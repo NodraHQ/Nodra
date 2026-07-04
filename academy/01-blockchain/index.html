@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="blockchain.meta.title">Blockchain Fundamentals — Nodra Academy</title>
+<meta name="description" data-i18n-attr="content" data-i18n="blockchain.meta.description" content="Learn how blockchain works from the ground up: blocks, hashes, consensus, layers, wallets and security.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/css/variables.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/academy.css">
+<link rel="stylesheet" href="../../assets/css/blockchain.css">
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="container navbar__inner">
+    <a href="../../index.html" class="navbar__logo" aria-label="Nodra">
+      <span class="logo-mark" aria-hidden="true">◆</span>
+      <span class="logo-text">Nodra</span>
+    </a>
+
+    <nav class="navbar__actions" aria-label="Lesson navigation">
+      <a href="../index.html" class="btn btn-ghost" data-i18n="nav.backToAcademy">← Back to Academy</a>
+
+      <div class="lang-switch" role="group" aria-label="Language switch">
+        <button type="button" id="lang-en" class="lang-switch__btn is-active" data-lang-btn="en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-pt" class="lang-switch__btn" data-lang-btn="pt" aria-pressed="false">PT</button>
+      </div>
+    </nav>
+  </div>
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="readingProgressBar"></div>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero lesson-hero" id="top">
+    <div class="container lesson-hero__grid">
+
+      <div class="lesson-hero__content">
+        <span class="badge badge-blue" data-i18n="blockchain.hero.module">MODULE 01</span>
+        <h1 class="lesson-hero__title" data-i18n="blockchain.hero.title">Blockchain Fundamentals</h1>
+        <p class="lesson-hero__description" data-i18n="blockchain.hero.description">
+          A complete introduction to how blockchains work: distributed ledgers, blocks, hashing,
+          consensus mechanisms, network layers, wallets, and the security model that holds it all together.
+        </p>
+
+        <div class="lesson-hero__meta">
+          <div class="meta-item">
+            <span class="meta-item__label" data-i18n="blockchain.hero.difficulty.label">Difficulty</span>
+            <span class="meta-item__value" data-i18n="blockchain.hero.difficulty.value">Beginner</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-item__label" data-i18n="blockchain.hero.duration.label">Duration</span>
+            <span class="meta-item__value" data-i18n="blockchain.hero.duration.value">35 min read</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-item__label" data-i18n="blockchain.hero.format.label">Format</span>
+            <span class="meta-item__value" data-i18n="blockchain.hero.format.value">Reading + Quiz</span>
+          </div>
+        </div>
+
+        <a href="#introduction" class="btn btn-primary btn-lg" data-i18n="blockchain.hero.cta">Start Reading</a>
+      </div>
+
+      <div class="lesson-hero__visual" aria-hidden="true">
+        <div class="chain-visual">
+          <div class="chain-block chain-block--genesis">
+            <span class="chain-block__index">#0</span>
+            <span class="chain-block__label" data-i18n="blockchain.visual.genesis">Genesis</span>
+          </div>
+          <span class="chain-link"></span>
+          <div class="chain-block">
+            <span class="chain-block__index">#1</span>
+            <span class="chain-block__hash">0x4a9f...</span>
+          </div>
+          <span class="chain-link"></span>
+          <div class="chain-block">
+            <span class="chain-block__index">#2</span>
+            <span class="chain-block__hash">0x7c2e...</span>
+          </div>
+          <span class="chain-link"></span>
+          <div class="chain-block chain-block--active">
+            <span class="chain-block__index">#3</span>
+            <span class="chain-block__hash">0x1d8b...</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="container lesson-layout">
+
+    <aside class="lesson-sidebar" id="sidebar">
+      <nav class="toc" aria-label="Table of contents">
+        <span class="toc__title" data-i18n="blockchain.toc.title">Contents</span>
+        <div class="toc__list-wrap" id="tocListWrap">
+          <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+          <ol class="toc__list" id="tocList">
+            <li><a href="#introduction" data-i18n="blockchain.toc.introduction">Introduction</a></li>
+            <li><a href="#how-it-works" data-i18n="blockchain.toc.howItWorks">How Blockchain Works</a></li>
+            <li><a href="#anatomy-of-a-block" data-i18n="blockchain.toc.anatomy">Anatomy of a Block</a></li>
+            <li><a href="#hash-demo" data-i18n="blockchain.toc.hashDemo">Hash Demo</a></li>
+            <li><a href="#consensus" data-i18n="blockchain.toc.consensus">Consensus</a></li>
+            <li><a href="#layers" data-i18n="blockchain.toc.layers">Layer 1 vs Layer 2</a></li>
+            <li><a href="#wallets" data-i18n="blockchain.toc.wallets">Wallets</a></li>
+            <li><a href="#security" data-i18n="blockchain.toc.security">Security</a></li>
+            <li><a href="#first-steps" data-i18n="blockchain.toc.firstSteps">First Steps</a></li>
+            <li><a href="#glossary" data-i18n="blockchain.toc.glossary">Glossary</a></li>
+            <li><a href="#quiz" data-i18n="blockchain.toc.quiz">Quiz</a></li>
+          </ol>
+        </div>
+      </nav>
+    </aside>
+
+    <article class="lesson-content">
+
+      <!-- INTRODUCTION -->
+      <section class="lesson-section" id="introduction">
+        <span class="section-eyebrow" data-i18n="blockchain.introduction.eyebrow">01</span>
+        <h2 class="section-title" data-i18n="blockchain.introduction.title">Introduction</h2>
+        <p data-i18n="blockchain.introduction.p1">
+          A blockchain is a distributed ledger: a database that is copied and synchronized across many
+          independent computers, called nodes, instead of being stored on a single server controlled by one entity.
+          Every participant holds a copy of the same history, and that history is agreed upon collectively rather
+          than dictated by a central authority.
+        </p>
+        <p data-i18n="blockchain.introduction.p2">
+          The term "blockchain" describes the structure of that ledger: data is grouped into blocks, and each
+          block is cryptographically linked to the one before it, forming a chain. Once a block is added and
+          confirmed by the network, altering it would require rewriting every block that came after it on
+          every copy of the ledger at the same time — which is what makes the record practically immutable.
+        </p>
+        <p data-i18n="blockchain.introduction.p3">
+          This lesson walks through the core mechanics behind that idea: how blocks are built, how nodes agree
+          on which version of the ledger is correct, how the network is organized into layers, and how users
+          interact with it safely through wallets.
+        </p>
+      </section>
+
+      <!-- HOW BLOCKCHAIN WORKS -->
+      <section class="lesson-section" id="how-it-works">
+        <span class="section-eyebrow" data-i18n="blockchain.howItWorks.eyebrow">02</span>
+        <h2 class="section-title" data-i18n="blockchain.howItWorks.title">How Blockchain Works</h2>
+        <p data-i18n="blockchain.howItWorks.intro">
+          At a high level, a blockchain network performs four repeating actions: transactions are broadcast,
+          nodes validate them, valid transactions are grouped into a block, and the network agrees on adding
+          that block to the chain. The four concepts below are the building blocks of that cycle.
+        </p>
+
+        <div class="card-grid">
+          <div class="card concept-card">
+            <span class="concept-card__icon" aria-hidden="true">◧</span>
+            <h3 class="concept-card__title" data-i18n="blockchain.howItWorks.card1.title">Decentralization</h3>
+            <p class="concept-card__text" data-i18n="blockchain.howItWorks.card1.text">
+              No single computer owns the ledger. Thousands of independent nodes each keep a full or partial
+              copy, so there is no single point of failure or control.
+            </p>
+          </div>
+          <div class="card concept-card">
+            <span class="concept-card__icon" aria-hidden="true">◨</span>
+            <h3 class="concept-card__title" data-i18n="blockchain.howItWorks.card2.title">Transactions</h3>
+            <p class="concept-card__text" data-i18n="blockchain.howItWorks.card2.text">
+              A transaction is a signed instruction, such as "send 0.5 units from address A to address B."
+              It is broadcast to the network and waits to be picked up by nodes for validation.
+            </p>
+          </div>
+          <div class="card concept-card">
+            <span class="concept-card__icon" aria-hidden="true">◩</span>
+            <h3 class="concept-card__title" data-i18n="blockchain.howItWorks.card3.title">Validation</h3>
+            <p class="concept-card__text" data-i18n="blockchain.howItWorks.card3.text">
+              Nodes check that a transaction follows the protocol's rules — correct signature, sufficient
+              balance, no double-spending — before it can be included in a block.
+            </p>
+          </div>
+          <div class="card concept-card">
+            <span class="concept-card__icon" aria-hidden="true">◪</span>
+            <h3 class="concept-card__title" data-i18n="blockchain.howItWorks.card4.title">Immutability</h3>
+            <p class="concept-card__text" data-i18n="blockchain.howItWorks.card4.text">
+              Once a block is confirmed and buried under later blocks, changing it becomes computationally
+              and economically impractical, giving the ledger its permanent, tamper-evident nature.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANATOMY OF A BLOCK -->
+      <section class="lesson-section" id="anatomy-of-a-block">
+        <span class="section-eyebrow" data-i18n="blockchain.anatomy.eyebrow">03</span>
+        <h2 class="section-title" data-i18n="blockchain.anatomy.title">Anatomy of a Block</h2>
+        <p data-i18n="blockchain.anatomy.intro">
+          Every block is made of a header and a body. The header contains metadata used to link and verify
+          the block; the body contains the actual transaction data.
+        </p>
+
+        <div class="block-diagram card">
+          <div class="block-diagram__chrome" aria-hidden="true">
+            <span class="block-diagram__dot"></span>
+            <span class="block-diagram__dot"></span>
+            <span class="block-diagram__dot"></span>
+            <span class="block-diagram__chrome-title">block_847213.json</span>
+          </div>
+          <div class="block-diagram__row">
+            <span class="block-diagram__label" data-i18n="blockchain.anatomy.field1.label">Block Number</span>
+            <span class="block-diagram__value">#847,213</span>
+          </div>
+          <div class="block-diagram__row">
+            <span class="block-diagram__label" data-i18n="blockchain.anatomy.field2.label">Timestamp</span>
+            <span class="block-diagram__value">2026-06-14T10:32:05Z</span>
+          </div>
+          <div class="block-diagram__row">
+            <span class="block-diagram__label" data-i18n="blockchain.anatomy.field3.label">Previous Hash</span>
+            <span class="block-diagram__value-group">
+              <span class="block-diagram__value" id="bdPrevHash">0x7c2e8f1a2b3d4e5f...</span>
+              <button type="button" class="copy-btn" data-copy-target="bdPrevHash" data-i18n="blockchain.common.copy" aria-label="Copy value">Copy</button>
+            </span>
+          </div>
+          <div class="block-diagram__row">
+            <span class="block-diagram__label" data-i18n="blockchain.anatomy.field4.label">Merkle Root</span>
+            <span class="block-diagram__value-group">
+              <span class="block-diagram__value" id="bdMerkleRoot">0x9b1c4d7e0f2a3b5c...</span>
+              <button type="button" class="copy-btn" data-copy-target="bdMerkleRoot" data-i18n="blockchain.common.copy" aria-label="Copy value">Copy</button>
+            </span>
+          </div>
+          <div class="block-diagram__row">
+            <span class="block-diagram__label" data-i18n="blockchain.anatomy.field5.label">Nonce</span>
+            <span class="block-diagram__value">2,847,193,022</span>
+          </div>
+          <div class="block-diagram__row">
+            <span class="block-diagram__label" data-i18n="blockchain.anatomy.field6.label">Block Hash</span>
+            <span class="block-diagram__value-group">
+              <span class="block-diagram__value" id="bdBlockHash">0x1d8b6a4c8e2f9a1d...</span>
+              <button type="button" class="copy-btn" data-copy-target="bdBlockHash" data-i18n="blockchain.common.copy" aria-label="Copy value">Copy</button>
+            </span>
+          </div>
+          <div class="block-diagram__row block-diagram__row--body">
+            <span class="block-diagram__label" data-i18n="blockchain.anatomy.field7.label">Transactions</span>
+            <span class="block-diagram__value" data-i18n="blockchain.anatomy.field7.value">1,942 transactions</span>
+          </div>
+        </div>
+
+        <ul class="lesson-list">
+          <li data-i18n="blockchain.anatomy.li1"><strong data-i18n="blockchain.anatomy.li1.term">Previous Hash</strong> — links this block to the one before it, forming the chain.</li>
+          <li data-i18n="blockchain.anatomy.li2"><strong data-i18n="blockchain.anatomy.li2.term">Merkle Root</strong> — a single hash that summarizes every transaction in the block, allowing quick verification without re-checking each one individually.</li>
+          <li data-i18n="blockchain.anatomy.li3"><strong data-i18n="blockchain.anatomy.li3.term">Nonce</strong> — a number miners adjust repeatedly while searching for a valid block hash under Proof of Work.</li>
+          <li data-i18n="blockchain.anatomy.li4"><strong data-i18n="blockchain.anatomy.li4.term">Block Hash</strong> — the fingerprint of the entire block header, recalculated by every node to confirm the block is valid.</li>
+        </ul>
+      </section>
+
+      <!-- HASH DEMO -->
+      <section class="lesson-section" id="hash-demo">
+        <span class="section-eyebrow" data-i18n="blockchain.hashDemo.eyebrow">04</span>
+        <h2 class="section-title" data-i18n="blockchain.hashDemo.title">Hash Demo</h2>
+        <p data-i18n="blockchain.hashDemo.intro">
+          A cryptographic hash function takes any input and returns a fixed-length string of characters.
+          The same input always produces the same output, but even a one-character change produces a
+          completely different result. This is what makes tampering with a block detectable.
+        </p>
+
+        <div class="hash-demo card" id="hashDemo">
+          <div class="hash-demo__chrome" aria-hidden="true">
+            <span class="hash-demo__dot"></span>
+            <span class="hash-demo__dot"></span>
+            <span class="hash-demo__dot"></span>
+            <span class="hash-demo__chrome-title">sha256.digest()</span>
+          </div>
+
+          <div class="hash-demo__examples">
+            <div class="hash-demo__row">
+              <span class="hash-demo__input" data-i18n="blockchain.hashDemo.input1">"Nodra Academy"</span>
+              <span class="hash-demo__arrow" aria-hidden="true">→</span>
+              <span class="hash-demo__output-group">
+                <code class="hash-demo__output" id="hashOutput1" data-hash-source="Nodra Academy">computing…</code>
+                <button type="button" class="copy-btn" data-copy-target="hashOutput1" data-i18n="blockchain.common.copy" aria-label="Copy hash">Copy</button>
+              </span>
+            </div>
+            <div class="hash-demo__row">
+              <span class="hash-demo__input" data-i18n="blockchain.hashDemo.input2">"Nodra academy"</span>
+              <span class="hash-demo__arrow" aria-hidden="true">→</span>
+              <span class="hash-demo__output-group">
+                <code class="hash-demo__output" id="hashOutput2" data-hash-source="Nodra academy">computing…</code>
+                <button type="button" class="copy-btn" data-copy-target="hashOutput2" data-i18n="blockchain.common.copy" aria-label="Copy hash">Copy</button>
+              </span>
+            </div>
+          </div>
+
+          <div class="hash-demo__divider" role="separator" aria-hidden="true"></div>
+
+          <div class="hash-demo__playground">
+            <label class="hash-demo__playground-label" for="hashDemoInput" data-i18n="blockchain.hashDemo.playgroundLabel">Try it with your own input — hashed live with SHA-256</label>
+            <div class="hash-demo__playground-row">
+              <input
+                type="text"
+                id="hashDemoInput"
+                class="hash-demo__field"
+                maxlength="140"
+                autocomplete="off"
+                spellcheck="false"
+                value="Nodra Academy"
+                data-i18n-attr="placeholder"
+                data-i18n="blockchain.hashDemo.placeholder"
+                placeholder="Type anything…">
+              <span class="hash-demo__arrow" aria-hidden="true">→</span>
+              <span class="hash-demo__output-group">
+                <code class="hash-demo__output hash-demo__output--live" id="hashDemoOutput">computing…</code>
+                <button type="button" class="copy-btn" data-copy-target="hashDemoOutput" data-i18n="blockchain.common.copy" aria-label="Copy hash">Copy</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <p class="hash-demo__note" data-i18n="blockchain.hashDemo.note">
+          Notice the second input only changes the capitalization of one letter, yet the resulting hash
+          is entirely different from the first. This property is called the avalanche effect, and it is
+          what allows nodes to instantly detect if a block's contents have been altered. Every hash on
+          this page is computed live in your browser using the SHA-256 algorithm — nothing is sent to a server.
+        </p>
+      </section>
+
+      <!-- CONSENSUS -->
+      <section class="lesson-section" id="consensus">
+        <span class="section-eyebrow" data-i18n="blockchain.consensus.eyebrow">05</span>
+        <h2 class="section-title" data-i18n="blockchain.consensus.title">Consensus</h2>
+        <p data-i18n="blockchain.consensus.intro">
+          Because there is no central authority, the network needs a way for independent nodes to agree
+          on a single, shared version of the ledger. This agreement mechanism is called a consensus algorithm.
+          The two most widely used models are Proof of Work and Proof of Stake.
+        </p>
+
+        <div class="card-grid card-grid--2">
+          <div class="card consensus-card">
+            <h3 class="consensus-card__title" data-i18n="blockchain.consensus.pow.title">Proof of Work (PoW)</h3>
+            <p class="consensus-card__text" data-i18n="blockchain.consensus.pow.text">
+              Nodes called miners compete to solve a computationally expensive puzzle: finding a nonce that,
+              combined with the block's data, produces a hash below a target value. The first miner to find
+              a valid solution broadcasts the block, and other nodes verify it instantly. Solving the puzzle
+              is hard; checking the solution is easy.
+            </p>
+            <ul class="lesson-list lesson-list--compact">
+              <li data-i18n="blockchain.consensus.pow.li1">Used by Bitcoin and (historically) Ethereum.</li>
+              <li data-i18n="blockchain.consensus.pow.li2">Security comes from the cost of computing power (energy and hardware).</li>
+              <li data-i18n="blockchain.consensus.pow.li3">High energy consumption is its main criticism.</li>
+            </ul>
+          </div>
+          <div class="card consensus-card">
+            <h3 class="consensus-card__title" data-i18n="blockchain.consensus.pos.title">Proof of Stake (PoS)</h3>
+            <p class="consensus-card__text" data-i18n="blockchain.consensus.pos.text">
+              Instead of competing with computing power, validators lock up ("stake") an amount of the
+              network's native asset. The protocol selects a validator to propose the next block,
+              generally weighted by stake size. Validators who approve invalid blocks can lose part of
+              their stake, a penalty known as slashing.
+            </p>
+            <ul class="lesson-list lesson-list--compact">
+              <li data-i18n="blockchain.consensus.pos.li1">Used by Ethereum (since the Merge), Cardano, and Solana.</li>
+              <li data-i18n="blockchain.consensus.pos.li2">Security comes from the economic value at stake, not raw computation.</li>
+              <li data-i18n="blockchain.consensus.pos.li3">Dramatically lower energy consumption than PoW.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- LAYER 1 VS LAYER 2 -->
+      <section class="lesson-section" id="layers">
+        <span class="section-eyebrow" data-i18n="blockchain.layers.eyebrow">06</span>
+        <h2 class="section-title" data-i18n="blockchain.layers.title">Layer 1 vs Layer 2</h2>
+        <p data-i18n="blockchain.layers.intro">
+          As blockchains grew in usage, a single base network struggled to process every transaction quickly
+          and cheaply. This led to a layered architecture, where additional networks are built on top of
+          the base chain to scale it.
+        </p>
+
+        <div class="card-grid card-grid--2">
+          <div class="card layer-card">
+            <h3 class="layer-card__title" data-i18n="blockchain.layers.l1.title">Layer 1</h3>
+            <p class="layer-card__text" data-i18n="blockchain.layers.l1.text">
+              The base blockchain itself — Bitcoin, Ethereum, Solana. It handles consensus, security, and
+              final settlement directly. Changes to its core rules require broad network agreement and are
+              made carefully, since everything else depends on this foundation.
+            </p>
+          </div>
+          <div class="card layer-card">
+            <h3 class="layer-card__title" data-i18n="blockchain.layers.l2.title">Layer 2</h3>
+            <p class="layer-card__text" data-i18n="blockchain.layers.l2.text">
+              A separate protocol built on top of a Layer 1 that processes transactions off the base chain
+              and later settles a summary back onto it. Examples include rollups and state channels. This
+              increases throughput and lowers fees while still inheriting the base layer's security.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WALLETS -->
+      <section class="lesson-section" id="wallets">
+        <span class="section-eyebrow" data-i18n="blockchain.wallets.eyebrow">07</span>
+        <h2 class="section-title" data-i18n="blockchain.wallets.title">Wallets</h2>
+        <p data-i18n="blockchain.wallets.intro">
+          A wallet does not "store" coins the way a physical wallet stores cash. It stores the private keys
+          that prove ownership of assets recorded on the blockchain, and uses those keys to sign transactions.
+        </p>
+
+        <div class="card-grid card-grid--2">
+          <div class="card wallet-card">
+            <h3 class="wallet-card__title" data-i18n="blockchain.wallets.hot.title">Hot Wallet</h3>
+            <p class="wallet-card__text" data-i18n="blockchain.wallets.hot.text">
+              Connected to the internet at all times — mobile apps, browser extensions, exchange accounts.
+              Convenient for frequent transactions, but more exposed to malware, phishing, and remote attacks.
+            </p>
+          </div>
+          <div class="card wallet-card">
+            <h3 class="wallet-card__title" data-i18n="blockchain.wallets.cold.title">Cold Wallet</h3>
+            <p class="wallet-card__text" data-i18n="blockchain.wallets.cold.text">
+              Keeps private keys offline — hardware devices or paper backups. Transactions are signed in an
+              isolated environment, which makes cold wallets far more resistant to remote hacking, at the
+              cost of convenience for everyday use.
+            </p>
+          </div>
+        </div>
+
+        <p data-i18n="blockchain.wallets.closing">
+          A common practice is to keep small, frequently used amounts in a hot wallet and larger holdings
+          in a cold wallet — the same logic as keeping cash in a pocket versus savings in a bank vault.
+        </p>
+      </section>
+
+      <!-- SECURITY -->
+      <section class="lesson-section" id="security">
+        <span class="section-eyebrow" data-i18n="blockchain.security.eyebrow">08</span>
+        <h2 class="section-title" data-i18n="blockchain.security.title">Security</h2>
+        <p data-i18n="blockchain.security.intro">
+          Blockchain security is a mix of cryptography, economic incentives, and network design. Understanding
+          where the guarantees actually come from helps separate real risk from perceived risk.
+        </p>
+        <ul class="lesson-list">
+          <li data-i18n="blockchain.security.li1"><strong data-i18n="blockchain.security.li1.term">Private keys are the real target.</strong> Most losses come from stolen or leaked keys, not from breaking the blockchain's cryptography.</li>
+          <li data-i18n="blockchain.security.li2"><strong data-i18n="blockchain.security.li2.term">51% attacks.</strong> If a single actor controls the majority of a network's mining power or stake, they could theoretically rewrite recent history — which is why decentralization of that power matters.</li>
+          <li data-i18n="blockchain.security.li3"><strong data-i18n="blockchain.security.li3.term">Smart contract risk.</strong> Code deployed on-chain can contain bugs; audits reduce but do not eliminate this risk.</li>
+          <li data-i18n="blockchain.security.li4"><strong data-i18n="blockchain.security.li4.term">Phishing and social engineering.</strong> The most common attack vector targets the user directly, not the protocol.</li>
+        </ul>
+      </section>
+
+      <!-- FIRST STEPS -->
+      <section class="lesson-section" id="first-steps">
+        <span class="section-eyebrow" data-i18n="blockchain.firstSteps.eyebrow">09</span>
+        <h2 class="section-title" data-i18n="blockchain.firstSteps.title">First Steps</h2>
+        <p data-i18n="blockchain.firstSteps.intro">
+          A practical path for putting this lesson into practice, from observation to safe first interaction.
+        </p>
+        <ol class="roadmap-list">
+          <li class="roadmap-list__item">
+            <span class="roadmap-list__index">1</span>
+            <div>
+              <h3 data-i18n="blockchain.firstSteps.step1Title">Explore a block explorer</h3>
+              <p data-i18n="blockchain.firstSteps.step1Text">Open a public block explorer for any major chain and inspect a real block: its hash, its transactions, its timestamp.</p>
+            </div>
+          </li>
+          <li class="roadmap-list__item">
+            <span class="roadmap-list__index">2</span>
+            <div>
+              <h3 data-i18n="blockchain.firstSteps.step2Title">Create a wallet on a testnet</h3>
+              <p data-i18n="blockchain.firstSteps.step2Text">Install a wallet and switch it to a test network, where assets have no real value, to practice safely.</p>
+            </div>
+          </li>
+          <li class="roadmap-list__item">
+            <span class="roadmap-list__index">3</span>
+            <div>
+              <h3 data-i18n="blockchain.firstSteps.step3Title">Send a test transaction</h3>
+              <p data-i18n="blockchain.firstSteps.step3Text">Request free test tokens from a faucet and send a transaction to another address to see the full lifecycle in action.</p>
+            </div>
+          </li>
+          <li class="roadmap-list__item">
+            <span class="roadmap-list__index">4</span>
+            <div>
+              <h3 data-i18n="blockchain.firstSteps.step4Title">Continue to Module 02</h3>
+              <p data-i18n="blockchain.firstSteps.step4Text">Move on to the next lesson in the Academy to go deeper into smart contracts and decentralized applications.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- GLOSSARY -->
+      <section class="lesson-section" id="glossary">
+        <span class="section-eyebrow" data-i18n="blockchain.glossary.eyebrow">10</span>
+        <h2 class="section-title" data-i18n="blockchain.glossary.title">Glossary</h2>
+        <dl class="glossary-list">
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term1">Node</dt>
+            <dd data-i18n="blockchain.glossary.def1">A computer participating in the network, holding a copy of the ledger and enforcing its rules.</dd>
+          </div>
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term2">Hash</dt>
+            <dd data-i18n="blockchain.glossary.def2">A fixed-length output produced by feeding data into a cryptographic hash function.</dd>
+          </div>
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term3">Nonce</dt>
+            <dd data-i18n="blockchain.glossary.def3">A number that miners vary to find a valid block hash under Proof of Work.</dd>
+          </div>
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term4">Merkle Root</dt>
+            <dd data-i18n="blockchain.glossary.def4">A single hash summarizing all transactions in a block, used for quick verification.</dd>
+          </div>
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term5">Validator / Miner</dt>
+            <dd data-i18n="blockchain.glossary.def5">A network participant responsible for proposing and confirming new blocks.</dd>
+          </div>
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term6">Private Key</dt>
+            <dd data-i18n="blockchain.glossary.def6">A secret value that proves ownership of an address and is used to sign transactions.</dd>
+          </div>
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term7">Rollup</dt>
+            <dd data-i18n="blockchain.glossary.def7">A Layer 2 solution that executes transactions off-chain and posts compressed results back to Layer 1.</dd>
+          </div>
+          <div class="glossary-list__item">
+            <dt data-i18n="blockchain.glossary.term8">Double-Spending</dt>
+            <dd data-i18n="blockchain.glossary.def8">Attempting to spend the same digital asset more than once, prevented by network validation.</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- QUIZ -->
+      <section class="lesson-section" id="quiz">
+        <span class="section-eyebrow" data-i18n="blockchain.quiz.eyebrow">11</span>
+        <h2 class="section-title" data-i18n="blockchain.quiz.title">Quiz</h2>
+        <p data-i18n="blockchain.quiz.intro">
+          Check your understanding of this lesson before moving on.
+        </p>
+
+        <div class="quiz-list" id="quizList" data-quiz-total="4">
+
+          <div class="card quiz-item" data-quiz-item>
+            <h3 class="quiz-item__question" data-i18n="blockchain.quiz.q1">1. What links one block to the next in a blockchain?</h3>
+            <div class="quiz-item__options" role="group" aria-label="Answer options">
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q1o1">A. The block number alone</button>
+              <button type="button" class="quiz-option" data-correct="true" data-i18n="blockchain.quiz.q1o2">B. The previous block's hash stored in the new block's header</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q1o3">C. A central server assigning order</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q1o4">D. The wallet address of the miner</button>
+            </div>
+            <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+            <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+          </div>
+
+          <div class="card quiz-item" data-quiz-item>
+            <h3 class="quiz-item__question" data-i18n="blockchain.quiz.q2">2. In Proof of Work, what makes the system secure?</h3>
+            <div class="quiz-item__options" role="group" aria-label="Answer options">
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q2o1">A. The identity of the miners</button>
+              <button type="button" class="quiz-option" data-correct="true" data-i18n="blockchain.quiz.q2o2">B. The cost of the computing power required to redo the work</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q2o3">C. Government regulation</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q2o4">D. The size of the Merkle root</button>
+            </div>
+            <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+            <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+          </div>
+
+          <div class="card quiz-item" data-quiz-item>
+            <h3 class="quiz-item__question" data-i18n="blockchain.quiz.q3">3. What is the main advantage of a Layer 2 network?</h3>
+            <div class="quiz-item__options" role="group" aria-label="Answer options">
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q3o1">A. It replaces the Layer 1 entirely</button>
+              <button type="button" class="quiz-option" data-correct="true" data-i18n="blockchain.quiz.q3o2">B. It increases throughput and lowers fees while inheriting Layer 1 security</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q3o3">C. It removes the need for consensus</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q3o4">D. It stores private keys for users</button>
+            </div>
+            <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+            <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+          </div>
+
+          <div class="card quiz-item" data-quiz-item>
+            <h3 class="quiz-item__question" data-i18n="blockchain.quiz.q4">4. Why is a cold wallet generally considered safer for long-term storage?</h3>
+            <div class="quiz-item__options" role="group" aria-label="Answer options">
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q4o1">A. It has a stronger internet connection</button>
+              <button type="button" class="quiz-option" data-correct="true" data-i18n="blockchain.quiz.q4o2">B. It keeps private keys offline, away from remote attacks</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q4o3">C. It is faster for daily transactions</button>
+              <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q4o4">D. It is managed by an exchange</button>
+            </div>
+            <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+            <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+          </div>
+
+          <div class="card quiz-summary" id="quizSummary" hidden>
+            <p class="quiz-summary__text">
+              <span data-i18n="blockchain.quiz.summaryPrefix">You scored</span>
+              <strong class="quiz-summary__score" id="quizScore">0</strong>
+              <span data-i18n="blockchain.quiz.summaryMiddle">out of</span>
+              <strong class="quiz-summary__score" id="quizTotal">4</strong>
+              <span data-i18n="blockchain.quiz.summarySuffix">correct.</span>
+            </p>
+            <button type="button" class="btn btn-ghost" id="quizResetBtn" data-i18n="blockchain.quiz.reset">Try again</button>
+          </div>
+
+        </div>
+      </section>
+
+      <nav class="lesson-pagination" aria-label="Lesson pagination">
+        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.pagination.back">← Back to Academy</a>
+        <a href="../index.html" class="btn btn-primary" data-i18n="blockchain.pagination.next">Next Module →</a>
+      </nav>
+
+    </article>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="logo-mark" aria-hidden="true">◆</span>
+      <span class="logo-text">Nodra</span>
+    </div>
+    <p class="footer__text" data-i18n="footer.text">Open-source blockchain education, built for everyone.</p>
+    <p class="footer__copy" data-i18n="footer.copy">© 2026 Nodra Academy. All rights reserved.</p>
+    <a href="#top" class="footer__back-to-top" data-i18n="footer.backToTop">Back to top ↑</a>
+  </div>
+</footer>
+
+<span id="i18nCopiedLabel" data-i18n="blockchain.common.copied" hidden>Copied</span>
+
+<script src="../../assets/js/translations.js"></script>
+<script src="../../assets/js/blockchain.js"></script>
+</body>
+</html>
