@@ -1,28 +1,24 @@
 /* ==========================================================================
-   NODRA ACADEMY
-   academy.css
-   PART 01
-   Layout + Navbar + Hero
+   ACADEMY.CSS
+   PART 1
    ========================================================================== */
 
 @import url("./variables.css");
 @import url("./components.css");
 
-/* ==========================================================================
-   BODY
-   ========================================================================== */
+/* BODY */
 
 body{
 
     background:var(--gradient-background);
 
-    background-attachment:fixed;
+    color:var(--text);
+
+    overflow-x:hidden;
 
 }
 
-/* ==========================================================================
-   GRID BACKGROUND
-   ========================================================================== */
+/* GRID */
 
 body::before{
 
@@ -34,9 +30,9 @@ body::before{
 
     background-image:
 
-        linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
 
-        linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
 
     background-size:64px 64px;
 
@@ -56,55 +52,47 @@ body::after{
 
     background:
 
-        radial-gradient(circle at 15% 20%,
-            rgba(77,166,255,.18),
-            transparent 30%),
+    radial-gradient(circle at top left,
 
-        radial-gradient(circle at 85% 15%,
-            rgba(77,166,255,.08),
-            transparent 25%),
+    rgba(77,166,255,.12),
 
-        radial-gradient(circle at 50% 100%,
-            rgba(77,166,255,.05),
-            transparent 35%);
+    transparent 35%),
+
+    radial-gradient(circle at bottom right,
+
+    rgba(77,166,255,.08),
+
+    transparent 40%);
 
     z-index:-1;
 
-    pointer-events:none;
-
 }
 
-/* ==========================================================================
-   NAVBAR
-   ========================================================================== */
+/* NAVBAR */
 
 .navbar{
 
     position:fixed;
 
-    top:0;
+    inset:0 0 auto 0;
 
-    left:0;
-
-    width:100%;
-
-    height:var(--navbar-height);
+    height:80px;
 
     display:flex;
 
-    align-items:center;
-
     justify-content:space-between;
+
+    align-items:center;
 
     padding:0 48px;
 
+    background:rgba(6,8,13,.72);
+
     backdrop-filter:blur(18px);
 
-    background:rgba(6,8,13,.70);
+    border-bottom:1px solid rgba(255,255,255,.05);
 
-    border-bottom:1px solid rgba(255,255,255,.04);
-
-    z-index:var(--z-navbar);
+    z-index:100;
 
 }
 
@@ -128,7 +116,7 @@ body::after{
 
     background:var(--primary);
 
-    box-shadow:var(--glow-primary);
+    box-shadow:0 0 24px rgba(77,166,255,.5);
 
 }
 
@@ -138,11 +126,9 @@ body::after{
 
     font-size:30px;
 
-    font-weight:900;
-
-    letter-spacing:.08em;
-
     text-transform:uppercase;
+
+    font-weight:900;
 
 }
 
@@ -152,7 +138,7 @@ body::after{
 
     align-items:center;
 
-    gap:40px;
+    gap:34px;
 
 }
 
@@ -160,9 +146,7 @@ body::after{
 
     color:var(--text-secondary);
 
-    transition:var(--transition);
-
-    font-size:15px;
+    transition:.25s;
 
 }
 
@@ -176,29 +160,53 @@ body::after{
 
     display:flex;
 
-    gap:12px;
+    gap:10px;
 
-    margin-left:32px;
+    margin-left:24px;
 
 }
 
 .language-switch button{
 
+    background:transparent;
+
     color:var(--text-secondary);
 
-    transition:var(--transition);
+    border:1px solid var(--border);
+
+    border-radius:8px;
+
+    padding:8px 12px;
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:all .2s ease;
 
 }
 
 .language-switch button:hover{
 
-    color:var(--primary);
+    border-color:var(--primary);
+
+    color:var(--text-primary);
 
 }
 
-/* ==========================================================================
-   HERO
-   ========================================================================== */
+.language-switch button.active{
+
+    background:var(--primary);
+
+    color:#fff;
+
+    border-color:var(--primary);
+
+}
+
+/* HERO */
 
 .hero{
 
@@ -208,7 +216,7 @@ body::after{
 
     align-items:center;
 
-    padding-top:var(--navbar-height);
+    padding-top:80px;
 
 }
 
@@ -216,11 +224,11 @@ body::after{
 
     display:grid;
 
-    grid-template-columns:1fr 500px;
+    grid-template-columns:1.1fr .9fr;
+
+    gap:72px;
 
     align-items:center;
-
-    gap:80px;
 
 }
 
@@ -232,19 +240,11 @@ body::after{
 
 .hero-tag{
 
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    margin-bottom:20px;
-
     color:var(--primary);
 
-    letter-spacing:.15em;
-
     text-transform:uppercase;
+
+    letter-spacing:.18em;
 
     font-size:13px;
 
@@ -254,17 +254,17 @@ body::after{
 
 .hero-title{
 
+    margin:18px 0 26px;
+
     font-family:var(--font-heading);
 
-    font-size:var(--hero-title);
+    font-size:clamp(5rem,8vw,7rem);
 
-    font-weight:900;
-
-    line-height:.9;
+    line-height:.88;
 
     text-transform:uppercase;
 
-    margin-bottom:28px;
+    font-weight:900;
 
 }
 
@@ -276,13 +276,11 @@ body::after{
 
 .hero-description{
 
-    max-width:620px;
-
     color:var(--text-secondary);
 
     line-height:1.9;
 
-    font-size:18px;
+    font-size:20px;
 
     margin-bottom:42px;
 
@@ -294,189 +292,171 @@ body::after{
 
     gap:18px;
 
-    flex-wrap:wrap;
+    margin-bottom:42px;
 
 }
 
-/* ==========================================================================
-   HERO VISUAL
-   ========================================================================== */
+.hero-stats{
 
-.hero-visual{
+    display:grid;
 
-    position:relative;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-}
-
-.hero-card{
-
-    width:100%;
-
-    height:620px;
-
-    border-radius:28px;
-
-    background:
-
-        linear-gradient(180deg,
-
-        rgba(255,255,255,.03),
-
-        rgba(255,255,255,.01));
-
-    border:1px solid rgba(255,255,255,.06);
-
-    overflow:hidden;
-
-    position:relative;
-
-    box-shadow:var(--shadow-lg);
-
-}
-
-.hero-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:420px;
-
-    height:420px;
-
-    border-radius:50%;
-
-    background:rgba(77,166,255,.12);
-
-    filter:blur(90px);
-
-    top:-120px;
-
-    right:-120px;
-
-}
-
-.hero-card::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-
-    linear-gradient(
-
-    transparent,
-
-    rgba(255,255,255,.015));
-
-}
-
-.hero-placeholder{
-
-    position:absolute;
-
-    inset:0;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    flex-direction:column;
+    grid-template-columns:repeat(4,1fr);
 
     gap:18px;
 
 }
 
-.hero-placeholder h2{
+.stat-card{
+
+    background:var(--surface-1);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:22px;
+
+    transition:.25s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:var(--primary);
+
+}
+
+.stat-card strong{
+
+    display:block;
 
     font-family:var(--font-heading);
 
-    font-size:52px;
+    font-size:32px;
+
+    margin-bottom:8px;
 
 }
 
-.hero-placeholder p{
+.stat-card span{
+
+    color:var(--text-secondary);
+
+    font-size:14px;
+
+}
+
+/* DASHBOARD */
+
+.hero-dashboard{
+
+    background:linear-gradient(
+
+    180deg,
+
+    var(--surface-2),
+
+    var(--surface-1));
+
+    border:1px solid var(--border);
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow-lg);
+
+}
+
+.dashboard-header{
+
+    display:flex;
+
+    gap:10px;
+
+    padding:18px 24px;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.dashboard-dot{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    opacity:.45;
+
+}
+
+.dashboard-content{
+
+    padding:36px;
+
+}
+
+.dashboard-title{
+
+    font-family:var(--font-heading);
+
+    font-size:40px;
+
+    margin-bottom:30px;
+
+}
+
+.dashboard-item{
+
+    padding:18px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+
+    color:var(--text-secondary);
+
+}
+
+.dashboard-item.active{
+
+    color:var(--primary);
+
+    font-weight:700;
+
+}
+
+.dashboard-divider{
+
+    height:1px;
+
+    background:rgba(255,255,255,.08);
+
+    margin:28px 0;
+
+}
+
+.dashboard-progress{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-bottom:18px;
+
+}
+
+.dashboard-footer{
 
     color:var(--text-muted);
 
-}
-
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
-
-@media (max-width:1200px){
-
-    .hero-grid{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .hero-visual{
-
-        order:-1;
-
-    }
+    font-size:14px;
 
 }
-
-@media (max-width:768px){
-
-    .navbar{
-
-        padding:0 24px;
-
-    }
-
-    .nav-links{
-
-        display:none;
-
-    }
-
-    .hero{
-
-        text-align:center;
-
-    }
-
-    .hero-actions{
-
-        justify-content:center;
-
-    }
-
-    .hero-description{
-
-        margin-inline:auto;
-
-    }
-
-    .hero-card{
-
-        height:420px;
-
-    }
-
-}
-
-/* ==========================================================================
-   academy.css
-   PART 02
-   Sidebar + Learning Paths + Philosophy + Footer
-   ========================================================================== */
 
 /* ==========================================================================
    LEARNING PATHS
@@ -490,9 +470,11 @@ body::after{
 
 .paths-header{
 
-    text-align:center;
+    max-width:760px;
 
-    margin-bottom:72px;
+    margin:0 auto 72px;
+
+    text-align:center;
 
 }
 
@@ -500,23 +482,21 @@ body::after{
 
     font-family:var(--font-heading);
 
-    font-size:56px;
+    font-size:64px;
 
     text-transform:uppercase;
 
-    margin-bottom:16px;
+    margin:18px 0;
 
 }
 
 .paths-header p{
 
-    max-width:760px;
-
-    margin:auto;
-
     color:var(--text-secondary);
 
-    line-height:1.8;
+    line-height:1.9;
+
+    font-size:18px;
 
 }
 
@@ -580,21 +560,11 @@ body::after{
 
     grid-template-columns:repeat(4,1fr);
 
-    gap:28px;
+    gap:24px;
 
 }
 
 .module{
-
-    background:var(--surface-1);
-
-    border:1px solid var(--border);
-
-    border-radius:24px;
-
-    padding:28px;
-
-    transition:var(--transition);
 
     display:flex;
 
@@ -602,7 +572,17 @@ body::after{
 
     justify-content:space-between;
 
-    min-height:280px;
+    min-height:300px;
+
+    padding:28px;
+
+    background:var(--surface-1);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    transition:.25s;
 
 }
 
@@ -620,13 +600,13 @@ body::after{
 
     color:var(--primary);
 
-    font-size:14px;
-
-    letter-spacing:.12em;
-
     text-transform:uppercase;
 
-    margin-bottom:18px;
+    letter-spacing:.15em;
+
+    font-size:12px;
+
+    margin-bottom:16px;
 
 }
 
@@ -634,11 +614,11 @@ body::after{
 
     font-family:var(--font-heading);
 
-    font-size:38px;
-
-    text-transform:uppercase;
+    font-size:40px;
 
     margin-bottom:18px;
+
+    text-transform:uppercase;
 
 }
 
@@ -648,19 +628,17 @@ body::after{
 
     line-height:1.8;
 
-    flex:1;
-
 }
 
 .module-footer{
-
-    margin-top:28px;
 
     display:flex;
 
     justify-content:space-between;
 
     align-items:center;
+
+    margin-top:32px;
 
 }
 
@@ -676,13 +654,13 @@ body::after{
 
 .meta{
 
-    font-size:12px;
-
     border:1px solid var(--border);
+
+    padding:6px 12px;
 
     border-radius:999px;
 
-    padding:6px 12px;
+    font-size:12px;
 
     color:var(--text-secondary);
 
@@ -692,23 +670,37 @@ body::after{
 
     color:var(--primary);
 
-    font-weight:600;
+    font-weight:700;
+
+    transition:.25s;
+
+}
+
+.module-link:hover{
+
+    transform:translateX(4px);
 
 }
 
 /* ==========================================================================
-   PHILOSOPHY
+   mission
    ========================================================================== */
 
-.philosophy{
+.mission{
 
     padding:140px 0;
 
 }
 
-.philosophy-box{
+.mission-box{
 
-    background:linear-gradient(180deg,var(--surface-2),var(--surface-1));
+    background:linear-gradient(
+
+    180deg,
+
+    var(--surface-2),
+
+    var(--surface-1));
 
     border:1px solid var(--border);
 
@@ -720,19 +712,19 @@ body::after{
 
 }
 
-.philosophy-box h2{
+.mission-box h2{
 
     font-family:var(--font-heading);
 
-    font-size:64px;
+    font-size:68px;
 
     text-transform:uppercase;
 
-    margin-bottom:24px;
+    margin:20px 0;
 
 }
 
-.philosophy-box p{
+.mission-box p{
 
     max-width:760px;
 
@@ -747,7 +739,7 @@ body::after{
 }
 
 /* ==========================================================================
-   WHAT'S NEXT
+   NEXT
    ========================================================================== */
 
 .next{
@@ -762,7 +754,7 @@ body::after{
 
     grid-template-columns:repeat(3,1fr);
 
-    gap:28px;
+    gap:24px;
 
 }
 
@@ -774,7 +766,17 @@ body::after{
 
     border-radius:24px;
 
-    padding:36px;
+    padding:34px;
+
+    transition:.25s;
+
+}
+
+.next-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:var(--primary);
 
 }
 
@@ -782,7 +784,7 @@ body::after{
 
     font-family:var(--font-heading);
 
-    font-size:36px;
+    font-size:38px;
 
     margin-bottom:16px;
 
@@ -818,7 +820,7 @@ body::after{
 
     flex-wrap:wrap;
 
-    gap:24px;
+    gap:32px;
 
 }
 
@@ -826,7 +828,9 @@ body::after{
 
     font-family:var(--font-heading);
 
-    font-size:32px;
+    font-size:34px;
+
+    text-transform:uppercase;
 
 }
 
@@ -848,7 +852,7 @@ body::after{
 
     color:var(--text-secondary);
 
-    transition:var(--transition);
+    transition:.25s;
 
 }
 
@@ -859,169 +863,7 @@ body::after{
 }
 
 /* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
-
-@media(max-width:1100px){
-
-.modules{
-
-grid-template-columns:repeat(2,1fr);
-
-}
-
-.next-grid{
-
-grid-template-columns:1fr;
-
-}
-
-}
-
-@media(max-width:768px){
-
-.modules{
-
-grid-template-columns:1fr;
-
-}
-
-.path-title{
-
-flex-direction:column;
-
-align-items:flex-start;
-
-gap:18px;
-
-}
-
-.philosophy-box{
-
-padding:42px 28px;
-
-}
-
-.philosophy-box h2{
-
-font-size:48px;
-
-}
-
-.footer-grid{
-
-flex-direction:column;
-
-text-align:center;
-
-}
-
-.footer-links{
-
-flex-wrap:wrap;
-
-justify-content:center;
-
-}
-
-}
-
-/* ==========================================================================
-   academy.css
-   PART 03
-   Animations + Utilities + Scrollbar + Effects
-   ========================================================================== */
-
-/* ==========================================================================
-   REVEAL ANIMATIONS
-   ========================================================================== */
-
-.reveal{
-
-    opacity:0;
-
-    transform:translateY(40px);
-
-    transition:
-
-        opacity .8s ease,
-
-        transform .8s ease;
-
-}
-
-.reveal.show{
-
-    opacity:1;
-
-    transform:translateY(0);
-
-}
-
-/* ==========================================================================
-   HOVER GLOW
-   ========================================================================== */
-
-.glow{
-
-    position:relative;
-
-}
-
-.glow::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:-1px;
-
-    border-radius:inherit;
-
-    background:
-
-        linear-gradient(
-
-        135deg,
-
-        rgba(77,166,255,.30),
-
-        transparent,
-
-        rgba(77,166,255,.10));
-
-    opacity:0;
-
-    transition:var(--transition);
-
-    pointer-events:none;
-
-}
-
-.glow:hover::before{
-
-    opacity:1;
-
-}
-
-/* ==========================================================================
-   GLASS
-   ========================================================================== */
-
-.glass{
-
-    background:
-
-        rgba(255,255,255,.03);
-
-    backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.05);
-
-}
-
-/* ==========================================================================
-   SECTION TITLE
+   UTILITIES
    ========================================================================== */
 
 .section-title{
@@ -1044,15 +886,11 @@ justify-content:center;
 
     color:var(--text-secondary);
 
-    line-height:1.9;
-
     font-size:18px;
 
-}
+    line-height:1.9;
 
-/* ==========================================================================
-   TAG
-   ========================================================================== */
+}
 
 .tag{
 
@@ -1066,7 +904,7 @@ justify-content:center;
 
     text-transform:uppercase;
 
-    letter-spacing:.14em;
+    letter-spacing:.15em;
 
     font-size:12px;
 
@@ -1076,57 +914,99 @@ justify-content:center;
 
 }
 
-/* ==========================================================================
-   DIVIDER
-   ========================================================================== */
+.glow{
 
-.divider{
+    position:relative;
 
-    width:100%;
+}
 
-    height:1px;
+.glow::before{
 
-    background:
+    content:"";
 
-        linear-gradient(
+    position:absolute;
 
-        to right,
+    inset:-1px;
+
+    border-radius:inherit;
+
+    background:linear-gradient(
+
+        135deg,
+
+        rgba(77,166,255,.20),
 
         transparent,
 
-        rgba(255,255,255,.08),
+        rgba(77,166,255,.05)
 
-        transparent);
+    );
 
-    margin:120px 0;
+    opacity:0;
+
+    transition:.3s;
+
+    pointer-events:none;
+
+}
+
+.glow:hover::before{
+
+    opacity:1;
 
 }
 
 /* ==========================================================================
-   ICON CIRCLE
+   ANIMATIONS
    ========================================================================== */
 
-.icon-circle{
+.reveal{
 
-    width:56px;
+    opacity:0;
 
-    height:56px;
+    transform:translateY(32px);
 
-    border-radius:50%;
+    transition:
 
-    display:flex;
+        opacity .8s ease,
 
-    align-items:center;
+        transform .8s ease;
 
-    justify-content:center;
+}
 
-    background:
+.reveal.show{
 
-        rgba(77,166,255,.08);
+    opacity:1;
 
-    color:var(--primary);
+    transform:translateY(0);
 
-    border:1px solid rgba(77,166,255,.18);
+}
+
+.float{
+
+    animation:float 5s ease-in-out infinite;
+
+}
+
+@keyframes float{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-10px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
 
 }
 
@@ -1148,7 +1028,7 @@ justify-content:center;
 
 ::-webkit-scrollbar-thumb{
 
-    background:#233447;
+    background:#223547;
 
     border-radius:999px;
 
@@ -1187,103 +1067,137 @@ a:focus{
 }
 
 /* ==========================================================================
-   IMAGE PLACEHOLDER
+   RESPONSIVE
    ========================================================================== */
 
-.image-placeholder{
+@media (max-width:1200px){
 
-    width:100%;
+    .hero-grid{
 
-    height:100%;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:var(--text-muted);
-
-    font-family:var(--font-heading);
-
-    font-size:42px;
-
-    text-transform:uppercase;
-
-}
-
-/* ==========================================================================
-   FADE
-   ========================================================================== */
-
-@keyframes float{
-
-    0%{
-
-        transform:translateY(0px);
+        grid-template-columns:1fr;
 
     }
 
-    50%{
+    .hero-visual{
 
-        transform:translateY(-10px);
+        order:-1;
 
     }
 
-    100%{
+    .modules{
 
-        transform:translateY(0px);
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .next-grid{
+
+        grid-template-columns:1fr;
 
     }
 
 }
 
-.float{
+@media (max-width:768px){
 
-    animation:float 5s ease-in-out infinite;
+    .navbar{
 
-}
+        padding:0 24px;
 
-/* ==========================================================================
-   RESPONSIVE HELPERS
-   ========================================================================== */
+    }
 
-.hide-mobile{
+    .nav-links{
 
-    display:block;
+        display:none;
 
-}
+    }
 
-.show-mobile{
+    .hero{
 
-    display:none;
+        text-align:center;
 
-}
+        min-height:auto;
 
-@media(max-width:768px){
+        padding:140px 0 80px;
 
-.hide-mobile{
+    }
 
-display:none;
+    .hero-title{
 
-}
+        font-size:4rem;
 
-.show-mobile{
+    }
 
-display:block;
+    .hero-description{
 
-}
+        font-size:17px;
 
-.section-title{
+        margin-inline:auto;
 
-font-size:44px;
+    }
 
-}
+    .hero-actions{
 
-.section-description{
+        justify-content:center;
 
-font-size:16px;
+        flex-wrap:wrap;
 
-}
+    }
+
+    .hero-stats{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .modules{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .path-title{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+
+    }
+
+    .paths-header h2{
+
+        font-size:44px;
+
+    }
+
+    .mission-box{
+
+        padding:42px 28px;
+
+    }
+
+    .mission-box h2{
+
+        font-size:48px;
+
+    }
+
+    .footer-grid{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+    .footer-links{
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+
+    }
 
 }
