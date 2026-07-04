@@ -471,3 +471,457 @@ body::after{
     }
 
 }
+
+/* ==========================================================================
+   academy.css
+   PART 02
+   Sidebar + Learning Paths + Philosophy + Footer
+   ========================================================================== */
+
+/* ==========================================================================
+   LEARNING PATHS
+   ========================================================================== */
+
+.learning-paths{
+
+    padding:140px 0;
+
+}
+
+.paths-header{
+
+    text-align:center;
+
+    margin-bottom:72px;
+
+}
+
+.paths-header h2{
+
+    font-family:var(--font-heading);
+
+    font-size:56px;
+
+    text-transform:uppercase;
+
+    margin-bottom:16px;
+
+}
+
+.paths-header p{
+
+    max-width:760px;
+
+    margin:auto;
+
+    color:var(--text-secondary);
+
+    line-height:1.8;
+
+}
+
+.path{
+
+    margin-bottom:96px;
+
+}
+
+.path-title{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:36px;
+
+}
+
+.path-title h3{
+
+    font-family:var(--font-heading);
+
+    font-size:42px;
+
+    text-transform:uppercase;
+
+}
+
+.path-progress{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+.path-progress span{
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:50%;
+
+    border:2px solid var(--primary);
+
+}
+
+.path-progress span.active{
+
+    background:var(--primary);
+
+}
+
+.modules{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:28px;
+
+}
+
+.module{
+
+    background:var(--surface-1);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:28px;
+
+    transition:var(--transition);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    min-height:280px;
+
+}
+
+.module:hover{
+
+    transform:translateY(-8px);
+
+    border-color:var(--primary);
+
+    box-shadow:var(--shadow-md);
+
+}
+
+.module-number{
+
+    color:var(--primary);
+
+    font-size:14px;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+
+    margin-bottom:18px;
+
+}
+
+.module h4{
+
+    font-family:var(--font-heading);
+
+    font-size:38px;
+
+    text-transform:uppercase;
+
+    margin-bottom:18px;
+
+}
+
+.module p{
+
+    color:var(--text-secondary);
+
+    line-height:1.8;
+
+    flex:1;
+
+}
+
+.module-footer{
+
+    margin-top:28px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.module-meta{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+}
+
+.meta{
+
+    font-size:12px;
+
+    border:1px solid var(--border);
+
+    border-radius:999px;
+
+    padding:6px 12px;
+
+    color:var(--text-secondary);
+
+}
+
+.module-link{
+
+    color:var(--primary);
+
+    font-weight:600;
+
+}
+
+/* ==========================================================================
+   PHILOSOPHY
+   ========================================================================== */
+
+.philosophy{
+
+    padding:140px 0;
+
+}
+
+.philosophy-box{
+
+    background:linear-gradient(180deg,var(--surface-2),var(--surface-1));
+
+    border:1px solid var(--border);
+
+    border-radius:32px;
+
+    padding:72px;
+
+    text-align:center;
+
+}
+
+.philosophy-box h2{
+
+    font-family:var(--font-heading);
+
+    font-size:64px;
+
+    text-transform:uppercase;
+
+    margin-bottom:24px;
+
+}
+
+.philosophy-box p{
+
+    max-width:760px;
+
+    margin:auto;
+
+    color:var(--text-secondary);
+
+    line-height:2;
+
+    font-size:18px;
+
+}
+
+/* ==========================================================================
+   WHAT'S NEXT
+   ========================================================================== */
+
+.next{
+
+    padding:140px 0;
+
+}
+
+.next-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:28px;
+
+}
+
+.next-card{
+
+    background:var(--surface-1);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:36px;
+
+}
+
+.next-card h3{
+
+    font-family:var(--font-heading);
+
+    font-size:36px;
+
+    margin-bottom:16px;
+
+}
+
+.next-card p{
+
+    color:var(--text-secondary);
+
+    line-height:1.8;
+
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.footer{
+
+    border-top:1px solid rgba(255,255,255,.05);
+
+    padding:48px 0;
+
+}
+
+.footer-grid{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:24px;
+
+}
+
+.footer-brand h3{
+
+    font-family:var(--font-heading);
+
+    font-size:32px;
+
+}
+
+.footer-brand span{
+
+    color:var(--text-muted);
+
+}
+
+.footer-links{
+
+    display:flex;
+
+    gap:28px;
+
+}
+
+.footer-links a{
+
+    color:var(--text-secondary);
+
+    transition:var(--transition);
+
+}
+
+.footer-links a:hover{
+
+    color:var(--primary);
+
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media(max-width:1100px){
+
+.modules{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+.next-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.modules{
+
+grid-template-columns:1fr;
+
+}
+
+.path-title{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:18px;
+
+}
+
+.philosophy-box{
+
+padding:42px 28px;
+
+}
+
+.philosophy-box h2{
+
+font-size:48px;
+
+}
+
+.footer-grid{
+
+flex-direction:column;
+
+text-align:center;
+
+}
+
+.footer-links{
+
+flex-wrap:wrap;
+
+justify-content:center;
+
+}
+
+}
