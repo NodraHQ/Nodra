@@ -1,24 +1,22 @@
 /* =====================================================================
    NODRA ACADEMY — LESSON 01: BLOCKCHAIN FUNDAMENTALS
-   Progressive-enhancement behaviors for the lesson page.
+   Lesson-specific behavior only.
 
-   Everything here is additive: if this script fails to load, the page
-   remains fully readable (no content is hidden behind JS by default).
-   Works alongside translations.js, which is loaded first and owns
-   language switching / data-i18n text replacement.
+   - Does not touch translations.js (language switching / data-i18n)
+   - Does not duplicate academy.js: the reveal-on-scroll behavior for
+     ".reveal" elements is already provided globally by academy.js,
+     which this page also loads. Elements that should animate on
+     scroll simply carry class="reveal" in the HTML.
+   - Does not touch .navbar (no elevation/scroll class toggling here);
+     that belongs to the shared navbar component, owned by academy.js.
    ===================================================================== */
 
 (function () {
   'use strict';
 
-  var root = document.documentElement;
-  root.classList.add('js-ready');
-
   document.addEventListener('DOMContentLoaded', function () {
     initReadingProgress();
-    initNavbarElevation();
     initScrollSpy();
-    initRevealOnScroll();
     initCopyButtons();
     initHashDemo();
     initQuiz();
@@ -49,25 +47,6 @@
       }
     }, { passive: true });
 
-    update();
-  }
-
-  /* ===================================================================
-     Navbar gains a stronger border/background once the page scrolls
-     =================================================================== */
-  function initNavbarElevation() {
-    var navbar = document.getElementById('navbar');
-    if (!navbar) return;
-
-    function update() {
-      if (window.scrollY > 8) {
-        navbar.classList.add('is-elevated');
-      } else {
-        navbar.classList.remove('is-elevated');
-      }
-    }
-
-    window.addEventListener('scroll', update, { passive: true });
     update();
   }
 
@@ -143,35 +122,6 @@
         moveIndicator(linkBySectionId[currentActiveId]);
       }
     });
-  }
-
-  /* ===================================================================
-     Reveal-on-scroll — subtle fade/translate for sections and cards.
-     Guarded by .js-ready in CSS so content is visible without JS.
-     =================================================================== */
-  function initRevealOnScroll() {
-    var targets = Array.prototype.slice.call(document.querySelectorAll(
-      '.lesson-section, .card, .roadmap-list__item, .glossary-list__item'
-    ));
-    if (!targets.length) return;
-
-    targets.forEach(function (el) { el.classList.add('reveal'); });
-
-    if (!('IntersectionObserver' in window)) {
-      targets.forEach(function (el) { el.classList.add('is-visible'); });
-      return;
-    }
-
-    var observer = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
-
-    targets.forEach(function (el) { observer.observe(el); });
   }
 
   /* ===================================================================
@@ -349,7 +299,7 @@
       var score = Object.keys(answered).filter(function (key) { return answered[key]; }).length;
       if (scoreEl) scoreEl.textContent = String(score);
       summary.hidden = false;
-      summary.classList.add('reveal', 'is-visible');
+      summary.classList.add('reveal', 'show');
       summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 

@@ -1,3 +1,8 @@
+// Resolved relative to this script's own location (not the page's),
+// so translations load correctly regardless of how deep the page is
+// nested (e.g. academy/01-blockchain/index.html).
+const TRANSLATIONS_BASE_URL = new URL("../../translations/", document.currentScript.src).href;
+
 class Translator {
 
     constructor() {
@@ -24,7 +29,7 @@ class Translator {
 
     async load(language) {
 
-        const response = await fetch(`../translations/${language}.json`);
+        const response = await fetch(`${TRANSLATIONS_BASE_URL}${language}.json`);
 
         this.translations = await response.json();
 
