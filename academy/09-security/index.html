@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="moduleSecurity.meta.title">Security — Nodra Academy</title>
+<meta name="description" content="Phishing, smart contract exploits, audits, and the habits that keep builders and users safe.">
+<link rel="stylesheet" href="../../assets/css/variables.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/academy.css">
+<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+                    <span class="tag" data-i18n="tracks.security.title">Security</span>
+                    <h1 class="hero-title" data-i18n="moduleSecurity.hero.title">Security</h1>
+                    <p class="hero-description" data-i18n="moduleSecurity.hero.description">Most losses in this space are preventable. This module explains the habits and red flags that matter most.</p>
+
+                    <div class="hero-actions">
+                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <strong data-i18n="moduleSecurity.hero.stat1.value">Advanced</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="moduleSecurity.hero.stat2.value">45 min</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="tracks.security.title">Security</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="dashboard-title">MODULE 09</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
+                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
+                            <div class="dashboard-divider"></div>
+                            <div class="dashboard-footer" data-i18n="tracks.security.title">Security</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
+                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
+                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
+                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="overview">
+                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.overview.title">Security</h2>
+                <p class="section-description" data-i18n="moduleSecurity.overview.p1">The overwhelming majority of losses in crypto come from a small set of repeated patterns: phishing, contract exploits, and avoidable operational mistakes — not exotic, unstoppable attacks.</p>
+                <p class="section-description" data-i18n="moduleSecurity.overview.p2">This module will teach you to recognize phishing attempts, understand what a smart contract audit does and doesn't guarantee, and build the personal security habits that remove most realistic risk.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="learn">
+                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleSecurity.learn.li1">The most common phishing patterns used against wallet holders.</li>
+                    <li data-i18n="moduleSecurity.learn.li2">What kinds of bugs smart contract exploits typically take advantage of.</li>
+                    <li data-i18n="moduleSecurity.learn.li3">What an audit actually verifies — and its real limitations.</li>
+                    <li data-i18n="moduleSecurity.learn.li4">How rug pulls are structured, and the warning signs that precede them.</li>
+                    <li data-i18n="moduleSecurity.learn.li5">The personal security habits (opsec) that remove most realistic risk.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="prerequisites">
+                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleSecurity.prereq.li1">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
+                    <li data-i18n="moduleSecurity.prereq.li2">Familiarity with the DeFi track (<a href="../05-defi/index.html">Modules 05–08</a>) is recommended.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
+                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term1">Audit</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def1">An independent review of a smart contract's code, looking for bugs and vulnerabilities.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term2">Exploit</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def2">An attack that takes advantage of a specific bug or design flaw to steal or misdirect funds.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term3">Rug Pull</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def3">A scam where a project's creators withdraw all liquidity or funds, abandoning users.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term4">Reentrancy</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def4">A common smart contract bug where a function is re-entered before its state is updated.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term5">Opsec</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def5">Operational security — the personal habits that reduce your exposure to attacks.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../08-stablecoins/index.html" class="btn btn-secondary" data-i18n="moduleSecurity.pagination.back">← Module 08</a>
+                <a href="../10-final-project/index.html" class="btn btn-primary" data-i18n="moduleSecurity.pagination.next">Next Module →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script defer src="../../assets/js/translations.js"></script>
+<script defer src="../../assets/js/academy.js"></script>
+<script defer src="../../assets/js/module-placeholder.js"></script>
+</body>
+</html>

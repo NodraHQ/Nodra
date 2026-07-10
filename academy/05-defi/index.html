@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="moduleDefi.meta.title">DeFi Fundamentals — Nodra Academy</title>
+<meta name="description" content="What decentralized finance actually replaces, and how liquidity moves without a bank in the middle.">
+<link rel="stylesheet" href="../../assets/css/variables.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/academy.css">
+<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+                    <span class="tag" data-i18n="tracks.defi.title">DeFi</span>
+                    <h1 class="hero-title" data-i18n="moduleDefi.hero.title">DeFi Fundamentals</h1>
+                    <p class="hero-description" data-i18n="moduleDefi.hero.description">DeFi rebuilds financial services as open protocols instead of institutions. This module explains how that works.</p>
+
+                    <div class="hero-actions">
+                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <strong data-i18n="moduleDefi.hero.stat1.value">Intermediate</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="moduleDefi.hero.stat2.value">40 min</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="tracks.defi.title">DeFi</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="dashboard-title">MODULE 05</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
+                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
+                            <div class="dashboard-divider"></div>
+                            <div class="dashboard-footer" data-i18n="tracks.defi.title">DeFi</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
+                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
+                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
+                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="overview">
+                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
+                <h2 class="section-title" data-i18n="moduleDefi.overview.title">DeFi Fundamentals</h2>
+                <p class="section-description" data-i18n="moduleDefi.overview.p1">Decentralized finance (DeFi) rebuilds services banks and exchanges normally provide — trading, lending, earning interest — as open protocols that anyone can use or build on, without a company custodying the funds.</p>
+                <p class="section-description" data-i18n="moduleDefi.overview.p2">This module will teach you the core primitive behind almost every DeFi protocol: the automated market maker, how liquidity pools replace order books, and the real risks — like impermanent loss — that come with providing liquidity.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="learn">
+                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleDefi.learn.li1">What problem DeFi actually solves compared to a traditional exchange.</li>
+                    <li data-i18n="moduleDefi.learn.li2">How an automated market maker (AMM) prices assets without an order book.</li>
+                    <li data-i18n="moduleDefi.learn.li3">What a liquidity pool is, and how liquidity providers earn fees.</li>
+                    <li data-i18n="moduleDefi.learn.li4">What impermanent loss is, and why it's a real cost, not just a risk.</li>
+                    <li data-i18n="moduleDefi.learn.li5">How to evaluate a DeFi protocol before using it.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="prerequisites">
+                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleDefi.prereq.li1">Completed <a href="../01-blockchain/index.html">Module 01 — Blockchain</a>.</li>
+                    <li data-i18n="moduleDefi.prereq.li2">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
+                    <li data-i18n="moduleDefi.prereq.li3">Completed <a href="../04-assets/index.html">Module 04 — Assets</a>.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
+                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleDefi.glossary.term1">AMM</dt>
+                        <dd data-i18n="moduleDefi.glossary.def1">Automated Market Maker — a protocol that prices and swaps assets algorithmically, without an order book.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleDefi.glossary.term2">Liquidity Pool</dt>
+                        <dd data-i18n="moduleDefi.glossary.def2">A pool of two or more assets locked in a smart contract, used to enable trading.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleDefi.glossary.term3">Slippage</dt>
+                        <dd data-i18n="moduleDefi.glossary.def3">The difference between a trade's expected price and its actual executed price.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleDefi.glossary.term4">DEX</dt>
+                        <dd data-i18n="moduleDefi.glossary.def4">Decentralized Exchange — a trading protocol that runs without a central operator.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleDefi.glossary.term5">Impermanent Loss</dt>
+                        <dd data-i18n="moduleDefi.glossary.def5">The temporary loss liquidity providers can face when pooled asset prices diverge.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../04-assets/index.html" class="btn btn-secondary" data-i18n="moduleDefi.pagination.back">← Module 04</a>
+                <a href="../06-lending/index.html" class="btn btn-primary" data-i18n="moduleDefi.pagination.next">Next Module →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script defer src="../../assets/js/translations.js"></script>
+<script defer src="../../assets/js/academy.js"></script>
+<script defer src="../../assets/js/module-placeholder.js"></script>
+</body>
+</html>

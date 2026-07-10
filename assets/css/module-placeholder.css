@@ -1,0 +1,278 @@
+/* ==========================================================================
+   MODULE-PLACEHOLDER.CSS
+   Shared by every module directory that does not have its full lesson
+   content written yet (03-networks through 10-final-project).
+
+   Reuse-first check performed before writing this file:
+   - .navbar, .hero*, .footer*, .tag, .section-title, .section-description,
+     .glow, .reveal, .card, .btn* already exist in components.css and are
+     reused as-is.
+   - Nothing academy-specific (.modules/.module, .next-grid/.next-card,
+     .tracks-grid/.track-card) is duplicated here; a module page that
+     hasn't had its full lesson written yet only needs a single "track"
+     tag in its hero, reusing .tag.
+
+   Why this file exists at all (documented duplication):
+   - The lesson reading shell (sidebar + table of contents + reading
+     progress + glossary grid) is the same shell used by
+     academy/01-blockchain (blockchain.css) and academy/02-wallets
+     (wallets.css). Module 01 and Module 02 are marked stable and their
+     stylesheets must not be edited, so that shell is duplicated here
+     for the 8 placeholder pages instead of extracted into a shared
+     file.
+   - This is a SINGLE duplication (one shared file for 8 identical
+     pages), not eight separate ones — the placeholder pages are truly
+     interchangeable, so one shared stylesheet for all of them is
+     correct, not premature abstraction.
+   - Candidate for future extraction: see "Future Global Improvements"
+     in the accompanying response — a single academy-lesson.css should
+     eventually replace the sidebar/TOC/glossary rules duplicated across
+     blockchain.css, wallets.css and this file.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. READING PROGRESS
+   ========================================================================== */
+
+.reading-progress{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:2px;
+    background:transparent;
+    overflow:hidden;
+}
+
+.reading-progress__bar{
+    height:100%;
+    width:0%;
+    background:var(--primary);
+    box-shadow:var(--glow-primary);
+    transition:width .1s linear;
+}
+
+/* ==========================================================================
+   2. LESSON LAYOUT — sidebar + reading column (same shell as Module 01/02)
+   ========================================================================== */
+
+.lesson-layout{
+    display:grid;
+    grid-template-columns:var(--sidebar-width) minmax(0,1fr);
+    gap:var(--space-16);
+    align-items:start;
+    padding:var(--space-16) 0;
+}
+
+.lesson-sidebar{
+    position:sticky;
+    top:calc(var(--navbar-height) + var(--space-8));
+    max-height:calc(100vh - var(--navbar-height) - var(--space-16));
+    overflow-y:auto;
+    padding-bottom:var(--space-6);
+}
+
+.toc__list-wrap{
+    position:relative;
+    margin-top:var(--space-4);
+}
+
+.toc__indicator{
+    position:absolute;
+    left:0;
+    top:0;
+    width:2px;
+    height:32px;
+    background:var(--primary);
+    box-shadow:var(--glow-primary);
+    transform:translateY(0);
+    transition:transform var(--transition), height var(--transition), opacity var(--transition-fast);
+    opacity:0;
+}
+
+.toc__list-wrap.is-tracking .toc__indicator{
+    opacity:1;
+}
+
+.toc__list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    border-left:1px solid var(--border);
+}
+
+.toc__list a{
+    display:block;
+    padding:var(--space-2) 0 var(--space-2) var(--space-5);
+    font-size:var(--text-sm);
+    color:var(--text-muted);
+    transition:color var(--transition);
+}
+
+.toc__list a:hover{
+    color:var(--text);
+}
+
+.toc__list a.is-active{
+    color:var(--primary);
+    font-weight:var(--semibold);
+}
+
+.lesson-content{
+    max-width:760px;
+}
+
+.lesson-section{
+    border-bottom:1px solid var(--border);
+}
+
+.lesson-section:last-of-type{
+    border-bottom:none;
+}
+
+.lesson-section .section-title{
+    font-size:var(--text-4xl);
+}
+
+.lesson-section .section-description{
+    max-width:none;
+    margin-bottom:var(--space-4);
+}
+
+.lesson-section .section-description:last-child{
+    margin-bottom:0;
+}
+
+/* ==========================================================================
+   3. LISTS ("What You'll Learn" / "Prerequisites")
+   ========================================================================== */
+
+.lesson-list{
+    list-style:none;
+    margin:var(--space-5) 0 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-4);
+}
+
+.lesson-list li{
+    position:relative;
+    padding-left:var(--space-6);
+    line-height:1.75;
+    color:var(--text-secondary);
+}
+
+.lesson-list li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:.55em;
+    width:6px;
+    height:6px;
+    border-radius:2px;
+    background:var(--primary);
+    opacity:.7;
+}
+
+/* ==========================================================================
+   4. GLOSSARY
+   ========================================================================== */
+
+.glossary-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:var(--space-5);
+    margin:var(--space-8) 0 0;
+}
+
+.glossary-list__item dt{
+    font-family:var(--font-heading);
+    text-transform:uppercase;
+    font-weight:var(--extrabold);
+    font-size:var(--text-lg);
+    color:var(--primary);
+    margin-bottom:var(--space-2);
+}
+
+.glossary-list__item dd{
+    color:var(--text-secondary);
+    line-height:1.7;
+    font-size:var(--text-sm);
+}
+
+/* ==========================================================================
+   5. PAGINATION
+   ========================================================================== */
+
+.lesson-pagination{
+    display:flex;
+    justify-content:space-between;
+    gap:var(--space-4);
+    margin-top:var(--space-16);
+}
+
+/* ==========================================================================
+   6. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width:900px){
+
+    .lesson-layout{
+        grid-template-columns:1fr;
+        padding-top:var(--space-8);
+    }
+
+    .lesson-sidebar{
+        position:sticky;
+        top:var(--navbar-height);
+        z-index:var(--z-sidebar);
+        max-height:none;
+        margin:0 -24px;
+        padding:var(--space-3) 24px;
+        background:rgba(6,8,13,.92);
+        backdrop-filter:blur(12px);
+        border-bottom:1px solid var(--border);
+        overflow-x:auto;
+        overflow-y:hidden;
+    }
+
+    .toc .tag{
+        display:none;
+    }
+
+    .toc__list-wrap{
+        width:max-content;
+        margin-top:0;
+    }
+
+    .toc__list{
+        display:flex;
+        gap:var(--space-1);
+        border-left:none;
+        white-space:nowrap;
+    }
+
+    .toc__indicator{
+        display:none;
+    }
+
+    .toc__list a{
+        padding:var(--space-2) var(--space-4);
+        border-radius:var(--radius-pill);
+        border:1px solid transparent;
+    }
+
+    .toc__list a.is-active{
+        background:rgba(77,166,255,.12);
+        border-color:var(--border-light);
+    }
+
+    .glossary-list{
+        grid-template-columns:1fr;
+    }
+
+    .lesson-pagination{
+        flex-direction:column;
+    }
+}

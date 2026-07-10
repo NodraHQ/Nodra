@@ -1,835 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-lang="en">
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <title>Nodra Academy</title>
-
-    <meta
-        name="description"
-        content="Knowledge before Capital.">
-
-    <link
-        rel="stylesheet"
-        href="../assets/css/variables.css">
-
-    <link
-        rel="stylesheet"
-        href="../assets/css/components.css">
-
-    <link
-        rel="stylesheet"
-        href="../assets/css/academy.css">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="home.meta.title">Nodra — Knowledge before Capital</title>
+<meta name="description" content="Nodra is an open ecosystem for learning and building in blockchain: Academy, Community, Labs, Tools, Games and more.">
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/home.css">
 </head>
-
 <body>
 
-    <!-- ===================================================== -->
-    <!-- NAVBAR -->
-    <!-- ===================================================== -->
+<nav class="navbar">
 
-    <nav class="navbar">
+    <div class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </div>
 
-        <div class="logo">
+    <div class="nav-links">
 
-            <div class="logo-icon"></div>
+        <a href="academy/index.html" data-i18n="nav.academy">Academy</a>
+        <a href="#ecosystem" data-i18n="nav.roadmap">Ecosystem</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
 
-            <span class="logo-text">
-
-                Nodra
-
-            </span>
-
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
         </div>
 
-        <div class="nav-links">
+    </div>
 
-            <a
-                href="#academy"
-                data-i18n="nav.academy">
+</nav>
 
-                Academy
+<!-- ===================================================== -->
+<!-- HERO — the Nodra brand, not the Academy -->
+<!-- ===================================================== -->
 
-            </a>
+<section class="hero" id="top">
+    <div class="container">
+        <div class="hero-grid">
 
-            <a
-                href="#mission"
-                data-i18n="nav.mission">
+            <div class="hero-content reveal">
+                <span class="tag" data-i18n="hero.tag">KNOWLEDGE BEFORE CAPITAL</span>
+                <h1 class="hero-title" data-i18n="hero.title">Knowledge<br><span>before</span><br>Capital.</h1>
+                <p class="hero-description" data-i18n="hero.description">The open academy for blockchain, DeFi and digital finance. Learn first. Build confidence. Invest later.</p>
 
-                Mission
+                <div class="hero-actions">
+                    <a href="academy/index.html" class="btn btn-primary" data-i18n="hero.start">Start Learning →</a>
+                    <a href="https://github.com/NodraHQ/Nodra" target="_blank" class="btn btn-secondary" data-i18n="hero.github">GitHub</a>
+                </div>
 
-            </a>
-
-            <a
-                href="#roadmap"
-                data-i18n="nav.roadmap">
-
-                Roadmap
-
-            </a>
-
-            <a
-                href="https://github.com/NodraHQ/Nodra"
-                target="_blank"
-                data-i18n="nav.github">
-
-                GitHub
-
-            </a>
-
-            <div class="language-switch">
-
-                <button id="lang-en">
-
-                    EN
-
-                </button>
-
-                <button id="lang-pt">
-
-                    PT
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </nav>
-
-    <!-- ===================================================== -->
-    <!-- HERO -->
-    <!-- ===================================================== -->
-
-    <section class="hero">
-
-        <div class="container">
-
-            <div class="hero-grid">
-
-                <div class="hero-content reveal">
-
-                    <span
-                        class="hero-tag"
-                        data-i18n="hero.tag">
-
-                        KNOWLEDGE BEFORE CAPITAL
-
-                    </span>
-
-                    <h1
-                        class="hero-title"
-                        data-i18n="hero.title">
-
-                        Knowledge
-
-                        <br>
-
-                        <span>
-
-                            before
-
-                        </span>
-
-                        <br>
-
-                        Capital.
-
-                    </h1>
-
-                    <p
-                        class="hero-description"
-                        data-i18n="hero.description">
-
-                        The open academy for blockchain,
-                        DeFi and digital finance.
-
-                        Learn first.
-                        Build confidence.
-                        Invest later.
-
-                    </p>
-
-                    <div class="hero-actions">
-
-                        <a
-                            href="#academy"
-                            class="btn btn-primary"
-                            data-i18n="hero.start">
-
-                            Start Learning →
-
-                        </a>
-
-                        <a
-                            href="https://github.com/NodraHQ/Nodra"
-                            target="_blank"
-                            class="btn btn-secondary"
-                            data-i18n="hero.github">
-
-                            GitHub
-
-                        </a>
-
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <strong data-i18n="stats.free.title">100%</strong>
+                        <span data-i18n="stats.free.subtitle">Free</span>
                     </div>
-
-                    <div class="hero-stats">
-
-                        <div class="stat-card">
-
-                            <strong
-                                data-i18n="stats.free.title">
-
-                                100%
-
-                            </strong>
-
-                            <span
-                                data-i18n="stats.free.subtitle">
-
-                                Free
-
-                            </span>
-
-                        </div>
-
-                        <div class="stat-card">
-
-                            <strong
-                                data-i18n="stats.opensource.title">
-
-                                Open
-
-                            </strong>
-
-                            <span
-                                data-i18n="stats.opensource.subtitle">
-
-                                Source
-
-                            </span>
-
-                        </div>
-
-                        <div class="stat-card">
-
-                            <strong
-                                data-i18n="stats.language.title">
-
-                                PT | EN
-
-                            </strong>
-
-                            <span
-                                data-i18n="stats.language.subtitle">
-
-                                Languages
-
-                            </span>
-
-                        </div>
-
-                        <div class="stat-card">
-
-                            <strong
-                                data-i18n="stats.modules.title">
-
-                                1 / 10
-
-                            </strong>
-
-                            <span
-                                data-i18n="stats.modules.subtitle">
-
-                                Modules
-
-                            </span>
-
-                        </div>
-
+                    <div class="stat-card">
+                        <strong data-i18n="stats.opensource.title">Open</strong>
+                        <span data-i18n="stats.opensource.subtitle">Source</span>
                     </div>
-
-                </div>
-
-                <div class="hero-visual reveal">
-
-                    <div class="hero-dashboard glow">
-
-                        <div class="dashboard-header">
-
-                            <span class="dashboard-dot"></span>
-
-                            <span class="dashboard-dot"></span>
-
-                            <span class="dashboard-dot"></span>
-
-                        </div>
-
-                        <div class="dashboard-content">
-
-                            <div
-                                class="dashboard-title"
-                                data-i18n="dashboard.title">
-
-                                NODRA
-
-                            </div>
-
-                            <div
-                                class="dashboard-item active"
-                                data-i18n="dashboard.blockchain">
-
-                                ✓ Blockchain
-
-                            </div>
-
-                            <div
-                                class="dashboard-item"
-                                data-i18n="dashboard.wallets">
-
-                                ○ Wallets
-
-                            </div>
-
-                            <div
-                                class="dashboard-item"
-                                data-i18n="dashboard.networks">
-
-                                ○ Networks
-
-                            </div>
-
-                            <div
-                                class="dashboard-item"
-                                data-i18n="dashboard.assets">
-
-                                ○ Assets
-
-                            </div>
-
-                            <div class="dashboard-divider"></div>
-
-                            <div class="dashboard-progress">
-
-                                <span class="dashboard-dot"></span>
-
-                                <span class="dashboard-dot"></span>
-
-                                <span class="dashboard-dot"></span>
-
-                                <span class="dashboard-dot"></span>
-
-                            </div>
-
-                            <div
-                                class="dashboard-footer"
-                                data-i18n="dashboard.footer">
-
-                                1 module available
-
-                            </div>
-
-                        </div>
-
+                    <div class="stat-card">
+                        <strong data-i18n="stats.language.title">PT | EN</strong>
+                        <span data-i18n="stats.language.subtitle">Languages</span>
                     </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- ===== END OF PART 1 ===== -->
-
-        <!-- ===================================================== -->
-    <!-- LEARNING PATHS -->
-    <!-- ===================================================== -->
-
-    <section
-        class="learning-paths"
-        id="academy">
-
-        <div class="container">
-
-            <div class="paths-header reveal">
-
-                <span
-                    class="tag"
-                    data-i18n="paths.tag">
-
-                    LEARNING PATHS
-
-                </span>
-
-                <h2
-                    data-i18n="paths.title">
-
-                    Your Journey
-
-                </h2>
-
-                <p
-                    data-i18n="paths.description">
-
-                    Start with the fundamentals and progress through
-                    each module at your own pace.
-
-                </p>
-
-            </div>
-
-            <div class="path">
-
-                <div class="path-title">
-
-                <!----
-                    <h3>
-
-                        Foundations
-
-                    </h3>
-                
-
-                    <div class="path-progress">
-
-                        <span class="active"></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-
+                    <div class="stat-card">
+                        <strong data-i18n="stats.verticals.title">6</strong>
+                        <span data-i18n="stats.verticals.subtitle">Verticals</span>
                     </div>
-                -->
-
                 </div>
+            </div>
 
-                <div class="modules">
+            <div class="hero-visual reveal">
+                <div class="hero-dashboard glow">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                    </div>
+                    <div class="dashboard-content">
+                        <div class="dashboard-title" data-i18n="dashboard.title">NODRA</div>
 
-                    <article class="module glow">
+                        <div class="dashboard-item active" data-i18n="homeDashboard.academy">✓ Academy</div>
+                        <div class="dashboard-item" data-i18n="homeDashboard.community">○ Community</div>
+                        <div class="dashboard-item" data-i18n="homeDashboard.labs">○ Labs</div>
+                        <div class="dashboard-item" data-i18n="homeDashboard.tools">○ Tools</div>
+                        <div class="dashboard-item" data-i18n="homeDashboard.games">○ Games</div>
+                        <div class="dashboard-item" data-i18n="homeDashboard.about">○ About</div>
 
-                        <div>
+                        <div class="dashboard-divider"></div>
 
-                            <div class="module-number"
-                             data-i18n="module.blockchain.number">
-                                
-
-                                MODULE 01
-
-                            </div>
-
-                            <h4 data-i18n="module.blockchain.title">
-
-                                Blockchain
-
-                            </h4>
-
-                            <p data-i18n="module.blockchain.description">
-
-                                Learn blocks,
-                                transactions,
-                                consensus,
-                                decentralization
-                                and digital ownership.
-
-                            </p>
-
+                        <div class="dashboard-progress">
+                            <span class="progress-dot active"></span>
+                            <span class="progress-dot"></span>
+                            <span class="progress-dot"></span>
+                            <span class="progress-dot"></span>
+                            <span class="progress-dot"></span>
+                            <span class="progress-dot"></span>
                         </div>
 
-                        <div class="module-footer">
-
-                            <div class="module-meta">
-
-                                <span 
-                                class="meta"
-                                data-i18n="module.beginner">
-
-                                    Beginner
-
-                                </span>
-
-                                <span 
-                                class="meta"
-                                data-i18n="module.duration">
-
-                                    40 min
-
-                                </span>
-
-                            </div>
-
-                            <a
-                                href="academy/01-blockchain"
-                                class="module-link"
-                                data-i18n="module.open">
-
-                                Open →
-
-                            </a>
-
-                        </div>
-
-                    </article>
-
-                    <article class="module">
-
-                        <div>
-
-                            <div class="module-number"
-                            data-i18n="module.wallets.number">
-
-                                MODULE 02
-
-                            </div>
-
-                            <h4 data-i18n="module.wallets.title">
-
-                                Wallets
-
-                            </h4>
-
-                            <p data-i18n="module.wallets.description">
-
-                                Private keys,
-                                seed phrases,
-                                self custody,
-                                hot wallets
-                                and cold wallets.
-
-                            </p>
-
-                        </div>
-
-                        <div class="module-footer">
-
-                            <span class="meta"
-                            data-i18n="module.coming">
-
-                                Coming Soon
-
-                            </span>
-
-                        </div>
-
-                    </article>
-
-                    <article class="module">
-
-                        <div>
-
-                            <div class="module-number"
-                            data-i18n="module.networks.number">
-
-                                MODULE 03
-
-                            </div>
-
-                            <h4 data-i18n="module.networks.title">
-
-                                Networks
-
-                            </h4>
-
-                            <p data-i18n="module.networks.description">
-
-                                Ethereum,
-                                Solana,
-                                BNB Chain
-                                and cross-chain
-                                transactions.
-
-                            </p>
-
-                        </div>
-
-                        <div class="module-footer">
-
-                            <span class="meta"
-                            data-i18n="module.coming">
-
-                                Coming Soon
-
-                            </span>
-
-                        </div>
-
-                    </article>
-
-                    <article class="module">
-
-                        <div>
-
-                            <div class="module-number"
-                            data-i18n="module.assets.number">
-
-                                MODULE 04
-
-                            </div>
-
-                            <h4 data-i18n="module.assets.title">
-
-                                Assets
-
-                            </h4>
-
-                            <p data-i18n="module.assets.description">
-
-                                Coins,
-                                tokens,
-                                stablecoins,
-                                NFTs
-                                and RWAs.
-
-                            </p>
-
-                        </div>
-
-                        <div class="module-footer">
-
-                            <span class="meta"
-                            data-i18n="module.coming">
-
-                                Coming Soon
-
-                            </span>
-
-                        </div>
-
-                    </article>
-
+                        <div class="dashboard-footer" data-i18n="homeDashboard.footer">New verticals launch as they're ready</div>
+                    </div>
                 </div>
-
             </div>
 
         </div>
+    </div>
+</section>
 
-    </section>
+<!-- ===================================================== -->
+<!-- ECOSYSTEM — the 6 verticals -->
+<!-- ===================================================== -->
 
-    <!-- ===================================================== -->
-    <!-- Mission -->
-    <!-- ===================================================== -->
+<section class="verticals" id="ecosystem">
+    <div class="container">
 
-    <section
-        class="mission"
-        id="mission">
-
-        <div class="container">
-
-            <div class="mission-box reveal">
-
-                <span
-                    class="tag"
-                    data-i18n="mission.tag">
-
-                    OUR MISSION
-
-                </span>
-
-                <h2
-                    data-i18n="mission.title">
-
-                    Knowledge Before Capital.
-
-                </h2>
-
-                <p
-                    data-i18n="mission.description">
-
-                    Nodra exists because understanding should always
-                    come before investing.
-
-                    Everything here is free, open source and built in
-                    public so anyone can learn blockchain the right way.
-
-                </p>
-
-            </div>
-
+        <div class="verticals-header reveal">
+            <span class="tag" data-i18n="ecosystem.tag">THE ECOSYSTEM</span>
+            <h2 data-i18n="ecosystem.title">One Brand, Several Products</h2>
+            <p data-i18n="ecosystem.description">Nodra is not a single app — it's a growing set of independent products that share one mission: put understanding before speculation.</p>
         </div>
 
-    </section>
+        <div class="verticals-grid">
 
-    <!-- ===== END OF PART 2 ===== -->
-
-        <!-- ===================================================== -->
-    <!-- ROADMAP -->
-    <!-- ===================================================== -->
-
-    <section
-        class="next"
-        id="roadmap">
-
-        <div class="container">
-
-            <div class="paths-header reveal">
-
-                <span
-                    class="tag"
-                    data-i18n="roadmap.tag">
-
-                    ROADMAP
-
-                </span>
-
-                <h2 data-i18n="roadmap.title">
-
-                    What's Next
-
-                </h2>
-
-                <p data-i18n="roadmap.description">
-
-                    The Nodra roadmap is public.
-
-                    Every new feature is built step by step, with the
-                    community following the entire process.
-
-                </p>
-
-            </div>
-
-            <div class="next-grid">
-
-                <div class="next-card glow">
-
-                    <h3 data-i18n="roadmap.academy.title">
-
-                        Academy
-
-                    </h3>
-
-                    <p data-i18n="roadmap.academy.description">
-
-                        Expand the educational platform with complete,
-                        practical and beginner-friendly modules.
-
-                    </p>
-
+            <article class="card glow vertical-card">
+                <div>
+                    <div class="vertical-card__icon" aria-hidden="true">A</div>
+                    <h3 data-i18n="ecosystem.academy.title">Academy</h3>
+                    <p data-i18n="ecosystem.academy.description">Free, hands-on courses covering blockchain, wallets, DeFi and security — from first principles to advanced practice.</p>
                 </div>
-
-                <div class="next-card glow">
-
-                    <h3 data-i18n="roadmap.community.title">
-
-                        Community
-
-                    </h3>
-
-                    <p data-i18n="roadmap.community.description">
-
-                        Build a place where learners and builders can
-                        share knowledge and collaborate together.
-
-                    </p>
-
+                <div class="vertical-card__footer">
+                    <span class="vertical-card__status vertical-card__status--live" data-i18n="ecosystem.status.live">Live</span>
+                    <a href="academy/index.html" class="vertical-card__link" data-i18n="ecosystem.academy.cta">Explore →</a>
                 </div>
+            </article>
 
-                <div class="next-card glow">
-
-                    <h3 data-i18n="roadmap.labs.title">
-
-                        Nodra Labs
-
-                    </h3>
-
-                    <p data-i18n="roadmap.labs.description">
-
-                        Future tools, consulting and educational
-                        products focused on blockchain adoption.
-
-                    </p>
-
+            <article class="card vertical-card">
+                <div>
+                    <div class="vertical-card__icon" aria-hidden="true">C</div>
+                    <h3 data-i18n="ecosystem.community.title">Community</h3>
+                    <p data-i18n="ecosystem.community.description">A space for builders, learners and contributors to discuss ideas, ask questions and grow together.</p>
                 </div>
+                <div class="vertical-card__footer">
+                    <span class="vertical-card__status" data-i18n="ecosystem.status.developing">In Development</span>
+                </div>
+            </article>
 
-            </div>
+            <article class="card vertical-card">
+                <div>
+                    <div class="vertical-card__icon" aria-hidden="true">L</div>
+                    <h3 data-i18n="ecosystem.labs.title">Labs</h3>
+                    <p data-i18n="ecosystem.labs.description">Experimental tools and research projects exploring what's next in decentralized technology.</p>
+                </div>
+                <div class="vertical-card__footer">
+                    <span class="vertical-card__status" data-i18n="ecosystem.status.developing">In Development</span>
+                </div>
+            </article>
+
+            <article class="card vertical-card">
+                <div>
+                    <div class="vertical-card__icon" aria-hidden="true">T</div>
+                    <h3 data-i18n="ecosystem.tools.title">Tools</h3>
+                    <p data-i18n="ecosystem.tools.description">Practical utilities for builders and users — calculators, explorers and everyday crypto tooling.</p>
+                </div>
+                <div class="vertical-card__footer">
+                    <span class="vertical-card__status" data-i18n="ecosystem.status.developing">In Development</span>
+                </div>
+            </article>
+
+            <article class="card vertical-card">
+                <div>
+                    <div class="vertical-card__icon" aria-hidden="true">G</div>
+                    <h3 data-i18n="ecosystem.games.title">Games</h3>
+                    <p data-i18n="ecosystem.games.description">Learning through play — interactive simulations that make abstract concepts tangible.</p>
+                </div>
+                <div class="vertical-card__footer">
+                    <span class="vertical-card__status" data-i18n="ecosystem.status.developing">In Development</span>
+                </div>
+            </article>
+
+            <article class="card vertical-card">
+                <div>
+                    <div class="vertical-card__icon" aria-hidden="true">N</div>
+                    <h3 data-i18n="ecosystem.about.title">About</h3>
+                    <p data-i18n="ecosystem.about.description">The people, principles and roadmap behind Nodra.</p>
+                </div>
+                <div class="vertical-card__footer">
+                    <span class="vertical-card__status" data-i18n="ecosystem.status.developing">In Development</span>
+                </div>
+            </article>
 
         </div>
+    </div>
+</section>
 
-    </section>
-
-    <!-- ===================================================== -->
-    <!-- FOOTER -->
-    <!-- ===================================================== -->
-
-    <footer class="footer">
-
-        <div class="container">
-
-            <div class="footer-grid">
-
-                <div class="footer-brand">
-
-                    <h3
-                        data-i18n="footer.title">
-
-                        Nodra
-
-                    </h3>
-
-                    <span
-                        data-i18n="footer.subtitle">
-
-                        Knowledge before Capital.
-
-                    </span>
-
-                </div>
-
-                <div class="footer-links">
-
-                    <a href="#academy">
-
-                        Academy
-
-                    </a>
-
-                    <a href="#mission" data-i18n="nav.mission">
-
-                        Mission
-
-                    </a>
-
-                    <a href="#roadmap">
-
-                        Roadmap
-
-                    </a>
-
-                    <a
-                        href="https://github.com/NodraHQ/Nodra"
-                        target="_blank">
-
-                        GitHub
-
-                    </a>
-
-                </div>
-
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
-
+            <div class="footer-links">
+                <a href="academy/index.html" data-i18n="nav.academy">Academy</a>
+                <a href="#ecosystem" data-i18n="nav.roadmap">Ecosystem</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
+            </div>
         </div>
+    </div>
+</footer>
 
-    </footer>
-
-    <script
-        defer
-        src="../assets/js/translations.js">
-
-    </script>
-
-    <script
-        defer
-        src="../assets/js/academy.js">
-
-    </script>
-
+<script defer src="assets/js/translations.js"></script>
+<script defer src="assets/js/academy.js"></script>
 </body>
-
 </html>

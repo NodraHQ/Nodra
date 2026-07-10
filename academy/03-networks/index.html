@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="moduleNetworks.meta.title">Networks — Nodra Academy</title>
+<meta name="description" content="Ethereum, Solana, BNB Chain and how transactions move across different blockchain networks.">
+<link rel="stylesheet" href="../../assets/css/variables.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/academy.css">
+<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+                    <span class="tag" data-i18n="tracks.foundations.title">Blockchain Foundations</span>
+                    <h1 class="hero-title" data-i18n="moduleNetworks.hero.title">Networks</h1>
+                    <p class="hero-description" data-i18n="moduleNetworks.hero.description">Blockchain isn't one network — it's many, each with different trade-offs. This module explains how to reason about them.</p>
+
+                    <div class="hero-actions">
+                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <strong data-i18n="moduleNetworks.hero.stat1.value">Beginner</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="moduleNetworks.hero.stat2.value">40 min</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="tracks.foundations.title">Blockchain Foundations</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="dashboard-title">MODULE 03</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
+                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
+                            <div class="dashboard-divider"></div>
+                            <div class="dashboard-footer" data-i18n="tracks.foundations.title">Blockchain Foundations</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
+                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
+                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
+                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="overview">
+                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
+                <h2 class="section-title" data-i18n="moduleNetworks.overview.title">Networks</h2>
+                <p class="section-description" data-i18n="moduleNetworks.overview.p1">Bitcoin proved one blockchain could work. Since then, hundreds of networks have launched, each making different trade-offs between speed, cost, and decentralization — Ethereum, Solana, and BNB Chain among the most used.</p>
+                <p class="section-description" data-i18n="moduleNetworks.overview.p2">This module will teach you how to compare networks on their own terms: what a Layer 1 actually is, how transactions get confirmed, what gas fees pay for, and how assets move from one chain to another through bridges.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="learn">
+                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleNetworks.learn.li1">How Ethereum, Solana, and BNB Chain differ in design and trade-offs.</li>
+                    <li data-i18n="moduleNetworks.learn.li2">What gas fees are actually paying for, and why they change.</li>
+                    <li data-i18n="moduleNetworks.learn.li3">How cross-chain bridges move assets between networks — and their risks.</li>
+                    <li data-i18n="moduleNetworks.learn.li4">What "finality" means and why it matters before you consider a transaction safe.</li>
+                    <li data-i18n="moduleNetworks.learn.li5">How to choose the right network for a given use case.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="prerequisites">
+                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleNetworks.prereq.li1">Completed <a href="../01-blockchain/index.html">Module 01 — Blockchain</a>.</li>
+                    <li data-i18n="moduleNetworks.prereq.li2">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
+                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleNetworks.glossary.term1">Layer 1</dt>
+                        <dd data-i18n="moduleNetworks.glossary.def1">A base blockchain network — like Ethereum or Solana — that handles its own consensus and security directly.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleNetworks.glossary.term2">RPC</dt>
+                        <dd data-i18n="moduleNetworks.glossary.def2">The endpoint a wallet or app uses to read from and send transactions to a blockchain network.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleNetworks.glossary.term3">Gas</dt>
+                        <dd data-i18n="moduleNetworks.glossary.def3">The fee paid to the network for processing a transaction or executing a smart contract.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleNetworks.glossary.term4">Bridge</dt>
+                        <dd data-i18n="moduleNetworks.glossary.def4">A protocol that moves assets or data from one blockchain network to another.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleNetworks.glossary.term5">Finality</dt>
+                        <dd data-i18n="moduleNetworks.glossary.def5">The point at which a transaction is considered permanently and irreversibly confirmed.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../02-wallets/index.html" class="btn btn-secondary" data-i18n="moduleNetworks.pagination.back">← Module 02</a>
+                <a href="../04-assets/index.html" class="btn btn-primary" data-i18n="moduleNetworks.pagination.next">Next Module →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script defer src="../../assets/js/translations.js"></script>
+<script defer src="../../assets/js/academy.js"></script>
+<script defer src="../../assets/js/module-placeholder.js"></script>
+</body>
+</html>

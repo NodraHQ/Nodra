@@ -1,0 +1,775 @@
+/* ==========================================================================
+   WALLETS.CSS
+   Estilos específicos do módulo academy/02-wallets.
+
+   O que NÃO está aqui, de propósito (já existe e é reutilizado sem
+   alteração pelo próprio index.html):
+   - .navbar, .logo, .nav-links, .language-switch, .footer, .footer-grid,
+     .footer-links, .container, .btn/.btn-primary/.btn-secondary, .hero,
+     .hero-grid, .hero-content, .hero-title, .hero-description,
+     .hero-actions, .hero-stats, .stat-card, .hero-dashboard, .glow,
+     .dashboard-header, .dashboard-dot, .tag, .section-title,
+     .section-description, .modules, .module, .module-number, .next-grid,
+     .next-card, .card, .reveal/.reveal.show
+
+   Este arquivo repete, de propósito, a parte "genérica" de leitura
+   (sidebar, TOC, reading-progress, block-diagram, glossary, quiz,
+   copy-btn) que também existe em blockchain.css — porque as regras do
+   módulo 01 dizem para não alterar blockchain.css, e não existe hoje
+   um arquivo compartilhado para esse "esqueleto de lição". Essa
+   duplicação está documentada e listada nas "Future Global
+   Improvements" da resposta, para ser extraída futuramente em um
+   único arquivo (ex.: academy-lesson.css) usado por todos os módulos.
+
+   Tudo abaixo usa apenas tokens já existentes em variables.css.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. READING PROGRESS (elemento novo, filho do .navbar já existente)
+   ========================================================================== */
+
+.reading-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: transparent;
+    overflow: hidden;
+}
+
+.reading-progress__bar {
+    height: 100%;
+    width: 0%;
+    background: var(--primary);
+    box-shadow: var(--glow-primary);
+    transition: width .1s linear;
+}
+
+/* ==========================================================================
+   2. WALLET MOCK (hero visual, dentro do .hero-dashboard / .dashboard-content)
+   ========================================================================== */
+
+.wallet-mock {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+}
+
+.wallet-mock__qr {
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 4px;
+    width: 96px;
+    height: 96px;
+    padding: var(--space-3);
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.wallet-mock__qr span {
+    border-radius: 2px;
+    background: var(--border-light);
+}
+
+.wallet-mock__qr span:nth-child(4n+1),
+.wallet-mock__qr span:nth-child(4n+2):nth-child(-n+8),
+.wallet-mock__qr span:nth-child(3),
+.wallet-mock__qr span:nth-child(6),
+.wallet-mock__qr span:nth-child(9),
+.wallet-mock__qr span:nth-child(12),
+.wallet-mock__qr span:nth-child(14) {
+    background: var(--primary);
+}
+
+.wallet-mock__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.wallet-mock__label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--text-muted);
+    margin-top: var(--space-3);
+}
+
+.wallet-mock__label:first-child {
+    margin-top: 0;
+}
+
+.wallet-mock__address {
+    font-size: var(--text-sm);
+    color: var(--text);
+    font-weight: var(--semibold);
+}
+
+.wallet-mock__balance {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: var(--black);
+    color: var(--primary);
+}
+
+/* ==========================================================================
+   3. LESSON LAYOUT — sidebar + coluna de leitura (mesmo padrão do Módulo 01)
+   ========================================================================== */
+
+.lesson-layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    gap: var(--space-16);
+    align-items: start;
+    padding: var(--space-16) 0;
+}
+
+.lesson-sidebar {
+    position: sticky;
+    top: calc(var(--navbar-height) + var(--space-8));
+    max-height: calc(100vh - var(--navbar-height) - var(--space-16));
+    overflow-y: auto;
+    padding-bottom: var(--space-6);
+}
+
+.toc__list-wrap {
+    position: relative;
+    margin-top: var(--space-4);
+}
+
+.toc__indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 32px;
+    background: var(--primary);
+    box-shadow: var(--glow-primary);
+    transform: translateY(0);
+    transition: transform var(--transition), height var(--transition), opacity var(--transition-fast);
+    opacity: 0;
+}
+
+.toc__list-wrap.is-tracking .toc__indicator {
+    opacity: 1;
+}
+
+.toc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--border);
+}
+
+.toc__list a {
+    display: block;
+    padding: var(--space-2) 0 var(--space-2) var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    transition: color var(--transition);
+}
+
+.toc__list a:hover {
+    color: var(--text);
+}
+
+.toc__list a.is-active {
+    color: var(--primary);
+    font-weight: var(--semibold);
+}
+
+.lesson-content {
+    max-width: 760px;
+}
+
+.lesson-section {
+    border-bottom: 1px solid var(--border);
+}
+
+.lesson-section:last-of-type {
+    border-bottom: none;
+}
+
+.lesson-section .section-title {
+    font-size: var(--text-4xl);
+}
+
+.lesson-section .section-description {
+    max-width: none;
+    margin-bottom: var(--space-4);
+}
+
+.lesson-section .section-description:last-child {
+    margin-bottom: 0;
+}
+
+/* Grids reutilizados da Landing, adaptados à coluna mais estreita do leitor */
+
+.lesson-content .modules {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.lesson-content .next-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* ==========================================================================
+   4. LISTAS DE CONTEÚDO (sem equivalente na Landing)
+   ========================================================================== */
+
+.lesson-list {
+    list-style: none;
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.lesson-list li {
+    position: relative;
+    padding-left: var(--space-6);
+    line-height: 1.75;
+    color: var(--text-secondary);
+}
+
+.lesson-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--primary);
+    opacity: .7;
+}
+
+.lesson-list--compact {
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.lesson-list--compact li {
+    font-size: var(--text-sm);
+}
+
+.lesson-list a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ==========================================================================
+   5. WALLET DIAGRAM ("What's Inside a Wallet" — reaproveita .card +
+      .dashboard-header/.dashboard-dot)
+   ========================================================================== */
+
+.wallet-diagram {
+    padding: 0;
+    overflow: hidden;
+    background: var(--surface-2);
+    margin-top: var(--space-8);
+}
+
+.wallet-diagram .dashboard-header {
+    justify-content: flex-start;
+}
+
+.wallet-diagram__chrome-title {
+    margin-left: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+.wallet-diagram__body {
+    padding: 0 var(--space-6) var(--space-4);
+}
+
+.wallet-diagram__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .05);
+    font-size: var(--text-sm);
+}
+
+.wallet-diagram__row:last-child {
+    border-bottom: none;
+}
+
+.wallet-diagram__row--body {
+    margin: 0 calc(var(--space-6) * -1);
+    padding: var(--space-3) var(--space-6);
+    background: rgba(77, 166, 255, .06);
+}
+
+.wallet-diagram__label {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.wallet-diagram__value {
+    color: var(--text);
+    text-align: right;
+    word-break: break-all;
+}
+
+.wallet-diagram__value--masked {
+    color: var(--text-muted);
+    letter-spacing: .2em;
+}
+
+.wallet-diagram__value-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+}
+
+.wallet-diagram__value-group .wallet-diagram__value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---- Copy button (mesmo padrão visual do Módulo 01) ---- */
+
+.copy-btn {
+    flex-shrink: 0;
+    font-size: var(--text-xs);
+    font-weight: var(--semibold);
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    transition: var(--transition);
+}
+
+.copy-btn:hover {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.copy-btn.is-copied {
+    color: var(--success);
+    border-color: var(--success);
+    background: rgba(40, 199, 111, .12);
+}
+
+/* ==========================================================================
+   6. KEY PAIR DIAGRAM (Public Key vs Private Key — reaproveita .next-grid/.next-card)
+   ========================================================================== */
+
+.key-pair-card {
+    position: relative;
+}
+
+.key-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: var(--space-4);
+    border-radius: 50%;
+    font-family: var(--font-heading);
+    font-weight: var(--black);
+    font-size: var(--text-sm);
+    letter-spacing: .02em;
+}
+
+.key-badge--public {
+    color: var(--primary);
+    background: rgba(77, 166, 255, .12);
+    border: 2px solid var(--primary);
+}
+
+.key-badge--private {
+    color: var(--background);
+    background: var(--primary);
+    box-shadow: var(--glow-primary);
+}
+
+.key-pair-card--private {
+    border-color: var(--border-light);
+}
+
+/* ==========================================================================
+   7. SEED PHRASE DEMO (reaproveita .card + .dashboard-header/.dashboard-dot)
+   ========================================================================== */
+
+.seed-demo {
+    padding: 0;
+    overflow: hidden;
+    background: var(--surface-2);
+    margin-top: var(--space-8);
+}
+
+.seed-demo .dashboard-header {
+    justify-content: flex-start;
+}
+
+.seed-demo__body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.seed-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+    transition: filter var(--transition-slow);
+}
+
+.seed-grid.is-hidden {
+    filter: blur(7px);
+    user-select: none;
+}
+
+.seed-word {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--text);
+}
+
+.seed-word em {
+    font-style: normal;
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    min-width: 14px;
+}
+
+.seed-demo__toggle {
+    align-self: flex-start;
+}
+
+/* ==========================================================================
+   8. FLOW DIAGRAM (Sending & Receiving — User → Wallet → Signature → Blockchain)
+   ========================================================================== */
+
+.flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+    padding: var(--space-8) var(--space-6);
+}
+
+.flow-diagram__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    flex: 1;
+    min-width: 90px;
+}
+
+.flow-diagram__index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-1);
+    border: 2px solid var(--border-light);
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    font-weight: var(--black);
+    font-size: var(--text-lg);
+}
+
+.flow-diagram__step--active .flow-diagram__index {
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: var(--glow-primary);
+}
+
+.flow-diagram__label {
+    font-size: var(--text-sm);
+    font-weight: var(--semibold);
+    color: var(--text);
+    text-align: center;
+}
+
+.flow-diagram__arrow {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: var(--text-lg);
+}
+
+/* ==========================================================================
+   9. HARDWARE MODULES (ajuste de grid para .modules com apenas 2 itens)
+   ========================================================================== */
+
+.lesson-content .hardware-modules {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* ==========================================================================
+   10. GLOSSARY (reaproveita .card para cada item)
+   ========================================================================== */
+
+.glossary-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+    margin: var(--space-8) 0 0;
+}
+
+.glossary-list__item dt {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: var(--extrabold);
+    font-size: var(--text-lg);
+    color: var(--primary);
+    margin-bottom: var(--space-2);
+}
+
+.glossary-list__item dd {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   11. QUIZ (reaproveita .card para cada pergunta e para o resumo)
+   ========================================================================== */
+
+.quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+}
+
+.quiz-item__question {
+    font-size: var(--text-lg);
+    font-weight: var(--semibold);
+    color: var(--text);
+    margin-bottom: var(--space-5);
+}
+
+.quiz-item__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.quiz-option {
+    text-align: left;
+    width: 100%;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    background: var(--background-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    transition: var(--transition);
+}
+
+.quiz-option:hover:not(:disabled) {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.quiz-option:disabled {
+    cursor: default;
+}
+
+.quiz-option.is-selected {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.quiz-option.is-correct {
+    border-color: var(--success);
+    background: rgba(40, 199, 111, .1);
+    color: var(--text);
+}
+
+.quiz-option.is-incorrect {
+    border-color: var(--danger);
+    background: rgba(255, 94, 122, .1);
+    color: var(--text);
+}
+
+.quiz-option.is-muted {
+    opacity: .5;
+}
+
+.quiz-item__feedback {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-sm);
+    font-weight: var(--semibold);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+}
+
+.quiz-item__feedback a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.quiz-item__feedback--correct {
+    color: var(--success);
+    background: rgba(40, 199, 111, .1);
+}
+
+.quiz-item__feedback--incorrect {
+    color: var(--danger);
+    background: rgba(255, 94, 122, .1);
+}
+
+.quiz-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+}
+
+.quiz-summary__text {
+    font-size: var(--text-lg);
+    color: var(--text);
+}
+
+.quiz-summary__score {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-weight: var(--black);
+    font-size: var(--text-xl);
+}
+
+/* ==========================================================================
+   12. PAGINATION
+   ========================================================================== */
+
+.lesson-pagination {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-16);
+}
+
+/* ==========================================================================
+   13. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+    .lesson-content .modules,
+    .lesson-content .hardware-modules {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .lesson-layout {
+        grid-template-columns: 1fr;
+        padding-top: var(--space-8);
+    }
+
+    .lesson-sidebar {
+        position: sticky;
+        top: var(--navbar-height);
+        z-index: var(--z-sidebar);
+        max-height: none;
+        margin: 0 -24px;
+        padding: var(--space-3) 24px;
+        background: rgba(6, 8, 13, .92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .toc .tag {
+        display: none;
+    }
+
+    .toc__list-wrap {
+        width: max-content;
+        margin-top: 0;
+    }
+
+    .toc__list {
+        display: flex;
+        gap: var(--space-1);
+        border-left: none;
+        white-space: nowrap;
+    }
+
+    .toc__indicator {
+        display: none;
+    }
+
+    .toc__list a {
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-pill);
+        border: 1px solid transparent;
+    }
+
+    .toc__list a.is-active {
+        background: rgba(77, 166, 255, .12);
+        border-color: var(--border-light);
+    }
+
+    .lesson-content .next-grid,
+    .glossary-list {
+        grid-template-columns: 1fr;
+    }
+
+    .wallet-diagram__row {
+        flex-wrap: wrap;
+    }
+
+    .seed-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .flow-diagram {
+        flex-direction: column;
+    }
+
+    .flow-diagram__arrow {
+        transform: rotate(90deg);
+    }
+
+    .lesson-pagination {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .wallet-mock {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .quiz-summary {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}

@@ -1,0 +1,136 @@
+/* ==========================================================================
+   HOME.CSS
+   Styles specific to the Nodra ecosystem Home (/).
+
+   Reuse-first check performed before writing this file:
+   - .navbar, .hero*, .hero-dashboard/.dashboard-*, .footer*, .tag,
+     .section-title, .section-description, .glow, .reveal, .card,
+     .btn*, .mission/.mission-box all already exist in components.css
+     and are reused as-is (this file only adds a spacing wrapper,
+     .home-mission, around the reused .mission-box).
+   - Nothing here duplicates the Academy's .modules/.module or
+     .next-grid/.next-card: the 6 ecosystem verticals are a distinct
+     concept (products, not lessons or comparisons) and get their own
+     .vertical-card, built on top of the shared .card so the box
+     styling (surface, border, radius, hover) is not duplicated.
+   ========================================================================== */
+
+/* ==========================================================================
+   ECOSYSTEM VERTICALS GRID
+   ========================================================================== */
+
+.verticals{
+    padding:140px 0;
+}
+
+.verticals-header{
+    max-width:760px;
+    margin:0 auto 72px;
+    text-align:center;
+}
+
+.verticals-header h2{
+    font-family:var(--font-heading);
+    font-size:64px;
+    text-transform:uppercase;
+    margin:18px 0;
+}
+
+.verticals-header p{
+    color:var(--text-secondary);
+    line-height:1.9;
+    font-size:18px;
+}
+
+.verticals-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+}
+
+.vertical-card{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:220px;
+}
+
+.vertical-card__icon{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:rgba(77,166,255,.12);
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-heading);
+    font-weight:900;
+    font-size:18px;
+    margin-bottom:20px;
+}
+
+.vertical-card h3{
+    font-family:var(--font-heading);
+    font-size:30px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.vertical-card p{
+    color:var(--text-secondary);
+    line-height:1.75;
+    font-size:15px;
+}
+
+.vertical-card__footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:28px;
+}
+
+.vertical-card__status{
+    border:1px solid var(--border);
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    color:var(--text-muted);
+}
+
+.vertical-card__status--live{
+    color:var(--primary);
+    border-color:var(--border-light);
+}
+
+.vertical-card__link{
+    color:var(--primary);
+    font-weight:700;
+    transition:.25s;
+}
+
+.vertical-card__link:hover{
+    transform:translateX(4px);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width:1024px){
+
+    .verticals-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media (max-width:768px){
+
+    .verticals-grid{
+        grid-template-columns:1fr;
+    }
+
+    .verticals-header h2{
+        font-size:44px;
+    }
+}

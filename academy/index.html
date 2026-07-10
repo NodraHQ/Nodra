@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="academy.meta.title">Nodra Academy — Learn Blockchain, DeFi & Security</title>
+<meta name="description" content="Free, hands-on courses covering blockchain, wallets, DeFi and security — organized into learning paths, from first principles to advanced practice.">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/academy.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="#modules" data-i18n="academyNav.modules">Modules</a>
+        <a href="#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- ===================================================== -->
+<!-- HERO — Academy-specific: focused on teaching, not on selling Nodra -->
+<!-- ===================================================== -->
+
+<section class="hero" id="top">
+    <div class="container">
+        <div class="hero-grid">
+
+            <div class="hero-content reveal">
+                <span class="tag" data-i18n="academyHero.tag">THE NODRA ACADEMY</span>
+                <h1 class="hero-title" data-i18n="academyHero.title">Learn Blockchain<br><span>The Right</span><br>Way.</h1>
+                <p class="hero-description" data-i18n="academyHero.description">Free, structured, hands-on courses — from your first block to advanced security practice. No hype, no shortcuts, just real understanding.</p>
+
+                <div class="hero-actions">
+                    <a href="#paths" class="btn btn-primary" data-i18n="academyHero.cta">Choose a Path →</a>
+                    <a href="https://github.com/NodraHQ/Nodra" target="_blank" class="btn btn-secondary" data-i18n="hero.github">GitHub</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <strong data-i18n="stats.free.title">100%</strong>
+                        <span data-i18n="stats.free.subtitle">Free</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong data-i18n="stats.opensource.title">Open</strong>
+                        <span data-i18n="stats.opensource.subtitle">Source</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong data-i18n="stats.language.title">PT | EN</strong>
+                        <span data-i18n="stats.language.subtitle">Languages</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong data-i18n="academyHero.tracksStat.title">3</strong>
+                        <span data-i18n="academyHero.tracksStat.subtitle">Tracks</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual reveal">
+                <div class="hero-dashboard glow">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                    </div>
+                    <div class="dashboard-content">
+                        <div class="dashboard-title" data-i18n="dashboard.title">NODRA</div>
+
+                        <div class="dashboard-item active" data-i18n="dashboard.blockchain">✓ Blockchain</div>
+                        <div class="dashboard-item active" data-i18n="dashboard.wallets">✓ Wallets</div>
+                        <div class="dashboard-item" data-i18n="dashboard.networks">○ Networks</div>
+                        <div class="dashboard-item" data-i18n="dashboard.assets">○ Assets</div>
+
+                        <div class="dashboard-divider"></div>
+
+                        <div class="dashboard-progress">
+                            <span class="progress-dot active"></span>
+                            <span class="progress-dot active"></span>
+                            <span class="progress-dot"></span>
+                            <span class="progress-dot"></span>
+                        </div>
+
+                        <div class="dashboard-footer" data-i18n="dashboard.footer">Foundations → DeFi → Security</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- LEARNING PATHS — track overview -->
+<!-- ===================================================== -->
+
+<section class="learning-paths" id="paths">
+    <div class="container">
+
+        <div class="paths-header reveal">
+            <span class="tag" data-i18n="paths.tag">LEARNING PATHS</span>
+            <h2 data-i18n="paths.title">Your Journey</h2>
+            <p data-i18n="paths.description">Choose a learning path.</p>
+        </div>
+
+        <div class="tracks-grid">
+
+            <div class="track-card glow">
+                <div class="track-card__count" data-i18n="tracks.foundations.count">4 Modules</div>
+                <h3 data-i18n="tracks.foundations.title">Blockchain Foundations</h3>
+                <p data-i18n="tracks.foundations.description">Blocks, consensus, wallets, networks and asset types — the base every other track builds on.</p>
+            </div>
+
+            <div class="track-card glow">
+                <div class="track-card__count" data-i18n="tracks.defi.count">4 Modules</div>
+                <h3 data-i18n="tracks.defi.title">DeFi</h3>
+                <p data-i18n="tracks.defi.description">Decentralized exchanges, lending markets, yield strategies and stablecoins — how money works without banks.</p>
+            </div>
+
+            <div class="track-card glow">
+                <div class="track-card__count" data-i18n="tracks.security.count">2 Modules</div>
+                <h3 data-i18n="tracks.security.title">Security</h3>
+                <p data-i18n="tracks.security.description">Threat models, common exploits, and a final project that ties every track together.</p>
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- ALL MODULES — grouped by track -->
+        <!-- ===================================================== -->
+
+        <div id="modules">
+
+            <div class="path">
+                <div class="path-title">
+                    <h3 data-i18n="tracks.foundations.title">Blockchain Foundations</h3>
+                    <div class="path-progress">
+                        <span class="active"></span>
+                        <span class="active"></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="modules">
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.blockchain.number">MODULE 01</div>
+                            <h4 data-i18n="module.blockchain.title">Blockchain</h4>
+                            <p data-i18n="module.blockchain.description">Learn blocks, transactions, consensus, decentralization and digital ownership.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.beginner">Beginner</span>
+                                <span class="meta" data-i18n="module.duration">40 min</span>
+                                <span class="meta" data-i18n="module.fullLesson">Full Lesson</span>
+                            </div>
+                            <a href="../academy/01-blockchain/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.wallets.number">MODULE 02</div>
+                            <h4 data-i18n="module.wallets.title">Wallets</h4>
+                            <p data-i18n="module.wallets.description">Private keys, seed phrases, self custody, hot wallets and cold wallets.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.beginner">Beginner</span>
+                                <span class="meta" data-i18n="module.duration">45 min</span>
+                                <span class="meta" data-i18n="module.fullLesson">Full Lesson</span>
+                            </div>
+                            <a href="../academy/02-wallets/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.networks.number">MODULE 03</div>
+                            <h4 data-i18n="module.networks.title">Networks</h4>
+                            <p data-i18n="module.networks.description">Ethereum, Solana, BNB Chain and cross-chain transactions.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.beginner">Beginner</span>
+                                <span class="meta" data-i18n="module.duration">40 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="03-networks/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.assets.number">MODULE 04</div>
+                            <h4 data-i18n="module.assets.title">Assets</h4>
+                            <p data-i18n="module.assets.description">Coins, tokens, stablecoins, NFTs and RWAs.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.beginner">Beginner</span>
+                                <span class="meta" data-i18n="module.duration">40 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="04-assets/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+            <div class="path">
+                <div class="path-title">
+                    <h3 data-i18n="tracks.defi.title">DeFi</h3>
+                    <div class="path-progress">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="modules">
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.defi.number">MODULE 05</div>
+                            <h4 data-i18n="module.defi.title">DeFi Fundamentals</h4>
+                            <p data-i18n="module.defi.description">What decentralized finance actually replaces, and how liquidity moves without a bank.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
+                                <span class="meta" data-i18n="module.duration">40 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="05-defi/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.lending.number">MODULE 06</div>
+                            <h4 data-i18n="module.lending.title">Lending</h4>
+                            <p data-i18n="module.lending.description">Collateral, interest rates, liquidations, and how on-chain lending markets stay solvent.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
+                                <span class="meta" data-i18n="module.duration">40 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="06-lending/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.yield.number">MODULE 07</div>
+                            <h4 data-i18n="module.yield.title">Yield</h4>
+                            <p data-i18n="module.yield.description">Liquidity pools, staking, farming, and telling real yield from unsustainable incentives.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
+                                <span class="meta" data-i18n="module.duration">40 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="07-yield/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.stablecoins.number">MODULE 08</div>
+                            <h4 data-i18n="module.stablecoins.title">Stablecoins</h4>
+                            <p data-i18n="module.stablecoins.description">Fiat-backed, crypto-backed and algorithmic stablecoins — and why some of them fail.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
+                                <span class="meta" data-i18n="module.duration">40 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="08-stablecoins/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+            <div class="path">
+                <div class="path-title">
+                    <h3 data-i18n="tracks.security.title">Security</h3>
+                    <div class="path-progress">
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="modules">
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.security.number">MODULE 09</div>
+                            <h4 data-i18n="module.security.title">Security</h4>
+                            <p data-i18n="module.security.description">Phishing, exploits, audits, and the habits that keep builders and users safe.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.advanced">Advanced</span>
+                                <span class="meta" data-i18n="module.duration">45 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="09-security/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="module.finalProject.number">MODULE 10</div>
+                            <h4 data-i18n="module.finalProject.title">Final Project</h4>
+                            <p data-i18n="module.finalProject.description">Bring every track together in one applied capstone project, reviewed step by step.</p>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-meta">
+                                <span class="meta" data-i18n="module.advanced">Advanced</span>
+                                <span class="meta" data-i18n="module.duration">60 min</span>
+                                <span class="meta" data-i18n="module.structureReady">Structure Ready</span>
+                            </div>
+                            <a href="10-final-project/index.html" class="module-link" data-i18n="module.open">Open →</a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- ABOUT THE ACADEMY -->
+<!-- ===================================================== -->
+
+<section class="mission">
+    <div class="container">
+        <div class="mission-box reveal glow">
+            <span class="tag" data-i18n="academyAbout.tag">ABOUT THE ACADEMY</span>
+            <h2 data-i18n="academyAbout.title">Teaching, Not Selling.</h2>
+            <p data-i18n="academyAbout.description">Every module is written to be understood, not skimmed — real explanations, real examples, and a quiz at the end to prove it stuck.</p>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+            <div class="footer-links">
+                <a href="#modules" data-i18n="academyNav.modules">Modules</a>
+                <a href="#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="../index.html" data-i18n="footer.backToNodra">Nodra</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/academy.js"></script>
+</body>
+</html>

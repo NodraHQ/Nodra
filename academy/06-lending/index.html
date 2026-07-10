@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="moduleLending.meta.title">Lending — Nodra Academy</title>
+<meta name="description" content="Collateral, interest rates and liquidations: how on-chain lending markets stay solvent without a bank.">
+<link rel="stylesheet" href="../../assets/css/variables.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/academy.css">
+<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+                    <span class="tag" data-i18n="tracks.defi.title">DeFi</span>
+                    <h1 class="hero-title" data-i18n="moduleLending.hero.title">Lending</h1>
+                    <p class="hero-description" data-i18n="moduleLending.hero.description">On-chain lending replaces a bank's credit check with collateral. This module explains how that trade-off works.</p>
+
+                    <div class="hero-actions">
+                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <strong data-i18n="moduleLending.hero.stat1.value">Intermediate</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="moduleLending.hero.stat2.value">40 min</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="tracks.defi.title">DeFi</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="dashboard-title">MODULE 06</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
+                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
+                            <div class="dashboard-divider"></div>
+                            <div class="dashboard-footer" data-i18n="tracks.defi.title">DeFi</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
+                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
+                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
+                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="overview">
+                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
+                <h2 class="section-title" data-i18n="moduleLending.overview.title">Lending</h2>
+                <p class="section-description" data-i18n="moduleLending.overview.p1">On-chain lending protocols let anyone borrow or lend assets without a credit check — because borrowers post collateral worth more than what they borrow, and that collateral can be automatically liquidated if its value falls.</p>
+                <p class="section-description" data-i18n="moduleLending.overview.p2">This module will teach you how collateralization ratios work, how interest rates adjust with supply and demand, and exactly what happens — step by step — when a position gets liquidated.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="learn">
+                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleLending.learn.li1">Why on-chain lending needs over-collateralization instead of a credit score.</li>
+                    <li data-i18n="moduleLending.learn.li2">How interest rate models respond to supply and demand in real time.</li>
+                    <li data-i18n="moduleLending.learn.li3">What loan-to-value (LTV) means and why it determines your safety margin.</li>
+                    <li data-i18n="moduleLending.learn.li4">What actually happens during a liquidation, and who profits from it.</li>
+                    <li data-i18n="moduleLending.learn.li5">How to monitor a borrowing position's health factor.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="prerequisites">
+                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleLending.prereq.li1">Completed <a href="../05-defi/index.html">Module 05 — DeFi Fundamentals</a>.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
+                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleLending.glossary.term1">Collateral</dt>
+                        <dd data-i18n="moduleLending.glossary.def1">An asset locked up to secure a loan, which can be seized if the loan isn't repaid.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleLending.glossary.term2">LTV</dt>
+                        <dd data-i18n="moduleLending.glossary.def2">Loan-to-Value — the ratio between what you borrow and the value of your collateral.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleLending.glossary.term3">Liquidation</dt>
+                        <dd data-i18n="moduleLending.glossary.def3">The forced sale of collateral when a loan's safety margin falls too low.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleLending.glossary.term4">Interest Rate Model</dt>
+                        <dd data-i18n="moduleLending.glossary.def4">The formula a lending protocol uses to set borrowing and supply rates.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleLending.glossary.term5">Health Factor</dt>
+                        <dd data-i18n="moduleLending.glossary.def5">A live score representing how close a borrowing position is to liquidation.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../05-defi/index.html" class="btn btn-secondary" data-i18n="moduleLending.pagination.back">← Module 05</a>
+                <a href="../07-yield/index.html" class="btn btn-primary" data-i18n="moduleLending.pagination.next">Next Module →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script defer src="../../assets/js/translations.js"></script>
+<script defer src="../../assets/js/academy.js"></script>
+<script defer src="../../assets/js/module-placeholder.js"></script>
+</body>
+</html>

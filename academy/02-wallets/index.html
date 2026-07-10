@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="wallets.meta.title">Wallets & Self Custody — Nodra Academy</title>
+<meta name="description" content="Learn what a crypto wallet really is: public and private keys, seed phrases, custodial vs non-custodial, hot vs cold storage, and how to send and receive assets safely.">
+<link rel="stylesheet" href="../../assets/css/variables.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/academy.css">
+<link rel="stylesheet" href="../../assets/css/wallets.css">
+</head>
+<body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as the Landing Page / Module 01) -->
+<!-- ===================================================== -->
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <!-- ===================================================== -->
+    <!-- HERO (reuses .hero / .hero-grid / .hero-stats / .hero-dashboard) -->
+    <!-- ===================================================== -->
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+
+                    <span class="tag" data-i18n="wallets.hero.tag">MODULE 02</span>
+
+                    <h1 class="hero-title" data-i18n="wallets.hero.title">Wallets & Self Custody</h1>
+
+                    <p class="hero-description" data-i18n="wallets.hero.description">
+                        What a wallet actually stores, how public and private keys work together, what a
+                        seed phrase really protects, and how to send and receive assets without losing
+                        them to a careless mistake.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#introduction" class="btn btn-primary" data-i18n="wallets.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="wallets.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <strong data-i18n="wallets.hero.stat1.value">Beginner</strong>
+                            <span data-i18n="wallets.hero.stat1.label">Difficulty</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="wallets.hero.stat2.value">45 min</strong>
+                            <span data-i18n="wallets.hero.stat2.label">Duration</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="wallets.hero.stat3.value">Reading + Quiz</strong>
+                            <span data-i18n="wallets.hero.stat3.label">Format</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="wallets.hero.stat4.value">12</strong>
+                            <span data-i18n="wallets.hero.stat4.label">Sections</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+
+                        <div class="dashboard-content">
+                            <div class="wallet-mock">
+                                <div class="wallet-mock__qr" aria-hidden="true">
+                                    <span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="wallet-mock__info">
+                                    <span class="wallet-mock__label" data-i18n="wallets.visual.addressLabel">Your Address</span>
+                                    <span class="wallet-mock__address">0x71C...9e3F</span>
+                                    <span class="wallet-mock__label" data-i18n="wallets.visual.balanceLabel">Balance</span>
+                                    <span class="wallet-mock__balance">2.45 ETH</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- LESSON BODY (sidebar + reading column — same layout as Module 01) -->
+    <!-- ===================================================== -->
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="wallets.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#introduction" data-i18n="wallets.toc.introduction">Introduction</a></li>
+                        <li><a href="#anatomy" data-i18n="wallets.toc.anatomy">What's Inside a Wallet</a></li>
+                        <li><a href="#keys" data-i18n="wallets.toc.keys">Public Key vs Private Key</a></li>
+                        <li><a href="#seed-phrase" data-i18n="wallets.toc.seedPhrase">Seed Phrase</a></li>
+                        <li><a href="#custodial" data-i18n="wallets.toc.custodial">Custodial vs Non-Custodial</a></li>
+                        <li><a href="#hot-cold" data-i18n="wallets.toc.hotCold">Hot Wallet vs Cold Wallet</a></li>
+                        <li><a href="#hardware" data-i18n="wallets.toc.hardware">Hardware Wallets</a></li>
+                        <li><a href="#sending-receiving" data-i18n="wallets.toc.sendingReceiving">Sending & Receiving</a></li>
+                        <li><a href="#security" data-i18n="wallets.toc.security">Security Best Practices</a></li>
+                        <li><a href="#mistakes" data-i18n="wallets.toc.mistakes">Common Mistakes</a></li>
+                        <li><a href="#glossary" data-i18n="wallets.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="wallets.toc.quiz">Quiz</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="wallets.introduction.eyebrow">01 — Introduction</span>
+                <h2 class="section-title" data-i18n="wallets.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="wallets.introduction.p1">
+                    The word "wallet" is misleading. A physical wallet holds cash — if you hand it over,
+                    the cash is gone. A crypto wallet holds none of your assets at all. Every coin, token,
+                    and NFT you own already lives on the blockchain, permanently, in a public ledger that
+                    anyone can inspect. What your wallet actually holds is something closer to a keychain:
+                    the cryptographic keys that prove those assets are yours and let you authorize moving
+                    them.
+                </p>
+                <p class="section-description" data-i18n="wallets.introduction.p2">
+                    This distinction matters more than it sounds. If you understand that a wallet is a key
+                    manager, not a vault of coins, almost everything else in this lesson — seed phrases,
+                    custodial services, hardware devices — becomes a natural consequence of one simple
+                    question: who controls the keys?
+                </p>
+                <p class="section-description" data-i18n="wallets.introduction.p3">
+                    By the end of this lesson you will know exactly what lives inside a wallet, how to tell
+                    a safe setup from a risky one, and how to send and receive assets without making the
+                    mistakes that cost beginners the most money.
+                </p>
+            </section>
+
+            <!-- WHAT'S REALLY INSIDE A WALLET -->
+            <section class="section lesson-section reveal" id="anatomy">
+                <span class="tag" data-i18n="wallets.anatomy.eyebrow">02 — What's Inside a Wallet</span>
+                <h2 class="section-title" data-i18n="wallets.anatomy.title">What's Really Inside a Wallet</h2>
+                <p class="section-description" data-i18n="wallets.anatomy.p1">
+                    Think of your blockchain balance as an entry in a giant public spreadsheet that every
+                    node in the network keeps a copy of. Your wallet doesn't hold the money in that
+                    spreadsheet — it holds the credentials that let you edit the row that belongs to you.
+                    Opening a wallet app is a bit like opening a key management app: three pieces of data
+                    make the whole system work.
+                </p>
+
+                <div class="card wallet-diagram">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="wallet-diagram__chrome-title">wallet.json</span>
+                    </div>
+                    <div class="wallet-diagram__body">
+                        <div class="wallet-diagram__row">
+                            <span class="wallet-diagram__label" data-i18n="wallets.anatomy.field1.label">Public Address</span>
+                            <span class="wallet-diagram__value-group">
+                                <span class="wallet-diagram__value" id="waAddress">0x71C7656EC7ab88b098defB751B7401B5f6d8976</span>
+                                <button type="button" class="copy-btn" data-copy-target="waAddress" aria-label="Copy value">Copy</button>
+                            </span>
+                        </div>
+                        <div class="wallet-diagram__row">
+                            <span class="wallet-diagram__label" data-i18n="wallets.anatomy.field2.label">Public Key</span>
+                            <span class="wallet-diagram__value">04a34b99f2...e1b8c9f0</span>
+                        </div>
+                        <div class="wallet-diagram__row">
+                            <span class="wallet-diagram__label" data-i18n="wallets.anatomy.field3.label">Private Key</span>
+                            <span class="wallet-diagram__value wallet-diagram__value--masked">•••• •••• •••• •••• ••••</span>
+                        </div>
+                        <div class="wallet-diagram__row">
+                            <span class="wallet-diagram__label" data-i18n="wallets.anatomy.field4.label">Derivation Path</span>
+                            <span class="wallet-diagram__value">m/44'/60'/0'/0/0</span>
+                        </div>
+                        <div class="wallet-diagram__row wallet-diagram__row--body">
+                            <span class="wallet-diagram__label" data-i18n="wallets.anatomy.field5.label">Balance (on-chain)</span>
+                            <span class="wallet-diagram__value" data-i18n="wallets.anatomy.field5.value">2.45 ETH</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="wallets.anatomy.p2">
+                    Notice the balance is the only thing here that actually lives on the blockchain — it is
+                    read from the network, not stored locally. Everything above it is what your wallet
+                    generates and safeguards. The private key is the only truly secret piece; everything
+                    derived from it can be shown, shared, or rebuilt.
+                </p>
+            </section>
+
+            <!-- PUBLIC KEY VS PRIVATE KEY -->
+            <section class="section lesson-section reveal" id="keys">
+                <span class="tag" data-i18n="wallets.keys.eyebrow">03 — Public Key vs Private Key</span>
+                <h2 class="section-title" data-i18n="wallets.keys.title">Public Key vs Private Key</h2>
+                <p class="section-description" data-i18n="wallets.keys.intro">
+                    A useful analogy: your public address is like a mailbox with your name on it, bolted to
+                    the street where anyone can see it and drop letters in. Your private key is the only
+                    key that opens that mailbox and lets you take what's inside — or send something out
+                    signed with your name. You can publish the mailbox address everywhere without any risk;
+                    the moment someone else holds the key, the mailbox is no longer yours.
+                </p>
+
+                <div class="next-grid key-pair-grid">
+                    <div class="next-card glow key-pair-card">
+                        <div class="key-badge key-badge--public" aria-hidden="true">PU</div>
+                        <h3 data-i18n="wallets.keys.public.title">Public Key / Address</h3>
+                        <p data-i18n="wallets.keys.public.text">Derived mathematically from your private key, but impossible to reverse. Safe to share with anyone — it's how people send you assets, and how the network verifies your signatures.</p>
+                        <ul class="lesson-list lesson-list--compact">
+                            <li data-i18n="wallets.keys.public.li1">Safe to post publicly, print, or read aloud.</li>
+                            <li data-i18n="wallets.keys.public.li2">Used to receive funds and verify signed transactions.</li>
+                            <li data-i18n="wallets.keys.public.li3">Sharing it can never move your funds.</li>
+                        </ul>
+                    </div>
+                    <div class="next-card glow key-pair-card key-pair-card--private">
+                        <div class="key-badge key-badge--private" aria-hidden="true">PR</div>
+                        <h3 data-i18n="wallets.keys.private.title">Private Key</h3>
+                        <p data-i18n="wallets.keys.private.text">A secret number that mathematically proves ownership. Whoever holds it can sign transactions and move the funds — no password reset, no customer support, no exceptions.</p>
+                        <ul class="lesson-list lesson-list--compact">
+                            <li data-i18n="wallets.keys.private.li1">Must never be typed into a website or shared with anyone.</li>
+                            <li data-i18n="wallets.keys.private.li2">Used to sign transactions, proving they came from you.</li>
+                            <li data-i18n="wallets.keys.private.li3">If it leaks, your funds can be moved instantly and irreversibly.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="wallets.keys.closing">
+                    Every legitimate wallet, exchange, or support agent will only ever ask for your public
+                    address. The single most reliable way to spot a scam is a request for your private key
+                    or seed phrase — genuine services never need it.
+                </p>
+            </section>
+
+            <!-- SEED PHRASE -->
+            <section class="section lesson-section reveal" id="seed-phrase">
+                <span class="tag" data-i18n="wallets.seedPhrase.eyebrow">04 — Seed Phrase</span>
+                <h2 class="section-title" data-i18n="wallets.seedPhrase.title">Seed Phrase</h2>
+                <p class="section-description" data-i18n="wallets.seedPhrase.p1">
+                    Modern wallets don't generate one private key — they can generate thousands, one for
+                    every asset and account inside the wallet. Memorizing all of them would be impossible,
+                    so wallets condense the master secret that produces every single key into one
+                    human-readable backup: a sequence of 12 or 24 common words, in a specific order, called
+                    a seed phrase (or recovery phrase).
+                </p>
+                <p class="section-description" data-i18n="wallets.seedPhrase.p2">
+                    Anyone who has your seed phrase can regenerate every private key your wallet ever
+                    created, on any device, anywhere in the world — with no PIN and no permission needed.
+                    It is not "a backup among others"; it is the single master key to everything. Treat the
+                    words below the way you'd treat the title deed to a house.
+                </p>
+
+                <div class="card seed-demo" id="seedDemo">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="wallet-diagram__chrome-title" data-i18n="wallets.seedPhrase.demoTitle">recovery_phrase (demo)</span>
+                    </div>
+                    <div class="seed-demo__body">
+                        <div class="seed-grid is-hidden" id="seedGrid">
+                            <span class="seed-word"><em>1</em>orbit</span>
+                            <span class="seed-word"><em>2</em>garden</span>
+                            <span class="seed-word"><em>3</em>velvet</span>
+                            <span class="seed-word"><em>4</em>canyon</span>
+                            <span class="seed-word"><em>5</em>signal</span>
+                            <span class="seed-word"><em>6</em>marble</span>
+                            <span class="seed-word"><em>7</em>ember</span>
+                            <span class="seed-word"><em>8</em>harbor</span>
+                            <span class="seed-word"><em>9</em>quartz</span>
+                            <span class="seed-word"><em>10</em>willow</span>
+                            <span class="seed-word"><em>11</em>drift</span>
+                            <span class="seed-word"><em>12</em>compass</span>
+                        </div>
+                        <button type="button" class="btn btn-secondary seed-demo__toggle" id="seedToggleBtn" data-i18n="wallets.seedPhrase.toggleShow">Show phrase</button>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="wallets.seedPhrase.p3">
+                    This demo is a harmless example — but notice how it feels to have it blurred by default.
+                    That's the correct default for a real seed phrase, always: hidden, offline, and never
+                    photographed, typed into a website, or stored in a notes app, email, or cloud drive.
+                </p>
+
+                <ul class="lesson-list">
+                    <li data-i18n="wallets.seedPhrase.li1"><strong>Write it on paper (or metal).</strong> A physical, offline copy can't be phished, hacked, or leaked through a data breach.</li>
+                    <li data-i18n="wallets.seedPhrase.li2"><strong>Never enter it into a website.</strong> No legitimate wallet or exchange will ever ask you to type your seed phrase into a browser form.</li>
+                    <li data-i18n="wallets.seedPhrase.li3"><strong>Store copies in separate secure locations.</strong> This protects against fire, theft, or loss of a single copy.</li>
+                    <li data-i18n="wallets.seedPhrase.li4"><strong>If it's ever exposed, move your funds immediately.</strong> Create a brand-new wallet and transfer everything — an exposed seed phrase cannot be "reset."</li>
+                </ul>
+            </section>
+
+            <!-- CUSTODIAL VS NON-CUSTODIAL -->
+            <section class="section lesson-section reveal" id="custodial">
+                <span class="tag" data-i18n="wallets.custodial.eyebrow">05 — Custodial vs Non-Custodial</span>
+                <h2 class="section-title" data-i18n="wallets.custodial.title">Custodial vs Non-Custodial</h2>
+                <p class="section-description" data-i18n="wallets.custodial.intro">
+                    The single most important question about any wallet is: who actually holds the private
+                    keys? The answer splits every wallet in existence into one of two categories.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="wallets.custodial.custodial.title">Custodial Wallet</h3>
+                        <p data-i18n="wallets.custodial.custodial.text">A third party — typically an exchange — holds the private keys on your behalf. You log in with a username and password, like a bank account. This is convenient and forgiving of mistakes (support can help with a lost password), but it means you don't truly own the assets: you own a claim against the company.</p>
+                        <ul class="lesson-list lesson-list--compact">
+                            <li data-i18n="wallets.custodial.custodial.li1">"Not your keys, not your coins" — a common saying in the space.</li>
+                            <li data-i18n="wallets.custodial.custodial.li2">If the company is hacked, goes bankrupt, or freezes withdrawals, you can lose access.</li>
+                            <li data-i18n="wallets.custodial.custodial.li3">Good fit for beginners moving small amounts or trading actively.</li>
+                        </ul>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="wallets.custodial.nonCustodial.title">Non-Custodial Wallet</h3>
+                        <p data-i18n="wallets.custodial.nonCustodial.text">You alone generate and hold the private keys — typically as a seed phrase only you know. Nobody can freeze, seize, or lose your funds on your behalf, but nobody can help you recover them either. Full control comes with full responsibility.</p>
+                        <ul class="lesson-list lesson-list--compact">
+                            <li data-i18n="wallets.custodial.nonCustodial.li1">True ownership — the assets are yours as long as the keys are safe.</li>
+                            <li data-i18n="wallets.custodial.nonCustodial.li2">No customer support can reset a lost seed phrase.</li>
+                            <li data-i18n="wallets.custodial.nonCustodial.li3">Better fit for long-term holdings and larger amounts.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOT WALLET VS COLD WALLET -->
+            <section class="section lesson-section reveal" id="hot-cold">
+                <span class="tag" data-i18n="wallets.hotCold.eyebrow">06 — Hot Wallet vs Cold Wallet</span>
+                <h2 class="section-title" data-i18n="wallets.hotCold.title">Hot Wallet vs Cold Wallet</h2>
+                <p class="section-description" data-i18n="wallets.hotCold.intro">
+                    This is a separate axis from custodial vs non-custodial: it's about whether your private
+                    keys ever touch a device connected to the internet.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="wallets.hotCold.hot.title">Hot Wallet</h3>
+                        <p data-i18n="wallets.hotCold.hot.text">A wallet app on a phone, browser extension, or desktop program — connected to the internet at all times. Signing a transaction takes seconds, which makes it ideal for everyday spending, but the private key sits on a device that malware, phishing pages, or a compromised browser could reach.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="wallets.hotCold.cold.title">Cold Wallet</h3>
+                        <p data-i18n="wallets.hotCold.cold.text">Private keys are generated and stored on a device that is never connected to the internet — a hardware wallet or even a sheet of paper. Transactions are signed offline and only the signed result touches the internet, which makes remote theft dramatically harder.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="wallets.hotCold.closing">
+                    A practical rule many experienced users follow: keep a small "spending" amount in a hot
+                    wallet, the way you'd carry cash in a pocket, and keep the bulk of your holdings in cold
+                    storage, the way you'd use a safe.
+                </p>
+            </section>
+
+            <!-- HARDWARE WALLETS -->
+            <section class="section lesson-section reveal" id="hardware">
+                <span class="tag" data-i18n="wallets.hardware.eyebrow">07 — Hardware Wallets</span>
+                <h2 class="section-title" data-i18n="wallets.hardware.title">Hardware Wallets</h2>
+                <p class="section-description" data-i18n="wallets.hardware.p1">
+                    A hardware wallet is a small dedicated device — resembling a USB drive — built for a
+                    single purpose: generating and storing private keys in a chip that never exposes them,
+                    even to the computer it's plugged into. When you approve a transaction, the unsigned
+                    data is sent to the device, signed internally, and only the signature is sent back.
+                    The private key itself never leaves the chip, not even during use.
+                </p>
+                <p class="section-description" data-i18n="wallets.hardware.p2">
+                    This is what makes hardware wallets the standard recommendation for holding meaningful
+                    amounts long-term: even a computer that is fully infected with malware cannot extract
+                    the key, because the key is never present in the computer's memory in the first place.
+                </p>
+
+                <div class="modules hardware-modules">
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="wallets.hardware.card1.number">01</div>
+                            <h4 data-i18n="wallets.hardware.card1.title">Isolated Signing</h4>
+                            <p data-i18n="wallets.hardware.card1.text">Transactions are signed inside the device's secure chip; the private key never touches the connected computer or phone.</p>
+                        </div>
+                    </article>
+                    <article class="module glow">
+                        <div>
+                            <div class="module-number" data-i18n="wallets.hardware.card2.number">02</div>
+                            <h4 data-i18n="wallets.hardware.card2.title">Physical Confirmation</h4>
+                            <p data-i18n="wallets.hardware.card2.text">You approve every transaction with a physical button press on the device itself, so malware on your computer can't silently approve one for you.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- SENDING & RECEIVING -->
+            <section class="section lesson-section reveal" id="sending-receiving">
+                <span class="tag" data-i18n="wallets.sendingReceiving.eyebrow">08 — Sending & Receiving</span>
+                <h2 class="section-title" data-i18n="wallets.sendingReceiving.title">Sending & Receiving Assets</h2>
+                <p class="section-description" data-i18n="wallets.sendingReceiving.intro">
+                    Every outgoing transaction follows the same four-step path, whether you're using a hot
+                    wallet on your phone or a hardware wallet on your desk.
+                </p>
+
+                <div class="card flow-diagram">
+                    <div class="flow-diagram__step">
+                        <span class="flow-diagram__index">1</span>
+                        <span class="flow-diagram__label" data-i18n="wallets.sendingReceiving.flow.step1">User</span>
+                    </div>
+                    <span class="flow-diagram__arrow" aria-hidden="true">→</span>
+                    <div class="flow-diagram__step">
+                        <span class="flow-diagram__index">2</span>
+                        <span class="flow-diagram__label" data-i18n="wallets.sendingReceiving.flow.step2">Wallet</span>
+                    </div>
+                    <span class="flow-diagram__arrow" aria-hidden="true">→</span>
+                    <div class="flow-diagram__step">
+                        <span class="flow-diagram__index">3</span>
+                        <span class="flow-diagram__label" data-i18n="wallets.sendingReceiving.flow.step3">Signature</span>
+                    </div>
+                    <span class="flow-diagram__arrow" aria-hidden="true">→</span>
+                    <div class="flow-diagram__step flow-diagram__step--active">
+                        <span class="flow-diagram__index">4</span>
+                        <span class="flow-diagram__label" data-i18n="wallets.sendingReceiving.flow.step4">Blockchain</span>
+                    </div>
+                </div>
+
+                <ul class="lesson-list">
+                    <li data-i18n="wallets.sendingReceiving.li1"><strong>User</strong> — you decide to send an amount to a specific address and initiate the request in your wallet app.</li>
+                    <li data-i18n="wallets.sendingReceiving.li2"><strong>Wallet</strong> — the app builds the transaction: sender, recipient, amount, and network fee.</li>
+                    <li data-i18n="wallets.sendingReceiving.li3"><strong>Signature</strong> — your private key signs the transaction, mathematically proving it came from you, without ever being revealed.</li>
+                    <li data-i18n="wallets.sendingReceiving.li4"><strong>Blockchain</strong> — the signed transaction is broadcast, validated by nodes, and permanently recorded in a block.</li>
+                </ul>
+
+                <p class="section-description" data-i18n="wallets.sendingReceiving.closing">
+                    Receiving works in reverse and requires nothing from you but sharing your public
+                    address — often as a scannable QR code — for the sender's wallet to fill in
+                    automatically, removing any chance of a typing mistake.
+                </p>
+            </section>
+
+            <!-- SECURITY BEST PRACTICES -->
+            <section class="section lesson-section reveal" id="security">
+                <span class="tag" data-i18n="wallets.security.eyebrow">09 — Security Best Practices</span>
+                <h2 class="section-title" data-i18n="wallets.security.title">Security Best Practices</h2>
+                <p class="section-description" data-i18n="wallets.security.intro">
+                    Most losses in this space come from a handful of preventable habits, not from exotic
+                    hacks. These practices remove almost all of the realistic risk.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="wallets.security.li1"><strong>Verify the full recipient address.</strong> Check the first and last several characters at minimum — malware is known to swap addresses in your clipboard.</li>
+                    <li data-i18n="wallets.security.li2"><strong>Send a small test amount first.</strong> For any large or first-time transfer, send a tiny amount, confirm it arrived, then send the rest.</li>
+                    <li data-i18n="wallets.security.li3"><strong>Use a hardware wallet for significant holdings.</strong> Keep only spending money in hot wallets connected to the internet.</li>
+                    <li data-i18n="wallets.security.li4"><strong>Bookmark official sites; never search for them.</strong> Search ads and lookalike domains are a leading source of phishing.</li>
+                    <li data-i18n="wallets.security.li5"><strong>Enable all available authentication layers</strong> on custodial accounts — a strong password plus two-factor authentication, never SMS alone if an authenticator app is available.</li>
+                </ul>
+            </section>
+
+            <!-- COMMON MISTAKES -->
+            <section class="section lesson-section reveal" id="mistakes">
+                <span class="tag" data-i18n="wallets.mistakes.eyebrow">10 — Common Mistakes</span>
+                <h2 class="section-title" data-i18n="wallets.mistakes.title">Common Mistakes</h2>
+                <p class="section-description" data-i18n="wallets.mistakes.intro">
+                    Nearly every avoidable loss traces back to one of these five mistakes.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="wallets.mistakes.li1"><strong>Typing a seed phrase into a website.</strong> No legitimate service ever needs it — this is always a phishing attempt, no matter how official the page looks.</li>
+                    <li data-i18n="wallets.mistakes.li2"><strong>Sending to the wrong network.</strong> The same address can exist on multiple chains; sending an asset on the wrong network can make it unrecoverable.</li>
+                    <li data-i18n="wallets.mistakes.li3"><strong>Storing a seed phrase digitally.</strong> Photos, notes apps, and cloud backups are all searchable by malware and cloud account breaches.</li>
+                    <li data-i18n="wallets.mistakes.li4"><strong>Skipping the test transaction.</strong> A single mistyped character in an address, sent at full amount, is one of the most common and painful losses.</li>
+                    <li data-i18n="wallets.mistakes.li5"><strong>Trusting unsolicited "support".</strong> Real support never DMs you first, never asks for your seed phrase, and never asks you to share your screen during a "fix."</li>
+                </ul>
+            </section>
+
+            <!-- GLOSSARY -->
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="wallets.glossary.eyebrow">11 — Glossary</span>
+                <h2 class="section-title" data-i18n="wallets.glossary.title">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term1">Wallet</dt>
+                        <dd data-i18n="wallets.glossary.def1">Software or hardware that generates, stores, and uses cryptographic keys to interact with a blockchain — it does not store the assets themselves.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term2">Public Key / Address</dt>
+                        <dd data-i18n="wallets.glossary.def2">A shareable identifier derived from a private key, used to receive assets and verify signatures.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term3">Private Key</dt>
+                        <dd data-i18n="wallets.glossary.def3">A secret number that proves ownership of an address and is used to sign outgoing transactions.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term4">Seed Phrase</dt>
+                        <dd data-i18n="wallets.glossary.def4">A 12–24 word backup that can regenerate every private key a wallet has ever created.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term5">Custodial Wallet</dt>
+                        <dd data-i18n="wallets.glossary.def5">A wallet where a third party holds the private keys on the user's behalf, such as an exchange account.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term6">Non-Custodial Wallet</dt>
+                        <dd data-i18n="wallets.glossary.def6">A wallet where the user alone holds and controls the private keys.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term7">Hot Wallet</dt>
+                        <dd data-i18n="wallets.glossary.def7">A wallet whose keys are generated or stored on a device connected to the internet.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term8">Cold Wallet</dt>
+                        <dd data-i18n="wallets.glossary.def8">A wallet whose keys are generated and stored fully offline, such as a hardware wallet.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term9">Hardware Wallet</dt>
+                        <dd data-i18n="wallets.glossary.def9">A dedicated physical device that signs transactions internally without ever exposing the private key.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="wallets.glossary.term10">Derivation Path</dt>
+                        <dd data-i18n="wallets.glossary.def10">The standardized formula a wallet uses to generate many key pairs from a single seed phrase.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <!-- QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="wallets.quiz.eyebrow">12 — Quiz</span>
+                <h2 class="section-title" data-i18n="wallets.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="wallets.quiz.intro">
+                    Check your understanding of this lesson before moving on. Incorrect answers point you
+                    straight back to the relevant section.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="wallets.quiz.q1">1. What does a wallet actually store?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q1o1">A. The coins and tokens themselves</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="wallets.quiz.q1o2">B. The cryptographic keys that prove ownership of on-chain assets</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q1o3">C. A copy of the entire blockchain</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q1o4">D. Your bank account details</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="wallets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="wallets.quiz.q1.feedbackIncorrect" hidden>Not quite — review <a href="#anatomy">What's Inside a Wallet</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="wallets.quiz.q2">2. What is safe to share publicly with someone who wants to send you funds?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q2o1">A. Your private key</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q2o2">B. Your seed phrase</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="wallets.quiz.q2o3">C. Your public address</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q2o4">D. Your wallet app password</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="wallets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="wallets.quiz.q2.feedbackIncorrect" hidden>Not quite — review <a href="#keys">Public Key vs Private Key</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="wallets.quiz.q3">3. What is a seed phrase used for?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q3o1">A. Logging into an exchange account</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="wallets.quiz.q3o2">B. Regenerating every private key the wallet has created</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q3o3">C. Paying network transaction fees</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q3o4">D. Verifying your identity with the government</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="wallets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="wallets.quiz.q3.feedbackIncorrect" hidden>Not quite — review <a href="#seed-phrase">Seed Phrase</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="wallets.quiz.q4">4. In a custodial wallet, who controls the private keys?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q4o1">A. You alone, offline</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="wallets.quiz.q4o2">B. The third-party service, such as an exchange</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q4o3">C. A hardware device you own</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q4o4">D. No one — custodial wallets have no keys</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="wallets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="wallets.quiz.q4.feedbackIncorrect" hidden>Not quite — review <a href="#custodial">Custodial vs Non-Custodial</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="wallets.quiz.q5">5. Which option is generally safest for storing large amounts long-term?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q5o1">A. A hot wallet on your phone</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q5o2">B. A browser extension wallet</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="wallets.quiz.q5o3">C. A hardware wallet, kept offline</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q5o4">D. An exchange account with no 2FA</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="wallets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="wallets.quiz.q5.feedbackIncorrect" hidden>Not quite — review <a href="#hardware">Hardware Wallets</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="wallets.quiz.q6">6. What is the single best habit to avoid the most common, costly mistake when sending funds?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q6o1">A. Sending the full amount immediately to save time</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="wallets.quiz.q6o2">B. Sending a small test amount first and confirming it arrived</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q6o3">C. Sharing your seed phrase with the recipient</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="wallets.quiz.q6o4">D. Disabling two-factor authentication first</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="wallets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="wallets.quiz.q6.feedbackIncorrect" hidden>Not quite — review <a href="#mistakes">Common Mistakes</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="wallets.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="wallets.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">6</strong>
+                            <span data-i18n="wallets.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="wallets.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../01-blockchain/index.html" class="btn btn-secondary" data-i18n="wallets.pagination.back">← Module 01</a>
+                <a href="../03-networks/index.html" class="btn btn-primary" data-i18n="wallets.pagination.next">Next Module →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<!-- ===================================================== -->
+<!-- FOOTER (exactly the same component as the Landing Page / Module 01) -->
+<!-- ===================================================== -->
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+<span id="i18nCopiedLabel" data-i18n="wallets.common.copied" hidden>Copied</span>
+<span id="i18nSeedShowLabel" data-i18n="wallets.seedPhrase.toggleShow" hidden>Show phrase</span>
+<span id="i18nSeedHideLabel" data-i18n="wallets.seedPhrase.toggleHide" hidden>Hide phrase</span>
+
+<script defer src="../../assets/js/translations.js"></script>
+<script defer src="../../assets/js/academy.js"></script>
+<script defer src="../../assets/js/wallets.js"></script>
+</body>
+</html>

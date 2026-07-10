@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="moduleStablecoins.meta.title">Stablecoins — Nodra Academy</title>
+<meta name="description" content="Fiat-backed, crypto-backed and algorithmic stablecoins — and why some of them fail.">
+<link rel="stylesheet" href="../../assets/css/variables.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/academy.css">
+<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+                    <span class="tag" data-i18n="tracks.defi.title">DeFi</span>
+                    <h1 class="hero-title" data-i18n="moduleStablecoins.hero.title">Stablecoins</h1>
+                    <p class="hero-description" data-i18n="moduleStablecoins.hero.description">Stablecoins try to hold a steady value in a volatile market. This module explains the three ways they attempt it.</p>
+
+                    <div class="hero-actions">
+                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <strong data-i18n="moduleStablecoins.hero.stat1.value">Intermediate</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="moduleStablecoins.hero.stat2.value">40 min</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="tracks.defi.title">DeFi</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                        </div>
+                        <div class="stat-card">
+                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
+                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="dashboard-title">MODULE 08</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
+                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
+                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
+                            <div class="dashboard-divider"></div>
+                            <div class="dashboard-footer" data-i18n="tracks.defi.title">DeFi</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
+                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
+                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
+                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="overview">
+                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.overview.title">Stablecoins</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.overview.p1">A stablecoin is a token designed to hold a steady value, usually pegged to a currency like the US dollar. How that peg is maintained differs enormously between designs — and that difference is exactly where the risk lives.</p>
+                <p class="section-description" data-i18n="moduleStablecoins.overview.p2">This module will teach you to tell fiat-backed, crypto-backed, and algorithmic stablecoins apart, understand what "reserve attestation" actually proves, and recognize the warning signs that precede a depeg.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="learn">
+                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleStablecoins.learn.li1">The three main stablecoin designs: fiat-backed, crypto-backed, and algorithmic.</li>
+                    <li data-i18n="moduleStablecoins.learn.li2">What a reserve attestation does — and doesn't — prove about a stablecoin.</li>
+                    <li data-i18n="moduleStablecoins.learn.li3">Why over-collateralization is used to absorb crypto price volatility.</li>
+                    <li data-i18n="moduleStablecoins.learn.li4">What a "depeg" is, and historical examples of why it happened.</li>
+                    <li data-i18n="moduleStablecoins.learn.li5">How to evaluate a stablecoin's real backing before relying on it.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="prerequisites">
+                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
+                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleStablecoins.prereq.li1">Completed <a href="../05-defi/index.html">Module 05 — DeFi Fundamentals</a>.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
+                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term1">Peg</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def1">The target value a stablecoin is designed to maintain, usually a fiat currency.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term2">Collateralization Ratio</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def2">The value of backing assets held relative to the stablecoins issued.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term3">Depeg</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def3">An event where a stablecoin's market price moves meaningfully away from its target peg.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term4">Reserve Attestation</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def4">A report (not a full audit) confirming a stablecoin issuer's reserves at a point in time.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term5">Algorithmic Stablecoin</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def5">A stablecoin that uses code and incentives, rather than collateral, to hold its peg.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../07-yield/index.html" class="btn btn-secondary" data-i18n="moduleStablecoins.pagination.back">← Module 07</a>
+                <a href="../09-security/index.html" class="btn btn-primary" data-i18n="moduleStablecoins.pagination.next">Next Module →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script defer src="../../assets/js/translations.js"></script>
+<script defer src="../../assets/js/academy.js"></script>
+<script defer src="../../assets/js/module-placeholder.js"></script>
+</body>
+</html>
