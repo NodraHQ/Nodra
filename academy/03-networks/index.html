@@ -3,14 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="moduleNetworks.meta.title">Networks — Nodra Academy</title>
-<meta name="description" content="Ethereum, Solana, BNB Chain and how transactions move across different blockchain networks.">
+<title data-i18n="networks.meta.title">Blockchain Networks — Nodra Academy</title>
+<meta name="description" content="What actually makes a blockchain network, why so many of them exist, how transactions get validated, what gas fees pay for, and how Layer 1s, Layer 2s, and bridges fit together.">
 <link rel="stylesheet" href="../../assets/css/variables.css">
 <link rel="stylesheet" href="../../assets/css/components.css">
 <link rel="stylesheet" href="../../assets/css/academy.css">
-<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+<link rel="stylesheet" href="../../assets/css/networks.css">
 </head>
 <body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as the Landing Page / Module 01 / Module 02) -->
+<!-- ===================================================== -->
 
 <nav class="navbar">
 
@@ -41,56 +45,81 @@
 
 <main>
 
+    <!-- ===================================================== -->
+    <!-- HERO (reuses .hero / .hero-grid / .hero-stats / .hero-dashboard) -->
+    <!-- ===================================================== -->
+
     <section class="hero" id="top">
         <div class="container">
             <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <span class="tag" data-i18n="tracks.foundations.title">Blockchain Foundations</span>
-                    <h1 class="hero-title" data-i18n="moduleNetworks.hero.title">Networks</h1>
-                    <p class="hero-description" data-i18n="moduleNetworks.hero.description">Blockchain isn't one network — it's many, each with different trade-offs. This module explains how to reason about them.</p>
+
+                    <span class="tag" data-i18n="networks.hero.tag">MODULE 03</span>
+
+                    <h1 class="hero-title" data-i18n="networks.hero.title">Blockchain Networks</h1>
+
+                    <p class="hero-description" data-i18n="networks.hero.description">
+                        What actually makes a blockchain network, why so many of them exist, how
+                        transactions get validated, what gas fees pay for, and how Layer 1s, Layer 2s,
+                        and bridges fit together.
+                    </p>
 
                     <div class="hero-actions">
-                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
-                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                        <a href="#introduction" class="btn btn-primary" data-i18n="networks.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="networks.hero.back">← Academy</a>
                     </div>
 
                     <div class="hero-stats">
                         <div class="stat-card">
-                            <strong data-i18n="moduleNetworks.hero.stat1.value">Beginner</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                            <strong data-i18n="networks.hero.stat1.value">Beginner</strong>
+                            <span data-i18n="networks.hero.stat1.label">Difficulty</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="moduleNetworks.hero.stat2.value">40 min</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                            <strong data-i18n="networks.hero.stat2.value">50 min</strong>
+                            <span data-i18n="networks.hero.stat2.label">Duration</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="tracks.foundations.title">Blockchain Foundations</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                            <strong data-i18n="networks.hero.stat3.value">Reading + Quiz</strong>
+                            <span data-i18n="networks.hero.stat3.label">Format</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                            <strong data-i18n="networks.hero.stat4.value">15</strong>
+                            <span data-i18n="networks.hero.stat4.label">Sections</span>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="hero-visual reveal">
                     <div class="hero-dashboard glow">
+
                         <div class="dashboard-header">
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                         </div>
+
                         <div class="dashboard-content">
-                            <div class="dashboard-title">MODULE 03</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
-                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
-                            <div class="dashboard-divider"></div>
-                            <div class="dashboard-footer" data-i18n="tracks.foundations.title">Blockchain Foundations</div>
+                            <div class="network-mock">
+                                <div class="network-mock__row">
+                                    <span class="network-mock__label" data-i18n="networks.visual.networkLabel">Network</span>
+                                    <span class="network-mock__value">Example L1</span>
+                                </div>
+                                <div class="network-mock__row">
+                                    <span class="network-mock__label" data-i18n="networks.visual.statusLabel">Status</span>
+                                    <span class="network-mock__value network-mock__value--live">
+                                        <span class="network-mock__dot" aria-hidden="true"></span>
+                                        <span data-i18n="networks.visual.statusValue">Active</span>
+                                    </span>
+                                </div>
+                                <div class="network-mock__row">
+                                    <span class="network-mock__label" data-i18n="networks.visual.blockLabel">Latest Block</span>
+                                    <span class="network-mock__block">#18,204,551</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -98,18 +127,33 @@
         </div>
     </section>
 
+    <!-- ===================================================== -->
+    <!-- LESSON BODY (sidebar + reading column — same layout as Modules 01/02) -->
+    <!-- ===================================================== -->
+
     <div class="container lesson-layout">
 
         <aside class="lesson-sidebar" id="sidebar">
             <nav class="toc" aria-label="Table of contents">
-                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <span class="tag" data-i18n="networks.toc.title">Contents</span>
                 <div class="toc__list-wrap" id="tocListWrap">
                     <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
                     <ol class="toc__list" id="tocList">
-                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
-                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
-                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
-                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                        <li><a href="#introduction" data-i18n="networks.toc.introduction">Introduction</a></li>
+                        <li><a href="#what-is-network" data-i18n="networks.toc.whatIsNetwork">What Is a Blockchain Network</a></li>
+                        <li><a href="#why-different-chains" data-i18n="networks.toc.whyDifferentChains">Why Different Blockchains Exist</a></li>
+                        <li><a href="#how-network-works" data-i18n="networks.toc.howNetworkWorks">How a Network Works</a></li>
+                        <li><a href="#validation" data-i18n="networks.toc.validation">Transaction Validation</a></li>
+                        <li><a href="#gas-fees" data-i18n="networks.toc.gasFees">Gas Fees</a></li>
+                        <li><a href="#layer1" data-i18n="networks.toc.layer1">Layer 1</a></li>
+                        <li><a href="#layer2" data-i18n="networks.toc.layer2">Layer 2</a></li>
+                        <li><a href="#evm-compatible" data-i18n="networks.toc.evmCompatible">EVM-Compatible Networks</a></li>
+                        <li><a href="#bridges" data-i18n="networks.toc.bridges">Bridges</a></li>
+                        <li><a href="#choosing-network" data-i18n="networks.toc.choosingNetwork">Choosing a Network</a></li>
+                        <li><a href="#mistakes" data-i18n="networks.toc.mistakes">Common Mistakes</a></li>
+                        <li><a href="#summary" data-i18n="networks.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="networks.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="networks.toc.quiz">Quiz</a></li>
                     </ol>
                 </div>
             </nav>
@@ -117,64 +161,554 @@
 
         <article class="lesson-content">
 
-            <section class="section lesson-section reveal" id="overview">
-                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
-                <h2 class="section-title" data-i18n="moduleNetworks.overview.title">Networks</h2>
-                <p class="section-description" data-i18n="moduleNetworks.overview.p1">Bitcoin proved one blockchain could work. Since then, hundreds of networks have launched, each making different trade-offs between speed, cost, and decentralization — Ethereum, Solana, and BNB Chain among the most used.</p>
-                <p class="section-description" data-i18n="moduleNetworks.overview.p2">This module will teach you how to compare networks on their own terms: what a Layer 1 actually is, how transactions get confirmed, what gas fees pay for, and how assets move from one chain to another through bridges.</p>
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="networks.introduction.eyebrow">01 — Introduction</span>
+                <h2 class="section-title" data-i18n="networks.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="networks.introduction.p1">
+                    A blockchain does not exist as a single global thing — it exists as many separate
+                    networks, each running its own independent ledger, its own rules, and its own set of
+                    validators. Bitcoin, Ethereum, and dozens of others are not different "brands" of the
+                    same network; they are, structurally, completely separate systems that happen to
+                    share the same underlying idea.
+                </p>
+                <p class="section-description" data-i18n="networks.introduction.p2">
+                    This lesson looks at what actually makes a "network" in this context: how transactions
+                    are validated, why fees exist, how networks scale through layers, and how assets
+                    sometimes move between one network and another. None of this requires guessing at any
+                    asset's price or making an investment decision — it is infrastructure, and
+                    infrastructure is worth understanding on its own terms.
+                </p>
+                <p class="section-description" data-i18n="networks.introduction.p3">
+                    By the end of this lesson you will be able to explain, in plain terms, what a
+                    blockchain network is, why so many of them exist, how a transaction gets validated,
+                    what gas fees pay for, the difference between a Layer 1 and a Layer 2, and how to
+                    avoid the handful of mistakes that most often cost beginners money when moving between
+                    networks.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="learn">
-                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+            <!-- WHAT IS A BLOCKCHAIN NETWORK -->
+            <section class="section lesson-section reveal" id="what-is-network">
+                <span class="tag" data-i18n="networks.whatIsNetwork.eyebrow">02 — What Is a Blockchain Network</span>
+                <h2 class="section-title" data-i18n="networks.whatIsNetwork.title">What Is a Blockchain Network</h2>
+                <p class="section-description" data-i18n="networks.whatIsNetwork.p1">
+                    Strip away the branding and a blockchain network is three things working together: a
+                    set of computers (nodes) that each keep a full copy of the same ledger, a set of rules
+                    (a protocol) that every node agrees to follow, and a mechanism (consensus) that lets
+                    thousands of independent nodes agree on which transactions are valid and in what order
+                    — without any single party being in charge.
+                </p>
+
+                <!-- Future illustration slot: simple diagram of nodes connected to each other, each holding an identical copy of the ledger -->
+
+                <div class="card network-diagram">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="network-diagram__chrome-title">network_info.json</span>
+                    </div>
+                    <div class="network-diagram__body">
+                        <div class="network-diagram__row">
+                            <span class="network-diagram__label" data-i18n="networks.whatIsNetwork.field1.label">Network Name</span>
+                            <span class="network-diagram__value-group">
+                                <span class="network-diagram__value" id="netName">Example L1</span>
+                                <button type="button" class="copy-btn" data-copy-target="netName" aria-label="Copy value">Copy</button>
+                            </span>
+                        </div>
+                        <div class="network-diagram__row">
+                            <span class="network-diagram__label" data-i18n="networks.whatIsNetwork.field2.label">Native Token</span>
+                            <span class="network-diagram__value">EXL</span>
+                        </div>
+                        <div class="network-diagram__row">
+                            <span class="network-diagram__label" data-i18n="networks.whatIsNetwork.field3.label">Consensus Mechanism</span>
+                            <span class="network-diagram__value">Proof of Stake</span>
+                        </div>
+                        <div class="network-diagram__row">
+                            <span class="network-diagram__label" data-i18n="networks.whatIsNetwork.field4.label">Average Block Time</span>
+                            <span class="network-diagram__value">~12 sec</span>
+                        </div>
+                        <div class="network-diagram__row network-diagram__row--body">
+                            <span class="network-diagram__label" data-i18n="networks.whatIsNetwork.field5.label">Status</span>
+                            <span class="network-diagram__value" data-i18n="networks.whatIsNetwork.field5.value">Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="networks.whatIsNetwork.p2">
+                    Every network you'll ever interact with — no matter its name — is some specific
+                    combination of these same three ingredients: who can run a node, what rule set they
+                    enforce, and how they reach agreement.
+                </p>
+            </section>
+
+            <!-- WHY DIFFERENT BLOCKCHAINS EXIST -->
+            <section class="section lesson-section reveal" id="why-different-chains">
+                <span class="tag" data-i18n="networks.whyDifferentChains.eyebrow">03 — Why Different Blockchains Exist</span>
+                <h2 class="section-title" data-i18n="networks.whyDifferentChains.title">Why Different Blockchains Exist</h2>
+                <p class="section-description" data-i18n="networks.whyDifferentChains.intro">
+                    If one network could do everything perfectly, there would be no reason for more than
+                    one to exist. In practice, every design choice involves a trade-off, and different
+                    networks make different trade-offs on purpose.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="networks.whyDifferentChains.general.title">General-Purpose Networks</h3>
+                        <p data-i18n="networks.whyDifferentChains.general.text">Built to run any kind of application through smart contracts — from simple transfers to complex programs. They prioritize flexibility and a broad ecosystem of tools over any single use case.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="networks.whyDifferentChains.specialized.title">Specialized Networks</h3>
+                        <p data-i18n="networks.whyDifferentChains.specialized.text">Optimized for one job — for example, moving payments quickly and cheaply, or supporting a single application at high speed. They trade some flexibility for performance in that specific area.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="networks.whyDifferentChains.enterprise.title">Enterprise / Permissioned Networks</h3>
+                        <p data-i18n="networks.whyDifferentChains.enterprise.text">Restrict who can run a node, often used by organizations that want the shared-ledger model without a fully public, anonymous set of participants.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="networks.whyDifferentChains.closing">
+                    None of these designs is universally "better" — they are answers to different
+                    questions. A network optimized for maximum decentralization will rarely also be the
+                    fastest one, and a network optimized for speed will usually concentrate validation
+                    among fewer participants.
+                </p>
+            </section>
+
+            <!-- HOW A NETWORK WORKS -->
+            <section class="section lesson-section reveal" id="how-network-works">
+                <span class="tag" data-i18n="networks.howNetworkWorks.eyebrow">04 — How a Network Works</span>
+                <h2 class="section-title" data-i18n="networks.howNetworkWorks.title">How a Network Works</h2>
+                <p class="section-description" data-i18n="networks.howNetworkWorks.intro">
+                    Once you understand the three ingredients above, the day-to-day operation of a network
+                    is a short, repeating cycle.
+                </p>
+
+                <div class="card flow-diagram">
+                    <div class="flow-diagram__step">
+                        <span class="flow-diagram__index">1</span>
+                        <span class="flow-diagram__label" data-i18n="networks.howNetworkWorks.flow.step1">Transaction Created</span>
+                    </div>
+                    <span class="flow-diagram__arrow" aria-hidden="true">→</span>
+                    <div class="flow-diagram__step">
+                        <span class="flow-diagram__index">2</span>
+                        <span class="flow-diagram__label" data-i18n="networks.howNetworkWorks.flow.step2">Broadcast to Nodes</span>
+                    </div>
+                    <span class="flow-diagram__arrow" aria-hidden="true">→</span>
+                    <div class="flow-diagram__step">
+                        <span class="flow-diagram__index">3</span>
+                        <span class="flow-diagram__label" data-i18n="networks.howNetworkWorks.flow.step3">Included in a Block</span>
+                    </div>
+                    <span class="flow-diagram__arrow" aria-hidden="true">→</span>
+                    <div class="flow-diagram__step">
+                        <span class="flow-diagram__index">4</span>
+                        <span class="flow-diagram__label" data-i18n="networks.howNetworkWorks.flow.step4">Block Validated</span>
+                    </div>
+                    <span class="flow-diagram__arrow" aria-hidden="true">→</span>
+                    <div class="flow-diagram__step flow-diagram__step--active">
+                        <span class="flow-diagram__index">5</span>
+                        <span class="flow-diagram__label" data-i18n="networks.howNetworkWorks.flow.step5">Added to the Chain</span>
+                    </div>
+                </div>
+
                 <ul class="lesson-list">
-                    <li data-i18n="moduleNetworks.learn.li1">How Ethereum, Solana, and BNB Chain differ in design and trade-offs.</li>
-                    <li data-i18n="moduleNetworks.learn.li2">What gas fees are actually paying for, and why they change.</li>
-                    <li data-i18n="moduleNetworks.learn.li3">How cross-chain bridges move assets between networks — and their risks.</li>
-                    <li data-i18n="moduleNetworks.learn.li4">What "finality" means and why it matters before you consider a transaction safe.</li>
-                    <li data-i18n="moduleNetworks.learn.li5">How to choose the right network for a given use case.</li>
+                    <li data-i18n="networks.howNetworkWorks.li1"><strong>Transaction Created</strong> — a user builds a request (e.g. "send X amount to this address") and signs it with their private key.</li>
+                    <li data-i18n="networks.howNetworkWorks.li2"><strong>Broadcast to Nodes</strong> — the signed transaction is sent out and quickly reaches many nodes across the network.</li>
+                    <li data-i18n="networks.howNetworkWorks.li3"><strong>Included in a Block</strong> — a node responsible for producing the next block picks up pending transactions and groups them together.</li>
+                    <li data-i18n="networks.howNetworkWorks.li4"><strong>Block Validated</strong> — other nodes independently check that every transaction in the block follows the rules (valid signature, sufficient balance, no duplicate spending).</li>
+                    <li data-i18n="networks.howNetworkWorks.li5"><strong>Added to the Chain</strong> — once enough nodes agree the block is valid, it is appended to the ledger, and every node updates its own copy.</li>
+                </ul>
+
+                <p class="section-description" data-i18n="networks.howNetworkWorks.closing">
+                    This cycle repeats continuously, and the time it takes to complete varies enormously
+                    between networks — from a couple of seconds to several minutes.
+                </p>
+            </section>
+
+            <!-- TRANSACTION VALIDATION -->
+            <section class="section lesson-section reveal" id="validation">
+                <span class="tag" data-i18n="networks.validation.eyebrow">05 — Transaction Validation</span>
+                <h2 class="section-title" data-i18n="networks.validation.title">Transaction Validation</h2>
+                <p class="section-description" data-i18n="networks.validation.intro">
+                    "Validation" is the step that turns a raw request into something the entire network
+                    trusts. Two things need to be true before a transaction is accepted.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="networks.validation.correctness.title">Correctness</h3>
+                        <p data-i18n="networks.validation.correctness.text">The transaction must be properly signed by the sender's private key, follow a valid format, and not attempt to spend funds that were already spent — this is what prevents "double-spending."</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="networks.validation.agreement.title">Agreement</h3>
+                        <p data-i18n="networks.validation.agreement.text">A sufficient number of independent nodes — following the network's specific consensus mechanism — must independently reach the same conclusion about which transactions are valid and in what order, without trusting each other's word for it.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="networks.validation.closing">
+                    The exact mechanism that produces this agreement — who is allowed to propose the next
+                    block, and how disagreements are resolved — is what's usually called the network's
+                    "consensus mechanism," a topic covered from the ground up in Module 01.
+                </p>
+            </section>
+
+            <!-- GAS FEES -->
+            <section class="section lesson-section reveal" id="gas-fees">
+                <span class="tag" data-i18n="networks.gasFees.eyebrow">06 — Gas Fees</span>
+                <h2 class="section-title" data-i18n="networks.gasFees.title">Gas Fees</h2>
+                <p class="section-description" data-i18n="networks.gasFees.p1">
+                    Producing and validating blocks costs real resources — computing power, storage, and
+                    bandwidth — and someone has to be compensated for providing them. "Gas" is the unit
+                    networks use to measure how much computational work a given transaction requires; the
+                    "gas fee" is the price paid, in the network's native token, for that work.
+                </p>
+                <p class="section-description" data-i18n="networks.gasFees.p2">
+                    Fees serve a second purpose beyond payment: they make it costly to spam the network
+                    with pointless transactions. Without any fee at all, flooding a network with millions
+                    of trivial transactions would be free, and blocks would fill up with noise instead of
+                    genuine activity.
+                </p>
+
+                <!-- Future illustration slot: simple bar showing gas limit filling up as transaction complexity increases -->
+
+                <div class="card gas-fee-card">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="network-diagram__chrome-title">fee_estimate.json</span>
+                    </div>
+                    <div class="gas-fee-card__body">
+                        <div class="gas-fee-card__row">
+                            <span class="gas-fee-card__label" data-i18n="networks.gasFees.field1.label">Gas Limit</span>
+                            <span class="gas-fee-card__value">21,000 units</span>
+                        </div>
+                        <div class="gas-fee-card__row">
+                            <span class="gas-fee-card__label" data-i18n="networks.gasFees.field2.label">Gas Price</span>
+                            <span class="gas-fee-card__value">20 gwei</span>
+                        </div>
+                        <div class="gas-fee-card__row gas-fee-card__row--result">
+                            <span class="gas-fee-card__label" data-i18n="networks.gasFees.field3.label">Estimated Fee</span>
+                            <span class="gas-fee-card__value" data-i18n="networks.gasFees.field3.value">Gas Limit × Gas Price</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="networks.gasFees.p3">
+                    Fees rise and fall with how busy a network is at any given moment — more people trying
+                    to transact at once means more competition for the same block space, and higher fees
+                    to be included sooner. This lesson only covers what a fee represents, not how to
+                    speculate on its future cost.
+                </p>
+            </section>
+
+            <!-- LAYER 1 -->
+            <section class="section lesson-section reveal" id="layer1">
+                <span class="tag" data-i18n="networks.layer1.eyebrow">07 — Layer 1</span>
+                <h2 class="section-title" data-i18n="networks.layer1.title">Layer 1</h2>
+                <p class="section-description" data-i18n="networks.layer1.p1">
+                    A Layer 1 is a base network — it has its own independent ledger, its own validators,
+                    and its own consensus mechanism. It doesn't depend on any other network to record or
+                    secure its transactions; it is the foundation.
+                </p>
+                <p class="section-description" data-i18n="networks.layer1.p2">
+                    Being the foundation comes with a trade-off: because every validator has to process
+                    every transaction directly, a Layer 1 that also wants a large, geographically spread
+                    set of independent validators usually can't also process an unlimited number of
+                    transactions per second. That trade-off is explored further in the next section.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="networks.layer1.li1">Provides the ultimate security guarantee — everything else that builds on top of it inherits that security.</li>
+                    <li data-i18n="networks.layer1.li2">Changes to its core rules are slow and deliberate on purpose, since they affect everyone using it.</li>
+                    <li data-i18n="networks.layer1.li3">Transaction capacity is limited by how much every single validator can process.</li>
                 </ul>
             </section>
 
-            <section class="section lesson-section reveal" id="prerequisites">
-                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+            <!-- LAYER 2 -->
+            <section class="section lesson-section reveal" id="layer2">
+                <span class="tag" data-i18n="networks.layer2.eyebrow">08 — Layer 2</span>
+                <h2 class="section-title" data-i18n="networks.layer2.title">Layer 2</h2>
+                <p class="section-description" data-i18n="networks.layer2.p1">
+                    A Layer 2 is a separate system built on top of a Layer 1 to handle transactions faster
+                    and more cheaply, while still relying on that Layer 1 to guarantee security. Rather
+                    than every transaction being processed and stored directly by the base network, a
+                    Layer 2 processes many transactions itself and periodically settles a compressed
+                    summary back down to the Layer 1.
+                </p>
+                <p class="section-description" data-i18n="networks.layer2.p2">
+                    This means a Layer 2 inherits most of the security of its underlying Layer 1 without
+                    inheriting its capacity limits — at the cost of some added complexity, and, in some
+                    designs, a short delay before a transaction is considered fully final.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="networks.layer2.l1.title">Layer 1</h3>
+                        <p data-i18n="networks.layer2.l1.text">Processes and finalizes every transaction directly. Maximizes security and decentralization; capacity is limited.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="networks.layer2.l2.title">Layer 2</h3>
+                        <p data-i18n="networks.layer2.l2.text">Processes transactions off the base network and periodically settles a summary back to it. Higher throughput and lower fees, with inherited security.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="networks.layer2.closing">
+                    Neither replaces the other — a healthy ecosystem generally uses a Layer 1 as the trust
+                    anchor and one or more Layer 2s to handle everyday volume cheaply.
+                </p>
+            </section>
+
+            <!-- EVM-COMPATIBLE NETWORKS -->
+            <section class="section lesson-section reveal" id="evm-compatible">
+                <span class="tag" data-i18n="networks.evmCompatible.eyebrow">09 — EVM-Compatible Networks</span>
+                <h2 class="section-title" data-i18n="networks.evmCompatible.title">EVM-Compatible Networks</h2>
+                <p class="section-description" data-i18n="networks.evmCompatible.p1">
+                    The Ethereum Virtual Machine (EVM) is the standardized environment that executes smart
+                    contracts on Ethereum: a common set of instructions that every compliant node
+                    understands and runs identically. "EVM-compatible" simply means a different network
+                    chose to implement that same execution environment.
+                </p>
+                <p class="section-description" data-i18n="networks.evmCompatible.p2">
+                    The practical benefit is portability: a smart contract, developer tool, or wallet built
+                    for one EVM-compatible network usually works on another EVM-compatible network with
+                    little or no modification, because they're speaking the same underlying language.
+                </p>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleNetworks.prereq.li1">Completed <a href="../01-blockchain/index.html">Module 01 — Blockchain</a>.</li>
-                    <li data-i18n="moduleNetworks.prereq.li2">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
+                    <li data-i18n="networks.evmCompatible.li1">Developers can reuse code and tools across multiple networks instead of learning a new environment for each one.</li>
+                    <li data-i18n="networks.evmCompatible.li2">Wallets that support one EVM-compatible network can typically support others by simply adding a new network configuration.</li>
+                    <li data-i18n="networks.evmCompatible.li3">EVM compatibility describes the execution environment only — it says nothing about a network's validators, consensus mechanism, or security assumptions, which can still differ significantly.</li>
+                    <li data-i18n="networks.evmCompatible.li4">The same wallet address format is shared across EVM-compatible networks, which is convenient — but, as covered in the mistakes section, is also a common source of confusion.</li>
                 </ul>
             </section>
 
+            <!-- BRIDGES -->
+            <section class="section lesson-section reveal" id="bridges">
+                <span class="tag" data-i18n="networks.bridges.eyebrow">10 — Bridges</span>
+                <h2 class="section-title" data-i18n="networks.bridges.title">Bridges</h2>
+                <p class="section-description" data-i18n="networks.bridges.p1">
+                    Because every network keeps its own independent ledger, an asset that exists on one
+                    network doesn't natively exist on another — there is no built-in way for Network A to
+                    know anything happened on Network B. A bridge is the infrastructure that lets a user
+                    move value or information from one network to another despite this separation.
+                </p>
+                <p class="section-description" data-i18n="networks.bridges.p2">
+                    Most bridges follow one of two general patterns: locking an asset on the original
+                    network while minting a representative version on the destination network, or burning
+                    an asset on one side while releasing an equivalent that was already reserved on the
+                    other. In both cases, the user ends up with something on the destination network that
+                    represents value from the source network.
+                </p>
+
+                <!-- Future illustration slot: simple two-network diagram showing an asset locked on one side and a representative version minted on the other -->
+
+                <ul class="lesson-list">
+                    <li data-i18n="networks.bridges.li1"><strong>A bridge adds a new piece of infrastructure.</strong> It introduces a new point of trust between two networks that were not designed to talk to each other.</li>
+                    <li data-i18n="networks.bridges.li2"><strong>Bridges are a frequent target of large-scale exploits.</strong> They concentrate a lot of value in one place, which makes them attractive targets.</li>
+                    <li data-i18n="networks.bridges.li3"><strong>A bridged asset is a representation, not the original moved physically.</strong> Its value depends on the bridge continuing to honor that representation correctly.</li>
+                </ul>
+            </section>
+
+            <!-- HOW TO CHOOSE A NETWORK CORRECTLY -->
+            <section class="section lesson-section reveal" id="choosing-network">
+                <span class="tag" data-i18n="networks.choosingNetwork.eyebrow">11 — Choosing a Network</span>
+                <h2 class="section-title" data-i18n="networks.choosingNetwork.title">How to Choose a Network Correctly</h2>
+                <p class="section-description" data-i18n="networks.choosingNetwork.intro">
+                    There is no single "best" network — there is only the network that fits what you're
+                    actually trying to do. A short checklist helps make that decision deliberately instead
+                    of by default.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="networks.choosingNetwork.li1"><strong>Purpose.</strong> What are you actually using the network for? Occasional transfers, running an application, or something else can point toward different priorities.</li>
+                    <li data-i18n="networks.choosingNetwork.li2"><strong>Fees and speed.</strong> How much does a typical transaction cost on this network, and how long does it take to be confirmed?</li>
+                    <li data-i18n="networks.choosingNetwork.li3"><strong>Security assumptions.</strong> How many independent validators does the network have, and how long has it operated without a major incident?</li>
+                    <li data-i18n="networks.choosingNetwork.li4"><strong>Ecosystem and tooling.</strong> Are the wallets, explorers, and applications you'll need actually well supported on this network?</li>
+                    <li data-i18n="networks.choosingNetwork.li5"><strong>Compatibility with what you already use.</strong> Does your existing wallet support this network natively, or would you need to add a new configuration?</li>
+                </ul>
+            </section>
+
+            <!-- COMMON MISTAKES -->
+            <section class="section lesson-section reveal" id="mistakes">
+                <span class="tag" data-i18n="networks.mistakes.eyebrow">12 — Common Mistakes</span>
+                <h2 class="section-title" data-i18n="networks.mistakes.title">Common Mistakes</h2>
+                <p class="section-description" data-i18n="networks.mistakes.intro">
+                    Nearly every network-related loss traces back to one of these avoidable mistakes.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="networks.mistakes.li1"><strong>Sending an asset to the wrong network.</strong> The exact same address format can exist on multiple EVM-compatible networks — sending an asset intended for one network to that address on a different network can make it unrecoverable.</li>
+                    <li data-i18n="networks.mistakes.li2"><strong>Forgetting that fees are paid in the native token of that network.</strong> Having funds on a network is not the same as having enough of its native token to pay for a transaction.</li>
+                    <li data-i18n="networks.mistakes.li3"><strong>Assuming "EVM-compatible" means "identical."</strong> Compatible networks can still differ significantly in security assumptions, validator count, and maturity.</li>
+                    <li data-i18n="networks.mistakes.li4"><strong>Using a bridge without checking it first.</strong> Bridging funds through an unfamiliar or unaudited bridge concentrates risk in a single piece of infrastructure.</li>
+                    <li data-i18n="networks.mistakes.li5"><strong>Choosing a network based on hype instead of fit.</strong> The network that's trending is not automatically the one that matches your actual purpose, budget, or risk tolerance.</li>
+                </ul>
+            </section>
+
+            <!-- SUMMARY -->
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="networks.summary.eyebrow">13 — Summary</span>
+                <h2 class="section-title" data-i18n="networks.summary.title">Summary</h2>
+                <p class="section-description" data-i18n="networks.summary.p1">
+                    A blockchain network is a set of nodes, a set of rules, and a way for those nodes to
+                    agree — validated transaction by validated transaction, block by block. Different
+                    networks make different trade-offs between decentralization, security, and speed,
+                    which is why so many exist side by side instead of one replacing all the others.
+                </p>
+                <p class="section-description" data-i18n="networks.summary.p2">
+                    Layer 1s provide the base security; Layer 2s scale on top of that security; EVM
+                    compatibility lets tools travel between networks; and bridges let value move between
+                    them — each with its own risks. Understanding these pieces is what lets you choose a
+                    network deliberately, instead of by accident.
+                </p>
+            </section>
+
+            <!-- GLOSSARY -->
             <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
-                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <span class="tag" data-i18n="networks.glossary.eyebrow">14 — Glossary</span>
+                <h2 class="section-title" data-i18n="networks.glossary.title">Glossary</h2>
                 <dl class="glossary-list">
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleNetworks.glossary.term1">Layer 1</dt>
-                        <dd data-i18n="moduleNetworks.glossary.def1">A base blockchain network — like Ethereum or Solana — that handles its own consensus and security directly.</dd>
+                        <dt data-i18n="networks.glossary.term1">Node</dt>
+                        <dd data-i18n="networks.glossary.def1">A computer that keeps a copy of a network's ledger and enforces its rules.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleNetworks.glossary.term2">RPC</dt>
-                        <dd data-i18n="moduleNetworks.glossary.def2">The endpoint a wallet or app uses to read from and send transactions to a blockchain network.</dd>
+                        <dt data-i18n="networks.glossary.term2">Consensus Mechanism</dt>
+                        <dd data-i18n="networks.glossary.def2">The process by which independent nodes agree on which transactions are valid and in what order.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleNetworks.glossary.term3">Gas</dt>
-                        <dd data-i18n="moduleNetworks.glossary.def3">The fee paid to the network for processing a transaction or executing a smart contract.</dd>
+                        <dt data-i18n="networks.glossary.term3">Validator</dt>
+                        <dd data-i18n="networks.glossary.def3">A participant responsible for checking and confirming transactions according to the network's consensus mechanism.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleNetworks.glossary.term4">Bridge</dt>
-                        <dd data-i18n="moduleNetworks.glossary.def4">A protocol that moves assets or data from one blockchain network to another.</dd>
+                        <dt data-i18n="networks.glossary.term4">Gas</dt>
+                        <dd data-i18n="networks.glossary.def4">The unit used to measure the computational work required by a transaction.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleNetworks.glossary.term5">Finality</dt>
-                        <dd data-i18n="moduleNetworks.glossary.def5">The point at which a transaction is considered permanently and irreversibly confirmed.</dd>
+                        <dt data-i18n="networks.glossary.term5">Gas Fee</dt>
+                        <dd data-i18n="networks.glossary.def5">The payment, in the network's native token, made to have a transaction processed.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="networks.glossary.term6">Layer 1</dt>
+                        <dd data-i18n="networks.glossary.def6">A base blockchain network with its own independent ledger, validators, and consensus mechanism.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="networks.glossary.term7">Layer 2</dt>
+                        <dd data-i18n="networks.glossary.def7">A system built on top of a Layer 1 that processes transactions off the base network and periodically settles a summary back to it.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="networks.glossary.term8">EVM (Ethereum Virtual Machine)</dt>
+                        <dd data-i18n="networks.glossary.def8">The standardized execution environment for smart contracts that a network can choose to implement.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="networks.glossary.term9">EVM-Compatible Network</dt>
+                        <dd data-i18n="networks.glossary.def9">A network that implements the same execution environment as Ethereum, allowing tools and contracts to be reused across it.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="networks.glossary.term10">Bridge</dt>
+                        <dd data-i18n="networks.glossary.def10">Infrastructure that allows value or information to move between two otherwise separate networks.</dd>
                     </div>
                 </dl>
             </section>
 
+            <!-- QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="networks.quiz.eyebrow">15 — Quiz</span>
+                <h2 class="section-title" data-i18n="networks.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="networks.quiz.intro">
+                    Check your understanding of this lesson before moving on. Incorrect answers point you
+                    straight back to the relevant section.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="networks.quiz.q1">1. What are the three ingredients that make up a blockchain network?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="networks.quiz.q1o1">A. Nodes, a set of rules, and a consensus mechanism</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q1o2">B. Wallets, prices, and exchanges</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q1o3">C. A single central server and its administrator</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q1o4">D. A logo, a token symbol, and a website</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="networks.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="networks.quiz.q1.feedbackIncorrect" hidden>Not quite — review <a href="#what-is-network">What Is a Blockchain Network</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="networks.quiz.q2">2. Why do different blockchain networks exist?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q2o1">A. Because only one network is technically allowed to exist</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="networks.quiz.q2o2">B. Because each network makes different trade-offs between decentralization, security, and speed</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q2o3">C. Because networks expire after a fixed number of transactions</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q2o4">D. Because every network must copy the exact design of the first one</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="networks.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="networks.quiz.q2.feedbackIncorrect" hidden>Not quite — review <a href="#why-different-chains">Why Different Blockchains Exist</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="networks.quiz.q3">3. What has to be true before a transaction is accepted by the network?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q3o1">A. It only needs to be broadcast, nothing else</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="networks.quiz.q3o2">B. It must be correctly signed and independently agreed upon by enough nodes</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q3o3">C. It must be approved by a single central authority</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q3o4">D. It must be paid for in a currency outside the network</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="networks.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="networks.quiz.q3.feedbackIncorrect" hidden>Not quite — review <a href="#validation">Transaction Validation</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="networks.quiz.q4">4. What does a gas fee primarily pay for?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q4o1">A. Marketing costs for the network</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="networks.quiz.q4o2">B. The computational work needed to process and validate a transaction</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q4o3">C. A monthly subscription to use the network</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q4o4">D. Insurance against losing your private key</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="networks.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="networks.quiz.q4.feedbackIncorrect" hidden>Not quite — review <a href="#gas-fees">Gas Fees</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="networks.quiz.q5">5. What is the main difference between a Layer 1 and a Layer 2?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q5o1">A. A Layer 2 replaces the Layer 1 entirely</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="networks.quiz.q5o2">B. A Layer 1 is the base network; a Layer 2 builds on top of it to scale while relying on its security</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q5o3">C. A Layer 1 only exists for testing</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q5o4">D. There is no meaningful difference between them</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="networks.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="networks.quiz.q5.feedbackIncorrect" hidden>Not quite — review <a href="#layer2">Layer 2</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="networks.quiz.q6">6. Why should you double-check the network before sending an asset to an address?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="networks.quiz.q6o1">A. Because the same address format can exist on multiple networks, and sending to the wrong one can make funds unrecoverable</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q6o2">B. Because addresses expire after 24 hours</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q6o3">C. Because every network requires a different alphabet for addresses</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="networks.quiz.q6o4">D. Because it's only a cosmetic issue with no real consequence</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="networks.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="networks.quiz.q6.feedbackIncorrect" hidden>Not quite — review <a href="#mistakes">Common Mistakes</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="networks.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="networks.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">6</strong>
+                            <span data-i18n="networks.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="networks.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
             <nav class="lesson-pagination" aria-label="Lesson pagination">
-                <a href="../02-wallets/index.html" class="btn btn-secondary" data-i18n="moduleNetworks.pagination.back">← Module 02</a>
-                <a href="../04-assets/index.html" class="btn btn-primary" data-i18n="moduleNetworks.pagination.next">Next Module →</a>
+                <a href="../02-wallets/index.html" class="btn btn-secondary" data-i18n="networks.pagination.back">← Module 02</a>
+                <a href="../04-assets/index.html" class="btn btn-primary" data-i18n="networks.pagination.next">Next Module →</a>
             </nav>
 
         </article>
@@ -182,25 +716,34 @@
 
 </main>
 
+<!-- ===================================================== -->
+<!-- FOOTER (exactly the same component as the Landing Page / Modules 01/02) -->
+<!-- ===================================================== -->
+
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+
             <div class="footer-brand">
-                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <h3 data-i18n="footer.title">Nodra</h3>
                 <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
+
             <div class="footer-links">
                 <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
                 <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
                 <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
             </div>
+
         </div>
     </div>
 </footer>
 
+<span id="i18nCopiedLabel" data-i18n="networks.common.copied" hidden>Copied</span>
+
 <script defer src="../../assets/js/translations.js"></script>
 <script defer src="../../assets/js/academy.js"></script>
-<script defer src="../../assets/js/module-placeholder.js"></script>
+<script defer src="../../assets/js/networks.js"></script>
 </body>
 </html>
