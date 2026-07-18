@@ -3,14 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="moduleAssets.meta.title">Assets — Nodra Academy</title>
-<meta name="description" content="Coins, tokens, stablecoins, NFTs and real-world assets: what they are and how they differ on-chain.">
+<title data-i18n="assets.meta.title">Digital Assets — Nodra Academy</title>
+<meta name="description" content="The main types of assets in a blockchain ecosystem: coins, tokens, standards, supply, and how to tell a legitimate asset from a fake one.">
 <link rel="stylesheet" href="../../assets/css/variables.css">
 <link rel="stylesheet" href="../../assets/css/components.css">
 <link rel="stylesheet" href="../../assets/css/academy.css">
-<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+<link rel="stylesheet" href="../../assets/css/assets.css">
 </head>
 <body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as previous modules) -->
+<!-- ===================================================== -->
 
 <nav class="navbar">
 
@@ -41,56 +45,77 @@
 
 <main>
 
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
+
     <section class="hero" id="top">
         <div class="container">
             <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <span class="tag" data-i18n="tracks.foundations.title">Blockchain Foundations</span>
-                    <h1 class="hero-title" data-i18n="moduleAssets.hero.title">Assets</h1>
-                    <p class="hero-description" data-i18n="moduleAssets.hero.description">Not everything on a blockchain is the same kind of asset. This module explains how to tell them apart.</p>
+
+                    <span class="tag" data-i18n="assets.hero.tag">MODULE 04</span>
+
+                    <h1 class="hero-title" data-i18n="assets.hero.title">Digital Assets</h1>
+
+                    <p class="hero-description" data-i18n="assets.hero.description">
+                        The main types of assets in a blockchain ecosystem: coins, tokens,
+                        standards, supply, and how to tell a legitimate asset from a fake one.
+                    </p>
 
                     <div class="hero-actions">
-                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
-                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                        <a href="#introduction" class="btn btn-primary" data-i18n="assets.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="assets.hero.back">← Academy</a>
                     </div>
 
                     <div class="hero-stats">
                         <div class="stat-card">
-                            <strong data-i18n="moduleAssets.hero.stat1.value">Beginner</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                            <strong data-i18n="assets.hero.stat1.value">Beginner</strong>
+                            <span data-i18n="assets.hero.stat1.label">Difficulty</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="moduleAssets.hero.stat2.value">40 min</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                            <strong data-i18n="assets.hero.stat2.value">55 min</strong>
+                            <span data-i18n="assets.hero.stat2.label">Duration</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="tracks.foundations.title">Blockchain Foundations</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                            <strong data-i18n="assets.hero.stat3.value">Reading + Quiz</strong>
+                            <span data-i18n="assets.hero.stat3.label">Format</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                            <strong data-i18n="assets.hero.stat4.value">13</strong>
+                            <span data-i18n="assets.hero.stat4.label">Sections</span>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="hero-visual reveal">
                     <div class="hero-dashboard glow">
+
                         <div class="dashboard-header">
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                         </div>
+
                         <div class="dashboard-content">
-                            <div class="dashboard-title">MODULE 04</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
-                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
-                            <div class="dashboard-divider"></div>
-                            <div class="dashboard-footer" data-i18n="tracks.foundations.title">Blockchain Foundations</div>
+                            <div class="asset-mock">
+                                <div class="asset-mock__row">
+                                    <span class="asset-mock__label" data-i18n="assets.visual.nameLabel">Name</span>
+                                    <span class="asset-mock__value">Example Token</span>
+                                </div>
+                                <div class="asset-mock__row">
+                                    <span class="asset-mock__label" data-i18n="assets.visual.tickerLabel">Ticker</span>
+                                    <span class="asset-mock__value">EXT</span>
+                                </div>
+                                <div class="asset-mock__row">
+                                    <span class="asset-mock__label" data-i18n="assets.visual.standardLabel">Standard</span>
+                                    <span class="asset-mock__block">ERC-20</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -98,18 +123,31 @@
         </div>
     </section>
 
+    <!-- ===================================================== -->
+    <!-- LESSON BODY -->
+    <!-- ===================================================== -->
+
     <div class="container lesson-layout">
 
         <aside class="lesson-sidebar" id="sidebar">
             <nav class="toc" aria-label="Table of contents">
-                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <span class="tag" data-i18n="assets.toc.title">Contents</span>
                 <div class="toc__list-wrap" id="tocListWrap">
                     <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
                     <ol class="toc__list" id="tocList">
-                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
-                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
-                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
-                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                        <li><a href="#introduction" data-i18n="assets.toc.introduction">Introduction</a></li>
+                        <li><a href="#coins" data-i18n="assets.toc.coins">Coins</a></li>
+                        <li><a href="#tokens" data-i18n="assets.toc.tokens">Tokens</a></li>
+                        <li><a href="#categories" data-i18n="assets.toc.categories">Main Categories</a></li>
+                        <li><a href="#token-standards" data-i18n="assets.toc.tokenStandards">Token Standards</a></li>
+                        <li><a href="#supply" data-i18n="assets.toc.supply">Supply</a></li>
+                        <li><a href="#identifying-assets" data-i18n="assets.toc.identifyingAssets">Identifying an Asset</a></li>
+                        <li><a href="#fake-tokens" data-i18n="assets.toc.fakeTokens">Fake Tokens</a></li>
+                        <li><a href="#use-cases" data-i18n="assets.toc.useCases">Use Cases</a></li>
+                        <li><a href="#mistakes" data-i18n="assets.toc.mistakes">Common Mistakes</a></li>
+                        <li><a href="#summary" data-i18n="assets.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="assets.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="assets.toc.quiz">Quiz</a></li>
                     </ol>
                 </div>
             </nav>
@@ -117,65 +155,523 @@
 
         <article class="lesson-content">
 
-            <section class="section lesson-section reveal" id="overview">
-                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
-                <h2 class="section-title" data-i18n="moduleAssets.overview.title">Assets</h2>
-                <p class="section-description" data-i18n="moduleAssets.overview.p1">"Crypto" is not one thing. A native coin like ETH, a token built on top of it, a stablecoin, and an NFT are all fundamentally different kinds of on-chain assets, with different rules for how they're created and transferred.</p>
-                <p class="section-description" data-i18n="moduleAssets.overview.p2">This module will teach you to read a token's standard, tell fungible from non-fungible assets, understand what backs a stablecoin, and see how real-world assets (like real estate or bonds) get represented on-chain.</p>
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="assets.introduction.eyebrow">01 — Introduction</span>
+                <h2 class="section-title" data-i18n="assets.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="assets.introduction.p1">
+                    Not everything that moves through a wallet is the same kind of thing. A
+                    blockchain ecosystem hosts many different digital assets, each built for a
+                    different purpose — some secure an entire network, others exist only inside a
+                    single application.
+                </p>
+                <p class="section-description" data-i18n="assets.introduction.p2">
+                    This lesson looks at what actually makes an asset a "coin" or a "token," how
+                    the main categories differ, how token standards let wallets and apps understand
+                    any compliant asset, and how supply and circulation work. None of this involves
+                    guessing at prices or making an investment decision — it's about recognizing
+                    what you're actually holding.
+                </p>
+                <p class="section-description" data-i18n="assets.introduction.p3">
+                    By the end of this lesson you will be able to explain the difference between a
+                    coin and a token, name the main categories of assets, recognize the most common
+                    token standards, and avoid the mistakes that most often lead beginners to lose
+                    funds to fake assets.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="learn">
-                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+            <!-- COINS -->
+            <section class="section lesson-section reveal" id="coins">
+                <span class="tag" data-i18n="assets.coins.eyebrow">02 — Coins</span>
+                <h2 class="section-title" data-i18n="assets.coins.title">Coins</h2>
+                <p class="section-description" data-i18n="assets.coins.p1">
+                    A coin is the native asset of a blockchain network — it isn't built on top of
+                    anything else. It's the asset used to pay gas fees on that network, and,
+                    depending on the consensus mechanism, the asset staked or mined to help secure
+                    it.
+                </p>
+                <p class="section-description" data-i18n="assets.coins.p2">
+                    Because a coin is tied directly to its own network, it has no separate contract
+                    to inspect — it exists as part of the protocol's core rules, tracked directly by
+                    every node.
+                </p>
+
+                <!-- Future illustration slot: simple row of network logos next to their native coin symbol -->
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.coins.ex1.title">Bitcoin (BTC)</h3>
+                        <p data-i18n="assets.coins.ex1.text">The native coin of the Bitcoin network.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.coins.ex2.title">Ether (ETH)</h3>
+                        <p data-i18n="assets.coins.ex2.text">The native coin of the Ethereum network, also used to pay for computation.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.coins.ex3.title">SOL</h3>
+                        <p data-i18n="assets.coins.ex3.text">The native coin of the Solana network.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.coins.ex4.title">BNB</h3>
+                        <p data-i18n="assets.coins.ex4.text">The native coin of the BNB Chain network.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.coins.ex5.title">AVAX</h3>
+                        <p data-i18n="assets.coins.ex5.text">The native coin of the Avalanche network.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TOKENS -->
+            <section class="section lesson-section reveal" id="tokens">
+                <span class="tag" data-i18n="assets.tokens.eyebrow">03 — Tokens</span>
+                <h2 class="section-title" data-i18n="assets.tokens.title">Tokens</h2>
+                <p class="section-description" data-i18n="assets.tokens.p1">
+                    A token is an asset created through a smart contract deployed on top of an
+                    existing network — it doesn't have its own ledger, validators, or consensus
+                    mechanism. It relies entirely on the host network to record and secure its
+                    transactions.
+                </p>
+                <p class="section-description" data-i18n="assets.tokens.p2">
+                    Ethereum is a common example: thousands of tokens exist as smart contracts
+                    running on Ethereum, each following a technical standard so wallets and
+                    applications know how to read balances and process transfers.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.tokens.coin.title">Coin</h3>
+                        <p data-i18n="assets.tokens.coin.text">Native to its own network. No separate contract. Used to pay that network's own gas fees.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.tokens.token.title">Token</h3>
+                        <p data-i18n="assets.tokens.token.text">Created by a smart contract on top of an existing network. Relies on that network's security and consensus.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="assets.tokens.closing">
+                    Every token has a host network — knowing which one is part of correctly
+                    identifying the asset, as covered later in this lesson.
+                </p>
+            </section>
+
+            <!-- MAIN CATEGORIES -->
+            <section class="section lesson-section reveal" id="categories">
+                <span class="tag" data-i18n="assets.categories.eyebrow">04 — Main Categories</span>
+                <h2 class="section-title" data-i18n="assets.categories.title">Main Categories</h2>
+                <p class="section-description" data-i18n="assets.categories.intro">
+                    Tokens are commonly grouped by what they're designed to do. These categories
+                    aren't mutually exclusive, but they cover most of what you'll encounter.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.categories.utility.title">Utility Tokens</h3>
+                        <p data-i18n="assets.categories.utility.text">Grant access to a specific application or service — for example, paying for computation, storage, or a feature within a platform.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.categories.governance.title">Governance Tokens</h3>
+                        <p data-i18n="assets.categories.governance.text">Grant holders voting rights on proposals that affect how a protocol operates.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.categories.stablecoins.title">Stablecoins</h3>
+                        <p data-i18n="assets.categories.stablecoins.text">Designed to track the value of a reference asset, such as a fiat currency, aiming for lower volatility relative to other digital assets.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.categories.wrapped.title">Wrapped Tokens</h3>
+                        <p data-i18n="assets.categories.wrapped.text">A representation of an asset from one network, made usable on a different network — commonly created through a bridge.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.categories.nft.title">NFTs (Introduction)</h3>
+                        <p data-i18n="assets.categories.nft.text">Non-fungible tokens: each one is unique and not interchangeable, commonly used to represent ownership of a specific, distinct item.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TOKEN STANDARDS -->
+            <section class="section lesson-section reveal" id="token-standards">
+                <span class="tag" data-i18n="assets.tokenStandards.eyebrow">05 — Token Standards</span>
+                <h2 class="section-title" data-i18n="assets.tokenStandards.title">Token Standards</h2>
+                <p class="section-description" data-i18n="assets.tokenStandards.p1">
+                    A token standard is an agreed technical specification that any compliant
+                    contract follows, so wallets, exchanges, and marketplaces can interact with it
+                    without needing custom code for every single asset.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.tokenStandards.erc20.title">ERC-20</h3>
+                        <p data-i18n="assets.tokenStandards.erc20.text">The standard for fungible tokens on Ethereum — every unit is identical and interchangeable, like a currency.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.tokenStandards.erc721.title">ERC-721</h3>
+                        <p data-i18n="assets.tokenStandards.erc721.text">The standard for non-fungible tokens (NFTs) — each token is unique and not interchangeable with another.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="assets.tokenStandards.erc1155.title">ERC-1155</h3>
+                        <p data-i18n="assets.tokenStandards.erc1155.text">A multi-token standard that can represent both fungible and non-fungible items within a single contract.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="assets.tokenStandards.closing">
+                    Other EVM-compatible networks generally reuse these same standards, while some
+                    non-EVM networks define their own equivalents — the underlying ideas of
+                    "fungible" and "non-fungible" carry over either way.
+                </p>
+            </section>
+
+            <!-- SUPPLY -->
+            <section class="section lesson-section reveal" id="supply">
+                <span class="tag" data-i18n="assets.supply.eyebrow">06 — Supply</span>
+                <h2 class="section-title" data-i18n="assets.supply.title">Supply</h2>
+                <p class="section-description" data-i18n="assets.supply.p1">
+                    "Circulating supply" refers to the units of an asset that currently exist and
+                    are accessible, while "max supply" refers to the upper limit a protocol's rules
+                    allow to ever exist, if one is defined at all.
+                </p>
+                <p class="section-description" data-i18n="assets.supply.p2">
+                    New units can be created over time through "emission," following rules set by
+                    the protocol. Units can also be permanently removed from circulation through
+                    "burning" — sending them to an address no one can access or spend from.
+                </p>
+
+                <!-- Future illustration slot: simple bar comparing circulating supply against max supply -->
+
+                <div class="card supply-card">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="asset-diagram__chrome-title">supply_overview.json</span>
+                    </div>
+                    <div class="supply-card__body">
+                        <div class="supply-card__row">
+                            <span class="supply-card__label" data-i18n="assets.supply.field1.label">Circulating Supply</span>
+                            <span class="supply-card__value">1,000,000 units</span>
+                        </div>
+                        <div class="supply-card__row">
+                            <span class="supply-card__label" data-i18n="assets.supply.field2.label">Max Supply</span>
+                            <span class="supply-card__value">10,000,000 units</span>
+                        </div>
+                        <div class="supply-card__row supply-card__row--result">
+                            <span class="supply-card__label" data-i18n="assets.supply.field3.label">Emission</span>
+                            <span class="supply-card__value" data-i18n="assets.supply.field3.value">Defined by protocol rules</span>
+                        </div>
+                        <div class="supply-card__row">
+                            <span class="supply-card__label" data-i18n="assets.supply.field4.label">Burn</span>
+                            <span class="supply-card__value" data-i18n="assets.supply.field4.value">Permanent removal from circulation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="assets.supply.p3">
+                    Not every asset defines a max supply, and not every asset uses burning — these
+                    are design choices, not requirements.
+                </p>
+            </section>
+
+            <!-- IDENTIFYING AN ASSET -->
+            <section class="section lesson-section reveal" id="identifying-assets">
+                <span class="tag" data-i18n="assets.identifyingAssets.eyebrow">07 — Identifying an Asset</span>
+                <h2 class="section-title" data-i18n="assets.identifyingAssets.title">How to Identify an Asset Correctly</h2>
+                <p class="section-description" data-i18n="assets.identifyingAssets.p1">
+                    A name alone is not enough to identify an asset safely. Because anyone can
+                    deploy a token with any name or symbol they choose, correctly identifying an
+                    asset means checking several fields together.
+                </p>
+
+                <div class="card asset-diagram">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="asset-diagram__chrome-title">asset_info.json</span>
+                    </div>
+                    <div class="asset-diagram__body">
+                        <div class="asset-diagram__row">
+                            <span class="asset-diagram__label" data-i18n="assets.identifyingAssets.field1.label">Name</span>
+                            <span class="asset-diagram__value">Example Token</span>
+                        </div>
+                        <div class="asset-diagram__row">
+                            <span class="asset-diagram__label" data-i18n="assets.identifyingAssets.field2.label">Ticker / Symbol</span>
+                            <span class="asset-diagram__value">EXT</span>
+                        </div>
+                        <div class="asset-diagram__row asset-diagram__row--body">
+                            <span class="asset-diagram__label" data-i18n="assets.identifyingAssets.field3.label">Contract Address</span>
+                            <span class="asset-diagram__value-group">
+                                <span class="asset-diagram__value" id="assetContract">0x1a2B3c4D5e6F7890aBc1234Dead5678Beef9012</span>
+                                <button type="button" class="copy-btn" data-copy-target="assetContract" aria-label="Copy value">Copy</button>
+                            </span>
+                        </div>
+                        <div class="asset-diagram__row">
+                            <span class="asset-diagram__label" data-i18n="assets.identifyingAssets.field4.label">Network</span>
+                            <span class="asset-diagram__value">Example L1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="assets.identifyingAssets.p2">
+                    A blockchain explorer lets you look up a contract address independently and
+                    confirm details like its creation date and current holders — a useful way to
+                    cross-check a project's own published information.
+                </p>
+                <p class="section-description" data-i18n="assets.identifyingAssets.closing">
+                    Copying only the name or ticker of an asset is risky: multiple contracts, on the
+                    same network or different ones, can share the exact same name.
+                </p>
+            </section>
+
+            <!-- FAKE TOKENS -->
+            <section class="section lesson-section reveal" id="fake-tokens">
+                <span class="tag" data-i18n="assets.fakeTokens.eyebrow">08 — Fake Tokens</span>
+                <h2 class="section-title" data-i18n="assets.fakeTokens.title">Fake Tokens</h2>
+                <p class="section-description" data-i18n="assets.fakeTokens.intro">
+                    Because deploying a token contract requires no permission from anyone,
+                    imitations of well-known assets are a common and recurring problem.
+                </p>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleAssets.learn.li1">The difference between a native coin and a token built on top of a network.</li>
-                    <li data-i18n="moduleAssets.learn.li2">What token standards like ERC-20 and ERC-721 actually define.</li>
-                    <li data-i18n="moduleAssets.learn.li3">Fungible vs. non-fungible assets, and why NFTs work differently from coins.</li>
-                    <li data-i18n="moduleAssets.learn.li4">How stablecoins attempt to hold a steady value.</li>
-                    <li data-i18n="moduleAssets.learn.li5">What a "real-world asset" (RWA) is when it's represented on-chain.</li>
+                    <li data-i18n="assets.fakeTokens.li1"><strong>Cloned contracts.</strong> A new contract copies the name, symbol, and even the logo of a legitimate asset, but is a completely different, unrelated contract.</li>
+                    <li data-i18n="assets.fakeTokens.li2"><strong>Manufactured appearances of legitimacy.</strong> Some fake tokens are set up to look active or established, which alone doesn't confirm they're genuine.</li>
+                    <li data-i18n="assets.fakeTokens.li3"><strong>Always verify through official channels.</strong> Use the project's own published documentation or website, not search engine results or ads, to confirm the correct contract address.</li>
+                    <li data-i18n="assets.fakeTokens.li4"><strong>Explorers help, but aren't proof by themselves.</strong> Details like contract creation date or holder distribution are useful signals, but should be combined with official verification.</li>
                 </ul>
             </section>
 
-            <section class="section lesson-section reveal" id="prerequisites">
-                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+            <!-- USE CASES -->
+            <section class="section lesson-section reveal" id="use-cases">
+                <span class="tag" data-i18n="assets.useCases.eyebrow">09 — Use Cases</span>
+                <h2 class="section-title" data-i18n="assets.useCases.title">Use Cases</h2>
+                <p class="section-description" data-i18n="assets.useCases.intro">
+                    Different categories of assets are typically used in different, concrete ways.
+                </p>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleAssets.prereq.li1">Completed <a href="../01-blockchain/index.html">Module 01 — Blockchain</a>.</li>
-                    <li data-i18n="moduleAssets.prereq.li2">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
-                    <li data-i18n="moduleAssets.prereq.li3">Completed <a href="../03-networks/index.html">Module 03 — Networks</a>.</li>
+                    <li data-i18n="assets.useCases.li1"><strong>Payment.</strong> Sending a coin or token as payment for a service or transfer of value.</li>
+                    <li data-i18n="assets.useCases.li2"><strong>Governance.</strong> Using a governance token to vote on a proposal that changes how a protocol operates.</li>
+                    <li data-i18n="assets.useCases.li3"><strong>Access.</strong> Holding a utility token to unlock a specific feature or service within an application.</li>
+                    <li data-i18n="assets.useCases.li4"><strong>NFTs.</strong> Representing ownership of a single, distinct item that cannot be exchanged one-for-one with another.</li>
+                    <li data-i18n="assets.useCases.li5"><strong>Stablecoins.</strong> Using an asset designed for lower volatility for everyday transactions.</li>
                 </ul>
             </section>
 
+            <!-- COMMON MISTAKES -->
+            <section class="section lesson-section reveal" id="mistakes">
+                <span class="tag" data-i18n="assets.mistakes.eyebrow">10 — Common Mistakes</span>
+                <h2 class="section-title" data-i18n="assets.mistakes.title">Common Mistakes</h2>
+                <p class="section-description" data-i18n="assets.mistakes.intro">
+                    Most losses involving digital assets trace back to one of these avoidable
+                    mistakes.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="assets.mistakes.li1"><strong>Assuming a name guarantees legitimacy.</strong> Anyone can deploy a contract using any name or symbol.</li>
+                    <li data-i18n="assets.mistakes.li2"><strong>Sending an asset to a network that doesn't support it.</strong> Not every asset exists on every network, even when address formats look compatible.</li>
+                    <li data-i18n="assets.mistakes.li3"><strong>Confusing a wrapped asset with the original.</strong> A wrapped token is a different contract representing the original, not the original itself.</li>
+                    <li data-i18n="assets.mistakes.li4"><strong>Ignoring the difference between circulating and max supply.</strong> Comparing these numbers without understanding what each represents can be misleading.</li>
+                    <li data-i18n="assets.mistakes.li5"><strong>Trusting unofficial links or ads instead of official sources.</strong> The contract address should be confirmed through the project's own official channels.</li>
+                </ul>
+            </section>
+
+            <!-- SUMMARY -->
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="assets.summary.eyebrow">11 — Summary</span>
+                <h2 class="section-title" data-i18n="assets.summary.title">Summary</h2>
+                <p class="section-description" data-i18n="assets.summary.p1">
+                    A coin is native to its own network; a token is created by a smart contract on
+                    top of an existing network. Assets are commonly grouped into categories like
+                    utility, governance, stablecoins, wrapped tokens, and NFTs, and follow technical
+                    standards so wallets and applications can handle them consistently.
+                </p>
+                <p class="section-description" data-i18n="assets.summary.p2">
+                    Supply concepts like circulation, emission, and burning describe how an asset's
+                    units change over time. Correctly identifying an asset means checking its name,
+                    ticker, contract address, and network together — never the name alone — which is
+                    also the best defense against fake tokens.
+                </p>
+            </section>
+
+            <!-- GLOSSARY -->
             <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
-                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <span class="tag" data-i18n="assets.glossary.eyebrow">12 — Glossary</span>
+                <h2 class="section-title" data-i18n="assets.glossary.title">Glossary</h2>
                 <dl class="glossary-list">
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleAssets.glossary.term1">Token Standard</dt>
-                        <dd data-i18n="moduleAssets.glossary.def1">A shared technical specification (like ERC-20) that lets wallets and apps handle a token predictably.</dd>
+                        <dt data-i18n="assets.glossary.term1">Coin</dt>
+                        <dd data-i18n="assets.glossary.def1">The native asset of a blockchain network, used to pay its gas fees.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleAssets.glossary.term2">NFT</dt>
-                        <dd data-i18n="moduleAssets.glossary.def2">A non-fungible token — a unique, non-interchangeable digital asset recorded on-chain.</dd>
+                        <dt data-i18n="assets.glossary.term2">Token</dt>
+                        <dd data-i18n="assets.glossary.def2">An asset created by a smart contract on top of an existing network.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleAssets.glossary.term3">RWA</dt>
-                        <dd data-i18n="moduleAssets.glossary.def3">A real-world asset represented on a blockchain, such as tokenized real estate or bonds.</dd>
+                        <dt data-i18n="assets.glossary.term3">Smart Contract</dt>
+                        <dd data-i18n="assets.glossary.def3">Self-executing code deployed on a network that defines how a token behaves.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleAssets.glossary.term4">Fungibility</dt>
-                        <dd data-i18n="moduleAssets.glossary.def4">The property of being interchangeable — one unit is identical in value to any other.</dd>
+                        <dt data-i18n="assets.glossary.term4">Utility Token</dt>
+                        <dd data-i18n="assets.glossary.def4">A token that grants access to a specific application or service.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleAssets.glossary.term5">Mint</dt>
-                        <dd data-i18n="moduleAssets.glossary.def5">The act of creating a new unit of a token or NFT on-chain.</dd>
+                        <dt data-i18n="assets.glossary.term5">Governance Token</dt>
+                        <dd data-i18n="assets.glossary.def5">A token that grants holders voting rights over a protocol's decisions.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="assets.glossary.term6">Stablecoin</dt>
+                        <dd data-i18n="assets.glossary.def6">An asset designed to track the value of a reference asset, aiming for lower volatility.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="assets.glossary.term7">Wrapped Token</dt>
+                        <dd data-i18n="assets.glossary.def7">A representation of an asset from one network, made usable on a different network.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="assets.glossary.term8">NFT</dt>
+                        <dd data-i18n="assets.glossary.def8">A non-fungible token — unique and not interchangeable with another.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="assets.glossary.term9">Token Standard</dt>
+                        <dd data-i18n="assets.glossary.def9">A shared technical specification that lets wallets and applications handle any compliant asset consistently.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="assets.glossary.term10">Burn</dt>
+                        <dd data-i18n="assets.glossary.def10">Permanently removing units of an asset from circulation.</dd>
                     </div>
                 </dl>
             </section>
 
+            <!-- QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="assets.quiz.eyebrow">13 — Quiz</span>
+                <h2 class="section-title" data-i18n="assets.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="assets.quiz.intro">
+                    Check your understanding of this lesson before moving on. Incorrect answers
+                    point you straight back to the relevant section.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q1">1. What defines a coin, as opposed to a token?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q1o1">A. It is native to its own network and isn't created by a smart contract</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q1o2">B. It always has a higher supply than a token</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q1o3">C. It can only be used for payments</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q1o4">D. It is always created on Ethereum</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q1.feedbackIncorrect" hidden>Not quite — review <a href="#coins">Coins</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q2">2. What is a token, technically?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q2o1">A. A separate blockchain with its own validators</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q2o2">B. An asset created by a smart contract on top of an existing network</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q2o3">C. A physical representation of a coin</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q2o4">D. A backup copy of a coin</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q2.feedbackIncorrect" hidden>Not quite — review <a href="#tokens">Tokens</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q3">3. What is a governance token used for?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q3o1">A. Paying gas fees on any network</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q3o2">B. Voting on proposals that affect how a protocol operates</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q3o3">C. Representing ownership of a unique item</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q3o4">D. Tracking the value of a fiat currency</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q3.feedbackIncorrect" hidden>Not quite — review <a href="#categories">Main Categories</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q4">4. What is the key difference between ERC-20 and ERC-721?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q4o1">A. ERC-20 is for fungible tokens; ERC-721 is for non-fungible tokens</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q4o2">B. ERC-721 is older than ERC-20</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q4o3">C. ERC-20 only works with NFTs</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q4o4">D. There is no meaningful difference between them</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q4.feedbackIncorrect" hidden>Not quite — review <a href="#token-standards">Token Standards</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q5">5. What does "burning" an asset mean?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q5o1">A. Increasing its max supply</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q5o2">B. Permanently removing units from circulation</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q5o3">C. Converting it into a wrapped token</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q5o4">D. Moving it to a different network</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q5.feedbackIncorrect" hidden>Not quite — review <a href="#supply">Supply</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q6">6. Why is copying only an asset's name risky?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q6o1">A. Names are case-sensitive on every network</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q6o2">B. Multiple different contracts can share the exact same name</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q6o3">C. Names automatically expire after some time</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q6o4">D. It isn't risky at all</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q6.feedbackIncorrect" hidden>Not quite — review <a href="#identifying-assets">Identifying an Asset</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q7">7. What is a common pattern behind fake tokens?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q7o1">A. A cloned contract copying the name and symbol of a legitimate asset</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q7o2">B. Every token with a short name is fake</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q7o3">C. Fake tokens can only exist on test networks</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q7o4">D. Explorers automatically block fake tokens</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q7.feedbackIncorrect" hidden>Not quite — review <a href="#fake-tokens">Fake Tokens</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q8">8. What best describes a wrapped token?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q8o1">A. The original asset moved physically to a new network</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q8o2">B. A representation of an asset from one network made usable on a different network</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q8o3">C. A token with no underlying asset at all</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q8o4">D. A governance token with extra voting power</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q8.feedbackIncorrect" hidden>Not quite — review <a href="#categories">Main Categories</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="assets.quiz.q9">9. What should you check before trusting a token's contract address?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q9o1">A. Whether it appears in a search engine ad</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="assets.quiz.q9o2">B. The project's own official documentation or channels</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q9o3">C. Whether the name sounds trustworthy</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="assets.quiz.q9o4">D. Whether the ticker is short</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="assets.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="assets.quiz.q9.feedbackIncorrect" hidden>Not quite — review <a href="#mistakes">Common Mistakes</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="assets.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="assets.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">9</strong>
+                            <span data-i18n="assets.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="assets.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
             <nav class="lesson-pagination" aria-label="Lesson pagination">
-                <a href="../03-networks/index.html" class="btn btn-secondary" data-i18n="moduleAssets.pagination.back">← Module 03</a>
-                <a href="../05-defi/index.html" class="btn btn-primary" data-i18n="moduleAssets.pagination.next">Next Module →</a>
+                <a href="../03-networks/index.html" class="btn btn-secondary" data-i18n="assets.pagination.back">← Module 03</a>
+                <a href="../05-defi/index.html" class="btn btn-primary" data-i18n="assets.pagination.next">Next Module →</a>
             </nav>
 
         </article>
@@ -183,25 +679,34 @@
 
 </main>
 
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+
             <div class="footer-brand">
-                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <h3 data-i18n="footer.title">Nodra</h3>
                 <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
+
             <div class="footer-links">
                 <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
                 <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
                 <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
             </div>
+
         </div>
     </div>
 </footer>
 
+<span id="i18nCopiedLabel" data-i18n="assets.common.copied" hidden>Copied</span>
+
 <script defer src="../../assets/js/translations.js"></script>
 <script defer src="../../assets/js/academy.js"></script>
-<script defer src="../../assets/js/module-placeholder.js"></script>
+<script defer src="../../assets/js/assets.js"></script>
 </body>
 </html>
