@@ -3,14 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="moduleYield.meta.title">Yield — Nodra Academy</title>
-<meta name="description" content="Staking, liquidity mining and telling real yield from unsustainable incentives.">
+<title data-i18n="yield.meta.title">Yield Fundamentals - Nodra Academy</title>
+<meta name="description" content="Where DeFi yield actually comes from: staking rewards, trading fees and token emissions, how APR and APY differ, and how to tell a sustainable return from a temporary incentive.">
 <link rel="stylesheet" href="../../assets/css/variables.css">
 <link rel="stylesheet" href="../../assets/css/components.css">
 <link rel="stylesheet" href="../../assets/css/academy.css">
-<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+<link rel="stylesheet" href="../../assets/css/yield.css">
 </head>
 <body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as previous modules) -->
+<!-- ===================================================== -->
 
 <nav class="navbar">
 
@@ -41,56 +45,78 @@
 
 <main>
 
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
+
     <section class="hero" id="top">
         <div class="container">
             <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <span class="tag" data-i18n="tracks.defi.title">DeFi</span>
-                    <h1 class="hero-title" data-i18n="moduleYield.hero.title">Yield</h1>
-                    <p class="hero-description" data-i18n="moduleYield.hero.description">Not all yield is created equal. This module explains how to tell a sustainable return from a temporary incentive.</p>
+
+                    <span class="tag" data-i18n="yield.hero.tag">MODULE 07</span>
+
+                    <h1 class="hero-title" data-i18n="yield.hero.title">Yield</h1>
+
+                    <p class="hero-description" data-i18n="yield.hero.description">
+                        Not all yield is created equal. How to separate staking rewards,
+                        trading fees and token emissions, and tell a sustainable return
+                        from a temporary incentive.
+                    </p>
 
                     <div class="hero-actions">
-                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
-                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                        <a href="#introduction" class="btn btn-primary" data-i18n="yield.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="yield.hero.back">← Academy</a>
                     </div>
 
                     <div class="hero-stats">
                         <div class="stat-card">
-                            <strong data-i18n="moduleYield.hero.stat1.value">Intermediate</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                            <strong data-i18n="yield.hero.stat1.value">Intermediate</strong>
+                            <span data-i18n="yield.hero.stat1.label">Difficulty</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="moduleYield.hero.stat2.value">40 min</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                            <strong data-i18n="yield.hero.stat2.value">40 min</strong>
+                            <span data-i18n="yield.hero.stat2.label">Duration</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="tracks.defi.title">DeFi</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                            <strong data-i18n="yield.hero.stat3.value">Reading + Quiz</strong>
+                            <span data-i18n="yield.hero.stat3.label">Format</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                            <strong data-i18n="yield.hero.stat4.value">12</strong>
+                            <span data-i18n="yield.hero.stat4.label">Sections</span>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="hero-visual reveal">
                     <div class="hero-dashboard glow">
+
                         <div class="dashboard-header">
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                         </div>
+
                         <div class="dashboard-content">
-                            <div class="dashboard-title">MODULE 07</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
-                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
-                            <div class="dashboard-divider"></div>
-                            <div class="dashboard-footer" data-i18n="tracks.defi.title">DeFi</div>
+                            <div class="yield-mock">
+                                <div class="yield-mock__row">
+                                    <span class="yield-mock__label" data-i18n="yield.visual.poolLabel">Pool</span>
+                                    <span class="yield-mock__value">ETH Staking</span>
+                                </div>
+                                <div class="yield-mock__row">
+                                    <span class="yield-mock__label" data-i18n="yield.visual.apyLabel">APY</span>
+                                    <span class="yield-mock__value">12.4%</span>
+                                </div>
+                                <div class="yield-mock__row">
+                                    <span class="yield-mock__label" data-i18n="yield.visual.tvlLabel">TVL</span>
+                                    <span class="yield-mock__block">$850M</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -98,18 +124,30 @@
         </div>
     </section>
 
+    <!-- ===================================================== -->
+    <!-- LESSON BODY -->
+    <!-- ===================================================== -->
+
     <div class="container lesson-layout">
 
         <aside class="lesson-sidebar" id="sidebar">
             <nav class="toc" aria-label="Table of contents">
-                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <span class="tag" data-i18n="yield.toc.title">Contents</span>
                 <div class="toc__list-wrap" id="tocListWrap">
                     <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
                     <ol class="toc__list" id="tocList">
-                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
-                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
-                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
-                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                        <li><a href="#introduction" data-i18n="yield.toc.introduction">Introduction</a></li>
+                        <li><a href="#sources-of-yield" data-i18n="yield.toc.sourcesOfYield">Sources of Yield</a></li>
+                        <li><a href="#apr-apy" data-i18n="yield.toc.aprApy">APR and APY</a></li>
+                        <li><a href="#tvl" data-i18n="yield.toc.tvl">Total Value Locked</a></li>
+                        <li><a href="#token-emissions" data-i18n="yield.toc.tokenEmissions">Token Emissions</a></li>
+                        <li><a href="#real-yield-vs-emissions" data-i18n="yield.toc.realVsEmissions">Real Yield vs Emissions</a></li>
+                        <li><a href="#yield-strategies" data-i18n="yield.toc.yieldStrategies">Yield Strategies</a></li>
+                        <li><a href="#compounding" data-i18n="yield.toc.compounding">Compounding</a></li>
+                        <li><a href="#evaluating-sustainability" data-i18n="yield.toc.evaluatingSustainability">Evaluating Sustainability</a></li>
+                        <li><a href="#summary" data-i18n="yield.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="yield.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="yield.toc.quiz">Quiz</a></li>
                     </ol>
                 </div>
             </nav>
@@ -117,64 +155,481 @@
 
         <article class="lesson-content">
 
-            <section class="section lesson-section reveal" id="overview">
-                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
-                <h2 class="section-title" data-i18n="moduleYield.overview.title">Yield</h2>
-                <p class="section-description" data-i18n="moduleYield.overview.p1">"Yield" in DeFi can come from very different places: securing a network through staking, earning trading fees by providing liquidity, or simply being paid in a protocol's own token to attract early users.</p>
-                <p class="section-description" data-i18n="moduleYield.overview.p2">This module will teach you to separate these sources, understand why advertised APYs can be misleading, and recognize the signs of yield that exists only to be unsustainable.</p>
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="yield.introduction.eyebrow">01. Introduction</span>
+                <h2 class="section-title" data-i18n="yield.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="yield.introduction.p1">
+                    Modules 05 and 06 covered two places yield can come from: trading
+                    fees earned by liquidity providers, and interest paid by borrowers.
+                    This lesson steps back and asks a broader question: when a protocol
+                    advertises a return, where does that number actually come from, and
+                    will it still be there next month.
+                </p>
+                <p class="section-description" data-i18n="yield.introduction.p2">
+                    This lesson explains the real sources yield can come from, how APR
+                    and APY differ, why Total Value Locked (TVL) is a useful signal but
+                    not a guarantee, and how to recognize when an advertised yield exists
+                    only to attract deposits rather than to last.
+                </p>
+                <p class="section-description" data-i18n="yield.introduction.p3">
+                    By the end of this lesson you will be able to look past a headline
+                    percentage and ask the one question that matters: is this yield
+                    being paid out of real activity, or is it being paid out of new
+                    deposits.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="learn">
-                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+            <!-- SOURCES OF YIELD -->
+            <section class="section lesson-section reveal" id="sources-of-yield">
+                <span class="tag" data-i18n="yield.sources.eyebrow">02. Sources of Yield</span>
+                <h2 class="section-title" data-i18n="yield.sources.title">Sources of Yield</h2>
+                <p class="section-description" data-i18n="yield.sources.p1">
+                    Every yield number in DeFi is paid from one of a small number of
+                    underlying sources, and the same advertised APY can come from a
+                    completely different mix depending on the protocol.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.sources.card1.title">Staking Rewards</h3>
+                        <p data-i18n="yield.sources.card1.text">Paid for helping secure a network or a protocol, usually funded by new issuance.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.sources.card2.title">Trading Fees</h3>
+                        <p data-i18n="yield.sources.card2.text">Paid to liquidity providers out of the fees traders actually pay on swaps.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.sources.card3.title">Token Emissions</h3>
+                        <p data-i18n="yield.sources.card3.text">Newly created tokens a protocol distributes to attract deposits, funded by the protocol itself.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="yield.sources.closing">
+                    The first two sources are backed by real economic activity; the
+                    third depends entirely on the protocol's own token remaining
+                    valuable.
+                </p>
+            </section>
+
+            <!-- APR AND APY -->
+            <section class="section lesson-section reveal" id="apr-apy">
+                <span class="tag" data-i18n="yield.aprApy.eyebrow">03. APR and APY</span>
+                <h2 class="section-title" data-i18n="yield.aprApy.title">APR and APY</h2>
+                <p class="section-description" data-i18n="yield.aprApy.p1">
+                    Annual Percentage Rate (APR) is a simple yearly rate with no
+                    compounding: it assumes you never reinvest what you earn. Annual
+                    Percentage Yield (APY) assumes earnings are reinvested continuously,
+                    so it compounds over the course of the year.
+                </p>
+                <p class="section-description" data-i18n="yield.aprApy.p2">
+                    The same underlying rate produces a higher APY than APR, purely
+                    because of compounding, which is why protocols often advertise the
+                    larger APY number even when the actual rate paid is more modest.
+                </p>
+
+                <div class="card rate-diagram">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="rate-diagram__chrome-title">rate_comparison.json</span>
+                    </div>
+                    <div class="rate-diagram__body">
+                        <div class="rate-diagram__row">
+                            <span class="rate-diagram__label" data-i18n="yield.aprApy.field1.label">Base Rate</span>
+                            <span class="rate-diagram__value">10% per year</span>
+                        </div>
+                        <div class="rate-diagram__row">
+                            <span class="rate-diagram__label" data-i18n="yield.aprApy.field2.label">APR (no compounding)</span>
+                            <span class="rate-diagram__value">10.00%</span>
+                        </div>
+                        <div class="rate-diagram__row">
+                            <span class="rate-diagram__label" data-i18n="yield.aprApy.field3.label">Compounding Frequency</span>
+                            <span class="rate-diagram__value" data-i18n="yield.aprApy.field3.value">Daily</span>
+                        </div>
+                        <div class="rate-diagram__row rate-diagram__row--body">
+                            <span class="rate-diagram__label" data-i18n="yield.aprApy.field4.label">APY</span>
+                            <span class="rate-diagram__value">10.52%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="yield.aprApy.closing">
+                    Always compare APR to APR and APY to APY. Comparing one protocol's
+                    APR to another's APY makes the second look worse than it actually
+                    is.
+                </p>
+            </section>
+
+            <!-- TOTAL VALUE LOCKED (TVL) -->
+            <section class="section lesson-section reveal" id="tvl">
+                <span class="tag" data-i18n="yield.tvl.eyebrow">04. Total Value Locked (TVL)</span>
+                <h2 class="section-title" data-i18n="yield.tvl.title">Total Value Locked (TVL)</h2>
+                <p class="section-description" data-i18n="yield.tvl.p1">
+                    Total Value Locked, or TVL, is the total value of assets currently
+                    deposited in a protocol. It's commonly used as a rough measure of
+                    how much capital trusts a protocol enough to use it.
+                </p>
+                <p class="section-description" data-i18n="yield.tvl.p2">
+                    TVL is useful context, but it isn't a guarantee of safety: a high
+                    TVL can still be concentrated in a few large depositors, and it can
+                    leave just as quickly as it arrived if incentives change.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.tvl.suggests.title">What TVL suggests</h3>
+                        <p data-i18n="yield.tvl.suggests.text">Real capital is currently deployed, and the protocol has attracted meaningful usage.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.tvl.notGuarantee.title">What TVL doesn't guarantee</h3>
+                        <p data-i18n="yield.tvl.notGuarantee.text">That the deposited assets are safe, or that depositors will stay if rewards drop.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="yield.tvl.closing">
+                    Treat TVL as one data point among several, not as proof that a
+                    protocol's yield is sustainable.
+                </p>
+            </section>
+
+            <!-- TOKEN EMISSIONS -->
+            <section class="section lesson-section reveal" id="token-emissions">
+                <span class="tag" data-i18n="yield.emissions.eyebrow">05. Token Emissions</span>
+                <h2 class="section-title" data-i18n="yield.emissions.title">Token Emissions</h2>
+                <p class="section-description" data-i18n="yield.emissions.p1">
+                    Emissions are new tokens a protocol creates and distributes as
+                    rewards, usually to attract early liquidity before trading fees or
+                    interest alone would be enough to compete with other protocols.
+                </p>
+                <p class="section-description" data-i18n="yield.emissions.p2">
+                    Because emissions are newly created supply, distributing them
+                    increases the total number of tokens in circulation, which puts
+                    downward pressure on that token's price unless demand grows just as
+                    fast.
+                </p>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleYield.learn.li1">The difference between staking rewards, trading fees, and token emissions.</li>
-                    <li data-i18n="moduleYield.learn.li2">Why APY and APR are calculated differently, and why that matters.</li>
-                    <li data-i18n="moduleYield.learn.li3">How to read Total Value Locked (TVL) as a signal, not a guarantee.</li>
-                    <li data-i18n="moduleYield.learn.li4">Why very high advertised yields are usually a warning sign, not a bonus.</li>
-                    <li data-i18n="moduleYield.learn.li5">How to evaluate whether a yield source can realistically continue.</li>
+                    <li data-i18n="yield.emissions.li1"><strong>Bootstrapping liquidity.</strong> Emissions can attract deposits quickly when a protocol is new and has little organic activity yet.</li>
+                    <li data-i18n="yield.emissions.li2"><strong>Diluting existing holders.</strong> Every new token distributed slightly reduces the share everyone else's tokens represent.</li>
+                    <li data-i18n="yield.emissions.li3"><strong>Fading over time.</strong> Most emissions schedules are designed to decrease, meaning the advertised APY funded by them typically falls as the protocol matures.</li>
+                </ul>
+                <p class="section-description" data-i18n="yield.emissions.closing">
+                    An APY that's mostly emissions is really a temporary subsidy, not a
+                    return generated by the protocol's actual activity.
+                </p>
+            </section>
+
+            <!-- REAL YIELD VS EMISSIONS YIELD -->
+            <section class="section lesson-section reveal" id="real-yield-vs-emissions">
+                <span class="tag" data-i18n="yield.realVsEmissions.eyebrow">06. Real Yield vs Emissions Yield</span>
+                <h2 class="section-title" data-i18n="yield.realVsEmissions.title">Real Yield vs Emissions Yield</h2>
+                <p class="section-description" data-i18n="yield.realVsEmissions.p1">
+                    "Real yield" describes returns paid from a protocol's actual
+                    revenue, trading fees or borrowing interest, in an asset that
+                    already has independent value, rather than in newly minted tokens.
+                </p>
+                <p class="section-description" data-i18n="yield.realVsEmissions.p2">
+                    Emissions yield can still be worth participating in, but it should
+                    be understood for what it is: a reward paid in a token whose price
+                    depends on continued demand, not a fee earned from existing
+                    economic activity.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.realVsEmissions.real.title">Real Yield</h3>
+                        <p data-i18n="yield.realVsEmissions.real.text">Paid from fees or interest the protocol actually collects, typically in an established asset.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.realVsEmissions.emissions.title">Emissions Yield</h3>
+                        <p data-i18n="yield.realVsEmissions.emissions.text">Paid in newly created tokens, only valuable if that token holds or grows its price.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="yield.realVsEmissions.closing">
+                    A protocol advertising 40% APY made almost entirely of emissions is
+                    telling you something very different than one advertising 4% APY
+                    made entirely of trading fees.
+                </p>
+            </section>
+
+            <!-- YIELD STRATEGIES -->
+            <section class="section lesson-section reveal" id="yield-strategies">
+                <span class="tag" data-i18n="yield.strategies.eyebrow">07. Yield Strategies</span>
+                <h2 class="section-title" data-i18n="yield.strategies.title">Yield Strategies</h2>
+                <p class="section-description" data-i18n="yield.strategies.intro">
+                    A yield strategy is simply a plan for where to deposit assets and
+                    how to move them over time to capture return, ranging from a single
+                    deposit left untouched to actively rotating capital between several
+                    protocols.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="yield.strategies.li1"><strong>Single-protocol staking.</strong> Deposit once, earn a steady rate, minimal ongoing management.</li>
+                    <li data-i18n="yield.strategies.li2"><strong>Liquidity provision.</strong> Earn trading fees, while accepting the risk of impermanent loss covered in Module 05.</li>
+                    <li data-i18n="yield.strategies.li3"><strong>Active farming.</strong> Move capital between protocols to chase the highest current incentive, accepting higher effort and higher risk.</li>
+                </ul>
+                <p class="section-description" data-i18n="yield.strategies.closing">
+                    More complex strategies aren't automatically better; they usually
+                    trade simplicity and lower risk for a chance at a higher, less
+                    certain return.
+                </p>
+            </section>
+
+            <!-- COMPOUNDING -->
+            <section class="section lesson-section reveal" id="compounding">
+                <span class="tag" data-i18n="yield.compounding.eyebrow">08. Compounding</span>
+                <h2 class="section-title" data-i18n="yield.compounding.title">Compounding</h2>
+                <p class="section-description" data-i18n="yield.compounding.p1">
+                    Compounding means reinvesting the yield you've already earned so
+                    that future returns are calculated on a larger base, rather than
+                    withdrawing rewards as they arrive.
+                </p>
+                <p class="section-description" data-i18n="yield.compounding.p2">
+                    The more frequently rewards compound, the higher the resulting APY,
+                    which is exactly the relationship covered earlier: identical base
+                    rates produce different APYs depending on how often they compound.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.compounding.manual.title">Manual Compounding</h3>
+                        <p data-i18n="yield.compounding.manual.text">You reinvest rewards yourself, paying a transaction fee each time you do.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="yield.compounding.auto.title">Automatic Compounding</h3>
+                        <p data-i18n="yield.compounding.auto.text">A protocol reinvests rewards for you continuously, usually in exchange for a small performance fee.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="yield.compounding.closing">
+                    Frequent manual compounding can be eaten up by transaction fees on
+                    some networks, which is part of why automatic compounding vaults
+                    exist.
+                </p>
+            </section>
+
+            <!-- EVALUATING SUSTAINABILITY -->
+            <section class="section lesson-section reveal" id="evaluating-sustainability">
+                <span class="tag" data-i18n="yield.sustainability.eyebrow">09. Evaluating Sustainability</span>
+                <h2 class="section-title" data-i18n="yield.sustainability.title">Evaluating Sustainability</h2>
+                <p class="section-description" data-i18n="yield.sustainability.intro">
+                    Before depositing into anything advertising a high yield, a few
+                    questions consistently separate a durable return from a temporary
+                    one.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="yield.sustainability.li1"><strong>Where does the yield come from?</strong> Real fees and interest, or newly minted emissions.</li>
+                    <li data-i18n="yield.sustainability.li2"><strong>Is the rate advertised as APR or APY?</strong> Confirm you're comparing like with like against other options.</li>
+                    <li data-i18n="yield.sustainability.li3"><strong>What happens to the schedule over time?</strong> Emissions schedules that decrease mean today's rate is not tomorrow's rate.</li>
+                    <li data-i18n="yield.sustainability.li4"><strong>Has TVL been stable or fleeing?</strong> Rapid TVL outflows often precede an emissions schedule running dry.</li>
+                    <li data-i18n="yield.sustainability.li5"><strong>Would the yield exist without new deposits funding it?</strong> If the answer is no, it is a subsidy, not a return.</li>
                 </ul>
             </section>
 
-            <section class="section lesson-section reveal" id="prerequisites">
-                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
-                <ul class="lesson-list">
-                    <li data-i18n="moduleYield.prereq.li1">Completed <a href="../05-defi/index.html">Module 05 — DeFi Fundamentals</a>.</li>
-                    <li data-i18n="moduleYield.prereq.li2">Completed <a href="../06-lending/index.html">Module 06 — Lending</a>.</li>
-                </ul>
+            <!-- SUMMARY -->
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="yield.summary.eyebrow">10. Summary</span>
+                <h2 class="section-title" data-i18n="yield.summary.title">Summary</h2>
+                <p class="section-description" data-i18n="yield.summary.p1">
+                    Yield in DeFi comes from a mix of staking rewards, trading fees, and
+                    token emissions, and the same advertised number can be backed by
+                    very different mixes of these three sources. APR and APY describe
+                    the same underlying rate differently depending on whether
+                    compounding is included.
+                </p>
+                <p class="section-description" data-i18n="yield.summary.p2">
+                    TVL is a useful signal of activity but never a guarantee of safety,
+                    and yield made mostly of emissions is a temporary subsidy rather
+                    than a durable return. The most useful habit from this lesson is
+                    asking where a yield number actually comes from before trusting it.
+                </p>
             </section>
 
+            <!-- GLOSSARY -->
             <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
-                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <span class="tag" data-i18n="yield.glossary.eyebrow">11. Glossary</span>
+                <h2 class="section-title" data-i18n="yield.glossary.title">Glossary</h2>
                 <dl class="glossary-list">
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleYield.glossary.term1">APY</dt>
-                        <dd data-i18n="moduleYield.glossary.def1">Annual Percentage Yield — a return rate that accounts for compounding.</dd>
+                        <dt data-i18n="yield.glossary.term1">Yield</dt>
+                        <dd data-i18n="yield.glossary.def1">Any return earned on deposited assets, from staking rewards, trading fees, interest, or token emissions.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleYield.glossary.term2">Staking</dt>
-                        <dd data-i18n="moduleYield.glossary.def2">Locking an asset to help secure a network (or protocol) in exchange for rewards.</dd>
+                        <dt data-i18n="yield.glossary.term2">APR</dt>
+                        <dd data-i18n="yield.glossary.def2">Annual Percentage Rate: a yearly return with no compounding assumed.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleYield.glossary.term3">Yield Farming</dt>
-                        <dd data-i18n="moduleYield.glossary.def3">Moving capital between DeFi protocols to chase the highest available return.</dd>
+                        <dt data-i18n="yield.glossary.term3">APY</dt>
+                        <dd data-i18n="yield.glossary.def3">Annual Percentage Yield: a yearly return that assumes earnings are reinvested and compound over time.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleYield.glossary.term4">Emissions</dt>
-                        <dd data-i18n="moduleYield.glossary.def4">New tokens a protocol distributes as rewards, often to attract early liquidity.</dd>
+                        <dt data-i18n="yield.glossary.term4">TVL</dt>
+                        <dd data-i18n="yield.glossary.def4">Total Value Locked: the total value of assets currently deposited in a protocol.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleYield.glossary.term5">TVL</dt>
-                        <dd data-i18n="moduleYield.glossary.def5">Total Value Locked — the total value of assets deposited in a protocol.</dd>
+                        <dt data-i18n="yield.glossary.term5">Emissions</dt>
+                        <dd data-i18n="yield.glossary.def5">New tokens a protocol creates and distributes as rewards, increasing that token's circulating supply.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="yield.glossary.term6">Real Yield</dt>
+                        <dd data-i18n="yield.glossary.def6">Return paid from a protocol's actual fees or interest, rather than from newly minted tokens.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="yield.glossary.term7">Compounding</dt>
+                        <dd data-i18n="yield.glossary.def7">Reinvesting earned yield so future returns are calculated on a larger base.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="yield.glossary.term8">Yield Farming</dt>
+                        <dd data-i18n="yield.glossary.def8">Actively moving assets between protocols to capture the highest available return.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="yield.glossary.term9">Dilution</dt>
+                        <dd data-i18n="yield.glossary.def9">The reduction in each token holder's relative share caused by new token emissions.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="yield.glossary.term10">Yield Strategy</dt>
+                        <dd data-i18n="yield.glossary.def10">A plan for where to deposit assets, and how (or whether) to move them, to capture return.</dd>
                     </div>
                 </dl>
             </section>
 
+            <!-- QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="yield.quiz.eyebrow">12. Quiz</span>
+                <h2 class="section-title" data-i18n="yield.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="yield.quiz.intro">
+                    Check your understanding of this lesson before moving on. Incorrect
+                    answers point you straight back to the relevant section.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q1">1. Which of these is one of the three main sources of yield covered in this lesson?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q1o1">A. Token emissions distributed to attract deposits</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q1o2">B. Guaranteed government-backed interest</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q1o3">C. A fixed fee charged only to new users</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q1o4">D. Automatic currency conversion</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="#sources-of-yield">Sources of Yield</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q2">2. Why is APY typically higher than APR for the same base rate?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q2o1">A. APY includes a bonus paid only to early depositors</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q2o2">B. APY accounts for compounding, reinvesting earnings over the year</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q2o3">C. APY is calculated using a different currency</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q2o4">D. APY excludes protocol fees, while APR includes them</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="#apr-apy">APR and APY</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q3">3. What does a high TVL actually suggest about a protocol?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q3o1">A. That deposited funds are guaranteed to be safe</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q3o2">B. That a meaningful amount of real capital is currently deployed in it</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q3o3">C. That the protocol's token price will only go up</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q3o4">D. That the protocol has passed a government audit</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="#tvl">Total Value Locked</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q4">4. What effect do token emissions have on a protocol's existing token holders?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q4o1">A. They increase each holder's share of the total supply</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q4o2">B. They dilute existing holders by increasing the total supply</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q4o3">C. They have no effect on circulating supply</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q4o4">D. They automatically raise the token's price</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="#token-emissions">Token Emissions</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q5">5. What distinguishes "real yield" from "emissions yield"?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q5o1">A. Real yield is always higher than emissions yield</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q5o2">B. Real yield is paid from actual fees or interest, not newly minted tokens</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q5o3">C. Emissions yield is paid only to a protocol's founders</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q5o4">D. Real yield can only be earned through staking</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q5.feedbackIncorrect" hidden>Not quite, review <a href="#real-yield-vs-emissions">Real Yield vs Emissions</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q6">6. Which best describes "active farming" as a yield strategy?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q6o1">A. Depositing once and never checking the position again</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q6o2">B. Regularly moving capital between protocols to chase the highest current incentive</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q6o3">C. A strategy that eliminates impermanent loss entirely</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q6o4">D. A strategy only available to institutional investors</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q6.feedbackIncorrect" hidden>Not quite, review <a href="#yield-strategies">Yield Strategies</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q7">7. How does compounding frequency affect APY?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q7o1">A. More frequent compounding always lowers the resulting APY</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q7o2">B. More frequent compounding produces a higher resulting APY for the same base rate</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q7o3">C. Compounding frequency has no effect on APY</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q7o4">D. Compounding only applies to token emissions, not fees</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q7.feedbackIncorrect" hidden>Not quite, review <a href="#compounding">Compounding</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q8">8. What is a warning sign that an advertised yield may be unsustainable?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q8o1">A. The yield is paid partly through trading fees</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q8o2">B. The yield would disappear without a constant stream of new deposits funding it</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q8o3">C. The protocol displays both APR and APY</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q8o4">D. TVL has remained stable over several months</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q8.feedbackIncorrect" hidden>Not quite, review <a href="#evaluating-sustainability">Evaluating Sustainability</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="yield.quiz.q9">9. What is the single most useful question to ask before trusting an advertised yield number?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q9o1">A. Whether the protocol has a popular social media account</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="yield.quiz.q9o2">B. Where the yield actually comes from</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q9o3">C. How many other protocols offer a similar number</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="yield.quiz.q9o4">D. Whether the yield is paid daily or weekly</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="yield.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="yield.quiz.q9.feedbackIncorrect" hidden>Not quite, review <a href="#evaluating-sustainability">Evaluating Sustainability</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="yield.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="yield.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">9</strong>
+                            <span data-i18n="yield.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="yield.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
             <nav class="lesson-pagination" aria-label="Lesson pagination">
-                <a href="../06-lending/index.html" class="btn btn-secondary" data-i18n="moduleYield.pagination.back">← Module 06</a>
-                <a href="../08-stablecoins/index.html" class="btn btn-primary" data-i18n="moduleYield.pagination.next">Next Module →</a>
+                <a href="../06-lending/index.html" class="btn btn-secondary" data-i18n="yield.pagination.back">← Module 06</a>
+                <a href="../08-stablecoins/index.html" class="btn btn-primary" data-i18n="yield.pagination.next">Next Module →</a>
             </nav>
 
         </article>
@@ -182,25 +637,34 @@
 
 </main>
 
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+
             <div class="footer-brand">
-                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <h3 data-i18n="footer.title">Nodra</h3>
                 <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
+
             <div class="footer-links">
                 <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
                 <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
                 <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
             </div>
+
         </div>
     </div>
 </footer>
 
+<span id="i18nCopiedLabel" data-i18n="yield.common.copied" hidden>Copied</span>
+
 <script defer src="../../assets/js/translations.js"></script>
 <script defer src="../../assets/js/academy.js"></script>
-<script defer src="../../assets/js/module-placeholder.js"></script>
+<script defer src="../../assets/js/yield.js"></script>
 </body>
 </html>

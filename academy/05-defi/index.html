@@ -3,14 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="moduleDefi.meta.title">DeFi Fundamentals — Nodra Academy</title>
-<meta name="description" content="What decentralized finance actually replaces, and how liquidity moves without a bank in the middle.">
+<title data-i18n="defi.meta.title">DeFi Fundamentals — Nodra Academy</title>
+<meta name="description" content="How decentralized exchanges, liquidity pools and automated market makers work, and the real risks — like impermanent loss — that come with providing liquidity.">
 <link rel="stylesheet" href="../../assets/css/variables.css">
 <link rel="stylesheet" href="../../assets/css/components.css">
 <link rel="stylesheet" href="../../assets/css/academy.css">
-<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+<link rel="stylesheet" href="../../assets/css/defi.css">
 </head>
 <body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as previous modules) -->
+<!-- ===================================================== -->
 
 <nav class="navbar">
 
@@ -41,56 +45,77 @@
 
 <main>
 
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
+
     <section class="hero" id="top">
         <div class="container">
             <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <span class="tag" data-i18n="tracks.defi.title">DeFi</span>
-                    <h1 class="hero-title" data-i18n="moduleDefi.hero.title">DeFi Fundamentals</h1>
-                    <p class="hero-description" data-i18n="moduleDefi.hero.description">DeFi rebuilds financial services as open protocols instead of institutions. This module explains how that works.</p>
+
+                    <span class="tag" data-i18n="defi.hero.tag">MODULE 05</span>
+
+                    <h1 class="hero-title" data-i18n="defi.hero.title">DeFi Fundamentals</h1>
+
+                    <p class="hero-description" data-i18n="defi.hero.description">
+                        Open, permissionless financial protocols — how trading, lending and
+                        earning yield work without a bank or exchange in the middle.
+                    </p>
 
                     <div class="hero-actions">
-                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
-                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                        <a href="#introduction" class="btn btn-primary" data-i18n="defi.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="defi.hero.back">← Academy</a>
                     </div>
 
                     <div class="hero-stats">
                         <div class="stat-card">
-                            <strong data-i18n="moduleDefi.hero.stat1.value">Intermediate</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                            <strong data-i18n="defi.hero.stat1.value">Intermediate</strong>
+                            <span data-i18n="defi.hero.stat1.label">Difficulty</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="moduleDefi.hero.stat2.value">40 min</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                            <strong data-i18n="defi.hero.stat2.value">40 min</strong>
+                            <span data-i18n="defi.hero.stat2.label">Duration</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="tracks.defi.title">DeFi</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                            <strong data-i18n="defi.hero.stat3.value">Reading + Quiz</strong>
+                            <span data-i18n="defi.hero.stat3.label">Format</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                            <strong data-i18n="defi.hero.stat4.value">12</strong>
+                            <span data-i18n="defi.hero.stat4.label">Sections</span>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="hero-visual reveal">
                     <div class="hero-dashboard glow">
+
                         <div class="dashboard-header">
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                         </div>
+
                         <div class="dashboard-content">
-                            <div class="dashboard-title">MODULE 05</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
-                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
-                            <div class="dashboard-divider"></div>
-                            <div class="dashboard-footer" data-i18n="tracks.defi.title">DeFi</div>
+                            <div class="pool-mock">
+                                <div class="pool-mock__row">
+                                    <span class="pool-mock__label" data-i18n="defi.visual.pairLabel">Pair</span>
+                                    <span class="pool-mock__value">ETH / USDC</span>
+                                </div>
+                                <div class="pool-mock__row">
+                                    <span class="pool-mock__label" data-i18n="defi.visual.liquidityLabel">Liquidity</span>
+                                    <span class="pool-mock__value">$4.2M</span>
+                                </div>
+                                <div class="pool-mock__row">
+                                    <span class="pool-mock__label" data-i18n="defi.visual.typeLabel">Type</span>
+                                    <span class="pool-mock__block">AMM</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -98,18 +123,30 @@
         </div>
     </section>
 
+    <!-- ===================================================== -->
+    <!-- LESSON BODY -->
+    <!-- ===================================================== -->
+
     <div class="container lesson-layout">
 
         <aside class="lesson-sidebar" id="sidebar">
             <nav class="toc" aria-label="Table of contents">
-                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <span class="tag" data-i18n="defi.toc.title">Contents</span>
                 <div class="toc__list-wrap" id="tocListWrap">
                     <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
                     <ol class="toc__list" id="tocList">
-                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
-                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
-                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
-                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                        <li><a href="#introduction" data-i18n="defi.toc.introduction">Introduction</a></li>
+                        <li><a href="#smart-contracts" data-i18n="defi.toc.smartContracts">Smart Contracts</a></li>
+                        <li><a href="#dexs" data-i18n="defi.toc.dexs">Decentralized Exchanges</a></li>
+                        <li><a href="#liquidity-pools" data-i18n="defi.toc.liquidityPools">Liquidity Pools</a></li>
+                        <li><a href="#amms" data-i18n="defi.toc.amms">Automated Market Makers</a></li>
+                        <li><a href="#yield-farming" data-i18n="defi.toc.yieldFarming">Yield Farming</a></li>
+                        <li><a href="#staking" data-i18n="defi.toc.staking">Staking</a></li>
+                        <li><a href="#impermanent-loss" data-i18n="defi.toc.impermanentLoss">Impermanent Loss</a></li>
+                        <li><a href="#risks" data-i18n="defi.toc.risks">DeFi Risks</a></li>
+                        <li><a href="#summary" data-i18n="defi.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="defi.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="defi.toc.quiz">Quiz</a></li>
                     </ol>
                 </div>
             </nav>
@@ -117,65 +154,503 @@
 
         <article class="lesson-content">
 
-            <section class="section lesson-section reveal" id="overview">
-                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
-                <h2 class="section-title" data-i18n="moduleDefi.overview.title">DeFi Fundamentals</h2>
-                <p class="section-description" data-i18n="moduleDefi.overview.p1">Decentralized finance (DeFi) rebuilds services banks and exchanges normally provide — trading, lending, earning interest — as open protocols that anyone can use or build on, without a company custodying the funds.</p>
-                <p class="section-description" data-i18n="moduleDefi.overview.p2">This module will teach you the core primitive behind almost every DeFi protocol: the automated market maker, how liquidity pools replace order books, and the real risks — like impermanent loss — that come with providing liquidity.</p>
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="defi.introduction.eyebrow">01 — Introduction</span>
+                <h2 class="section-title" data-i18n="defi.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="defi.introduction.p1">
+                    Every financial action covered so far assumed you were the only one
+                    involved — holding an asset, moving it across a network. Decentralized
+                    finance (DeFi) introduces other participants: traders, liquidity
+                    providers, borrowers and lenders, all interacting through code instead
+                    of an institution.
+                </p>
+                <p class="section-description" data-i18n="defi.introduction.p2">
+                    This lesson explains what DeFi actually replaces, how a decentralized
+                    exchange fills a trade without an order book, how liquidity pools and
+                    automated market makers set prices, and the real risks — like
+                    impermanent loss — that come with participating.
+                </p>
+                <p class="section-description" data-i18n="defi.introduction.p3">
+                    By the end of this lesson you will understand how a swap executes
+                    without a company matching orders, why liquidity providers earn fees,
+                    what yield farming and staking actually mean in DeFi, and how to weigh
+                    the risk of a protocol before using it.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="learn">
-                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+            <!-- SMART CONTRACTS -->
+            <section class="section lesson-section reveal" id="smart-contracts">
+                <span class="tag" data-i18n="defi.smartContracts.eyebrow">02 — Smart Contracts</span>
+                <h2 class="section-title" data-i18n="defi.smartContracts.title">Smart Contracts</h2>
+                <p class="section-description" data-i18n="defi.smartContracts.p1">
+                    A smart contract is self-executing code deployed on a blockchain. Once
+                    deployed, its logic runs exactly as written — no company can quietly
+                    change the rules, freeze a specific user's funds, or make an exception
+                    behind the scenes.
+                </p>
+                <p class="section-description" data-i18n="defi.smartContracts.p2">
+                    Every DeFi protocol — every exchange, lending market, or yield strategy
+                    — is ultimately a set of smart contracts. Calling a protocol
+                    "trustless" means you're trusting published, inspectable code instead
+                    of a company's internal promises.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.smartContracts.card1.title">Deterministic</h3>
+                        <p data-i18n="defi.smartContracts.card1.text">Given the same inputs, a smart contract always produces the same outcome.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.smartContracts.card2.title">Public</h3>
+                        <p data-i18n="defi.smartContracts.card2.text">Anyone can read a contract's code and verify what it actually does.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.smartContracts.card3.title">Immutable (usually)</h3>
+                        <p data-i18n="defi.smartContracts.card3.text">Most deployed contracts can't be changed, though some include upgrade mechanisms worth checking for.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DECENTRALIZED EXCHANGES (DEXS) -->
+            <section class="section lesson-section reveal" id="dexs">
+                <span class="tag" data-i18n="defi.dexs.eyebrow">03 — Decentralized Exchanges (DEXs)</span>
+                <h2 class="section-title" data-i18n="defi.dexs.title">Decentralized Exchanges (DEXs)</h2>
+                <p class="section-description" data-i18n="defi.dexs.p1">
+                    A decentralized exchange lets people trade assets directly from their
+                    own wallets, using smart contracts to execute trades instead of a
+                    company holding custody of funds and matching orders internally.
+                </p>
+                <p class="section-description" data-i18n="defi.dexs.p2">
+                    Traditional exchanges (CEXs) use an order book, matching buyers and
+                    sellers at agreed prices. Most DEXs use a different model entirely —
+                    liquidity pools priced algorithmically by an automated market maker,
+                    covered in the next two sections.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.dexs.cex.title">CEX</h3>
+                        <p data-i18n="defi.dexs.cex.text">A company custodies your funds, matches orders on an internal order book, and requires an account.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.dexs.dex.title">DEX</h3>
+                        <p data-i18n="defi.dexs.dex.text">Your wallet keeps custody of your funds. Trades execute against a smart contract, with no account required.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="defi.dexs.closing">
+                    Both models coexist across the industry — a DEX simply removes the
+                    custodian from the trading process.
+                </p>
+            </section>
+
+            <!-- LIQUIDITY POOLS -->
+            <section class="section lesson-section reveal" id="liquidity-pools">
+                <span class="tag" data-i18n="defi.liquidityPools.eyebrow">04 — Liquidity Pools</span>
+                <h2 class="section-title" data-i18n="defi.liquidityPools.title">Liquidity Pools</h2>
+                <p class="section-description" data-i18n="defi.liquidityPools.p1">
+                    A liquidity pool is a smart contract holding two (or more) assets,
+                    deposited by liquidity providers (LPs), that traders swap against
+                    directly. Instead of matching a buyer with a seller, a trade adjusts
+                    the pool's own reserves.
+                </p>
+                <p class="section-description" data-i18n="defi.liquidityPools.p2">
+                    In exchange for depositing assets, liquidity providers receive LP
+                    tokens representing their share of the pool, and earn a portion of the
+                    trading fees generated by every swap.
+                </p>
+
+                <div class="card pool-diagram">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="pool-diagram__chrome-title">pool_reserves.json</span>
+                    </div>
+                    <div class="pool-diagram__body">
+                        <div class="pool-diagram__row">
+                            <span class="pool-diagram__label" data-i18n="defi.liquidityPools.field1.label">Pool</span>
+                            <span class="pool-diagram__value">ETH / USDC</span>
+                        </div>
+                        <div class="pool-diagram__row">
+                            <span class="pool-diagram__label" data-i18n="defi.liquidityPools.field2.label">Reserve A</span>
+                            <span class="pool-diagram__value">120 ETH</span>
+                        </div>
+                        <div class="pool-diagram__row pool-diagram__row--body">
+                            <span class="pool-diagram__label" data-i18n="defi.liquidityPools.field3.label">Reserve B</span>
+                            <span class="pool-diagram__value">240,000 USDC</span>
+                        </div>
+                        <div class="pool-diagram__row">
+                            <span class="pool-diagram__label" data-i18n="defi.liquidityPools.field4.label">LP Fee</span>
+                            <span class="pool-diagram__value" data-i18n="defi.liquidityPools.field4.value">0.30% per swap</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="defi.liquidityPools.closing">
+                    The relationship between the two reserves is exactly what an automated
+                    market maker uses to set price, covered next.
+                </p>
+            </section>
+
+            <!-- AUTOMATED MARKET MAKERS (AMMS) -->
+            <section class="section lesson-section reveal" id="amms">
+                <span class="tag" data-i18n="defi.amms.eyebrow">05 — Automated Market Makers (AMMs)</span>
+                <h2 class="section-title" data-i18n="defi.amms.title">Automated Market Makers (AMMs)</h2>
+                <p class="section-description" data-i18n="defi.amms.p1">
+                    An automated market maker is the formula a liquidity pool uses to price
+                    trades, based only on the pool's own reserves — no order book, and no
+                    external price feed required for the trade itself.
+                </p>
+                <p class="section-description" data-i18n="defi.amms.p2">
+                    The most common model keeps the product of both reserves constant: as a
+                    trade removes some of one asset, the pool automatically raises its
+                    price relative to the other, in proportion to how much was removed.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.amms.card1.title">Price is reactive</h3>
+                        <p data-i18n="defi.amms.card1.text">A large trade moves the pool's price more than a small one — this is where slippage comes from.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.amms.card2.title">No counterparty needed</h3>
+                        <p data-i18n="defi.amms.card2.text">You always trade against the pool itself, not another specific person.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.amms.card3.title">Arbitrage keeps it honest</h3>
+                        <p data-i18n="defi.amms.card3.text">If a pool's price drifts from the wider market, traders are incentivized to correct it for profit.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="defi.amms.closing">
+                    This same mechanism is also what creates impermanent loss for liquidity
+                    providers, explained later in this lesson.
+                </p>
+            </section>
+
+            <!-- YIELD FARMING -->
+            <section class="section lesson-section reveal" id="yield-farming">
+                <span class="tag" data-i18n="defi.yieldFarming.eyebrow">06 — Yield Farming</span>
+                <h2 class="section-title" data-i18n="defi.yieldFarming.title">Yield Farming</h2>
+                <p class="section-description" data-i18n="defi.yieldFarming.intro">
+                    Yield farming means actively moving assets between DeFi protocols to
+                    capture the highest available return, which can come from more than one
+                    source at once.
+                </p>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleDefi.learn.li1">What problem DeFi actually solves compared to a traditional exchange.</li>
-                    <li data-i18n="moduleDefi.learn.li2">How an automated market maker (AMM) prices assets without an order book.</li>
-                    <li data-i18n="moduleDefi.learn.li3">What a liquidity pool is, and how liquidity providers earn fees.</li>
-                    <li data-i18n="moduleDefi.learn.li4">What impermanent loss is, and why it's a real cost, not just a risk.</li>
-                    <li data-i18n="moduleDefi.learn.li5">How to evaluate a DeFi protocol before using it.</li>
+                    <li data-i18n="defi.yieldFarming.li1"><strong>Trading fees.</strong> A share of the fees generated by swaps in a pool you've provided liquidity to.</li>
+                    <li data-i18n="defi.yieldFarming.li2"><strong>Lending interest.</strong> Interest paid by borrowers in a lending market, covered in Module 06.</li>
+                    <li data-i18n="defi.yieldFarming.li3"><strong>Incentive rewards.</strong> Extra tokens a protocol distributes to attract liquidity, on top of its normal fees.</li>
+                </ul>
+                <p class="section-description" data-i18n="defi.yieldFarming.closing">
+                    Advertised returns often combine several of these sources — and
+                    incentive rewards specifically tend to fade as a protocol matures.
+                </p>
+            </section>
+
+            <!-- STAKING -->
+            <section class="section lesson-section reveal" id="staking">
+                <span class="tag" data-i18n="defi.staking.eyebrow">07 — Staking</span>
+                <h2 class="section-title" data-i18n="defi.staking.title">Staking</h2>
+                <p class="section-description" data-i18n="defi.staking.p1">
+                    In DeFi, "staking" is used in two related but distinct ways: locking a
+                    network's native coin to help secure that network, or depositing an
+                    asset into a protocol's own contract to earn rewards.
+                </p>
+                <p class="section-description" data-i18n="defi.staking.p2">
+                    Protocol-level staking is common: depositing an LP token to earn extra
+                    incentive rewards, or locking a governance token for a period in
+                    exchange for a share of protocol fees.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.staking.network.title">Network Staking</h3>
+                        <p data-i18n="defi.staking.network.text">Securing a proof-of-stake network directly, earning a share of newly issued coins.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="defi.staking.protocol.title">Protocol Staking</h3>
+                        <p data-i18n="defi.staking.protocol.text">Depositing an asset into a specific protocol's contract to earn that protocol's own rewards.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="defi.staking.closing">
+                    Read a staking contract's terms carefully — lock-up periods and reward
+                    sources vary significantly between protocols.
+                </p>
+            </section>
+
+            <!-- IMPERMANENT LOSS -->
+            <section class="section lesson-section reveal" id="impermanent-loss">
+                <span class="tag" data-i18n="defi.impermanentLoss.eyebrow">08 — Impermanent Loss</span>
+                <h2 class="section-title" data-i18n="defi.impermanentLoss.title">Impermanent Loss</h2>
+                <p class="section-description" data-i18n="defi.impermanentLoss.p1">
+                    Impermanent loss is the gap between what a liquidity provider's
+                    deposited assets would be worth if simply held, versus what they're
+                    worth withdrawn from the pool, after the pool's prices have moved.
+                </p>
+                <p class="section-description" data-i18n="defi.impermanentLoss.p2">
+                    It happens because an AMM automatically rebalances a pool's reserves
+                    as prices shift — the pool ends up holding more of the asset that fell
+                    in relative price and less of the one that rose.
+                </p>
+
+                <div class="card divergence-card">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="divergence-card__chrome-title">divergence_example.json</span>
+                    </div>
+                    <div class="divergence-card__body">
+                        <div class="divergence-card__row">
+                            <span class="divergence-card__label" data-i18n="defi.impermanentLoss.field1.label">Deposited</span>
+                            <span class="divergence-card__value">1 ETH + 2,000 USDC</span>
+                        </div>
+                        <div class="divergence-card__row">
+                            <span class="divergence-card__label" data-i18n="defi.impermanentLoss.field2.label">If Held</span>
+                            <span class="divergence-card__value" data-i18n="defi.impermanentLoss.field2.value">Value unchanged from deposit</span>
+                        </div>
+                        <div class="divergence-card__row divergence-card__row--result">
+                            <span class="divergence-card__label" data-i18n="defi.impermanentLoss.field3.label">If Withdrawn</span>
+                            <span class="divergence-card__value" data-i18n="defi.impermanentLoss.field3.value">Lower after price divergence</span>
+                        </div>
+                        <div class="divergence-card__row">
+                            <span class="divergence-card__label" data-i18n="defi.impermanentLoss.field4.label">Impermanent?</span>
+                            <span class="divergence-card__value" data-i18n="defi.impermanentLoss.field4.value">Only realized if you withdraw during the gap</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="defi.impermanentLoss.closing">
+                    The loss is called "impermanent" because it can shrink back to zero if
+                    prices return to their original ratio before you withdraw — but it
+                    becomes permanent the moment you do.
+                </p>
+            </section>
+
+            <!-- DEFI RISKS -->
+            <section class="section lesson-section reveal" id="risks">
+                <span class="tag" data-i18n="defi.risks.eyebrow">09 — DeFi Risks</span>
+                <h2 class="section-title" data-i18n="defi.risks.title">DeFi Risks</h2>
+                <p class="section-description" data-i18n="defi.risks.intro">
+                    Removing a company from the process doesn't remove risk — it changes
+                    what kind of risk you're taking on.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="defi.risks.li1"><strong>Smart contract risk.</strong> A bug in a contract's code can be exploited, and losses are frequently irreversible.</li>
+                    <li data-i18n="defi.risks.li2"><strong>Impermanent loss.</strong> Covered in the previous section — a real cost of providing liquidity, not just a hypothetical one.</li>
+                    <li data-i18n="defi.risks.li3"><strong>Oracle risk.</strong> Protocols that rely on external price feeds can be manipulated if that feed is inaccurate or compromised.</li>
+                    <li data-i18n="defi.risks.li4"><strong>Rug pulls.</strong> A project's creators abandon it and drain its liquidity, sometimes by design from the start.</li>
+                    <li data-i18n="defi.risks.li5"><strong>Composability risk.</strong> Protocols building on top of each other means a failure in one can cascade into every protocol depending on it.</li>
                 </ul>
             </section>
 
-            <section class="section lesson-section reveal" id="prerequisites">
-                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
-                <ul class="lesson-list">
-                    <li data-i18n="moduleDefi.prereq.li1">Completed <a href="../01-blockchain/index.html">Module 01 — Blockchain</a>.</li>
-                    <li data-i18n="moduleDefi.prereq.li2">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
-                    <li data-i18n="moduleDefi.prereq.li3">Completed <a href="../04-assets/index.html">Module 04 — Assets</a>.</li>
-                </ul>
+            <!-- SUMMARY -->
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="defi.summary.eyebrow">10 — Summary</span>
+                <h2 class="section-title" data-i18n="defi.summary.title">Summary</h2>
+                <p class="section-description" data-i18n="defi.summary.p1">
+                    DeFi rebuilds trading, lending, and earning yield as open smart
+                    contracts instead of company-run services. Decentralized exchanges use
+                    liquidity pools priced by automated market makers, replacing a
+                    traditional order book.
+                </p>
+                <p class="section-description" data-i18n="defi.summary.p2">
+                    Liquidity providers earn fees but take on impermanent loss when pool
+                    prices diverge. Yield farming and staking describe different ways of
+                    putting assets to work across protocols — and every one of these
+                    activities carries risk that doesn't disappear just because there's no
+                    company involved.
+                </p>
             </section>
 
+            <!-- GLOSSARY -->
             <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
-                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <span class="tag" data-i18n="defi.glossary.eyebrow">11 — Glossary</span>
+                <h2 class="section-title" data-i18n="defi.glossary.title">Glossary</h2>
                 <dl class="glossary-list">
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleDefi.glossary.term1">AMM</dt>
-                        <dd data-i18n="moduleDefi.glossary.def1">Automated Market Maker — a protocol that prices and swaps assets algorithmically, without an order book.</dd>
+                        <dt data-i18n="defi.glossary.term1">DeFi</dt>
+                        <dd data-i18n="defi.glossary.def1">Decentralized finance: financial services rebuilt as open smart contracts instead of company-run services.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleDefi.glossary.term2">Liquidity Pool</dt>
-                        <dd data-i18n="moduleDefi.glossary.def2">A pool of two or more assets locked in a smart contract, used to enable trading.</dd>
+                        <dt data-i18n="defi.glossary.term2">Smart Contract</dt>
+                        <dd data-i18n="defi.glossary.def2">Self-executing code deployed on a blockchain that defines exactly how a protocol behaves.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleDefi.glossary.term3">Slippage</dt>
-                        <dd data-i18n="moduleDefi.glossary.def3">The difference between a trade's expected price and its actual executed price.</dd>
+                        <dt data-i18n="defi.glossary.term3">DEX</dt>
+                        <dd data-i18n="defi.glossary.def3">Decentralized Exchange — a trading protocol that executes trades against smart contracts instead of a company's order book.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleDefi.glossary.term4">DEX</dt>
-                        <dd data-i18n="moduleDefi.glossary.def4">Decentralized Exchange — a trading protocol that runs without a central operator.</dd>
+                        <dt data-i18n="defi.glossary.term4">Liquidity Pool</dt>
+                        <dd data-i18n="defi.glossary.def4">A smart contract holding two or more assets that traders swap against directly.</dd>
                     </div>
                     <div class="card glossary-list__item">
-                        <dt data-i18n="moduleDefi.glossary.term5">Impermanent Loss</dt>
-                        <dd data-i18n="moduleDefi.glossary.def5">The temporary loss liquidity providers can face when pooled asset prices diverge.</dd>
+                        <dt data-i18n="defi.glossary.term5">AMM</dt>
+                        <dd data-i18n="defi.glossary.def5">Automated Market Maker — the formula a liquidity pool uses to price trades based on its own reserves.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="defi.glossary.term6">LP Token</dt>
+                        <dd data-i18n="defi.glossary.def6">A token representing a liquidity provider's share of a pool, used to withdraw their deposit and earned fees.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="defi.glossary.term7">Yield Farming</dt>
+                        <dd data-i18n="defi.glossary.def7">Actively moving assets between protocols to capture the highest available return.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="defi.glossary.term8">Staking</dt>
+                        <dd data-i18n="defi.glossary.def8">Locking an asset in a network or protocol's contract in exchange for rewards.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="defi.glossary.term9">Impermanent Loss</dt>
+                        <dd data-i18n="defi.glossary.def9">The gap between holding assets and providing them to a pool, caused by price divergence between reserves.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="defi.glossary.term10">Rug Pull</dt>
+                        <dd data-i18n="defi.glossary.def10">When a project's creators abandon it and drain its liquidity, leaving other participants with worthless holdings.</dd>
                     </div>
                 </dl>
             </section>
 
+            <!-- QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="defi.quiz.eyebrow">12 — Quiz</span>
+                <h2 class="section-title" data-i18n="defi.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="defi.quiz.intro">
+                    Check your understanding of this lesson before moving on. Incorrect
+                    answers point you straight back to the relevant section.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q1">1. What does a smart contract guarantee, compared to a company-run service?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q1o1">A. Its published logic runs exactly as written, without hidden exceptions</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q1o2">B. It always doubles investor returns</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q1o3">C. It requires no gas fees to use</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q1o4">D. It can be paused only by its original creator</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q1.feedbackIncorrect" hidden>Not quite — review <a href="#smart-contracts">Smart Contracts</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q2">2. How does a typical DEX differ from a centralized exchange?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q2o1">A. It uses the same order book model, just online</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q2o2">B. Trades execute against a smart contract instead of a company matching orders</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q2o3">C. It requires users to open a custodial account</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q2o4">D. It cannot process token swaps</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q2.feedbackIncorrect" hidden>Not quite — review <a href="#dexs">Decentralized Exchanges</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q3">3. What is a liquidity pool?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q3o1">A. A single trader willing to buy at any price</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q3o2">B. A smart contract holding assets that traders swap against directly</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q3o3">C. A centralized order book matching engine</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q3o4">D. A type of wallet used only for staking</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q3.feedbackIncorrect" hidden>Not quite — review <a href="#liquidity-pools">Liquidity Pools</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q4">4. What determines the price of a trade in an AMM-based pool?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q4o1">A. A company-set reference price updated daily</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q4o2">B. The pool's own reserves, following a pricing formula</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q4o3">C. The average price across every exchange</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q4o4">D. A vote among liquidity providers</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q4.feedbackIncorrect" hidden>Not quite — review <a href="#amms">Automated Market Makers</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q5">5. Which of these is a real source of yield farming returns?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q5o1">A. Trading fees earned from swaps in a pool you've provided liquidity to</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q5o2">B. Guaranteed fixed interest set by a government</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q5o3">C. Free tokens with no underlying source</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q5o4">D. Interest paid by the blockchain's protocol layer for holding any asset</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q5.feedbackIncorrect" hidden>Not quite — review <a href="#yield-farming">Yield Farming</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q6">6. What is "protocol staking," as distinct from network staking?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q6o1">A. Locking a network's native coin to help secure that network</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q6o2">B. Depositing an asset into a specific protocol's contract to earn that protocol's own rewards</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q6o3">C. Buying insurance against smart contract risk</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q6o4">D. Registering a wallet address with a centralized exchange</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q6.feedbackIncorrect" hidden>Not quite — review <a href="#staking">Staking</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q7">7. When does impermanent loss become permanent?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q7o1">A. The moment prices in the pool start to diverge</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q7o2">B. The moment you withdraw your liquidity while prices are diverged</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q7o3">C. It is always permanent, regardless of when you withdraw</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q7o4">D. Only if the protocol is exploited</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q7.feedbackIncorrect" hidden>Not quite — review <a href="#impermanent-loss">Impermanent Loss</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q8">8. What is a "rug pull"?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q8o1">A. A sudden but harmless change in a pool's trading fee</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q8o2">B. A project's creators abandoning it and draining its liquidity</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q8o3">C. A required security audit before launch</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q8o4">D. A type of yield farming reward</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q8.feedbackIncorrect" hidden>Not quite — review <a href="#risks">DeFi Risks</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="defi.quiz.q9">9. Why doesn't removing a company from a financial service eliminate risk?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q9o1">A. Because smart contracts are always audited perfectly</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="defi.quiz.q9o2">B. Because it shifts the risk toward things like contract bugs, oracle manipulation, and impermanent loss</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q9o3">C. Because DeFi protocols are legally insured</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="defi.quiz.q9o4">D. Because all DeFi protocols are identical</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="defi.quiz.feedbackCorrect" hidden>Correct — well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="defi.quiz.q9.feedbackIncorrect" hidden>Not quite — review <a href="#risks">DeFi Risks</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="defi.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="defi.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">9</strong>
+                            <span data-i18n="defi.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="defi.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
             <nav class="lesson-pagination" aria-label="Lesson pagination">
-                <a href="../04-assets/index.html" class="btn btn-secondary" data-i18n="moduleDefi.pagination.back">← Module 04</a>
-                <a href="../06-lending/index.html" class="btn btn-primary" data-i18n="moduleDefi.pagination.next">Next Module →</a>
+                <a href="../04-assets/index.html" class="btn btn-secondary" data-i18n="defi.pagination.back">← Module 04</a>
+                <a href="../06-lending/index.html" class="btn btn-primary" data-i18n="defi.pagination.next">Next Module →</a>
             </nav>
 
         </article>
@@ -183,25 +658,34 @@
 
 </main>
 
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+
             <div class="footer-brand">
-                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <h3 data-i18n="footer.title">Nodra</h3>
                 <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
+
             <div class="footer-links">
                 <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
                 <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
                 <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
             </div>
+
         </div>
     </div>
 </footer>
 
+<span id="i18nCopiedLabel" data-i18n="defi.common.copied" hidden>Copied</span>
+
 <script defer src="../../assets/js/translations.js"></script>
 <script defer src="../../assets/js/academy.js"></script>
-<script defer src="../../assets/js/module-placeholder.js"></script>
+<script defer src="../../assets/js/defi.js"></script>
 </body>
 </html>

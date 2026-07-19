@@ -63,3 +63,15 @@ Instead of selling expensive courses, Nodra focuses on providing free, high-qual
 ## License
 
 MIT
+
+## Documentation
+
+Before implementing new Academy modules, read:
+
+- docs/ACADEMY_ARCHITECTURE.md
+- docs/CLAUDE_EXECUTOR.md
+- docs/MODULE_TEMPLATE.md
+
+##
+
+python3 -m http.server 8000
