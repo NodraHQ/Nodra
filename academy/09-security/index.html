@@ -5,12 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="moduleSecurity.meta.title">Security — Nodra Academy</title>
 <meta name="description" content="Phishing, smart contract exploits, audits, and the habits that keep builders and users safe.">
-<link rel="stylesheet" href="../../assets/css/variables.css">
-<link rel="stylesheet" href="../../assets/css/components.css">
-<link rel="stylesheet" href="../../assets/css/academy.css">
-<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/academy.css">
+<link rel="stylesheet" href="../assets/css/security.css">
 </head>
 <body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as previous modules) -->
+<!-- ===================================================== -->
 
 <nav class="navbar">
 
@@ -41,56 +45,81 @@
 
 <main>
 
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
+
     <section class="hero" id="top">
         <div class="container">
             <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <span class="tag" data-i18n="tracks.security.title">Security</span>
+
+                    <span class="tag" data-i18n="moduleSecurity.hero.tag">MODULE 09</span>
+
                     <h1 class="hero-title" data-i18n="moduleSecurity.hero.title">Security</h1>
-                    <p class="hero-description" data-i18n="moduleSecurity.hero.description">Most losses in this space are preventable. This module explains the habits and red flags that matter most.</p>
+
+                    <p class="hero-description" data-i18n="moduleSecurity.hero.description">
+                        Most losses in this space are preventable. This module explains
+                        the habits and red flags that matter most.
+                    </p>
 
                     <div class="hero-actions">
-                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
-                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                        <a href="#introduction" class="btn btn-primary" data-i18n="moduleSecurity.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="moduleSecurity.hero.back">← Academy</a>
                     </div>
 
                     <div class="hero-stats">
                         <div class="stat-card">
                             <strong data-i18n="moduleSecurity.hero.stat1.value">Advanced</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                            <span data-i18n="moduleSecurity.hero.stat1.label">Difficulty</span>
                         </div>
                         <div class="stat-card">
                             <strong data-i18n="moduleSecurity.hero.stat2.value">45 min</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                            <span data-i18n="moduleSecurity.hero.stat2.label">Duration</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="tracks.security.title">Security</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                            <strong data-i18n="moduleSecurity.hero.stat3.value">Reading + Quiz</strong>
+                            <span data-i18n="moduleSecurity.hero.stat3.label">Format</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                            <strong data-i18n="moduleSecurity.hero.stat4.value">11</strong>
+                            <span data-i18n="moduleSecurity.hero.stat4.label">Sections</span>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="hero-visual reveal">
                     <div class="hero-dashboard glow">
+
                         <div class="dashboard-header">
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                         </div>
+
                         <div class="dashboard-content">
-                            <div class="dashboard-title">MODULE 09</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
-                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
-                            <div class="dashboard-divider"></div>
-                            <div class="dashboard-footer" data-i18n="tracks.security.title">Security</div>
+                            <div class="risk-mock">
+                                <div class="risk-mock__row">
+                                    <span class="risk-mock__label" data-i18n="moduleSecurity.visual.riskLabel">Risk Category</span>
+                                    <span class="risk-mock__value">Phishing</span>
+                                </div>
+                                <div class="risk-mock__row">
+                                    <span class="risk-mock__label" data-i18n="moduleSecurity.visual.vectorLabel">Most Common Vector</span>
+                                    <span class="risk-mock__value">Malicious Approval</span>
+                                </div>
+                                <div class="risk-mock__row">
+                                    <span class="risk-mock__label" data-i18n="moduleSecurity.visual.defenseLabel">Best Defense</span>
+                                    <span class="risk-mock__value">Read Before You Sign</span>
+                                </div>
+                                <div class="risk-mock__row">
+                                    <span class="risk-mock__label" data-i18n="moduleSecurity.visual.statusLabel">Preventable</span>
+                                    <span class="risk-mock__block">Yes</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -98,18 +127,29 @@
         </div>
     </section>
 
+    <!-- ===================================================== -->
+    <!-- LESSON BODY -->
+    <!-- ===================================================== -->
+
     <div class="container lesson-layout">
 
         <aside class="lesson-sidebar" id="sidebar">
             <nav class="toc" aria-label="Table of contents">
-                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <span class="tag" data-i18n="moduleSecurity.toc.title">Contents</span>
                 <div class="toc__list-wrap" id="tocListWrap">
                     <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
                     <ol class="toc__list" id="tocList">
-                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
-                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
-                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
-                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                        <li><a href="#introduction" data-i18n="moduleSecurity.toc.introduction">Introduction</a></li>
+                        <li><a href="#phishing" data-i18n="moduleSecurity.toc.phishing">Phishing</a></li>
+                        <li><a href="#smart-contract-exploits" data-i18n="moduleSecurity.toc.exploits">Smart Contract Exploits</a></li>
+                        <li><a href="#audits" data-i18n="moduleSecurity.toc.audits">What Audits Do (and Don't) Guarantee</a></li>
+                        <li><a href="#rug-pulls" data-i18n="moduleSecurity.toc.rugPulls">Rug Pulls</a></li>
+                        <li><a href="#wallet-approvals" data-i18n="moduleSecurity.toc.approvals">Wallet Approvals & Permissions</a></li>
+                        <li><a href="#opsec" data-i18n="moduleSecurity.toc.opsec">Personal Security Habits</a></li>
+                        <li><a href="#if-compromised" data-i18n="moduleSecurity.toc.ifCompromised">If You Get Compromised</a></li>
+                        <li><a href="#summary" data-i18n="moduleSecurity.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="moduleSecurity.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="moduleSecurity.toc.quiz">Quiz</a></li>
                     </ol>
                 </div>
             </nav>
@@ -117,37 +157,209 @@
 
         <article class="lesson-content">
 
-            <section class="section lesson-section reveal" id="overview">
-                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
-                <h2 class="section-title" data-i18n="moduleSecurity.overview.title">Security</h2>
-                <p class="section-description" data-i18n="moduleSecurity.overview.p1">The overwhelming majority of losses in crypto come from a small set of repeated patterns: phishing, contract exploits, and avoidable operational mistakes — not exotic, unstoppable attacks.</p>
-                <p class="section-description" data-i18n="moduleSecurity.overview.p2">This module will teach you to recognize phishing attempts, understand what a smart contract audit does and doesn't guarantee, and build the personal security habits that remove most realistic risk.</p>
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="moduleSecurity.introduction.eyebrow">01. Introduction</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="moduleSecurity.introduction.p1">
+                    The overwhelming majority of losses in crypto come from a small
+                    set of repeated patterns: phishing, contract exploits, and
+                    avoidable operational mistakes, not exotic, unstoppable attacks.
+                </p>
+                <p class="section-description" data-i18n="moduleSecurity.introduction.p2">
+                    This lesson is written from a defender's perspective. It explains
+                    what these attacks look like and why they work, so you can
+                    recognize the pattern, not how to carry one out.
+                </p>
+                <p class="section-description" data-i18n="moduleSecurity.introduction.p3">
+                    By the end of this lesson you'll be able to recognize common
+                    phishing patterns, understand what a smart contract audit does
+                    and doesn't guarantee, spot the warning signs of a rug pull, and
+                    build the personal habits that remove most realistic risk.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="learn">
-                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+            <!-- PHISHING -->
+            <section class="section lesson-section reveal" id="phishing">
+                <span class="tag" data-i18n="moduleSecurity.phishing.eyebrow">02. Phishing</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.phishing.title">Phishing</h2>
+                <p class="section-description" data-i18n="moduleSecurity.phishing.p1">
+                    Phishing is the single largest cause of loss in crypto, by a wide
+                    margin. It doesn't exploit a weakness in a blockchain or a
+                    wallet, it exploits trust, and a moment of urgency.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleSecurity.phishing.card1.title">Fake Websites & Ads</h3>
+                        <p data-i18n="moduleSecurity.phishing.card1.text">Near-identical copies of real dApp interfaces, often bought as top search ads, that connect your wallet and request a malicious signature.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleSecurity.phishing.card2.title">Fake Support & DMs</h3>
+                        <p data-i18n="moduleSecurity.phishing.card2.text">Someone posing as "support" in a Discord or Telegram, offering to help, then asking you to share a screen, a seed phrase, or click a "verification" link.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleSecurity.phishing.card3.title">Malicious Approvals</h3>
+                        <p data-i18n="moduleSecurity.phishing.card3.text">A transaction disguised as something routine (a mint, a claim) that actually requests broad, ongoing permission to move your tokens.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="moduleSecurity.phishing.closing">
+                    The common thread across all three is the same: a request to
+                    sign, connect, or reveal something, wrapped in urgency. No
+                    legitimate support agent will ever ask for your seed phrase.
+                </p>
+            </section>
+
+            <!-- SMART CONTRACT EXPLOITS -->
+            <section class="section lesson-section reveal" id="smart-contract-exploits">
+                <span class="tag" data-i18n="moduleSecurity.exploits.eyebrow">03. Smart Contract Exploits</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.exploits.title">Smart Contract Exploits</h2>
+                <p class="section-description" data-i18n="moduleSecurity.exploits.p1">
+                    Most smart contract exploits don't "break" anything in a
+                    traditional hacking sense. The attacker interacts with the
+                    contract exactly as its code allows, just in a sequence or
+                    combination its developers didn't anticipate.
+                </p>
+                <p class="section-description" data-i18n="moduleSecurity.exploits.p2">
+                    A few categories of bugs show up repeatedly across incidents.
+                    Understanding what they are, at a conceptual level, helps you
+                    understand why audits and defensive coding patterns exist.
+                </p>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleSecurity.learn.li1">The most common phishing patterns used against wallet holders.</li>
-                    <li data-i18n="moduleSecurity.learn.li2">What kinds of bugs smart contract exploits typically take advantage of.</li>
-                    <li data-i18n="moduleSecurity.learn.li3">What an audit actually verifies — and its real limitations.</li>
-                    <li data-i18n="moduleSecurity.learn.li4">How rug pulls are structured, and the warning signs that precede them.</li>
-                    <li data-i18n="moduleSecurity.learn.li5">The personal security habits (opsec) that remove most realistic risk.</li>
+                    <li data-i18n="moduleSecurity.exploits.li1"><strong>Reentrancy.</strong> A contract sends funds out before updating its own internal balance, letting the same call re-enter and withdraw again before the first withdrawal is even recorded.</li>
+                    <li data-i18n="moduleSecurity.exploits.li2"><strong>Access control gaps.</strong> A function meant to be restricted (minting tokens, changing an admin) is missing the permission check that should have restricted it.</li>
+                    <li data-i18n="moduleSecurity.exploits.li3"><strong>Oracle manipulation.</strong> A contract that prices an asset using a manipulable source can be tricked into acting on a temporarily distorted price, often using a flash loan to fund the distortion.</li>
+                </ul>
+                <p class="section-description" data-i18n="moduleSecurity.exploits.closing">
+                    None of these require the attacker to break cryptography, they
+                    require the contract's logic to have a gap. This is exactly what
+                    an audit is meant to catch.
+                </p>
+            </section>
+
+            <!-- AUDITS -->
+            <section class="section lesson-section reveal" id="audits">
+                <span class="tag" data-i18n="moduleSecurity.audits.eyebrow">04. What Audits Do (and Don't) Guarantee</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.audits.title">What Audits Do (and Don't) Guarantee</h2>
+                <p class="section-description" data-i18n="moduleSecurity.audits.p1">
+                    An audit is a time-boxed, expert review of a contract's code,
+                    looking for the kinds of bugs covered in the previous section,
+                    and others specific to the protocol's design.
+                </p>
+                <p class="section-description" data-i18n="moduleSecurity.audits.p2">
+                    An audit reduces risk, it doesn't eliminate it. It's a review of
+                    the code at a specific point in time, by people working within a
+                    limited timeframe, not a mathematical proof that no bug exists.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleSecurity.audits.covers.title">What an audit typically covers</h3>
+                        <p data-i18n="moduleSecurity.audits.covers.text">The specific version of the code that was submitted for review, checked against known bug classes and the protocol's own stated logic.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleSecurity.audits.doesntCover.title">What an audit doesn't guarantee</h3>
+                        <p data-i18n="moduleSecurity.audits.doesntCover.text">That the deployed code matches what was audited, that every possible interaction was considered, or that the protocol's economic design itself is sound.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="moduleSecurity.audits.closing">
+                    A published audit is a genuinely good sign, but "audited" is a
+                    data point to weigh, not a guarantee to rely on completely.
+                </p>
+            </section>
+
+            <!-- RUG PULLS -->
+            <section class="section lesson-section reveal" id="rug-pulls">
+                <span class="tag" data-i18n="moduleSecurity.rugPulls.eyebrow">05. Rug Pulls</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.rugPulls.title">Rug Pulls</h2>
+                <p class="section-description" data-i18n="moduleSecurity.rugPulls.intro">
+                    A rug pull is a scam where a project's creators withdraw
+                    liquidity or funds and disappear, rather than a technical
+                    exploit of someone else's code. A few structural warning signs
+                    tend to precede one.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleSecurity.rugPulls.li1"><strong>Unlocked liquidity.</strong> If the team can withdraw the pool's liquidity at any time, with no lock or time delay, nothing stops them from doing so.</li>
+                    <li data-i18n="moduleSecurity.rugPulls.li2"><strong>Unlimited minting power.</strong> A function that lets the owner create new tokens at will can be used to dilute or dump on holders without warning.</li>
+                    <li data-i18n="moduleSecurity.rugPulls.li3"><strong>Anonymous team, no lock-up.</strong> Anonymity alone isn't disqualifying, but combined with no vesting schedule on team tokens, it removes any cost to walking away.</li>
+                    <li data-i18n="moduleSecurity.rugPulls.li4"><strong>Retained owner privileges.</strong> A contract owner that keeps the ability to pause trading, blacklist addresses, or change fees after launch holds a lot of leverage over holders.</li>
                 </ul>
             </section>
 
-            <section class="section lesson-section reveal" id="prerequisites">
-                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
+            <!-- WALLET APPROVALS & PERMISSIONS -->
+            <section class="section lesson-section reveal" id="wallet-approvals">
+                <span class="tag" data-i18n="moduleSecurity.approvals.eyebrow">06. Wallet Approvals & Permissions</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.approvals.title">Wallet Approvals &amp; Permissions</h2>
+                <p class="section-description" data-i18n="moduleSecurity.approvals.p1">
+                    To let a dApp move your tokens on your behalf (to swap or stake
+                    them, for example), you grant it a token approval, a permission
+                    recorded on-chain, separate from any individual transaction.
+                </p>
+                <p class="section-description" data-i18n="moduleSecurity.approvals.p2">
+                    Many interfaces default to requesting an unlimited approval,
+                    permission to move any amount, indefinitely, rather than just
+                    the amount needed for that transaction. That convenience is
+                    exactly what a malicious approval abuses.
+                </p>
+                <p class="section-description" data-i18n="moduleSecurity.approvals.closing">
+                    Reviewing and revoking unused or unlimited approvals
+                    periodically, using a block explorer's token approval checker,
+                    closes off access you may have forgotten you granted.
+                </p>
+            </section>
+
+            <!-- PERSONAL SECURITY HABITS -->
+            <section class="section lesson-section reveal" id="opsec">
+                <span class="tag" data-i18n="moduleSecurity.opsec.eyebrow">07. Personal Security Habits</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.opsec.title">Personal Security Habits</h2>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleSecurity.prereq.li1">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
-                    <li data-i18n="moduleSecurity.prereq.li2">Familiarity with the DeFi track (<a href="../05-defi/index.html">Modules 05–08</a>) is recommended.</li>
+                    <li data-i18n="moduleSecurity.opsec.li1"><strong>Separate wallets by purpose.</strong> Keep a small "hot" wallet for everyday interactions and a hardware wallet for meaningful holdings, exactly the hot/cold split covered in Module 02.</li>
+                    <li data-i18n="moduleSecurity.opsec.li2"><strong>Never share your seed phrase.</strong> No legitimate wallet, exchange, or support channel will ever need it, anyone asking for it is attacking you.</li>
+                    <li data-i18n="moduleSecurity.opsec.li3"><strong>Verify URLs before connecting.</strong> Bookmark official sites you use regularly instead of searching for them each time, search ads are a common phishing vector.</li>
+                    <li data-i18n="moduleSecurity.opsec.li4"><strong>Read what you sign.</strong> A wallet's signature prompt describes what permission you're granting, treat a request you don't understand as a reason to stop, not to proceed.</li>
+                    <li data-i18n="moduleSecurity.opsec.li5"><strong>Be skeptical of urgency.</strong> "Act now or lose your funds" is a pressure tactic used by nearly every phishing attempt, a genuine issue rarely requires an instant, unverified reaction.</li>
                 </ul>
             </section>
 
+            <!-- IF YOU GET COMPROMISED -->
+            <section class="section lesson-section reveal" id="if-compromised">
+                <span class="tag" data-i18n="moduleSecurity.ifCompromised.eyebrow">08. If You Get Compromised</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.ifCompromised.title">If You Get Compromised</h2>
+                <p class="section-description" data-i18n="moduleSecurity.ifCompromised.p1">
+                    If you suspect a wallet has been compromised, or that you signed
+                    something malicious, speed matters more than certainty.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleSecurity.ifCompromised.li1"><strong>Move remaining funds immediately.</strong> Send anything still safe to a fresh wallet whose keys have never touched the compromised device.</li>
+                    <li data-i18n="moduleSecurity.ifCompromised.li2"><strong>Revoke approvals from the old wallet.</strong> Use a token approval checker to cut off any permission the attacker's contract still holds.</li>
+                    <li data-i18n="moduleSecurity.ifCompromised.li3"><strong>Treat the device as compromised, not just the wallet.</strong> If malware or a fake app is the likely cause, a new wallet on the same device doesn't fix the root problem.</li>
+                    <li data-i18n="moduleSecurity.ifCompromised.li4"><strong>Be wary of "recovery" offers.</strong> Unsolicited help offering to recover stolen funds, for an upfront fee, is itself one of the most common follow-up scams.</li>
+                </ul>
+            </section>
+
+            <!-- SUMMARY -->
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="moduleSecurity.summary.eyebrow">09. Summary</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.summary.title">Summary</h2>
+                <p class="section-description" data-i18n="moduleSecurity.summary.p1">
+                    Most losses in crypto trace back to phishing, contract logic
+                    gaps, or avoidable operational habits, not unstoppable attacks.
+                    Recognizing the pattern is most of the defense.
+                </p>
+                <p class="section-description" data-i18n="moduleSecurity.summary.p2">
+                    An audit and a locked liquidity pool are good signs, not
+                    guarantees. The habits that remove the most realistic risk are
+                    simple: separate wallets by purpose, never share a seed phrase,
+                    read what you sign, and treat urgency as a reason to slow down.
+                </p>
+            </section>
+
+            <!-- GLOSSARY -->
             <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
-                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <span class="tag" data-i18n="moduleSecurity.glossary.eyebrow">10. Glossary</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.glossary.title">Glossary</h2>
                 <dl class="glossary-list">
                     <div class="card glossary-list__item">
                         <dt data-i18n="moduleSecurity.glossary.term1">Audit</dt>
@@ -167,9 +379,143 @@
                     </div>
                     <div class="card glossary-list__item">
                         <dt data-i18n="moduleSecurity.glossary.term5">Opsec</dt>
-                        <dd data-i18n="moduleSecurity.glossary.def5">Operational security — the personal habits that reduce your exposure to attacks.</dd>
+                        <dd data-i18n="moduleSecurity.glossary.def5">Operational security, the personal habits that reduce your exposure to attacks.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term6">Phishing</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def6">An attempt to trick someone into revealing sensitive information or signing a malicious transaction, usually by impersonating something trusted.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term7">Token Approval</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def7">An on-chain permission letting a contract move a specified (or unlimited) amount of your tokens on your behalf.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleSecurity.glossary.term8">Oracle Manipulation</dt>
+                        <dd data-i18n="moduleSecurity.glossary.def8">An attack that distorts the price feed a contract relies on, tricking it into acting on an inaccurate value.</dd>
                     </div>
                 </dl>
+            </section>
+
+            <!-- QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="moduleSecurity.quiz.eyebrow">11. Quiz</span>
+                <h2 class="section-title" data-i18n="moduleSecurity.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="moduleSecurity.quiz.intro">
+                    Check your understanding of this lesson before moving on.
+                    Incorrect answers point you straight back to the relevant
+                    section.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q1">1. What does phishing actually exploit?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q1o1">A. A weakness in blockchain cryptography</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q1o2">B. Trust and a moment of urgency</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q1o3">C. A bug in the wallet's hardware</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q1o4">D. A flaw only present in old wallets</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="#phishing">Phishing</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q2">2. Which of these should always be treated as a phishing attempt?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q2o1">A. A wallet update notification inside the wallet app itself</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q2o2">B. Someone asking for your seed phrase to "verify" your account</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q2o3">C. A block explorer showing your transaction history</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q2o4">D. A hardware wallet asking you to confirm a transaction on its screen</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="#phishing">Phishing</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q3">3. What is reentrancy, at a conceptual level?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q3o1">A. A contract sending funds out before updating its own internal balance</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q3o2">B. A wallet that lets you reuse the same password</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q3o3">C. A type of phishing email sent more than once</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q3o4">D. Two users sharing the same private key</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="#smart-contract-exploits">Smart Contract Exploits</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q4">4. What does a smart contract audit NOT guarantee?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q4o1">A. That the code was reviewed by someone other than its own developers</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q4o2">B. That the deployed code perfectly matches what was audited, with no bug possible</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q4o3">C. That known bug classes were checked for</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q4o4">D. That the audit happened at a specific point in time</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="#audits">What Audits Do (and Don't) Guarantee</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q5">5. Which is a genuine rug pull warning sign?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q5o1">A. Liquidity locked for a fixed period with no early withdrawal</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q5o2">B. The contract owner retains the power to mint unlimited new tokens at will</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q5o3">C. A published, dated audit report</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q5o4">D. A vesting schedule on the team's own tokens</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q5.feedbackIncorrect" hidden>Not quite, review <a href="#rug-pulls">Rug Pulls</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q6">6. Why are unlimited token approvals risky?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q6o1">A. They cost more gas than limited approvals</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q6o2">B. They grant ongoing permission to move any amount, indefinitely, which a malicious contract can abuse</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q6o3">C. They automatically expire after 24 hours</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q6o4">D. They are required by every legitimate dApp</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q6.feedbackIncorrect" hidden>Not quite, review <a href="#wallet-approvals">Wallet Approvals & Permissions</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q7">7. What's the most important first step if you suspect your wallet was compromised?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q7o1">A. Wait a few days to see if anything happens</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q7o2">B. Move remaining funds to a fresh wallet immediately</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q7o3">C. Share your seed phrase with a support agent to investigate</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q7o4">D. Accept an unsolicited recovery offer to get funds back</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q7.feedbackIncorrect" hidden>Not quite, review <a href="#if-compromised">If You Get Compromised</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleSecurity.quiz.q8">8. What is the most reliable sign that a message or request is malicious?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q8o1">A. It is written in poor grammar</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleSecurity.quiz.q8o2">B. It creates urgency and asks you to sign, connect, or reveal something</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q8o3">C. It comes from an official-looking domain</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleSecurity.quiz.q8o4">D. It mentions a specific token you hold</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleSecurity.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleSecurity.quiz.q8.feedbackIncorrect" hidden>Not quite, review <a href="#phishing">Phishing</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="moduleSecurity.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="moduleSecurity.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">8</strong>
+                            <span data-i18n="moduleSecurity.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="moduleSecurity.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
             </section>
 
             <nav class="lesson-pagination" aria-label="Lesson pagination">
@@ -182,25 +528,34 @@
 
 </main>
 
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+
             <div class="footer-brand">
-                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <h3 data-i18n="footer.title">Nodra</h3>
                 <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
+
             <div class="footer-links">
                 <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
                 <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
                 <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
             </div>
+
         </div>
     </div>
 </footer>
 
-<script defer src="../../assets/js/translations.js"></script>
-<script defer src="../../assets/js/academy.js"></script>
-<script defer src="../../assets/js/module-placeholder.js"></script>
+<span id="i18nCopiedLabel" data-i18n="moduleSecurity.common.copied" hidden>Copied</span>
+
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/academy.js"></script>
+<script defer src="../assets/js/security.js"></script>
 </body>
 </html>

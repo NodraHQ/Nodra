@@ -5,12 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="moduleStablecoins.meta.title">Stablecoins — Nodra Academy</title>
 <meta name="description" content="Fiat-backed, crypto-backed and algorithmic stablecoins — and why some of them fail.">
-<link rel="stylesheet" href="../../assets/css/variables.css">
-<link rel="stylesheet" href="../../assets/css/components.css">
-<link rel="stylesheet" href="../../assets/css/academy.css">
-<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/academy.css">
+<link rel="stylesheet" href="../assets/css/stablecoins.css">
 </head>
 <body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as previous modules) -->
+<!-- ===================================================== -->
 
 <nav class="navbar">
 
@@ -41,56 +45,81 @@
 
 <main>
 
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
+
     <section class="hero" id="top">
         <div class="container">
             <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <span class="tag" data-i18n="tracks.defi.title">DeFi</span>
+
+                    <span class="tag" data-i18n="moduleStablecoins.hero.tag">MODULE 08</span>
+
                     <h1 class="hero-title" data-i18n="moduleStablecoins.hero.title">Stablecoins</h1>
-                    <p class="hero-description" data-i18n="moduleStablecoins.hero.description">Stablecoins try to hold a steady value in a volatile market. This module explains the three ways they attempt it.</p>
+
+                    <p class="hero-description" data-i18n="moduleStablecoins.hero.description">
+                        Stablecoins try to hold a steady value in a volatile market.
+                        This module explains the three ways they attempt it.
+                    </p>
 
                     <div class="hero-actions">
-                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
-                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                        <a href="#introduction" class="btn btn-primary" data-i18n="moduleStablecoins.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="moduleStablecoins.hero.back">← Academy</a>
                     </div>
 
                     <div class="hero-stats">
                         <div class="stat-card">
                             <strong data-i18n="moduleStablecoins.hero.stat1.value">Intermediate</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                            <span data-i18n="moduleStablecoins.hero.stat1.label">Difficulty</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="moduleStablecoins.hero.stat2.value">40 min</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                            <strong data-i18n="moduleStablecoins.hero.stat2.value">35 min</strong>
+                            <span data-i18n="moduleStablecoins.hero.stat2.label">Duration</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="tracks.defi.title">DeFi</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                            <strong data-i18n="moduleStablecoins.hero.stat3.value">Reading + Quiz</strong>
+                            <span data-i18n="moduleStablecoins.hero.stat3.label">Format</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                            <strong data-i18n="moduleStablecoins.hero.stat4.value">11</strong>
+                            <span data-i18n="moduleStablecoins.hero.stat4.label">Sections</span>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="hero-visual reveal">
                     <div class="hero-dashboard glow">
+
                         <div class="dashboard-header">
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                         </div>
+
                         <div class="dashboard-content">
-                            <div class="dashboard-title">MODULE 08</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
-                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
-                            <div class="dashboard-divider"></div>
-                            <div class="dashboard-footer" data-i18n="tracks.defi.title">DeFi</div>
+                            <div class="stablecoin-mock">
+                                <div class="stablecoin-mock__row">
+                                    <span class="stablecoin-mock__label" data-i18n="moduleStablecoins.visual.assetLabel">Stablecoin</span>
+                                    <span class="stablecoin-mock__value">USDC</span>
+                                </div>
+                                <div class="stablecoin-mock__row">
+                                    <span class="stablecoin-mock__label" data-i18n="moduleStablecoins.visual.pegLabel">Peg Target</span>
+                                    <span class="stablecoin-mock__value">$1.00</span>
+                                </div>
+                                <div class="stablecoin-mock__row">
+                                    <span class="stablecoin-mock__label" data-i18n="moduleStablecoins.visual.priceLabel">Market Price</span>
+                                    <span class="stablecoin-mock__value">$0.998</span>
+                                </div>
+                                <div class="stablecoin-mock__row">
+                                    <span class="stablecoin-mock__label" data-i18n="moduleStablecoins.visual.statusLabel">Status</span>
+                                    <span class="stablecoin-mock__block">Stable</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -98,18 +127,29 @@
         </div>
     </section>
 
+    <!-- ===================================================== -->
+    <!-- LESSON BODY -->
+    <!-- ===================================================== -->
+
     <div class="container lesson-layout">
 
         <aside class="lesson-sidebar" id="sidebar">
             <nav class="toc" aria-label="Table of contents">
-                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <span class="tag" data-i18n="moduleStablecoins.toc.title">Contents</span>
                 <div class="toc__list-wrap" id="tocListWrap">
                     <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
                     <ol class="toc__list" id="tocList">
-                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
-                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
-                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
-                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                        <li><a href="#introduction" data-i18n="moduleStablecoins.toc.introduction">Introduction</a></li>
+                        <li><a href="#types" data-i18n="moduleStablecoins.toc.types">Types of Stablecoins</a></li>
+                        <li><a href="#peg-mechanisms" data-i18n="moduleStablecoins.toc.pegMechanisms">How the Peg Is Maintained</a></li>
+                        <li><a href="#over-collateralization" data-i18n="moduleStablecoins.toc.overCollateralization">Over-Collateralization</a></li>
+                        <li><a href="#reserve-attestation" data-i18n="moduleStablecoins.toc.reserveAttestation">Reserve Attestation</a></li>
+                        <li><a href="#algorithmic-stablecoins" data-i18n="moduleStablecoins.toc.algorithmic">Algorithmic Stablecoins</a></li>
+                        <li><a href="#historical-depegs" data-i18n="moduleStablecoins.toc.historicalDepegs">Historical Depegs</a></li>
+                        <li><a href="#risks-red-flags" data-i18n="moduleStablecoins.toc.risks">Risks & Red Flags</a></li>
+                        <li><a href="#summary" data-i18n="moduleStablecoins.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="moduleStablecoins.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="moduleStablecoins.toc.quiz">Quiz</a></li>
                     </ol>
                 </div>
             </nav>
@@ -117,36 +157,258 @@
 
         <article class="lesson-content">
 
-            <section class="section lesson-section reveal" id="overview">
-                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
-                <h2 class="section-title" data-i18n="moduleStablecoins.overview.title">Stablecoins</h2>
-                <p class="section-description" data-i18n="moduleStablecoins.overview.p1">A stablecoin is a token designed to hold a steady value, usually pegged to a currency like the US dollar. How that peg is maintained differs enormously between designs — and that difference is exactly where the risk lives.</p>
-                <p class="section-description" data-i18n="moduleStablecoins.overview.p2">This module will teach you to tell fiat-backed, crypto-backed, and algorithmic stablecoins apart, understand what "reserve attestation" actually proves, and recognize the warning signs that precede a depeg.</p>
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="moduleStablecoins.introduction.eyebrow">01. Introduction</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.introduction.p1">
+                    Module 05 introduced stablecoins briefly as one of DeFi's core
+                    building blocks. This lesson slows down and looks at what actually
+                    keeps a stablecoin's price steady, and why "stable" is a design
+                    goal, not a guarantee.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.introduction.p2">
+                    A stablecoin is a token engineered to hold a steady value, usually
+                    pegged to a fiat currency like the US dollar. How that peg is
+                    maintained differs enormously between designs, and that difference
+                    is exactly where the risk lives.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.introduction.p3">
+                    By the end of this lesson you'll be able to tell fiat-backed,
+                    crypto-backed and algorithmic stablecoins apart, understand what a
+                    reserve attestation actually proves, and recognize the warning
+                    signs that tend to precede a depeg.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="learn">
-                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
+            <!-- TYPES OF STABLECOINS -->
+            <section class="section lesson-section reveal" id="types">
+                <span class="tag" data-i18n="moduleStablecoins.types.eyebrow">02. Types of Stablecoins</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.types.title">Types of Stablecoins</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.types.p1">
+                    Nearly every stablecoin in use today falls into one of three broad
+                    designs, each trading off decentralization, capital efficiency and
+                    risk differently.
+                </p>
+
+                <div class="next-grid next-grid--three">
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleStablecoins.types.card1.title">Fiat-Backed</h3>
+                        <p data-i18n="moduleStablecoins.types.card1.text">Backed 1:1 by cash and cash-equivalents held by a company, off-chain. Examples: USDC, USDT.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleStablecoins.types.card2.title">Crypto-Backed</h3>
+                        <p data-i18n="moduleStablecoins.types.card2.text">Backed by other cryptocurrencies locked as collateral, usually over-collateralized to absorb price swings. Example: DAI.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleStablecoins.types.card3.title">Algorithmic</h3>
+                        <p data-i18n="moduleStablecoins.types.card3.text">Backed mainly by code and market incentives rather than collateral, expanding and contracting supply to defend the peg.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="moduleStablecoins.types.closing">
+                    Each model answers the same question, what stands behind this
+                    token, in a very different way.
+                </p>
+            </section>
+
+            <!-- HOW THE PEG IS MAINTAINED -->
+            <section class="section lesson-section reveal" id="peg-mechanisms">
+                <span class="tag" data-i18n="moduleStablecoins.pegMechanisms.eyebrow">03. How the Peg Is Maintained</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.pegMechanisms.title">How the Peg Is Maintained</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.pegMechanisms.p1">
+                    A peg isn't enforced by a rule, it's maintained by arbitrage:
+                    whenever the price drifts away from the target, someone has a
+                    financial incentive to trade it back.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.pegMechanisms.p2">
+                    If a fiat-backed stablecoin trades below $1, arbitrageurs can buy
+                    it cheaply and redeem it for $1 from the issuer, pushing demand
+                    (and price) back up. If it trades above $1, they can mint new
+                    tokens for $1 and sell them for a profit, pushing price back down.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.pegMechanisms.closing">
+                    This mechanism only works if redemption and minting are actually
+                    reliable, if an issuer freezes redemptions, the arbitrage loop
+                    breaks and the peg can drift indefinitely.
+                </p>
+            </section>
+
+            <!-- OVER-COLLATERALIZATION -->
+            <section class="section lesson-section reveal" id="over-collateralization">
+                <span class="tag" data-i18n="moduleStablecoins.overCollateralization.eyebrow">04. Over-Collateralization</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.overCollateralization.title">Over-Collateralization</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.overCollateralization.p1">
+                    Crypto-backed stablecoins can't rely on a stable asset as
+                    collateral, so they compensate by requiring more collateral value
+                    than the stablecoin they issue.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.overCollateralization.p2">
+                    If $100 of ETH is deposited to mint $70 of a stablecoin, the
+                    position can absorb roughly a 30% drop in ETH's price before the
+                    collateral is no longer sufficient to back what was issued.
+                </p>
+
+                <div class="card rate-diagram">
+                    <div class="dashboard-header">
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="dashboard-dot"></span>
+                        <span class="rate-diagram__chrome-title">collateral_position.json</span>
+                    </div>
+                    <div class="rate-diagram__body">
+                        <div class="rate-diagram__row">
+                            <span class="rate-diagram__label" data-i18n="moduleStablecoins.overCollateralization.field1.label">Collateral Deposited</span>
+                            <span class="rate-diagram__value">$100 (ETH)</span>
+                        </div>
+                        <div class="rate-diagram__row">
+                            <span class="rate-diagram__label" data-i18n="moduleStablecoins.overCollateralization.field2.label">Stablecoin Minted</span>
+                            <span class="rate-diagram__value">$70</span>
+                        </div>
+                        <div class="rate-diagram__row">
+                            <span class="rate-diagram__label" data-i18n="moduleStablecoins.overCollateralization.field3.label">Collateralization Ratio</span>
+                            <span class="rate-diagram__value">143%</span>
+                        </div>
+                        <div class="rate-diagram__row rate-diagram__row--body">
+                            <span class="rate-diagram__label" data-i18n="moduleStablecoins.overCollateralization.field4.label">Liquidation Threshold</span>
+                            <span class="rate-diagram__value">110%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="moduleStablecoins.overCollateralization.closing">
+                    If collateral value falls below the required ratio, the position
+                    can be liquidated automatically to protect the system, a mechanic
+                    covered in <a href="../06-lending/index.html">Module 06 — Lending</a>.
+                </p>
+            </section>
+
+            <!-- RESERVE ATTESTATION -->
+            <section class="section lesson-section reveal" id="reserve-attestation">
+                <span class="tag" data-i18n="moduleStablecoins.reserveAttestation.eyebrow">05. Reserve Attestation</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.reserveAttestation.title">Reserve Attestation</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.reserveAttestation.p1">
+                    Fiat-backed issuers regularly publish a reserve attestation, a
+                    report from an accounting firm confirming that reserves of a
+                    certain value existed on a specific date.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.reserveAttestation.p2">
+                    An attestation is not the same as a full audit. It confirms a
+                    snapshot, not that reserves are always fully backing every token
+                    in circulation, nor how those reserves are invested or how quickly
+                    they could be accessed.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleStablecoins.reserveAttestation.proves.title">What an attestation shows</h3>
+                        <p data-i18n="moduleStablecoins.reserveAttestation.proves.text">That reported reserves existed, in some form, on the date it covers.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleStablecoins.reserveAttestation.notProve.title">What an attestation doesn't show</h3>
+                        <p data-i18n="moduleStablecoins.reserveAttestation.notProve.text">Ongoing solvency, the quality or liquidity of the reserves, or that reserves have not changed since.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="moduleStablecoins.reserveAttestation.closing">
+                    Treat attestations as a useful data point, not as proof that a
+                    stablecoin can never break its peg.
+                </p>
+            </section>
+
+            <!-- ALGORITHMIC STABLECOINS -->
+            <section class="section lesson-section reveal" id="algorithmic-stablecoins">
+                <span class="tag" data-i18n="moduleStablecoins.algorithmic.eyebrow">06. Algorithmic Stablecoins</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.algorithmic.title">Algorithmic Stablecoins</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.algorithmic.p1">
+                    Algorithmic stablecoins try to hold their peg through code and
+                    incentives instead of holding real collateral. A common design
+                    pairs the stablecoin with a second, volatile token that absorbs
+                    the difference.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.algorithmic.p2">
+                    When the stablecoin trades below its peg, the protocol lets users
+                    burn it in exchange for newly minted volatile token, reducing the
+                    stablecoin's supply and, in theory, pushing its price back up.
+                </p>
                 <ul class="lesson-list">
-                    <li data-i18n="moduleStablecoins.learn.li1">The three main stablecoin designs: fiat-backed, crypto-backed, and algorithmic.</li>
-                    <li data-i18n="moduleStablecoins.learn.li2">What a reserve attestation does — and doesn't — prove about a stablecoin.</li>
-                    <li data-i18n="moduleStablecoins.learn.li3">Why over-collateralization is used to absorb crypto price volatility.</li>
-                    <li data-i18n="moduleStablecoins.learn.li4">What a "depeg" is, and historical examples of why it happened.</li>
-                    <li data-i18n="moduleStablecoins.learn.li5">How to evaluate a stablecoin's real backing before relying on it.</li>
+                    <li data-i18n="moduleStablecoins.algorithmic.li1"><strong>No independent collateral.</strong> Backing comes from confidence in the system itself, not from assets held elsewhere.</li>
+                    <li data-i18n="moduleStablecoins.algorithmic.li2"><strong>Reflexive design.</strong> The mechanism that defends the peg depends on the volatile token holding value, which itself depends on confidence in the peg.</li>
+                    <li data-i18n="moduleStablecoins.algorithmic.li3"><strong>Death spiral risk.</strong> If confidence breaks, both tokens can fall together, since minting more of the volatile token to defend the peg only works while someone is still willing to buy it.</li>
+                </ul>
+                <p class="section-description" data-i18n="moduleStablecoins.algorithmic.closing">
+                    This design can work while confidence holds, but it removes the
+                    safety net that collateral-backed models have.
+                </p>
+            </section>
+
+            <!-- HISTORICAL DEPEGS -->
+            <section class="section lesson-section reveal" id="historical-depegs">
+                <span class="tag" data-i18n="moduleStablecoins.historicalDepegs.eyebrow">07. Historical Depegs</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.historicalDepegs.title">Historical Depegs</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.historicalDepegs.p1">
+                    Two well-documented cases show how differently a depeg can play
+                    out depending on what actually backs a stablecoin.
+                </p>
+
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleStablecoins.historicalDepegs.card1.title">TerraUSD (UST), May 2022</h3>
+                        <p data-i18n="moduleStablecoins.historicalDepegs.card1.text">An algorithmic stablecoin that lost its peg during a period of large withdrawals; its companion token's price collapsed at the same time, and the peg was never recovered.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="moduleStablecoins.historicalDepegs.card2.title">USDC, March 2023</h3>
+                        <p data-i18n="moduleStablecoins.historicalDepegs.card2.text">Briefly traded near $0.88 after news that part of its reserves were held at a bank that had just failed. It returned to $1.00 within days once the issuer confirmed reserves remained accessible.</p>
+                    </div>
+                </div>
+
+                <p class="section-description" data-i18n="moduleStablecoins.historicalDepegs.closing">
+                    The same word, depeg, describes a temporary wobble in one case and
+                    a permanent collapse in the other. What backs the token is what
+                    determines which one you're looking at.
+                </p>
+            </section>
+
+            <!-- RISKS & RED FLAGS -->
+            <section class="section lesson-section reveal" id="risks-red-flags">
+                <span class="tag" data-i18n="moduleStablecoins.risks.eyebrow">08. Risks & Red Flags</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.risks.title">Risks &amp; Red Flags</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.risks.intro">
+                    Not every stablecoin carries the same risk, but a few warning
+                    signs are worth checking before relying on one.
+                </p>
+                <ul class="lesson-list">
+                    <li data-i18n="moduleStablecoins.risks.li1"><strong>Opaque reserves.</strong> An issuer that won't publish regular attestations, or discloses vague reserve composition, is harder to trust by default.</li>
+                    <li data-i18n="moduleStablecoins.risks.li2"><strong>Reflexive backing.</strong> Any design where the peg depends on confidence in another token issued by the same protocol carries the algorithmic risk covered above.</li>
+                    <li data-i18n="moduleStablecoins.risks.li3"><strong>Thin liquidity.</strong> A stablecoin that's hard to buy or sell at its peg price in size is more likely to slip during stress, even if it's fully backed.</li>
+                    <li data-i18n="moduleStablecoins.risks.li4"><strong>Regulatory exposure.</strong> Reserves held at a single bank or jurisdiction can become temporarily inaccessible for reasons that have nothing to do with the stablecoin's own design.</li>
+                    <li data-i18n="moduleStablecoins.risks.li5"><strong>Unsustainable yield.</strong> A stablecoin offering yield well above what fiat savings or DeFi lending normally pay is often subsidizing that rate from somewhere, and that somewhere matters.</li>
                 </ul>
             </section>
 
-            <section class="section lesson-section reveal" id="prerequisites">
-                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
-                <ul class="lesson-list">
-                    <li data-i18n="moduleStablecoins.prereq.li1">Completed <a href="../05-defi/index.html">Module 05 — DeFi Fundamentals</a>.</li>
-                </ul>
+            <!-- SUMMARY -->
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="moduleStablecoins.summary.eyebrow">09. Summary</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.summary.title">Summary</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.summary.p1">
+                    Stablecoins hold their value through one of three broad designs,
+                    fiat reserves, crypto over-collateralization, or algorithmic
+                    incentives, and each trades decentralization for a different kind
+                    of risk.
+                </p>
+                <p class="section-description" data-i18n="moduleStablecoins.summary.p2">
+                    A reserve attestation is a useful signal but not a guarantee,
+                    over-collateralization absorbs volatility but isn't limitless, and
+                    algorithmic designs remove the collateral safety net entirely. The
+                    single most useful habit from this lesson is asking what actually
+                    backs a stablecoin before treating its peg as guaranteed.
+                </p>
             </section>
 
+            <!-- GLOSSARY -->
             <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
-                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
+                <span class="tag" data-i18n="moduleStablecoins.glossary.eyebrow">10. Glossary</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.glossary.title">Glossary</h2>
                 <dl class="glossary-list">
                     <div class="card glossary-list__item">
                         <dt data-i18n="moduleStablecoins.glossary.term1">Peg</dt>
@@ -168,7 +430,141 @@
                         <dt data-i18n="moduleStablecoins.glossary.term5">Algorithmic Stablecoin</dt>
                         <dd data-i18n="moduleStablecoins.glossary.def5">A stablecoin that uses code and incentives, rather than collateral, to hold its peg.</dd>
                     </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term6">Arbitrage</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def6">Buying an asset where it's cheap and selling where it's expensive, the mechanism that keeps a stablecoin's price close to its peg.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term7">Over-Collateralization</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def7">Backing a loan or a stablecoin with collateral worth more than the amount issued, to absorb price volatility.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="moduleStablecoins.glossary.term8">Liquidation Threshold</dt>
+                        <dd data-i18n="moduleStablecoins.glossary.def8">The collateralization ratio below which a position can be automatically closed to protect the system.</dd>
+                    </div>
                 </dl>
+            </section>
+
+            <!-- QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="moduleStablecoins.quiz.eyebrow">11. Quiz</span>
+                <h2 class="section-title" data-i18n="moduleStablecoins.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="moduleStablecoins.quiz.intro">
+                    Check your understanding of this lesson before moving on.
+                    Incorrect answers point you straight back to the relevant
+                    section.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q1">1. What determines which of the three main stablecoin designs a token uses?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q1o1">A. The blockchain it is issued on</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q1o2">B. What actually backs it, fiat reserves, crypto collateral, or code and incentives</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q1o3">C. Whether it pays yield to holders</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q1o4">D. How many exchanges list it</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="#types">Types of Stablecoins</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q2">2. Why does arbitrage help keep a fiat-backed stablecoin near its $1 peg?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q2o1">A. Because the issuer manually sets the price each day</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q2o2">B. Because traders profit by pushing the price back toward $1, buying when it's cheap and minting/selling when it's expensive</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q2o3">C. Because exchanges refuse to list it below $1</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q2o4">D. Because governments require it by law</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="#peg-mechanisms">How the Peg Is Maintained</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q3">3. If $100 of collateral backs $70 of a stablecoin, roughly how much can the collateral's price fall before it's no longer sufficient?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q3o1">A. About 10%</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q3o2">B. About 30%</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q3o3">C. About 50%</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q3o4">D. It can never fall</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="#over-collateralization">Over-Collateralization</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q4">4. What does a reserve attestation actually confirm?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q4o1">A. That the stablecoin can never lose its peg</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q4o2">B. That reserves of a reported value existed on a specific date</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q4o3">C. That the issuer has been fully audited every year</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q4o4">D. That reserves are held in the safest possible assets</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="#reserve-attestation">Reserve Attestation</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q5">5. What makes algorithmic stablecoins riskier than collateral-backed ones?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q5o1">A. They are always more expensive to use</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q5o2">B. Their peg depends on ongoing confidence rather than assets held elsewhere</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q5o3">C. They cannot be traded on exchanges</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q5o4">D. They are illegal in most countries</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q5.feedbackIncorrect" hidden>Not quite, review <a href="#algorithmic-stablecoins">Algorithmic Stablecoins</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q6">6. What was the key difference between UST's 2022 depeg and USDC's 2023 depeg?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q6o1">A. UST recovered quickly while USDC never did</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q6o2">B. USDC was backed by reserves that were temporarily inaccessible, not gone, while UST's backing mechanism collapsed entirely</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q6o3">C. Both were caused by the same root issue</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q6o4">D. Neither actually lost its peg</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q6.feedbackIncorrect" hidden>Not quite, review <a href="#historical-depegs">Historical Depegs</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q7">7. Which of these is a genuine red flag for a stablecoin?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q7o1">A. Regular, transparent reserve attestations</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q7o2">B. A yield far above what comparable, lower-risk options pay</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q7o3">C. Being redeemable 1:1 with the issuer</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q7o4">D. Having deep liquidity across major exchanges</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q7.feedbackIncorrect" hidden>Not quite, review <a href="#risks-red-flags">Risks & Red Flags</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleStablecoins.quiz.q8">8. What is the single most useful question to ask before trusting a stablecoin's peg?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q8o1">A. How many social media followers the project has</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleStablecoins.quiz.q8o2">B. What actually backs it</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q8o3">C. How long ago it launched</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleStablecoins.quiz.q8o4">D. What color its logo is</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleStablecoins.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleStablecoins.quiz.q8.feedbackIncorrect" hidden>Not quite, review <a href="#risks-red-flags">Risks & Red Flags</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="moduleStablecoins.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="moduleStablecoins.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">8</strong>
+                            <span data-i18n="moduleStablecoins.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="moduleStablecoins.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
             </section>
 
             <nav class="lesson-pagination" aria-label="Lesson pagination">
@@ -181,25 +577,34 @@
 
 </main>
 
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+
             <div class="footer-brand">
-                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <h3 data-i18n="footer.title">Nodra</h3>
                 <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
+
             <div class="footer-links">
                 <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
                 <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
                 <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
             </div>
+
         </div>
     </div>
 </footer>
 
-<script defer src="../../assets/js/translations.js"></script>
-<script defer src="../../assets/js/academy.js"></script>
-<script defer src="../../assets/js/module-placeholder.js"></script>
+<span id="i18nCopiedLabel" data-i18n="moduleStablecoins.common.copied" hidden>Copied</span>
+
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/academy.js"></script>
+<script defer src="../assets/js/stablecoins.js"></script>
 </body>
 </html>

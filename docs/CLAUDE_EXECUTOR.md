@@ -1,8 +1,10 @@
 # CLAUDE_EXECUTOR
 
-Version: 1.0
+Version: 2.0
 Status: Stable
 Last Updated: July 2026
+
+This version reflects the Academy's self-contained structure (see ACADEMY_ARCHITECTURE.md, Migration Note). Academy assets and translations now live inside academy/, not at the repository root. Academy translations are split into one file per module plus a shared file, instead of one single file per language.
 
 ---
 
@@ -94,15 +96,17 @@ Do not refactor.
 
 You MAY:
 
-Create a new module folder.
+Create a new module folder inside academy/.
 
 Create the module HTML.
 
-Create module CSS.
+Create module CSS inside academy/assets/css/.
 
-Create module JavaScript.
+Create module JavaScript inside academy/assets/js/.
 
-Add translation keys.
+Create the module's translation files (academy/translations/en/{module}.json and academy/translations/pt/{module}.json).
+
+Add translation keys to the module's own translation file, or to shared.json if the key is genuinely shared academy-wide (rare, and only if explicitly requested).
 
 Add glossary entries.
 
@@ -140,7 +144,13 @@ ScrollSpy
 
 Language Switch
 
+shared.json
+
+Another module's translation file
+
 Unless explicitly requested.
+
+Never create a new Academy file outside of academy/, and never reference a file outside of academy/ from an Academy page.
 
 ---
 
@@ -165,6 +175,8 @@ Quiz
 Navigation
 
 Keep everything else identical.
+
+All shared asset paths are relative to academy/, one level up from a module's own folder. For example, a module at academy/08-stablecoins/index.html links its shared CSS as ../assets/css/variables.css, not ../../assets/css/variables.css. Never link to a path outside of academy/.
 
 ---
 
@@ -202,7 +214,13 @@ Do not rewrite working JavaScript.
 
 Use the module namespace.
 
-Never modify another module's namespace.
+Add new keys to the module's own translation file: academy/translations/en/{module-folder}.json and academy/translations/pt/{module-folder}.json.
+
+Never add a module's keys to shared.json.
+
+Never add shared/navigation/footer keys to a module's own file.
+
+Never modify another module's namespace or file.
 
 Never rename translation keys.
 
@@ -313,6 +331,8 @@ STOP.
 List the required files.
 
 Wait for approval.
+
+A standard new module touches five files: the module's index.html, its CSS, its JavaScript, and its two translation files (en and pt). This is expected and does not require approval.
 
 ---
 

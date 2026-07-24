@@ -1,0 +1,121 @@
+/* ==========================================================================
+   ABOUT.CSS
+   Styles specific to the Nodra About page (/about/).
+
+   This folder is self-contained, same as /academy/: it keeps its own
+   copies of variables.css and components.css rather than referencing
+   the root's, and its own translations/ folder. Nothing here is shared
+   with or imported from the root Nodra landing page.
+
+   Reuse-first check performed before writing this file:
+   - .navbar, .hero*, .footer*, .tag, .card, .glow, .reveal, .btn*,
+     .mission/.mission-box, .section-title, .section-description all
+     already exist in this folder's own components.css and are reused
+     as-is.
+   - Nothing here duplicates the Academy's .next-grid/.next-card: this
+     file defines its own .principle-card and .roadmap-item because
+     their content shape (a title + one short paragraph, no button, no
+     eyebrow) doesn't match .next-card closely enough to force a reuse.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. SECTION SHELL (mission / principles / roadmap share one rhythm)
+   ========================================================================== */
+
+.about-section{
+    padding:96px 0;
+}
+
+.about-section__header{
+    max-width:640px;
+    margin:0 0 48px;
+}
+
+/* ==========================================================================
+   2. PRINCIPLES GRID
+   ========================================================================== */
+
+.principles-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+}
+
+.principle-card{
+    padding:32px;
+}
+
+.principle-card h3{
+    font-family:var(--font-heading);
+    text-transform:uppercase;
+    font-size:20px;
+    margin-bottom:12px;
+}
+
+.principle-card p{
+    color:var(--text-secondary);
+    line-height:1.7;
+    font-size:15px;
+}
+
+/* ==========================================================================
+   3. ROADMAP LIST
+   ========================================================================== */
+
+.roadmap-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.roadmap-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    padding:28px 32px;
+}
+
+.roadmap-item__body h3{
+    font-family:var(--font-heading);
+    text-transform:uppercase;
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.roadmap-item__body p{
+    color:var(--text-secondary);
+    line-height:1.7;
+    font-size:15px;
+    max-width:56ch;
+}
+
+.roadmap-item__status{
+    flex-shrink:0;
+    border:1px solid var(--border);
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    color:var(--text-muted);
+}
+
+.roadmap-item__status--live{
+    color:var(--primary);
+    border-color:var(--border-light);
+}
+
+/* ==========================================================================
+   4. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 900px){
+    .principles-grid{
+        grid-template-columns:1fr;
+    }
+
+    .roadmap-item{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+}

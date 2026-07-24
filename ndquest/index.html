@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">NDQuest — Quiz &amp; Event Activations</title>
+<meta name="description" content="NDQuest is Nodra's game platform: quizzes and interactive challenges built for events, communities and creators.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/home.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        <img src="assets/logos/ndquest-light.png" alt="NDQuest">
+    </a>
+
+    <div class="nav-links">
+
+        <a href="#games" data-i18n="nav.games">Games</a>
+        <a href="../index.html" data-i18n="nav.nodra">Nodra</a>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+</nav>
+
+<main>
+
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
+
+    <section class="hero">
+        <div class="container">
+            <div class="reveal">
+                <h1 class="hero-title" data-i18n="hero.title">Test your knowledge.<br>Pick your challenge.</h1>
+                <p class="hero-description" data-i18n="hero.description">
+                    NDQuest is Nodra's game platform: quizzes and interactive
+                    challenges built for events, communities and creators.
+                    Pick a game below to jump in.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- GAMES -->
+    <!-- ===================================================== -->
+
+    <section class="games-section" id="games">
+        <div class="container">
+            <div class="reveal" style="margin-bottom:32px">
+                <h2 style="font-family:var(--font-display);font-weight:600;font-size:28px;margin:0" data-i18n="games.title">Available Games</h2>
+            </div>
+
+            <div class="games-grid">
+
+                <div class="card game-card reveal">
+                    <img class="game-card__image" src="assets/images/quest-drop-preview.png" alt="Quest Drop">
+                    <div class="game-card__body">
+                        <h3 data-i18n="games.questdrop.title">Quest Drop</h3>
+                        <p data-i18n="games.questdrop.description">Pick a difficulty, open a challenge, answer correctly and claim the prize. Built for live events, fully brandable per sponsor.</p>
+                        <a href="quest-drop/index.html" class="btn btn-primary" data-i18n="games.questdrop.cta">Play →</a>
+                    </div>
+                </div>
+
+                <div class="card game-card game-card--soon reveal">
+                    <div class="game-card__body">
+                        <h3 data-i18n="games.soon.title">More Games Coming</h3>
+                        <p data-i18n="games.soon.description">New NDQuest games launch as they're ready. No fixed dates, just steady progress.</p>
+                        <span class="game-card__status" data-i18n="games.soon.status">Coming Soon</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <span data-i18n="footer.subtitle">Part of the Nodra ecosystem.</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html" data-i18n="footer.backToNodra">← Nodra</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script defer src="assets/js/translations.js"></script>
+<script defer src="assets/js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+/* =========================================================
+   NDQUEST — VARIABLES.CSS
+
+   Own design tokens for the NDQuest platform landing. Values
+   are copied from quest-drop/style.css (same brand, same
+   palette) so the landing and the game feel like one product —
+   but this is an independent file, not an import. NDQuest does
+   not share any assets/ or translations/ with the root Nodra
+   landing or with academy/, same self-containment rule applied
+   everywhere else in this repo.
+   ========================================================= */
+
+:root {
+  --color-bg: #071b30;
+  --color-bg-alt: #0d2846;
+  --color-surface: #123a5e;
+  --color-surface-border: rgba(254, 162, 3, 0.18);
+
+  --color-gold: #fea203;
+  --color-gold-light: #ffc24d;
+
+  --color-paper: #f4ebda;
+  --color-paper-dark: #e2d2ab;
+
+  --color-text: #eaf2fa;
+  --color-text-muted: #9fb4c9;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Work Sans', sans-serif;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.35);
+}

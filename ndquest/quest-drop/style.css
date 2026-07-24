@@ -1,0 +1,1031 @@
+/* =========================================================
+   TOKENS
+   ========================================================= */
+:root {
+  --color-bg: #071b30;
+  --color-bg-alt: #0d2846;
+  --color-surface: #123a5e;
+  --color-surface-border: rgba(254, 162, 3, 0.18);
+
+  --color-gold: #fea203;
+  --color-gold-light: #ffc24d;
+  --color-gold-rgb: 254, 162, 3;
+  --color-bg-rgb: 7, 27, 48;
+
+  --color-paper: #f4ebda;
+  --color-paper-dark: #e2d2ab;
+  --color-paper-shadow: #c9b98c;
+
+  --color-text: #eaf2fa;
+  --color-text-muted: #9fb4c9;
+
+  --color-success: #5fa77c;
+  --color-error: #b5544a;
+
+  --envelope-texture-image: none;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Work Sans', sans-serif;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 20% 15%, rgba(var(--color-gold-rgb), 0.16), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(var(--color-gold-rgb), 0.11), transparent 50%),
+    var(--color-bg);
+  min-height: 100vh;
+  min-height: 100dvh; /* iOS/iPadOS: ignora a barra de endereço/abas na hora de medir a tela */
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Botão de idioma — fixo, visível em todas as telas (config,
+   envelopes e overlays), independente do tema de marca ativo. */
+.language-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 50;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Link de volta pra landing do NDQuest — só existe na tela de
+   configuração (a envelopes já tem seu próprio botão de voltar
+   pra configuração), simétrico ao seletor de idioma no canto
+   oposto. */
+.back-to-ndquest {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow: var(--shadow-soft);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.back-to-ndquest:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 480px) {
+  .back-to-ndquest {
+    top: 10px;
+    left: 10px;
+    padding: 6px 10px;
+  }
+}
+
+.language-btn {
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.language-btn.is-active {
+  background: linear-gradient(180deg, var(--color-gold-light), var(--color-gold));
+  color: var(--color-bg);
+}
+
+@media (max-width: 480px) {
+  .language-toggle {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* marca d'água extremamente sutil, derivada da logo do tema ativo —
+   fica atrás de todo o conteúdo, sem competir com os envelopes */
+.brand-watermark {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.brand-watermark img {
+  position: absolute;
+  bottom: 4%;
+  right: 4%;
+  width: 38vw;
+  max-width: 560px;
+  opacity: 0.05;
+  filter: grayscale(15%);
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================
+   LAYOUT / SCREENS
+   ========================================================= */
+#app {
+  min-height: 100vh;
+  min-height: 100dvh; /* iOS/iPadOS: ignora a barra de endereço/abas na hora de medir a tela */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 20px 20px;
+}
+
+.screen {
+  display: none;
+  width: 100%;
+  max-width: 720px;
+  animation: fade-up 0.5s ease both;
+}
+
+.screen.is-active {
+  display: block;
+}
+
+/* a tela de envelopes é o "jogo" em si: usa muito mais espaço da tela */
+#screen-envelopes {
+  max-width: 1500px;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+  font-weight: 600;
+}
+
+.title-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+  color: var(--color-text);
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: 15.5px;
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+
+/* =========================================================
+   TELA 1 - CONFIGURAÇÃO
+   ========================================================= */
+
+/* Logo da NDQuest, agora dentro da própria hero da tela de
+   configuração — centralizada, acima do eyebrow, em vez de um
+   selo solto no canto. */
+.config-hero-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.config-hero-logo img {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+}
+
+@media (max-width: 480px) {
+  .config-hero-logo img {
+    height: 34px;
+  }
+}
+
+.submit-link-row {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.submit-link-row a {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.submit-link-row a:hover {
+  color: var(--color-gold);
+}
+
+.config-hero {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.config-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  padding: 30px 36px;
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+}
+
+.config-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.config-columns .config-section {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.config-section {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.config-section:last-of-type {
+  margin-bottom: 14px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+@media (max-width: 640px) {
+  .config-columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .config-columns .config-section:first-child {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--color-surface-border);
+  }
+}
+
+.config-section-title {
+  margin: 0 0 14px;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+}
+
+.title-display {
+  font-size: 34px;
+}
+
+.field {
+  text-align: left;
+  margin-bottom: 14px;
+}
+
+/* campo isolado, centralizado, entre as colunas e a seção de dificuldade */
+.field-centered {
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.field-centered input {
+  text-align: center;
+}
+
+.field label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.field input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  padding: 11px 16px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(var(--color-gold-rgb), 0.22);
+}
+
+.field input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.55;
+}
+
+.field select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  padding: 11px 16px;
+  outline: none;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-gold-light) 50%), linear-gradient(135deg, var(--color-gold-light) 50%, transparent 50%);
+  background-position: calc(100% - 22px) center, calc(100% - 16px) center;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field select:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(var(--color-gold-rgb), 0.22);
+}
+
+.field select option {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.field-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.field-group-label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+}
+
+.percent-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.percent-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.percent-label {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.percent-field input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.percent-field input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(var(--color-gold-rgb), 0.22);
+}
+
+.field-error {
+  min-height: 20px;
+  color: var(--color-error);
+  font-size: 13.5px;
+  margin: 4px 0 18px;
+  text-align: left;
+}
+
+.btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: var(--radius-md);
+  padding: 13px 26px;
+  width: 100%;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--color-gold-light), var(--color-gold));
+  color: var(--color-bg);
+  box-shadow: 0 10px 22px rgba(var(--color-gold-rgb), 0.28);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 12px 26px rgba(var(--color-gold-rgb), 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-surface-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-gold);
+}
+
+/* =========================================================
+   TELA 2 - ENVELOPES
+   ========================================================= */
+.envelopes-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.hero-logo {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  max-width: 220px;
+  margin: 0 auto 14px;
+}
+
+.hero-logo::before {
+  content: '';
+  position: absolute;
+  inset: -22px;
+  background: radial-gradient(circle, rgba(var(--color-gold-rgb), 0.22), transparent 72%);
+  filter: blur(2px);
+  z-index: -1;
+}
+
+.hero-logo img {
+  max-width: 100%;
+  max-height: 60px;
+  object-fit: contain;
+}
+
+.hero-slogan {
+  margin: 2px 0 0;
+  font-size: 15px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.back-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-surface-border);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--color-text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.55;
+  transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.back-btn:hover {
+  opacity: 1;
+  border-color: var(--color-gold);
+  color: var(--color-text);
+}
+
+.envelope-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 28px 24px;
+  justify-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  /* espelham os valores de minmax()/gap acima — usadas via JS para
+     calcular uma largura máxima que deixe a grade equilibrada
+     (ex.: 6 envelopes = 3×2) sem remover o auto-fit responsivo */
+  --envelope-cell-min: 175px;
+  --envelope-gap-col: 24px;
+}
+
+.envelope {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px;
+  width: 100%;
+  max-width: 300px;
+  font-family: var(--font-body);
+}
+
+.envelope-shape {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  perspective: 500px;
+  transition: transform 0.25s ease, filter 0.35s ease, box-shadow 0.25s ease;
+  border-radius: 10px;
+}
+
+.envelope:hover .envelope-shape {
+  transform: translateY(-10px) scale(1.05);
+}
+
+.envelope:active .envelope-shape {
+  transform: translateY(-3px) scale(0.95);
+}
+
+/* destaque bem visível durante a abertura, para ficar claro em vídeo */
+.envelope.is-opening .envelope-shape,
+.envelope.is-open .envelope-shape {
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 0 0 6px rgba(var(--color-gold-rgb), 0.25);
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  background-image:
+    var(--envelope-texture-image),
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.45), transparent 55%),
+    radial-gradient(circle at 72% 88%, rgba(var(--color-gold-rgb), 0.12), transparent 60%),
+    linear-gradient(160deg, var(--color-paper), var(--color-paper-dark) 65%, var(--color-paper-shadow));
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.envelope-back::before {
+  /* subtle inner "V" fold lines of the envelope pocket */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 48%, rgba(0,0,0,0.06) 49%, transparent 51%),
+    linear-gradient(245deg, transparent 48%, rgba(0,0,0,0.06) 49%, transparent 51%);
+  border-radius: 10px;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 62%;
+  background: linear-gradient(160deg, var(--color-paper-dark), var(--color-paper-shadow));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.6, 0.1, 0.3, 1), opacity 0.45s ease 0.18s;
+  border-radius: 10px 10px 0 0;
+}
+
+.seal {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 17%;
+  min-width: 38px;
+  max-width: 60px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, var(--color-gold-light), var(--color-gold) 55%, #6e5210 100%);
+  color: #3a2c07;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 2;
+}
+
+.difficulty-tag {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  z-index: 4;
+  padding: 4px 16px 4px 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f4ebda;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+}
+
+.difficulty-tag.difficulty-easy {
+  background: linear-gradient(135deg, #3f9142, #1f5c28);
+}
+
+.difficulty-tag.difficulty-medium {
+  background: linear-gradient(135deg, #d9a021, #a5720a);
+  color: #2b1c02;
+}
+
+.difficulty-tag.difficulty-hard {
+  background: linear-gradient(135deg, #b23a3a, #7a1f1f);
+}
+
+.used-badge {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--color-bg);
+  background: var(--color-paper);
+  border-radius: 10px;
+  z-index: 3;
+  text-align: center;
+  padding: 8px;
+}
+
+@keyframes prize-reveal {
+  0% { transform: scale(0.5); opacity: 0; }
+  65% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.envelope.is-used .used-badge {
+  display: flex;
+  animation: prize-reveal 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+/* opening animation, played once while transitioning to the question */
+.envelope.is-opening .envelope-flap {
+  transform: rotateX(-165deg);
+  opacity: 0;
+}
+
+.envelope.is-opening .seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+}
+
+/* aberto e aguardando a conclusão da pergunta: flap permanece aberto,
+   mas o prêmio ainda não é revelado */
+.envelope.is-open {
+  cursor: default;
+  pointer-events: none;
+}
+
+.envelope.is-open .envelope-flap,
+.envelope.is-used .envelope-flap {
+  transform: rotateX(-165deg);
+  opacity: 0;
+}
+
+.envelope.is-open .seal,
+.envelope.is-used .seal {
+  opacity: 0;
+}
+
+/* utilizado: prêmio revelado e envelope permanentemente marcado */
+.envelope.is-used {
+  cursor: default;
+  pointer-events: none;
+}
+
+.envelope.is-used .envelope-shape {
+  transform: none;
+}
+
+.envelope.is-used .used-badge {
+  display: flex;
+}
+
+/* =========================================================
+   OVERLAYS (pergunta / resultado / evento finalizado)
+   ========================================================= */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 7, 13, 0.72);
+  backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.overlay.is-active {
+  display: flex;
+  opacity: 1;
+}
+
+.question-card,
+.result-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  transform: scale(0.94);
+  transition: transform 0.3s ease;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-surface-border);
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--color-text-muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+
+.modal-close-btn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-text);
+}
+
+.finished-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.event-finished-badge {
+  display: inline-block;
+  margin: 14px auto 0;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(95, 167, 122, 0.16);
+  color: var(--color-success);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* [hidden] precisa vencer a regra de display acima — sem isso, o
+   atributo "hidden" do HTML é ignorado e o badge fica sempre visível */
+.event-finished-badge[hidden] {
+  display: none;
+}
+
+.overlay.is-active .question-card,
+.overlay.is-active .result-card {
+  transform: scale(1);
+}
+
+.question-text {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.35;
+  margin: 0 0 28px;
+  text-align: left;
+}
+
+.answers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.answer-btn {
+  appearance: none;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  padding: 15px 18px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.12s ease;
+}
+
+.answer-btn:hover {
+  border-color: var(--color-gold);
+  background: rgba(var(--color-gold-rgb), 0.1);
+}
+
+.answer-btn:active {
+  transform: scale(0.98);
+}
+
+.result-content {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-content.is-active {
+  display: flex;
+}
+
+.result-icon {
+  font-size: 40px;
+  color: var(--color-success);
+  margin: 0 0 6px;
+}
+
+.result-icon--fail {
+  color: var(--color-error);
+}
+
+.result-prize {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--color-gold-light);
+  margin: 0 0 28px;
+}
+
+.result-continue-btn {
+  max-width: 280px;
+}
+
+/* =========================================================
+   RESPONSIVE — telas pequenas (celular / tablet retrato)
+   ========================================================= */
+@media (max-width: 480px) {
+  .config-card,
+  .question-card,
+  .result-card {
+    padding: 32px 24px;
+  }
+
+  .title-display {
+    font-size: 28px;
+  }
+
+  .envelope-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 18px 12px;
+    --envelope-cell-min: 120px;
+    --envelope-gap-col: 12px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — tablets e notebooks: prioriza impacto visual,
+   envelopes bem maiores e uso amplo da tela (ativação/gravação)
+   ========================================================= */
+@media (min-width: 768px) {
+  #screen-envelopes {
+    max-width: 1300px;
+  }
+
+  .envelopes-header {
+    margin-bottom: 64px;
+  }
+
+  .envelopes-header .title-display {
+    font-size: 40px;
+  }
+
+  .envelope-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 38px 34px;
+    --envelope-cell-min: 240px;
+    --envelope-gap-col: 34px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #screen-envelopes {
+    max-width: 1650px;
+  }
+
+  .envelope-grid {
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 48px 42px;
+    --envelope-cell-min: 290px;
+    --envelope-gap-col: 42px;
+  }
+
+  .envelope {
+    max-width: 380px;
+  }
+
+  .seal {
+    font-size: 22px;
+  }
+
+  .used-badge {
+    font-size: 30px;
+  }
+
+  .question-card,
+  .result-card {
+    max-width: 640px;
+    padding: 48px 44px;
+  }
+
+  .question-text {
+    font-size: 27px;
+  }
+}

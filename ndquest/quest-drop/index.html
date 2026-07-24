@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title data-i18n="app.title">Quest Drop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260721b">
+<link rel="stylesheet" href="assets/css/pack-input.css">
+</head>
+<body>
+
+<div class="brand-watermark" id="brand-watermark" aria-hidden="true">
+  <img id="brand-watermark-img" src="" alt="">
+</div>
+
+<div class="language-toggle" id="language-toggle" role="group" aria-label="Idioma / Language">
+  <button type="button" class="language-btn" data-lang="pt">PT</button>
+  <button type="button" class="language-btn" data-lang="en">EN</button>
+</div>
+
+<div id="app">
+
+  <!-- ============================= -->
+  <!-- TELA 1 - CONFIGURAÇÃO         -->
+  <!-- ============================= -->
+  <section id="screen-config" class="screen is-active">
+    <a href="../index.html" class="back-to-ndquest">← NDQuest</a>
+    <header class="config-hero">
+      <div class="config-hero-logo">
+        <img src="assets/logos/ndquest-light.png" alt="NDQuest" onerror="this.parentElement.style.display='none';">
+      </div>
+      <p class="eyebrow" data-i18n="config.eyebrow">Configuração do Jogo</p>
+      <h1 class="title-display" data-i18n="app.title">Quest&nbsp;Drop</h1>
+      <p class="subtitle" data-i18n="config.subtitle">Defina o orçamento e a quantidade de envelopes para preparar a mesa de prêmios.</p>
+    </header>
+
+    <div class="config-card">
+      <div class="config-columns">
+        <div class="config-section">
+          <h2 class="config-section-title" data-i18n="config.section.event">Evento</h2>
+
+          <div class="field">
+            <label for="budget-input" data-i18n="labels.budget">Orçamento total</label>
+            <input type="number" id="budget-input" inputmode="decimal" min="0.01" step="0.01" placeholder="Ex: 300 ou 1.5" data-i18n-placeholder="placeholders.budget">
+          </div>
+
+          <div class="field">
+            <label for="unit-select" data-i18n="labels.unit">Unidade do prêmio</label>
+            <select id="unit-select">
+              <option value="USD">USD</option>
+              <option value="BRL">BRL</option>
+              <option value="WBRL">WBRL</option>
+              <option value="AVAX">AVAX</option>
+              <option value="EVA">EVA</option>
+              <option value="XLM">XLM</option>
+              <option value="custom" data-i18n="unit.other">Outro...</option>
+            </select>
+          </div>
+
+          <div class="field" id="unit-custom-field" hidden>
+            <label for="unit-custom-input" data-i18n="labels.unitCustom">Unidade personalizada</label>
+            <input type="text" id="unit-custom-input" placeholder="Ex: POINTS, XP, SATS..." data-i18n-placeholder="placeholders.unitCustom">
+          </div>
+        </div>
+
+        <div class="config-section">
+          <h2 class="config-section-title" data-i18n="config.section.content">Conteúdo</h2>
+
+          <div class="field">
+            <label for="pack-select" data-i18n="labels.pack">Pacote de perguntas</label>
+            <select id="pack-select"></select>
+          </div>
+
+          <div class="field pack-custom-summary" id="pack-custom-summary" hidden>
+            <p class="pack-custom-status" id="pack-custom-status" data-i18n="pack.noneYet">Nenhuma pergunta ainda.</p>
+            <button type="button" class="btn btn-secondary" id="open-pack-modal-btn" data-i18n="pack.openEditor">✎ Abrir editor de perguntas</button>
+          </div>
+
+          <div class="field">
+            <label for="theme-select" data-i18n="labels.theme">Tema da empresa</label>
+            <select id="theme-select"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field field-centered">
+        <label for="envelope-count-input" data-i18n="labels.envelopeCount">Quantidade de envelopes</label>
+        <input type="number" id="envelope-count-input" inputmode="numeric" min="1" step="1" placeholder="Ex: 6" data-i18n-placeholder="placeholders.envelopeCount">
+      </div>
+
+      <div class="config-section">
+        <h2 class="config-section-title" data-i18n="config.section.difficulty">Dificuldade e orçamento</h2>
+
+        <div class="field-group">
+          <label class="field-group-label" data-i18n="labels.difficultyDistribution">Distribuição das dificuldades (%)</label>
+          <div class="percent-row">
+            <div class="percent-field">
+              <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
+              <input type="number" id="diff-easy" inputmode="numeric" min="0" max="100" step="1" value="33">
+            </div>
+            <div class="percent-field">
+              <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
+              <input type="number" id="diff-medium" inputmode="numeric" min="0" max="100" step="1" value="33">
+            </div>
+            <div class="percent-field">
+              <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
+              <input type="number" id="diff-hard" inputmode="numeric" min="0" max="100" step="1" value="34">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-group-label" data-i18n="labels.budgetDistribution">Distribuição do orçamento (%)</label>
+          <div class="percent-row">
+            <div class="percent-field">
+              <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
+              <input type="number" id="budget-easy" inputmode="numeric" min="0" max="100" step="1" value="33">
+            </div>
+            <div class="percent-field">
+              <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
+              <input type="number" id="budget-medium" inputmode="numeric" min="0" max="100" step="1" value="33">
+            </div>
+            <div class="percent-field">
+              <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
+              <input type="number" id="budget-hard" inputmode="numeric" min="0" max="100" step="1" value="34">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="field-error" id="config-error"></p>
+
+      <button id="start-btn" class="btn btn-primary" data-i18n="buttons.start">Iniciar</button>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- TELA 2 - ENVELOPES            -->
+  <!-- ============================= -->
+  <section id="screen-envelopes" class="screen">
+    <header class="envelopes-header">
+      <button type="button" class="back-btn" id="back-to-config-btn" aria-label="Voltar à configuração" data-i18n-aria-label="envelopes.backAriaLabel">←</button>
+      <div class="hero-logo" id="hero-logo">
+        <img id="hero-logo-img" src="" alt="" onerror="this.style.display='none'; document.getElementById('hero-brand-name').hidden=false;">
+      </div>
+      <p class="eyebrow" id="hero-brand-name" hidden></p>
+      <h2 class="title-display" data-i18n="envelopes.title">Escolha um envelope</h2>
+      <p class="hero-slogan" id="hero-slogan" hidden></p>
+      <p class="event-finished-badge" id="event-finished-badge" hidden data-i18n="envelopes.finishedBadge">✓ Evento finalizado</p>
+    </header>
+    <div id="envelope-grid" class="envelope-grid"></div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- OVERLAY: MINHAS PRÓPRIAS PERGUNTAS -->
+  <!-- ============================= -->
+  <div id="pack-overlay" class="overlay">
+    <div class="pack-modal-card">
+      <button type="button" class="modal-close-btn" id="pack-modal-close-x" aria-label="Fechar" data-i18n-aria-label="modal.closeAriaLabel">✕</button>
+
+      <p class="eyebrow" data-i18n="pack.modalEyebrow">Minhas Próprias Perguntas</p>
+      <p class="pack-custom-hint" data-i18n="pack.customHint">Cole ou envie suas perguntas, clique em "Processar", e comece o evento. Nada disso fica salvo — some quando a sessão terminar.</p>
+
+      <div class="pack-toolbar">
+        <button type="button" class="btn btn-secondary" id="download-template-btn" data-i18n="pack.downloadTemplate">⭳ Baixar modelo (.txt)</button>
+        <label class="file-label" data-i18n="pack.uploadLabel">Ou envie um arquivo .txt</label>
+        <input type="file" id="file-upload" accept=".txt">
+      </div>
+
+      <textarea id="bulk-textarea" placeholder="DIFICULDADE: facil&#10;PERGUNTA: ...&#10;RESPOSTAS: A; B; C; D&#10;CORRETA: 1&#10;---"></textarea>
+
+      <button type="button" class="btn btn-secondary" id="parse-btn" data-i18n="pack.parseBtn">Processar Perguntas</button>
+
+      <div class="pack-parse-errors" id="parse-errors" hidden></div>
+
+      <div class="preview-list" id="preview-list"></div>
+
+      <button type="button" class="btn btn-primary" id="pack-modal-done-btn" data-i18n="pack.doneBtn">Concluído</button>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- OVERLAY: PERGUNTA             -->
+  <!-- ============================= -->
+  <div id="question-overlay" class="overlay">
+    <div class="question-card">
+      <button type="button" class="modal-close-btn" id="question-close-x" aria-label="Fechar" data-i18n-aria-label="modal.closeAriaLabel">✕</button>
+      <p class="eyebrow" data-i18n="question.eyebrow">Pergunta</p>
+      <h3 id="question-text" class="question-text"></h3>
+      <div id="answers-list" class="answers-list"></div>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- OVERLAY: RESULTADO            -->
+  <!-- ============================= -->
+  <div id="result-overlay" class="overlay">
+    <div class="result-card">
+      <button type="button" class="modal-close-btn" id="result-close-x" aria-label="Fechar" data-i18n-aria-label="modal.closeAriaLabel">✕</button>
+
+      <div id="result-success" class="result-content">
+        <p class="result-icon">✦</p>
+        <h2 class="title-display" data-i18n="result.successTitle">Parabéns!</h2>
+        <p id="result-prize" class="result-prize"></p>
+        <button class="btn btn-primary result-continue-btn" data-i18n="buttons.continue">Continuar</button>
+      </div>
+
+      <div id="result-fail" class="result-content">
+        <p class="result-icon result-icon--fail">✕</p>
+        <h2 class="title-display" data-i18n="result.failTitle">Resposta incorreta</h2>
+        <button class="btn btn-secondary result-continue-btn" data-i18n="buttons.backToEnvelopes">Voltar aos envelopes</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- OVERLAY: EVENTO FINALIZADO    -->
+  <!-- ============================= -->
+  <div id="finished-overlay" class="overlay">
+    <div class="result-card">
+      <button type="button" class="modal-close-btn" id="finished-close-x" aria-label="Fechar" data-i18n-aria-label="modal.closeAriaLabel">✕</button>
+      <p class="eyebrow" data-i18n="finished.eyebrow">Fim de jogo</p>
+      <h2 class="title-display" data-i18n="finished.title">Evento finalizado</h2>
+      <p class="subtitle" data-i18n="finished.subtitle">Todos os envelopes foram conquistados. Obrigado por participar!</p>
+      <div class="finished-actions">
+        <button id="view-result-btn" class="btn btn-primary" data-i18n="buttons.viewResult">Ver Resultado</button>
+        <button id="new-event-btn" class="btn btn-secondary" data-i18n="buttons.newEvent">Novo Evento</button>
+        <button id="finished-close-btn" class="btn btn-secondary" data-i18n="buttons.close">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module" src="script.js?v=20260721b"></script>
+</body>
+</html>

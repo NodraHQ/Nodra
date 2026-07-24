@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="submit.meta.title">Submit Your Questions — NDQuest</title>
+<meta name="description" content="Submit your own question pack to use in NDQuest games.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/submit.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        <img src="../assets/logos/ndquest-light.png" alt="NDQuest">
+    </a>
+
+    <div class="nav-links">
+        <a href="../index.html" data-i18n="nav.nodra">NDQuest</a>
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+    </div>
+
+</nav>
+
+<main>
+    <section class="hero" style="padding-bottom:32px">
+        <div class="container">
+            <div class="reveal">
+                <h1 class="hero-title" style="font-size:36px" data-i18n="submit.title">Submit Your Question Pack</h1>
+                <p class="hero-description" data-i18n="submit.description">
+                    Write your own quiz pack for an NDQuest game. Add as many
+                    questions as you like, pick a difficulty for each, then
+                    send it in. Our team reviews every submission before it
+                    goes live.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container submit-section">
+
+        <form id="submit-form" class="card submit-card">
+
+            <h2 data-i18n="submit.packInfo">Pack Info</h2>
+
+            <div class="submit-grid">
+                <div class="field">
+                    <label for="pack-name-pt" data-i18n="submit.labels.namePt">Pack name (Portuguese)</label>
+                    <input type="text" id="pack-name-pt" required maxlength="200" placeholder="Ex: Minha Empresa 2026">
+                </div>
+                <div class="field">
+                    <label for="pack-name-en" data-i18n="submit.labels.nameEn">Pack name (English)</label>
+                    <input type="text" id="pack-name-en" required maxlength="200" placeholder="Ex: My Company 2026">
+                </div>
+                <div class="field">
+                    <label for="submitter-name" data-i18n="submit.labels.yourName">Your name</label>
+                    <input type="text" id="submitter-name" required maxlength="200">
+                </div>
+                <div class="field">
+                    <label for="submitter-email" data-i18n="submit.labels.yourEmail">Your email</label>
+                    <input type="email" id="submitter-email" required maxlength="320">
+                </div>
+            </div>
+
+            <hr class="submit-divider">
+
+            <h2 data-i18n="submit.addQuestion">Add a Question</h2>
+
+            <div class="field">
+                <label for="q-difficulty" data-i18n="submit.labels.difficulty">Difficulty</label>
+                <select id="q-difficulty">
+                    <option value="easy" data-i18n="submit.difficulty.easy">Easy</option>
+                    <option value="medium" data-i18n="submit.difficulty.medium">Medium</option>
+                    <option value="hard" data-i18n="submit.difficulty.hard">Hard</option>
+                </select>
+            </div>
+
+            <div class="submit-grid">
+                <div class="field">
+                    <label for="q-text-pt" data-i18n="submit.labels.questionPt">Question (Portuguese)</label>
+                    <input type="text" id="q-text-pt">
+                </div>
+                <div class="field">
+                    <label for="q-text-en" data-i18n="submit.labels.questionEn">Question (English)</label>
+                    <input type="text" id="q-text-en">
+                </div>
+            </div>
+
+            <p class="submit-hint" data-i18n="submit.answerHint">Fill in all 4 answers for both languages, then mark which one is correct.</p>
+
+            <div class="submit-answers" id="answers-pt">
+                <input type="text" class="answer-input" data-lang="pt" data-index="0" placeholder="Resposta 1 (PT)">
+                <input type="text" class="answer-input" data-lang="pt" data-index="1" placeholder="Resposta 2 (PT)">
+                <input type="text" class="answer-input" data-lang="pt" data-index="2" placeholder="Resposta 3 (PT)">
+                <input type="text" class="answer-input" data-lang="pt" data-index="3" placeholder="Resposta 4 (PT)">
+            </div>
+
+            <div class="submit-answers" id="answers-en">
+                <input type="text" class="answer-input" data-lang="en" data-index="0" placeholder="Answer 1 (EN)">
+                <input type="text" class="answer-input" data-lang="en" data-index="1" placeholder="Answer 2 (EN)">
+                <input type="text" class="answer-input" data-lang="en" data-index="2" placeholder="Answer 3 (EN)">
+                <input type="text" class="answer-input" data-lang="en" data-index="3" placeholder="Answer 4 (EN)">
+            </div>
+
+            <div class="field">
+                <label for="q-correct" data-i18n="submit.labels.correct">Correct answer</label>
+                <select id="q-correct">
+                    <option value="0" data-i18n="submit.optionLabel1">Option 1</option>
+                    <option value="1" data-i18n="submit.optionLabel2">Option 2</option>
+                    <option value="2" data-i18n="submit.optionLabel3">Option 3</option>
+                    <option value="3" data-i18n="submit.optionLabel4">Option 4</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-secondary" id="add-question-btn" data-i18n="submit.addQuestionBtn">+ Add Question</button>
+
+            <hr class="submit-divider">
+
+            <h2 data-i18n="submit.draftTitle">Questions in This Pack</h2>
+            <p class="submit-hint" id="draft-empty" data-i18n="submit.draftEmpty">No questions added yet.</p>
+            <div id="draft-list" class="draft-list"></div>
+
+            <button type="submit" class="btn btn-primary" id="submit-btn" data-i18n="submit.submitBtn">Send Pack for Review</button>
+
+            <p class="submit-feedback" id="submit-feedback" hidden></p>
+
+        </form>
+
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <span data-i18n="footer.subtitle">Part of the Nodra ecosystem.</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html" data-i18n="footer.backToNodra">← Nodra</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/home.js"></script>
+<script defer src="../assets/js/submit.js"></script>
+</body>
+</html>

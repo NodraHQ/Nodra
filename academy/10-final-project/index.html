@@ -4,13 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="moduleFinalProject.meta.title">Final Project — Nodra Academy</title>
-<meta name="description" content="Bring every track together in one applied capstone project, reviewed step by step.">
-<link rel="stylesheet" href="../../assets/css/variables.css">
-<link rel="stylesheet" href="../../assets/css/components.css">
-<link rel="stylesheet" href="../../assets/css/academy.css">
-<link rel="stylesheet" href="../../assets/css/module-placeholder.css">
+<meta name="description" content="Bring every module together in one guided review, closing with a comprehensive quiz.">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/academy.css">
+<link rel="stylesheet" href="../assets/css/final-project.css">
 </head>
 <body>
+
+<!-- ===================================================== -->
+<!-- NAVBAR (exactly the same component as previous modules) -->
+<!-- ===================================================== -->
 
 <nav class="navbar">
 
@@ -23,7 +27,7 @@
 
         <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
         <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
-        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="#quiz" data-i18n="moduleFinalProject.toc.quiz">Final Quiz</a>
         <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
 
         <div class="language-switch">
@@ -41,56 +45,81 @@
 
 <main>
 
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
+
     <section class="hero" id="top">
         <div class="container">
             <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <span class="tag" data-i18n="tracks.security.title">Security</span>
+
+                    <span class="tag" data-i18n="moduleFinalProject.hero.tag">MODULE 10</span>
+
                     <h1 class="hero-title" data-i18n="moduleFinalProject.hero.title">Final Project</h1>
-                    <p class="hero-description" data-i18n="moduleFinalProject.hero.description">The capstone applies everything from Foundations, DeFi and Security in one connected project.</p>
+
+                    <p class="hero-description" data-i18n="moduleFinalProject.hero.description">
+                        Not a new topic, a guided review of everything the Academy
+                        covered, closing with one comprehensive quiz.
+                    </p>
 
                     <div class="hero-actions">
-                        <a href="#overview" class="btn btn-primary" data-i18n="modulePlaceholder.hero.cta">Read Overview →</a>
-                        <a href="../index.html" class="btn btn-secondary" data-i18n="blockchain.hero.back">← Academy</a>
+                        <a href="#introduction" class="btn btn-primary" data-i18n="moduleFinalProject.hero.cta">Start Reading →</a>
+                        <a href="../index.html" class="btn btn-secondary" data-i18n="moduleFinalProject.hero.back">← Academy</a>
                     </div>
 
                     <div class="hero-stats">
                         <div class="stat-card">
-                            <strong data-i18n="moduleFinalProject.hero.stat1.value">Advanced</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat1.label">Difficulty</span>
+                            <strong data-i18n="moduleFinalProject.hero.stat1.value">All Levels</strong>
+                            <span data-i18n="moduleFinalProject.hero.stat1.label">Difficulty</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="moduleFinalProject.hero.stat2.value">60 min</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat2.label">Duration</span>
+                            <strong data-i18n="moduleFinalProject.hero.stat2.value">25 min</strong>
+                            <span data-i18n="moduleFinalProject.hero.stat2.label">Duration</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="tracks.security.title">Security</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat3.label">Track</span>
+                            <strong data-i18n="moduleFinalProject.hero.stat3.value">Review + Quiz</strong>
+                            <span data-i18n="moduleFinalProject.hero.stat3.label">Format</span>
                         </div>
                         <div class="stat-card">
-                            <strong data-i18n="modulePlaceholder.hero.stat4.value">4</strong>
-                            <span data-i18n="modulePlaceholder.hero.stat4.label">Sections</span>
+                            <strong data-i18n="moduleFinalProject.hero.stat4.value">9</strong>
+                            <span data-i18n="moduleFinalProject.hero.stat4.label">Sections</span>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="hero-visual reveal">
                     <div class="hero-dashboard glow">
+
                         <div class="dashboard-header">
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                             <span class="dashboard-dot"></span>
                         </div>
+
                         <div class="dashboard-content">
-                            <div class="dashboard-title">MODULE 10</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.overview">Overview</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</div>
-                            <div class="dashboard-item" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</div>
-                            <div class="dashboard-item" data-i18n="academyNav.glossary">Glossary</div>
-                            <div class="dashboard-divider"></div>
-                            <div class="dashboard-footer" data-i18n="tracks.security.title">Security</div>
+                            <div class="recap-mock">
+                                <div class="recap-mock__row">
+                                    <span class="recap-mock__label" data-i18n="moduleFinalProject.visual.moduleLabel">Modules Reviewed</span>
+                                    <span class="recap-mock__value">9 / 9</span>
+                                </div>
+                                <div class="recap-mock__row">
+                                    <span class="recap-mock__label" data-i18n="moduleFinalProject.visual.questionsLabel">Quiz Questions</span>
+                                    <span class="recap-mock__value">10</span>
+                                </div>
+                                <div class="recap-mock__row">
+                                    <span class="recap-mock__label" data-i18n="moduleFinalProject.visual.trackLabel">Tracks Covered</span>
+                                    <span class="recap-mock__value">Foundations, DeFi, Security</span>
+                                </div>
+                                <div class="recap-mock__row">
+                                    <span class="recap-mock__label" data-i18n="moduleFinalProject.visual.statusLabel">Status</span>
+                                    <span class="recap-mock__block">Ready</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -98,18 +127,27 @@
         </div>
     </section>
 
+    <!-- ===================================================== -->
+    <!-- LESSON BODY -->
+    <!-- ===================================================== -->
+
     <div class="container lesson-layout">
 
         <aside class="lesson-sidebar" id="sidebar">
             <nav class="toc" aria-label="Table of contents">
-                <span class="tag" data-i18n="blockchain.toc.title">Contents</span>
+                <span class="tag" data-i18n="moduleFinalProject.toc.title">Contents</span>
                 <div class="toc__list-wrap" id="tocListWrap">
                     <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
                     <ol class="toc__list" id="tocList">
-                        <li><a href="#overview" data-i18n="modulePlaceholder.toc.overview">Overview</a></li>
-                        <li><a href="#learn" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</a></li>
-                        <li><a href="#prerequisites" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</a></li>
-                        <li><a href="#glossary" data-i18n="academyNav.glossary">Glossary</a></li>
+                        <li><a href="#introduction" data-i18n="moduleFinalProject.toc.introduction">Introduction</a></li>
+                        <li><a href="#recap-foundations" data-i18n="moduleFinalProject.toc.recapFoundations">Recap: Foundations</a></li>
+                        <li><a href="#recap-networks-assets" data-i18n="moduleFinalProject.toc.recapNetworksAssets">Recap: Networks & Assets</a></li>
+                        <li><a href="#recap-defi" data-i18n="moduleFinalProject.toc.recapDefi">Recap: DeFi Track</a></li>
+                        <li><a href="#recap-security" data-i18n="moduleFinalProject.toc.recapSecurity">Recap: Security</a></li>
+                        <li><a href="#putting-it-together" data-i18n="moduleFinalProject.toc.puttingTogether">Putting It Together</a></li>
+                        <li><a href="#summary" data-i18n="moduleFinalProject.toc.summary">Summary</a></li>
+                        <li><a href="#quiz" data-i18n="moduleFinalProject.toc.quiz">Final Quiz</a></li>
+                        <li><a href="#completion" data-i18n="moduleFinalProject.toc.completion">Completion</a></li>
                     </ol>
                 </div>
             </nav>
@@ -117,61 +155,299 @@
 
         <article class="lesson-content">
 
-            <section class="section lesson-section reveal" id="overview">
-                <span class="tag" data-i18n="modulePlaceholder.overview.eyebrow">01 — Overview</span>
-                <h2 class="section-title" data-i18n="moduleFinalProject.overview.title">Final Project</h2>
-                <p class="section-description" data-i18n="moduleFinalProject.overview.p1">The Final Project is the Academy's capstone: instead of a new topic, it asks you to apply what Modules 01 through 09 covered — blockchain fundamentals, wallets, DeFi mechanics, and security — to one connected, realistic scenario.</p>
-                <p class="section-description" data-i18n="moduleFinalProject.overview.p2">This module will outline the project's structure, what will be evaluated, and how to submit your work for community review once the full module is published.</p>
+            <!-- INTRODUCTION -->
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="moduleFinalProject.introduction.eyebrow">01. Introduction</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.introduction.p1">
+                    The Final Project isn't a new topic. It's a guided walk back
+                    through everything Modules 01 through 09 covered, foundations,
+                    networks, assets, DeFi, and security, tying the pieces together
+                    before the course-wide quiz.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.introduction.p2">
+                    Each recap section below is intentionally short, a reminder, not
+                    a rewrite. If a summary doesn't fully click, that module's link
+                    takes you straight back to it.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="learn">
-                <span class="tag" data-i18n="modulePlaceholder.learn.eyebrow">02 — What You'll Learn</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.learn">What You'll Learn</h2>
-                <ul class="lesson-list">
-                    <li data-i18n="moduleFinalProject.learn.li1">How the capstone project is structured, module by module.</li>
-                    <li data-i18n="moduleFinalProject.learn.li2">What deliverables will be expected by the end of the project.</li>
-                    <li data-i18n="moduleFinalProject.learn.li3">How the project will be evaluated, and against what criteria.</li>
-                    <li data-i18n="moduleFinalProject.learn.li4">How to set up a testnet environment to complete the project safely.</li>
-                    <li data-i18n="moduleFinalProject.learn.li5">How peer review will work once the full module is published.</li>
-                </ul>
+            <!-- RECAP: FOUNDATIONS -->
+            <section class="section lesson-section reveal" id="recap-foundations">
+                <span class="tag" data-i18n="moduleFinalProject.recapFoundations.eyebrow">02. Recap: Foundations</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.recapFoundations.title">Recap: Foundations</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.recapFoundations.p1">
+                    <a href="../01-blockchain/index.html">Module 01</a> covered the
+                    blockchain itself: a distributed ledger replicated across
+                    independent nodes that agree on a shared history through
+                    consensus, instead of trusting a single server.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.recapFoundations.p2">
+                    <a href="../02-wallets/index.html">Module 02</a> covered
+                    wallets: they don't hold your assets, they hold the keys that
+                    prove ownership of assets that already live on the network,
+                    which is why key management is the whole game.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="prerequisites">
-                <span class="tag" data-i18n="modulePlaceholder.prerequisites.eyebrow">03 — Prerequisites</span>
-                <h2 class="section-title" data-i18n="modulePlaceholder.toc.prerequisites">Prerequisites</h2>
-                <ul class="lesson-list">
-                    <li data-i18n="moduleFinalProject.prereq.li1">Completed <a href="../01-blockchain/index.html">Module 01 — Blockchain</a>.</li>
-                    <li data-i18n="moduleFinalProject.prereq.li2">Completed <a href="../02-wallets/index.html">Module 02 — Wallets</a>.</li>
-                    <li data-i18n="moduleFinalProject.prereq.li3">Familiarity with the DeFi track (<a href="../05-defi/index.html">Modules 05–08</a>) is recommended.</li>
-                    <li data-i18n="moduleFinalProject.prereq.li4">Completed <a href="../09-security/index.html">Module 09 — Security</a>.</li>
-                </ul>
+            <!-- RECAP: NETWORKS & ASSETS -->
+            <section class="section lesson-section reveal" id="recap-networks-assets">
+                <span class="tag" data-i18n="moduleFinalProject.recapNetworksAssets.eyebrow">03. Recap: Networks & Assets</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.recapNetworksAssets.title">Recap: Networks &amp; Assets</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.recapNetworksAssets.p1">
+                    <a href="../03-networks/index.html">Module 03</a> covered how
+                    different networks trade off decentralization, security and
+                    speed differently, and how Layer 2s and bridges connect them,
+                    each with their own risk.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.recapNetworksAssets.p2">
+                    <a href="../04-assets/index.html">Module 04</a> covered the
+                    difference between a coin (native to its network) and a token
+                    (issued by a smart contract on top of one), and how to actually
+                    verify what you're holding.
+                </p>
             </section>
 
-            <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="modulePlaceholder.glossary.eyebrow">04 — Glossary</span>
-                <h2 class="section-title" data-i18n="academyNav.glossary">Glossary</h2>
-                <dl class="glossary-list">
-                    <div class="card glossary-list__item">
-                        <dt data-i18n="moduleFinalProject.glossary.term1">Capstone</dt>
-                        <dd data-i18n="moduleFinalProject.glossary.def1">A final project designed to apply everything learned across a full course track.</dd>
+            <!-- RECAP: DEFI TRACK -->
+            <section class="section lesson-section reveal" id="recap-defi">
+                <span class="tag" data-i18n="moduleFinalProject.recapDefi.eyebrow">04. Recap: DeFi Track</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.recapDefi.title">Recap: DeFi Track</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.recapDefi.p1">
+                    <a href="../05-defi/index.html">Module 05</a> introduced
+                    DeFi's building blocks, decentralized exchanges priced by
+                    automated market makers instead of an order book, and the
+                    impermanent loss that liquidity providers take on in exchange
+                    for fees.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.recapDefi.p2">
+                    <a href="../06-lending/index.html">Module 06</a> covered
+                    lending protocols, replacing a bank's credit check with
+                    collateral and a health factor that determines when a position
+                    gets liquidated.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.recapDefi.p3">
+                    <a href="../07-yield/index.html">Module 07</a> stepped back to
+                    ask where an advertised yield actually comes from, staking
+                    rewards, trading fees, or token emissions, and whether it's
+                    still there next month.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.recapDefi.p4">
+                    <a href="../08-stablecoins/index.html">Module 08</a> covered
+                    the three ways a stablecoin tries to hold its peg, fiat
+                    reserves, crypto over-collateralization, or algorithmic
+                    incentives, and why each fails differently when it fails.
+                </p>
+            </section>
+
+            <!-- RECAP: SECURITY -->
+            <section class="section lesson-section reveal" id="recap-security">
+                <span class="tag" data-i18n="moduleFinalProject.recapSecurity.eyebrow">05. Recap: Security</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.recapSecurity.title">Recap: Security</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.recapSecurity.p1">
+                    <a href="../09-security/index.html">Module 09</a> covered
+                    where losses actually come from, phishing far more than
+                    exploits, what an audit does and doesn't guarantee, and the
+                    habits that remove most realistic risk: separate wallets by
+                    purpose, never share a seed phrase, read what you sign.
+                </p>
+            </section>
+
+            <!-- PUTTING IT TOGETHER -->
+            <section class="section lesson-section reveal" id="putting-it-together">
+                <span class="tag" data-i18n="moduleFinalProject.puttingTogether.eyebrow">06. Putting It Together</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.puttingTogether.title">Putting It Together</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.puttingTogether.p1">
+                    Say you're evaluating a new protocol promising a stablecoin
+                    paying an unusually high yield. Every module in this course
+                    gives you one piece of that evaluation.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.puttingTogether.p2">
+                    Which network is it deployed on, and what does that imply
+                    about its security assumptions (Module 03)? What actually
+                    backs the stablecoin, and is that disclosed (Module 08)? Where
+                    does the advertised yield come from, and is it sustainable
+                    (Module 07)? Has the contract been audited, and what does that
+                    audit actually cover (Module 09)?
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.puttingTogether.p3">
+                    None of these questions require exotic knowledge, they're the
+                    same handful of questions from this course, applied together.
+                    That's the actual skill this Academy was built to teach.
+                </p>
+            </section>
+
+            <!-- SUMMARY -->
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="moduleFinalProject.summary.eyebrow">07. Summary</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.summary.title">Summary</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.summary.p1">
+                    Nine modules, one underlying habit: ask what actually backs
+                    something, where a number actually comes from, and who
+                    actually controls it, before trusting a network, an asset, a
+                    yield, or a peg.
+                </p>
+                <p class="section-description" data-i18n="moduleFinalProject.summary.p2">
+                    The final quiz below draws one or two questions from every
+                    module in the course. It's meant as a genuine check of the
+                    whole journey, not just this recap page.
+                </p>
+            </section>
+
+            <!-- FINAL QUIZ -->
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="moduleFinalProject.quiz.eyebrow">08. Final Quiz</span>
+                <h2 class="section-title" data-i18n="moduleFinalProject.quiz.title">Final Quiz</h2>
+                <p class="section-description" data-i18n="moduleFinalProject.quiz.intro">
+                    This quiz draws from every module in the Academy. Incorrect
+                    answers link back to the module that covers it, in case a
+                    refresher helps.
+                </p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q1">1. What makes a blockchain a distributed ledger rather than a normal database?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q1o1">A. It only stores financial data</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q1o2">B. It's copied and synchronized across many independent nodes instead of one server</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q1o3">C. It can be edited by anyone at any time</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q1o4">D. It requires a company to operate it</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="../01-blockchain/index.html">Module 01 — Blockchain</a> and try again.</p>
                     </div>
-                    <div class="card glossary-list__item">
-                        <dt data-i18n="moduleFinalProject.glossary.term2">Portfolio</dt>
-                        <dd data-i18n="moduleFinalProject.glossary.def2">A collection of completed projects used to demonstrate practical skill.</dd>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q2">2. What does a crypto wallet actually hold?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q2o1">A. Your actual coins and tokens</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q2o2">B. The keys that prove ownership of assets that live on the network</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q2o3">C. A copy of the entire blockchain</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q2o4">D. Nothing, it's just a login for an exchange</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="../02-wallets/index.html">Module 02 — Wallets</a> and try again.</p>
                     </div>
-                    <div class="card glossary-list__item">
-                        <dt data-i18n="moduleFinalProject.glossary.term3">Peer Review</dt>
-                        <dd data-i18n="moduleFinalProject.glossary.def3">A process where fellow learners evaluate and give feedback on submitted work.</dd>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q3">3. What is a Layer 2 built to do?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q3o1">A. Replace Layer 1 security entirely with its own</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q3o2">B. Scale on top of a Layer 1's existing security</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q3o3">C. Store assets offline permanently</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q3o4">D. Function only as a stablecoin issuer</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="../03-networks/index.html">Module 03 — Networks</a> and try again.</p>
                     </div>
-                    <div class="card glossary-list__item">
-                        <dt data-i18n="moduleFinalProject.glossary.term4">Deployment</dt>
-                        <dd data-i18n="moduleFinalProject.glossary.def4">The act of publishing a smart contract or application to a live network.</dd>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q4">4. What's the key difference between a coin and a token?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q4o1">A. A coin is native to its own network, a token is issued by a smart contract on top of one</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q4o2">B. Tokens are always worth more than coins</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q4o3">C. Coins can only be used for gas fees</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q4o4">D. There is no real difference</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="../04-assets/index.html">Module 04 — Assets</a> and try again.</p>
                     </div>
-                    <div class="card glossary-list__item">
-                        <dt data-i18n="moduleFinalProject.glossary.term5">Testnet</dt>
-                        <dd data-i18n="moduleFinalProject.glossary.def5">A blockchain network used for testing, where assets have no real value.</dd>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q5">5. In an automated market maker, what replaces a traditional order book?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q5o1">A. A central company setting prices manually</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q5o2">B. A liquidity pool priced by a pricing formula</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q5o3">C. A government-regulated exchange</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q5o4">D. A single large market maker</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q5.feedbackIncorrect" hidden>Not quite, review <a href="../05-defi/index.html">Module 05 — DeFi</a> and try again.</p>
                     </div>
-                </dl>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q6">6. What does a lending protocol's health factor track?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q6o1">A. How much interest a lender has earned so far</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q6o2">B. How close a borrowing position is to being liquidated</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q6o3">C. The total number of users on the protocol</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q6o4">D. The protocol's trading volume that day</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q6.feedbackIncorrect" hidden>Not quite, review <a href="../06-lending/index.html">Module 06 — Lending</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q7">7. Before trusting an advertised yield, what should you ask first?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q7o1">A. How many followers the project has on social media</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q7o2">B. Where the yield actually comes from, and whether it will still exist next month</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q7o3">C. What color the project's logo is</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q7o4">D. How long the token's name is</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q7.feedbackIncorrect" hidden>Not quite, review <a href="../07-yield/index.html">Module 07 — Yield</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q8">8. What is the single most useful question before trusting a stablecoin's peg?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q8o1">A. How many exchanges list it</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q8o2">B. What actually backs it</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q8o3">C. How long ago it launched</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q8o4">D. Whether its name sounds trustworthy</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q8.feedbackIncorrect" hidden>Not quite, review <a href="../08-stablecoins/index.html">Module 08 — Stablecoins</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q9">9. What is the single largest cause of loss in crypto?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q9o1">A. Smart contract bugs</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q9o2">B. Phishing</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q9o3">C. Network outages</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q9o4">D. Regulatory changes</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q9.feedbackIncorrect" hidden>Not quite, review <a href="../09-security/index.html">Module 09 — Security</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="moduleFinalProject.quiz.q10">10. When evaluating a new protocol, which combination of questions from this course matters most?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q10o1">A. Only how large its community is</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="moduleFinalProject.quiz.q10o2">B. What network it's on, what backs it, where its yield comes from, and what its audit actually covers</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q10o3">C. Only its token price history</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="moduleFinalProject.quiz.q10o4">D. Only who the anonymous founders are</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="moduleFinalProject.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="moduleFinalProject.quiz.q10.feedbackIncorrect" hidden>Not quite, review <a href="../index.html#modules">the Academy overview</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="moduleFinalProject.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="moduleFinalProject.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">10</strong>
+                            <span data-i18n="moduleFinalProject.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="moduleFinalProject.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- COMPLETION (self-contained: no NDQuest / badge references) -->
+            <section class="section lesson-section reveal" id="completion">
+                <span class="tag" data-i18n="moduleFinalProject.completion.eyebrow">09. Completion</span>
+                <div class="card completion-card glow">
+                    <h2 class="completion-card__title" data-i18n="moduleFinalProject.completion.title">You've Completed Nodra Academy</h2>
+                    <p data-i18n="moduleFinalProject.completion.p1">That's all nine modules, from how a blockchain works to how to keep yourself safe using one.</p>
+                    <p data-i18n="moduleFinalProject.completion.p2">Modules stay here if you ever want to revisit one, and the glossary terms across the course are worth bookmarking as a quick reference.</p>
+                    <a href="../index.html" class="btn btn-primary" data-i18n="moduleFinalProject.completion.cta">← Back to Academy</a>
+                </div>
             </section>
 
             <nav class="lesson-pagination" aria-label="Lesson pagination">
@@ -184,25 +460,34 @@
 
 </main>
 
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+
             <div class="footer-brand">
-                <h3 data-i18n="footer.title">Nodra Academy</h3>
+                <h3 data-i18n="footer.title">Nodra</h3>
                 <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
             </div>
+
             <div class="footer-links">
                 <a href="../index.html#modules" data-i18n="academyNav.modules">Modules</a>
                 <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
-                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="#quiz" data-i18n="moduleFinalProject.toc.quiz">Final Quiz</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
             </div>
+
         </div>
     </div>
 </footer>
 
-<script defer src="../../assets/js/translations.js"></script>
-<script defer src="../../assets/js/academy.js"></script>
-<script defer src="../../assets/js/module-placeholder.js"></script>
+<span id="i18nCopiedLabel" data-i18n="moduleFinalProject.common.copied" hidden>Copied</span>
+
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/academy.js"></script>
+<script defer src="../assets/js/final-project.js"></script>
 </body>
 </html>
