@@ -1,11 +1,17 @@
 /* =========================================================
    QUEST DROP — PACK-INPUT.CSS
-   Estilos do editor de "Minhas Próprias Perguntas" (uso
-   pessoal, não salvo). Vive num modal (mesmo padrão de overlay
-   que a pergunta/resultado do jogo já usam) em vez de inline na
-   tela de configuração — a primeira versão ficava espremida
-   dentro da coluna "Conteúdo", que é estreita demais pra um
-   editor de texto confortável.
+   Estilos reaproveitados pelos modais de configuração da tela
+   1: editor de "Minhas Próprias Perguntas" e editor de "Lista
+   de Prêmios". Vivem em modal (mesmo padrão de overlay que a
+   pergunta/resultado do jogo já usam) em vez de inline na tela
+   de configuração — a primeira versão do editor de perguntas
+   ficava espremida dentro da coluna "Conteúdo", estreita demais
+   pra um editor confortável.
+
+   O nome do arquivo ficou um pouco impreciso depois que o
+   segundo modal (prêmios) entrou aqui também — decidimos não
+   renomear de novo pra não gerar mais um "delete isso, aplique
+   aquilo" toda vez que você for aplicar o pacote.
    ========================================================= */
 
 .pack-modal-card {
@@ -38,6 +44,15 @@
   border-radius: 12px;
   padding: 14px 18px;
   margin: -4px 0 16px;
+}
+
+/* display:flex acima empata em especificidade com a regra padrão do
+   navegador pro atributo hidden, e como é regra de autor, ela vence —
+   ou seja, sem isso aqui, hidden="" nunca escondia o elemento de
+   verdade. [id][hidden] tem mais peso que a classe sozinha, então
+   essa regra sempre ganha quando hidden está presente. */
+.pack-custom-summary[hidden] {
+  display: none;
 }
 
 .pack-custom-status {
@@ -118,4 +133,87 @@
   text-transform: uppercase;
   color: var(--color-gold);
   flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------
+   Modal "Lista de Prêmios"
+   --------------------------------------------------------- */
+
+.prize-tier {
+  margin-bottom: 24px;
+}
+
+.prize-tier__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin: 0 0 6px;
+}
+
+.prize-tier__hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin: 0 0 8px;
+}
+
+.prize-tier__errors {
+  background: rgba(224, 106, 95, 0.12);
+  border: 1px solid rgba(224, 106, 95, 0.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  color: #e06a5f;
+}
+
+.prize-bulk-textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--color-text);
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.prize-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prize-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+}
+
+.prize-item__remove {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.prize-item__remove:hover {
+  color: var(--color-text);
+}
+
+.prize-total {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-align: right;
+  margin: 4px 0 20px;
 }

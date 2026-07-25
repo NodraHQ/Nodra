@@ -20,8 +20,10 @@ import translations from './i18n/translations.js';
    ========================================================= */
 const state = {
   language: 'pt',     // idioma ativo da interface e das perguntas ('pt' | 'en')
-  envelopes: [],      // [{ prize: Number, difficulty: 'easy'|'medium'|'hard', conquered: Boolean }]
+  envelopes: [],      // [{ prizeLabel: String|null, difficulty: 'easy'|'medium'|'hard', conquered: Boolean }]
   unit: 'USD',
+  prizeMode: 'budget', // 'budget' (número calculado) | 'list' (sorteia do estoque)
+  prizeStock: { easy: [], medium: [], hard: [] }, // [{ label, quantity }], descontado a cada acerto no modo lista
   questionPack: null, // pacote de perguntas selecionado para o evento atual
   theme: null,        // tema de marca selecionado para o evento atual
   usedQuestionIndexes: { easy: [], medium: [], hard: [] }, // índices descartados nesta sessão, por nível
@@ -38,6 +40,16 @@ const screenEnvelopes = document.getElementById('screen-envelopes');
 
 const budgetInput = document.getElementById('budget-input');
 const envelopeCountInput = document.getElementById('envelope-count-input');
+const prizeModeSelect = document.getElementById('prize-mode-select');
+const budgetModeOnlyEls = document.querySelectorAll('.budget-mode-only');
+const prizeModeOnlyEls = document.querySelectorAll('.prize-mode-only');
+const prizeListSummary = document.getElementById('prize-list-summary');
+const prizeListStatus = document.getElementById('prize-list-status');
+const openPrizeModalBtn = document.getElementById('open-prize-modal-btn');
+const prizeOverlay = document.getElementById('prize-overlay');
+const prizeModalCloseX = document.getElementById('prize-modal-close-x');
+const prizeModalDoneBtn = document.getElementById('prize-modal-done-btn');
+const prizeTotalSummary = document.getElementById('prize-total-summary');
 const packSelect = document.getElementById('pack-select');
 const packCustomSummary = document.getElementById('pack-custom-summary');
 const packCustomStatus = document.getElementById('pack-custom-status');
@@ -59,6 +71,11 @@ const unitCustomInput = document.getElementById('unit-custom-input');
 const diffEasyInput = document.getElementById('diff-easy');
 const diffMediumInput = document.getElementById('diff-medium');
 const diffHardInput = document.getElementById('diff-hard');
+const difficultySummaryStatus = document.getElementById('difficulty-summary-status');
+const openDifficultyModalBtn = document.getElementById('open-difficulty-modal-btn');
+const difficultyOverlay = document.getElementById('difficulty-overlay');
+const difficultyModalCloseX = document.getElementById('difficulty-modal-close-x');
+const difficultyModalDoneBtn = document.getElementById('difficulty-modal-done-btn');
 
 const budgetEasyInput = document.getElementById('budget-easy');
 const budgetMediumInput = document.getElementById('budget-medium');
@@ -274,6 +291,20 @@ const DIFFICULTY_LEVELS = ['easy', 'medium', 'hard'];
 // Evita gerar envelope vazio: se o pacote pessoal só tem perguntas de
 // algumas dificuldades, desliga e zera as que não têm pergunta nenhuma,
 // e redistribui 100% só entre as que têm.
+function updateDifficultySummary() {
+  const isDefault = diffEasyInput.value === '33' && diffMediumInput.value === '33' && diffHardInput.value === '34'
+    && budgetEasyInput.value === '33' && budgetMediumInput.value === '33' && budgetHardInput.value === '34';
+
+  if (isDefault) {
+    difficultySummaryStatus.textContent = t('difficulty.usingDefault');
+  } else {
+    difficultySummaryStatus.textContent = t('difficulty.customSummary')
+      .replace('{easy}', diffEasyInput.value || '0')
+      .replace('{medium}', diffMediumInput.value || '0')
+      .replace('{hard}', diffHardInput.value || '0');
+  }
+}
+
 function applyCustomDifficultyAvailability(presentDifficulties) {
   const diffInputs = { easy: diffEasyInput, medium: diffMediumInput, hard: diffHardInput };
   const budgetInputs = { easy: budgetEasyInput, medium: budgetMediumInput, hard: budgetHardInput };
@@ -297,6 +328,8 @@ function applyCustomDifficultyAvailability(presentDifficulties) {
     diffInputs[level].value = value;
     budgetInputs[level].value = value;
   });
+
+  updateDifficultySummary();
 }
 
 function restoreDifficultyDefaults() {
@@ -309,7 +342,16 @@ function restoreDifficultyDefaults() {
   budgetEasyInput.value = '33';
   budgetMediumInput.value = '33';
   budgetHardInput.value = '34';
+  updateDifficultySummary();
 }
+
+[diffEasyInput, diffMediumInput, diffHardInput, budgetEasyInput, budgetMediumInput, budgetHardInput].forEach((input) => {
+  input.addEventListener('input', updateDifficultySummary);
+});
+
+openDifficultyModalBtn.addEventListener('click', () => openOverlay(difficultyOverlay));
+difficultyModalCloseX.addEventListener('click', () => closeOverlay(difficultyOverlay));
+difficultyModalDoneBtn.addEventListener('click', () => closeOverlay(difficultyOverlay));
 
 parseBtn.addEventListener('click', () => {
   const { parsed, errors } = parseCustomBulkText(bulkTextarea.value);
@@ -320,6 +362,144 @@ parseBtn.addEventListener('click', () => {
     applyCustomDifficultyAvailability(new Set(parsed.map((q) => q.difficulty)));
   }
 });
+
+/* =========================================================
+   MODO DE PRÊMIO — orçamento simples (padrão, como sempre foi)
+   ou lista de prêmios personalizada (itens diferentes por
+   dificuldade, quantidade de envelopes de cada uma é a soma
+   dos itens que ela tiver).
+   ========================================================= */
+let customPrizeLists = { easy: [], medium: [], hard: [] };
+
+function setPrizeModeVisibility(mode) {
+  const isList = mode === 'list';
+  budgetModeOnlyEls.forEach((el) => { el.hidden = isList; });
+  prizeModeOnlyEls.forEach((el) => { el.hidden = !isList; });
+}
+
+prizeModeSelect.addEventListener('change', () => {
+  const mode = prizeModeSelect.value;
+  setPrizeModeVisibility(mode);
+  if (mode === 'list') {
+    updatePrizeSummary();
+    const isEmpty = DIFFICULTY_LEVELS.every((level) => customPrizeLists[level].length === 0);
+    if (isEmpty) {
+      openOverlay(prizeOverlay);
+    }
+  } else {
+    closeOverlay(prizeOverlay);
+  }
+});
+
+function renderPrizeTierList(tier) {
+  const container = document.getElementById(`prize-list-${tier}`);
+  container.innerHTML = '';
+  customPrizeLists[tier].forEach((item, index) => {
+    const row = document.createElement('div');
+    row.className = 'prize-item';
+    row.innerHTML = `<span>${item.label} × ${item.quantity}</span>`;
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'prize-item__remove';
+    removeBtn.textContent = '✕';
+    removeBtn.addEventListener('click', () => {
+      customPrizeLists[tier].splice(index, 1);
+      renderPrizeTierList(tier);
+      updatePrizeSummary();
+    });
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+  });
+}
+
+function prizeTotalsByTier() {
+  const totals = { easy: 0, medium: 0, hard: 0 };
+  DIFFICULTY_LEVELS.forEach((level) => {
+    totals[level] = customPrizeLists[level].reduce((sum, item) => sum + item.quantity, 0);
+  });
+  return totals;
+}
+
+function updatePrizeSummary() {
+  const totals = prizeTotalsByTier();
+  const grandTotal = totals.easy + totals.medium + totals.hard;
+
+  if (grandTotal === 0) {
+    prizeListStatus.textContent = t('prizeList.noneYet');
+  } else {
+    prizeListStatus.textContent = t('prizeList.someConfigured').replace('{n}', String(grandTotal));
+  }
+
+  prizeTotalSummary.textContent = t('prizeList.totalSummary')
+    .replace('{easy}', String(totals.easy))
+    .replace('{medium}', String(totals.medium))
+    .replace('{hard}', String(totals.hard))
+    .replace('{total}', String(grandTotal));
+}
+
+function parsePrizeBulkText(text) {
+  const items = [];
+  const errors = [];
+
+  text.split('\n').forEach((rawLine, i) => {
+    const line = rawLine.trim();
+    if (!line) return;
+
+    const parts = line.split(';').map((p) => p.trim());
+    if (parts.length !== 2) {
+      errors.push(`Linha ${i + 1}: use o formato "Nome; Quantidade".`);
+      return;
+    }
+
+    const [label, qtyRaw] = parts;
+    const quantity = Math.round(Number(qtyRaw));
+
+    if (!label) {
+      errors.push(`Linha ${i + 1}: nome do prêmio vazio.`);
+      return;
+    }
+
+    if (!quantity || quantity < 1) {
+      errors.push(`Linha ${i + 1}: quantidade precisa ser um número maior que 0.`);
+      return;
+    }
+
+    items.push({ label, quantity });
+  });
+
+  return { items, errors };
+}
+
+document.querySelectorAll('.prize-tier').forEach((tierEl) => {
+  const tier = tierEl.dataset.tier;
+  const bulkTextareaEl = tierEl.querySelector('.prize-bulk-textarea');
+  const parseBtnEl = tierEl.querySelector('.prize-parse-btn');
+  const errorsEl = tierEl.querySelector('.prize-tier__errors');
+
+  parseBtnEl.addEventListener('click', () => {
+    const { items, errors } = parsePrizeBulkText(bulkTextareaEl.value);
+
+    if (errors.length > 0) {
+      errorsEl.hidden = false;
+      errorsEl.textContent = errors.join(' ');
+      return;
+    }
+
+    errorsEl.hidden = true;
+
+    // Processar substitui a lista dessa dificuldade pelo que acabou de
+    // ser colado, em vez de somar — assim reprocessar depois de
+    // corrigir um erro de digitação não duplica os itens já certos.
+    customPrizeLists[tier] = items;
+    renderPrizeTierList(tier);
+    updatePrizeSummary();
+    bulkTextareaEl.value = '';
+  });
+});
+
+openPrizeModalBtn.addEventListener('click', () => openOverlay(prizeOverlay));
+prizeModalCloseX.addEventListener('click', () => closeOverlay(prizeOverlay));
+prizeModalDoneBtn.addEventListener('click', () => closeOverlay(prizeOverlay));
 
 /* =========================================================
    TEMAS DE MARCA (WHITE LABEL) — seletor e aplicação
@@ -543,10 +723,10 @@ unitSelect.addEventListener('change', () => {
 // volta para a unidade real no momento de montar os envelopes.
 const CENTS_FACTOR = 100;
 
-function formatPrize(value) {
+function formatPrize(value, unit) {
   const rounded = Math.round(value * CENTS_FACTOR) / CENTS_FACTOR; // remove ruído de ponto flutuante
   const display = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2);
-  return `${display} ${state.unit}`;
+  return `${display} ${unit}`;
 }
 
 /* =========================================================
@@ -657,19 +837,6 @@ function closeOverlay(overlayEl) {
 startBtn.addEventListener('click', () => {
   configError.textContent = '';
 
-  const budget = Number(budgetInput.value);
-  const envelopeCount = Math.round(Number(envelopeCountInput.value));
-
-  if (!budget || budget <= 0) {
-    configError.textContent = t('errors.invalidBudget');
-    return;
-  }
-
-  if (!envelopeCount || envelopeCount <= 0) {
-    configError.textContent = t('errors.invalidCount');
-    return;
-  }
-
   if (questionPacks.length === 0) {
     configError.textContent = t('errors.noPacks');
     return;
@@ -677,6 +844,16 @@ startBtn.addEventListener('click', () => {
 
   if (themes.length === 0) {
     configError.textContent = t('errors.noThemes');
+    return;
+  }
+
+  const prizeMode = prizeModeSelect.value;
+  let budgetPerLevelCents = { easy: 0, medium: 0, hard: 0 };
+  let unit = 'USD';
+
+  const envelopeCount = Math.round(Number(envelopeCountInput.value));
+  if (!envelopeCount || envelopeCount <= 0) {
+    configError.textContent = t('errors.invalidCount');
     return;
   }
 
@@ -692,37 +869,56 @@ startBtn.addEventListener('click', () => {
     return;
   }
 
-  const budgetPercentages = {
-    easy: Number(budgetEasyInput.value) || 0,
-    medium: Number(budgetMediumInput.value) || 0,
-    hard: Number(budgetHardInput.value) || 0
-  };
+  const countPerLevel = distributeByPercentages(envelopeCount, difficultyPercentages);
 
-  const budgetSum = budgetPercentages.easy + budgetPercentages.medium + budgetPercentages.hard;
-  if (budgetSum !== 100) {
-    configError.textContent = t('errors.budgetSum');
-    return;
-  }
-
-  let unit = unitSelect.value;
-  if (unit === 'custom') {
-    unit = unitCustomInput.value.trim();
-    if (!unit) {
-      configError.textContent = t('errors.customUnit');
+  if (prizeMode === 'list') {
+    const stockTotals = prizeTotalsByTier();
+    const tierMissingStock = ['easy', 'medium', 'hard'].find(
+      (level) => countPerLevel[level] > 0 && stockTotals[level] === 0
+    );
+    if (tierMissingStock) {
+      configError.textContent = t('errors.tierMissingStock');
       return;
     }
-  }
+  } else {
+    const budget = Number(budgetInput.value);
 
-  const countPerLevel = distributeByPercentages(envelopeCount, difficultyPercentages);
-  const budgetCents = Math.round(budget * CENTS_FACTOR);
-  const budgetPerLevelCents = distributeBudgetAmongActiveLevels(countPerLevel, budgetPercentages, budgetCents);
+    if (!budget || budget <= 0) {
+      configError.textContent = t('errors.invalidBudget');
+      return;
+    }
 
-  const insufficientLevel = ['easy', 'medium', 'hard'].find(
-    (level) => countPerLevel[level] > 0 && budgetPerLevelCents[level] < countPerLevel[level]
-  );
-  if (insufficientLevel) {
-    configError.textContent = t('errors.insufficientBudget');
-    return;
+    const budgetPercentages = {
+      easy: Number(budgetEasyInput.value) || 0,
+      medium: Number(budgetMediumInput.value) || 0,
+      hard: Number(budgetHardInput.value) || 0
+    };
+
+    const budgetSum = budgetPercentages.easy + budgetPercentages.medium + budgetPercentages.hard;
+    if (budgetSum !== 100) {
+      configError.textContent = t('errors.budgetSum');
+      return;
+    }
+
+    unit = unitSelect.value;
+    if (unit === 'custom') {
+      unit = unitCustomInput.value.trim();
+      if (!unit) {
+        configError.textContent = t('errors.customUnit');
+        return;
+      }
+    }
+
+    const budgetCents = Math.round(budget * CENTS_FACTOR);
+    budgetPerLevelCents = distributeBudgetAmongActiveLevels(countPerLevel, budgetPercentages, budgetCents);
+
+    const insufficientLevel = ['easy', 'medium', 'hard'].find(
+      (level) => countPerLevel[level] > 0 && budgetPerLevelCents[level] < countPerLevel[level]
+    );
+    if (insufficientLevel) {
+      configError.textContent = t('errors.insufficientBudget');
+      return;
+    }
   }
 
   let selectedPack;
@@ -744,18 +940,36 @@ startBtn.addEventListener('click', () => {
   }
   const selectedTheme = themes[Number(themeSelect.value)];
 
-  startEvent(countPerLevel, budgetPerLevelCents, unit, selectedPack, selectedTheme);
+  startEvent(countPerLevel, budgetPerLevelCents, unit, selectedPack, selectedTheme, prizeMode, customPrizeLists);
 });
 
-function buildEnvelopePool(countPerLevel, budgetPerLevelCents) {
+// Modo "lista": gera countPerLevel[level] envelopes por dificuldade,
+// todos com prizeLabel null — o prêmio de cada um só é sorteado do
+// estoque configurado (e descontado) no momento em que a pessoa
+// acerta, não na hora de montar o pool (ver drawPrizeFromStock).
+// Modo "orçamento": mantém exatamente o cálculo de sempre (valor
+// numérico dividido pela quantidade), com o prizeLabel já pronto
+// desde a montagem do pool.
+function buildEnvelopePool(countPerLevel, budgetPerLevelCents, unit, prizeMode) {
   const levels = ['easy', 'medium', 'hard'];
   let pool = [];
 
   levels.forEach((level) => {
-    if (countPerLevel[level] > 0) {
+    if (countPerLevel[level] <= 0) return;
+
+    if (prizeMode === 'list') {
+      // prizeLabel fica null de propósito: o prêmio desse envelope só é
+      // sorteado do estoque (e descontado) no momento em que a pessoa
+      // acerta a pergunta, não na hora de montar o pool. Isso é o que
+      // permite ter, por exemplo, 6 envelopes fáceis puxando de um
+      // estoque de 50 chaveiros, em vez de precisar de 50 envelopes.
+      for (let i = 0; i < countPerLevel[level]; i += 1) {
+        pool.push({ prizeLabel: null, difficulty: level, conquered: false });
+      }
+    } else {
       const prizesCents = generatePrizes(budgetPerLevelCents[level], countPerLevel[level]);
       prizesCents.forEach((prizeCents) => {
-        pool.push({ prize: prizeCents / CENTS_FACTOR, difficulty: level, conquered: false });
+        pool.push({ prizeLabel: formatPrize(prizeCents / CENTS_FACTOR, unit), difficulty: level, conquered: false });
       });
     }
   });
@@ -764,9 +978,19 @@ function buildEnvelopePool(countPerLevel, budgetPerLevelCents) {
   return pool;
 }
 
-function startEvent(countPerLevel, budgetPerLevelCents, unit, pack, theme) {
-  state.envelopes = buildEnvelopePool(countPerLevel, budgetPerLevelCents);
+function startEvent(countPerLevel, budgetPerLevelCents, unit, pack, theme, prizeMode, prizeLists) {
+  state.envelopes = buildEnvelopePool(countPerLevel, budgetPerLevelCents, unit, prizeMode);
   state.unit = unit;
+  state.prizeMode = prizeMode;
+  // Cópia própria (não referência) do estoque configurado, pra cada
+  // sorteio/desconto durante o evento não mexer no que está na tela
+  // de configuração — importante pro "Novo Evento" recomeçar do
+  // estoque original configurado, não do que sobrou do evento anterior.
+  state.prizeStock = {
+    easy: prizeLists.easy.map((item) => ({ ...item })),
+    medium: prizeLists.medium.map((item) => ({ ...item })),
+    hard: prizeLists.hard.map((item) => ({ ...item }))
+  };
   state.questionPack = pack;
   state.theme = theme;
   state.usedQuestionIndexes = { easy: [], medium: [], hard: [] };
@@ -827,7 +1051,7 @@ function renderEnvelopes() {
         <div class="difficulty-tag difficulty-${envelope.difficulty}">${difficultyLabel(envelope.difficulty)}</div>
         <div class="envelope-flap"></div>
         <div class="seal">${index + 1}</div>
-        <div class="used-badge">${envelope.conquered ? formatPrize(envelope.prize) : ''}</div>
+        <div class="used-badge">${envelope.conquered ? envelope.prizeLabel : ''}</div>
       </div>
     `;
     btn.addEventListener('click', () => handleEnvelopeClick(index, btn));
@@ -871,8 +1095,13 @@ function pickRandomQuestion(level) {
     return null;
   }
 
+  // Se já usamos todas as perguntas desse nível nesta sessão (mais
+  // envelopes do que perguntas cadastradas), reinicia o controle de
+  // repetição em vez de travar o jogo com "nenhuma pergunta
+  // disponível" no meio de um evento — melhor repetir pergunta do
+  // que interromper a experiência de quem está jogando.
   if (state.usedQuestionIndexes[level].length >= pool.length) {
-    return null; // não há mais perguntas desse nível disponíveis nesta sessão
+    state.usedQuestionIndexes[level] = [];
   }
 
   let index;
@@ -925,6 +1154,17 @@ function showQuestion(level) {
   openOverlay(questionOverlay);
 }
 
+// Sorteia um item do estoque daquela dificuldade e desconta 1 unidade.
+// Retorna null se o estoque dessa dificuldade já esgotou.
+function drawPrizeFromStock(level) {
+  const stock = state.prizeStock[level].filter((item) => item.quantity > 0);
+  if (stock.length === 0) return null;
+
+  const picked = stock[Math.floor(Math.random() * stock.length)];
+  picked.quantity -= 1;
+  return picked.label;
+}
+
 function handleAnswer(isCorrect) {
   closeOverlay(questionOverlay);
   state.lastAnswerCorrect = isCorrect;
@@ -933,8 +1173,20 @@ function handleAnswer(isCorrect) {
   resultFail.classList.toggle('is-active', !isCorrect);
 
   if (isCorrect) {
-    const prize = state.envelopes[state.currentEnvelopeIndex].prize;
-    resultPrize.textContent = `${t('result.wonPrefix')} ${formatPrize(prize)}`;
+    const envelope = state.envelopes[state.currentEnvelopeIndex];
+
+    if (state.prizeMode === 'list' && envelope.prizeLabel === null) {
+      const drawnLabel = drawPrizeFromStock(envelope.difficulty);
+      if (drawnLabel) {
+        envelope.prizeLabel = drawnLabel;
+        resultPrize.textContent = `${t('result.wonPrefix')} ${drawnLabel}`;
+      } else {
+        envelope.prizeLabel = t('prizeList.soldOut');
+        resultPrize.textContent = t('result.soldOutMessage');
+      }
+    } else {
+      resultPrize.textContent = `${t('result.wonPrefix')} ${envelope.prizeLabel}`;
+    }
   }
 
   openOverlay(resultOverlay);
@@ -952,15 +1204,32 @@ function conquerEnvelope() {
   const envelopeEl = envelopeGrid.querySelector(`[data-index="${index}"]`);
   if (!envelopeEl) return;
 
-  state.envelopes[index].conquered = true;
+  const envelope = state.envelopes[index];
+  const difficulty = envelope.difficulty;
+  envelope.conquered = true;
 
   const badge = envelopeEl.querySelector('.used-badge');
-  badge.textContent = formatPrize(state.envelopes[index].prize);
+  badge.textContent = envelope.prizeLabel;
 
   envelopeEl.classList.remove('is-open');
   envelopeEl.classList.add('is-used');
 
   state.currentEnvelopeIndex = null;
+
+  // Modo lista: o limite real de quanta gente joga é o estoque de
+  // prêmios, não a quantidade de envelopes visíveis na tela — se
+  // ainda sobrar estoque dessa dificuldade, este mesmo espaço no
+  // grid volta a ficar disponível pra uma nova tentativa em vez de
+  // ficar "usado" pra sempre. Só fica definitivamente usado quando o
+  // estoque daquela dificuldade realmente acaba.
+  if (state.prizeMode === 'list') {
+    const hasStockLeft = state.prizeStock[difficulty].some((item) => item.quantity > 0);
+    if (hasStockLeft) {
+      state.envelopes[index] = { prizeLabel: null, difficulty, conquered: false };
+      envelopeEl.classList.remove('is-used');
+      badge.textContent = '';
+    }
+  }
 }
 
 // Errou (ou não há pergunta disponível): o envelope fecha e continua disponível.
@@ -977,6 +1246,19 @@ function closeEnvelopeBack() {
 }
 
 function checkEventFinished() {
+  if (state.prizeMode === 'list') {
+    // No modo lista os envelopes reciclam enquanto sobrar estoque, então
+    // "todos conquistados" não é mais o critério certo — o evento só
+    // termina quando o estoque de TODAS as dificuldades zera.
+    const hasAnyStockLeft = ['easy', 'medium', 'hard'].some((level) =>
+      state.prizeStock[level].some((item) => item.quantity > 0)
+    );
+    if (!hasAnyStockLeft) {
+      openOverlay(finishedOverlay);
+    }
+    return;
+  }
+
   const allConquered = state.envelopes.every((e) => e.conquered);
   if (allConquered) {
     openOverlay(finishedOverlay);
@@ -1045,11 +1327,20 @@ function resetToConfig() {
   unitCustomField.hidden = true;
   unitCustomInput.value = '';
   restoreDifficultyDefaults();
+  closeOverlay(difficultyOverlay);
+  prizeModeSelect.value = 'budget';
+  setPrizeModeVisibility('budget');
+  closeOverlay(prizeOverlay);
+  customPrizeLists = { easy: [], medium: [], hard: [] };
+  DIFFICULTY_LEVELS.forEach((level) => renderPrizeTierList(level));
+  updatePrizeSummary();
   configError.textContent = '';
   eventFinishedBadge.hidden = true;
 
   state.envelopes = [];
   state.unit = 'USD';
+  state.prizeMode = 'budget';
+  state.prizeStock = { easy: [], medium: [], hard: [] };
   state.questionPack = null;
   state.theme = null;
   state.usedQuestionIndexes = { easy: [], medium: [], hard: [] };

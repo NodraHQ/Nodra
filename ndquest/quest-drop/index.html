@@ -43,11 +43,19 @@
           <h2 class="config-section-title" data-i18n="config.section.event">Evento</h2>
 
           <div class="field">
+            <label for="prize-mode-select" data-i18n="labels.prizeMode">Modo de prêmio</label>
+            <select id="prize-mode-select">
+              <option value="budget" data-i18n="prizeMode.budget">Orçamento simples (1 unidade, calculado automaticamente)</option>
+              <option value="list" data-i18n="prizeMode.list">Lista de prêmios personalizada (itens diferentes por dificuldade)</option>
+            </select>
+          </div>
+
+          <div class="field budget-mode-only">
             <label for="budget-input" data-i18n="labels.budget">Orçamento total</label>
             <input type="number" id="budget-input" inputmode="decimal" min="0.01" step="0.01" placeholder="Ex: 300 ou 1.5" data-i18n-placeholder="placeholders.budget">
           </div>
 
-          <div class="field">
+          <div class="field budget-mode-only">
             <label for="unit-select" data-i18n="labels.unit">Unidade do prêmio</label>
             <select id="unit-select">
               <option value="USD">USD</option>
@@ -60,9 +68,19 @@
             </select>
           </div>
 
-          <div class="field" id="unit-custom-field" hidden>
+          <div class="field budget-mode-only" id="unit-custom-field" hidden>
             <label for="unit-custom-input" data-i18n="labels.unitCustom">Unidade personalizada</label>
             <input type="text" id="unit-custom-input" placeholder="Ex: POINTS, XP, SATS..." data-i18n-placeholder="placeholders.unitCustom">
+          </div>
+
+          <div class="field">
+            <label for="envelope-count-input" data-i18n="labels.envelopeCount">Quantidade de envelopes</label>
+            <input type="number" id="envelope-count-input" inputmode="numeric" min="1" step="1" placeholder="Ex: 6" data-i18n-placeholder="placeholders.envelopeCount">
+          </div>
+
+          <div class="field prize-mode-only" id="prize-list-summary" hidden>
+            <p class="pack-custom-status" id="prize-list-status" data-i18n="prizeList.noneYet">Nenhum prêmio configurado ainda.</p>
+            <button type="button" class="btn btn-secondary" id="open-prize-modal-btn" data-i18n="prizeList.openEditor">🎁 Configurar prêmios</button>
           </div>
         </div>
 
@@ -87,48 +105,8 @@
       </div>
 
       <div class="field field-centered">
-        <label for="envelope-count-input" data-i18n="labels.envelopeCount">Quantidade de envelopes</label>
-        <input type="number" id="envelope-count-input" inputmode="numeric" min="1" step="1" placeholder="Ex: 6" data-i18n-placeholder="placeholders.envelopeCount">
-      </div>
-
-      <div class="config-section">
-        <h2 class="config-section-title" data-i18n="config.section.difficulty">Dificuldade e orçamento</h2>
-
-        <div class="field-group">
-          <label class="field-group-label" data-i18n="labels.difficultyDistribution">Distribuição das dificuldades (%)</label>
-          <div class="percent-row">
-            <div class="percent-field">
-              <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
-              <input type="number" id="diff-easy" inputmode="numeric" min="0" max="100" step="1" value="33">
-            </div>
-            <div class="percent-field">
-              <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
-              <input type="number" id="diff-medium" inputmode="numeric" min="0" max="100" step="1" value="33">
-            </div>
-            <div class="percent-field">
-              <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
-              <input type="number" id="diff-hard" inputmode="numeric" min="0" max="100" step="1" value="34">
-            </div>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-group-label" data-i18n="labels.budgetDistribution">Distribuição do orçamento (%)</label>
-          <div class="percent-row">
-            <div class="percent-field">
-              <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
-              <input type="number" id="budget-easy" inputmode="numeric" min="0" max="100" step="1" value="33">
-            </div>
-            <div class="percent-field">
-              <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
-              <input type="number" id="budget-medium" inputmode="numeric" min="0" max="100" step="1" value="33">
-            </div>
-            <div class="percent-field">
-              <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
-              <input type="number" id="budget-hard" inputmode="numeric" min="0" max="100" step="1" value="34">
-            </div>
-          </div>
-        </div>
+        <p class="pack-custom-status" id="difficulty-summary-status" data-i18n="difficulty.usingDefault">Usando a divisão padrão (33% / 33% / 34%) entre fácil, médio e difícil.</p>
+        <button type="button" class="btn btn-secondary" id="open-difficulty-modal-btn" data-i18n="difficulty.openEditor">⚖️ Ajustar distribuição</button>
       </div>
 
       <p class="field-error" id="config-error"></p>
@@ -179,6 +157,99 @@
       <div class="preview-list" id="preview-list"></div>
 
       <button type="button" class="btn btn-primary" id="pack-modal-done-btn" data-i18n="pack.doneBtn">Concluído</button>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- OVERLAY: LISTA DE PRÊMIOS     -->
+  <!-- ============================= -->
+  <div id="prize-overlay" class="overlay">
+    <div class="pack-modal-card">
+      <button type="button" class="modal-close-btn" id="prize-modal-close-x" aria-label="Fechar" data-i18n-aria-label="modal.closeAriaLabel">✕</button>
+
+      <p class="eyebrow" data-i18n="prizeList.modalEyebrow">Lista de Prêmios</p>
+      <p class="pack-custom-hint" data-i18n="prizeList.hint">Defina o estoque de prêmios de cada dificuldade. Cada envelope respondido corretamente sorteia um item do estoque daquela dificuldade e desconta 1 unidade — não é mais "1 item = 1 envelope".</p>
+
+      <div class="prize-tier" data-tier="easy">
+        <h3 class="prize-tier__title" data-i18n="percent.easy">🟢 Fácil</h3>
+        <p class="prize-tier__hint" data-i18n="prizeList.pasteHint">Um prêmio por linha, no formato "Nome; Quantidade"</p>
+        <textarea class="prize-bulk-textarea" placeholder="Adesivo; 10&#10;Chaveiro; 2"></textarea>
+        <button type="button" class="btn btn-secondary prize-parse-btn" data-i18n="prizeList.parseBtn">Processar Lista</button>
+        <p class="prize-tier__errors" hidden></p>
+        <div class="prize-item-list" id="prize-list-easy"></div>
+      </div>
+
+      <div class="prize-tier" data-tier="medium">
+        <h3 class="prize-tier__title" data-i18n="percent.medium">🟡 Médio</h3>
+        <p class="prize-tier__hint" data-i18n="prizeList.pasteHint">Um prêmio por linha, no formato "Nome; Quantidade"</p>
+        <textarea class="prize-bulk-textarea" placeholder="Camiseta; 5"></textarea>
+        <button type="button" class="btn btn-secondary prize-parse-btn" data-i18n="prizeList.parseBtn">Processar Lista</button>
+        <p class="prize-tier__errors" hidden></p>
+        <div class="prize-item-list" id="prize-list-medium"></div>
+      </div>
+
+      <div class="prize-tier" data-tier="hard">
+        <h3 class="prize-tier__title" data-i18n="percent.hard">🔴 Difícil</h3>
+        <p class="prize-tier__hint" data-i18n="prizeList.pasteHint">Um prêmio por linha, no formato "Nome; Quantidade"</p>
+        <textarea class="prize-bulk-textarea" placeholder="Voucher R$50; 3&#10;Voucher R$100; 1"></textarea>
+        <button type="button" class="btn btn-secondary prize-parse-btn" data-i18n="prizeList.parseBtn">Processar Lista</button>
+        <p class="prize-tier__errors" hidden></p>
+        <div class="prize-item-list" id="prize-list-hard"></div>
+      </div>
+
+      <p class="prize-total" id="prize-total-summary"></p>
+
+      <button type="button" class="btn btn-primary" id="prize-modal-done-btn" data-i18n="pack.doneBtn">Concluído</button>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- OVERLAY: DIFICULDADE/ORÇAMENTO -->
+  <!-- ============================= -->
+  <div id="difficulty-overlay" class="overlay">
+    <div class="pack-modal-card">
+      <button type="button" class="modal-close-btn" id="difficulty-modal-close-x" aria-label="Fechar" data-i18n-aria-label="modal.closeAriaLabel">✕</button>
+
+      <p class="eyebrow" data-i18n="config.section.difficulty">Dificuldade e orçamento</p>
+      <p class="pack-custom-hint" data-i18n="difficulty.hint">O padrão (33% / 33% / 34%) funciona bem pra maioria dos eventos — só mexa aqui se quiser um evento com mais perguntas de um nível específico.</p>
+
+      <div class="field-group">
+        <label class="field-group-label" data-i18n="labels.difficultyDistribution">Distribuição das dificuldades (%)</label>
+        <div class="percent-row">
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
+            <input type="number" id="diff-easy" inputmode="numeric" min="0" max="100" step="1" value="33">
+          </div>
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
+            <input type="number" id="diff-medium" inputmode="numeric" min="0" max="100" step="1" value="33">
+          </div>
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
+            <input type="number" id="diff-hard" inputmode="numeric" min="0" max="100" step="1" value="34">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group budget-mode-only">
+        <label class="field-group-label" data-i18n="labels.budgetDistribution">Distribuição do orçamento (%)</label>
+        <div class="percent-row">
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
+            <input type="number" id="budget-easy" inputmode="numeric" min="0" max="100" step="1" value="33">
+          </div>
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
+            <input type="number" id="budget-medium" inputmode="numeric" min="0" max="100" step="1" value="33">
+          </div>
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
+            <input type="number" id="budget-hard" inputmode="numeric" min="0" max="100" step="1" value="34">
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" id="difficulty-modal-done-btn" data-i18n="pack.doneBtn">Concluído</button>
     </div>
   </div>
 
