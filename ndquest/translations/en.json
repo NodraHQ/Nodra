@@ -7,10 +7,13 @@
   "games.soon.description": "New NDQuest games launch as they're ready. No fixed dates, just steady progress.",
   "games.soon.status": "Coming Soon",
   "games.soon.title": "More Games Coming",
+  "games.timeattack.cta": "Play →",
+  "games.timeattack.description": "Race the clock, right answers add time, wrong ones take it away. Multiple players join the same room from their own phones.",
+  "games.timeattack.title": "Time Attack",
   "games.title": "Available Games",
   "hero.description": "NDQuest is Nodra's game platform: quizzes and interactive challenges built for events, communities and creators. Pick a game below to jump in.",
   "hero.title": "Test your knowledge.<br>Pick your challenge.",
-  "meta.title": "NDQuest — Quiz & Event Activations",
-  "nav.games": "Games",
-  "nav.nodra": "Nodra"
+  "meta.title": "NDQuest: Quiz & Event Activations",
+  "nav.nodra": "Nodra",
+  "nav.x": "X"
 }

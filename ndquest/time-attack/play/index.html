@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title data-i18n="meta.title">Time Attack: NDQuest</title>
+<meta name="description" content="Entre numa sala de Time Attack e jogue contra o relógio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="language-toggle" role="group" aria-label="Idioma / Language">
+    <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
+</div>
+
+
+<div class="container">
+
+    <div class="logo-row">
+        <img src="../assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- TELA 1: ENTRAR NA SALA -->
+    <!-- ===================================================== -->
+    <section id="screen-join">
+        <span class="eyebrow" data-i18n="join.eyebrow">Time Attack</span>
+        <h1 class="title-display" data-i18n="join.title">Entrar na Sala</h1>
+        <p class="subtitle" data-i18n="join.subtitle">Digite o código que o host te passou.</p>
+
+        <a href="../index.html" class="join-existing-link" data-i18n="join.createInstead">Quer criar uma sala? Clique aqui →</a>
+
+        <div class="card">
+            <div class="field">
+                <label for="room-code-input" data-i18n="labels.roomCode">Código da sala</label>
+                <input type="text" id="room-code-input" maxlength="6" style="text-transform:uppercase">
+            </div>
+
+            <div class="field">
+                <label for="nickname-input" data-i18n="labels.nickname">Seu apelido</label>
+                <input type="text" id="nickname-input" maxlength="40">
+            </div>
+
+            <p class="field-error" id="join-error"></p>
+
+            <button type="button" class="btn btn-primary" id="join-room-btn" data-i18n="buttons.joinRoom">Entrar</button>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 2: PRONTO PRA JOGAR -->
+    <!-- ===================================================== -->
+    <section id="screen-ready" hidden>
+        <div class="card ready-screen">
+            <span class="eyebrow" data-i18n="ready.eyebrow">Pronto?</span>
+            <h1 class="title-display" data-i18n="ready.title">Teste seu conhecimento</h1>
+            <p class="subtitle" data-i18n="ready.subtitle">Cada acerto some tempo ao seu relógio, cada erro tira. Acabou quando o tempo zerar ou bater o limite da partida.</p>
+            <button type="button" class="btn btn-primary" id="play-btn" data-i18n="buttons.play">Jogar</button>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 3: JOGANDO -->
+    <!-- ===================================================== -->
+    <section id="screen-game" hidden>
+        <div class="time-bank">
+            <div class="time-bank__value" id="time-bank-value">30</div>
+            <div class="time-bank__label" data-i18n="game.timeLabel">Tempo</div>
+        </div>
+
+        <p class="score-display">
+            <span data-i18n="game.scorePrefix">Acertos:</span>
+            <span id="score-value">0</span>
+        </p>
+
+        <div class="card question-card">
+            <h2 class="question-card__text" id="question-text"></h2>
+            <div class="answers-grid" id="answers-grid"></div>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 4: RESULTADO FINAL -->
+    <!-- ===================================================== -->
+    <section id="screen-finished" hidden>
+        <div class="card finished-screen">
+            <span class="eyebrow" data-i18n="finished.eyebrow">Fim de Jogo</span>
+            <h1 class="title-display" id="finished-title" data-i18n="finished.title">Tempo esgotado!</h1>
+            <p class="subtitle" style="margin-bottom:0" data-i18n="finished.scoreLabel">Você acertou</p>
+            <div class="finished-screen__score" id="final-score"></div>
+            <p class="subtitle" data-i18n="finished.subtitle">Sua pontuação já foi enviada pro host. Confira o placar na tela dele.</p>
+            <button type="button" class="btn btn-secondary" id="play-again-btn" data-i18n="buttons.playAgain">Jogar de Novo</button>
+        </div>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script type="module" src="play.js"></script>
+</body>
+</html>

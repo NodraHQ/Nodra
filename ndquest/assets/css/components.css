@@ -11,7 +11,8 @@
 
 body {
   margin: 0;
-  background: var(--color-bg);
+  background-color: var(--color-bg);
+  background-image: var(--gradient-background);
   color: var(--color-text);
   font-family: var(--font-body);
   line-height: 1.6;

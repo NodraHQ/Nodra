@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">Time Attack: NDQuest</title>
+<meta name="description" content="Crie uma sala de Time Attack e receba jogadores em tempo real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="language-toggle" role="group" aria-label="Idioma / Language">
+    <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
+</div>
+
+
+<div class="container">
+
+    <div class="logo-row">
+        <img src="assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+    </div>
+
+    <a href="../index.html" class="field-error" style="color:var(--color-text-muted);text-decoration:none;display:inline-block;margin-bottom:20px" data-i18n="nav.back">← NDQuest</a>
+
+    <!-- ===================================================== -->
+    <!-- TELA 1: CONFIGURAÇÃO DA SALA -->
+    <!-- ===================================================== -->
+    <section id="screen-config">
+        <span class="eyebrow" data-i18n="host.eyebrow">Time Attack</span>
+        <h1 class="title-display" data-i18n="host.title">Criar Sala</h1>
+        <p class="subtitle" data-i18n="host.subtitle">Configure o jogo uma vez, todo mundo que entrar na sala joga com essas regras.</p>
+
+        <a href="play/index.html" class="join-existing-link" data-i18n="host.joinExisting">Já tem um código? Entrar numa sala →</a>
+
+        <div class="card">
+            <div class="field">
+                <label for="host-name-input" data-i18n="labels.hostName">Seu nome</label>
+                <input type="text" id="host-name-input" maxlength="60">
+            </div>
+
+            <div class="field">
+                <label for="pack-select" data-i18n="labels.pack">Pacote de perguntas</label>
+                <select id="pack-select"></select>
+            </div>
+
+            <div class="custom-questions-panel" id="custom-questions-panel" hidden>
+                <p class="hint-text" data-i18n="customQuestions.hint">Cole suas perguntas, clique em "Processar", e crie a sala. Nada disso fica salvo pra outros usos, só vale pra essa sala.</p>
+
+                <div class="panel-toolbar">
+                    <button type="button" class="btn btn-secondary" id="download-template-btn" data-i18n="customQuestions.downloadTemplate">⭳ Baixar modelo (.txt)</button>
+                    <label class="file-label" data-i18n="customQuestions.uploadLabel">Ou envie um arquivo .txt</label>
+                    <input type="file" id="file-upload" accept=".txt">
+                </div>
+
+                <textarea id="bulk-textarea" placeholder="PERGUNTA: ...&#10;RESPOSTAS: A; B; C; D&#10;CORRETA: 1&#10;---"></textarea>
+
+                <button type="button" class="btn btn-secondary" id="parse-btn" data-i18n="customQuestions.parseBtn">Processar Perguntas</button>
+
+                <div class="parse-errors" id="parse-errors" hidden></div>
+
+                <p class="hint-text" id="preview-status"></p>
+                <div class="preview-list" id="preview-list"></div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="time-start-input" data-i18n="labels.timeBankStart">Tempo inicial (segundos)</label>
+                    <input type="number" id="time-start-input" min="5" step="1" value="30">
+                </div>
+                <div class="field">
+                    <label for="time-cap-input" data-i18n="labels.timeCapSeconds">Tempo máximo de partida (segundos)</label>
+                    <input type="number" id="time-cap-input" min="10" step="1" value="120">
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="time-bonus-input" data-i18n="labels.timeBonusCorrect">Bônus por acerto (segundos)</label>
+                    <input type="number" id="time-bonus-input" min="1" step="1" value="5">
+                </div>
+                <div class="field">
+                    <label for="time-penalty-input" data-i18n="labels.timePenaltyWrong">Penalidade por erro (segundos)</label>
+                    <input type="number" id="time-penalty-input" min="1" step="1" value="5">
+                </div>
+            </div>
+
+            <p class="field-error" id="config-error"></p>
+
+            <button type="button" class="btn btn-primary" id="create-room-btn" data-i18n="buttons.createRoom">Criar Sala</button>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 2: SALA CRIADA — CÓDIGO, QR, PLACAR AO VIVO -->
+    <!-- ===================================================== -->
+    <section id="screen-room" hidden>
+        <div class="room-layout">
+
+            <div class="room-sidebar">
+                <div class="card room-code-display">
+                    <div class="room-code-display__banner">
+                        <span class="eyebrow" data-i18n="room.codeLabel">Código da sala</span>
+                        <div class="room-code-display__code" id="room-code-text"></div>
+                        <div class="room-code-display__qr">
+                            <img id="room-qr-img" src="" alt="QR code da sala">
+                        </div>
+                    </div>
+                    <p class="subtitle" style="margin-bottom:8px" data-i18n="room.qrHint">Escaneie o QR ou digite o código pra entrar</p>
+                    <p class="room-code-display__link" id="room-link-text"></p>
+                    <button type="button" class="btn btn-secondary copy-link-btn" id="copy-link-btn" data-i18n="buttons.copyLink">📋 Copiar Link</button>
+
+                    <div class="room-summary" id="room-summary"></div>
+                </div>
+
+                <a id="play-as-host-link" href="#" target="_blank" class="btn btn-secondary" style="margin-bottom:12px;text-decoration:none;display:flex" data-i18n="buttons.playAsHost">Jogar também →</a>
+                <button type="button" class="btn btn-secondary" id="close-room-btn" data-i18n="buttons.closeRoom">Encerrar Sala</button>
+            </div>
+
+            <div class="room-main">
+                <div class="card leaderboard-card">
+                    <span class="eyebrow" data-i18n="leaderboard.title">Placar ao Vivo</span>
+                    <p class="leaderboard-playing-now" id="leaderboard-playing-now" hidden></p>
+                    <p class="leaderboard-empty" id="leaderboard-empty" data-i18n="leaderboard.empty">Nenhum jogador terminou ainda.</p>
+                    <div class="leaderboard-list" id="leaderboard-list"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/supabase-client.js"></script>
+<script type="module" src="host.js"></script>
+</body>
+</html>

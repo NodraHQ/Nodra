@@ -7,10 +7,13 @@
   "games.soon.description": "Novos jogos do NDQuest chegam conforme ficam prontos. Sem datas fixas, só progresso constante.",
   "games.soon.status": "Em Breve",
   "games.soon.title": "Mais Jogos em Breve",
+  "games.timeattack.cta": "Jogar →",
+  "games.timeattack.description": "Corra contra o relógio, acerto soma tempo, erro tira. Vários jogadores entram na mesma sala pelo próprio celular.",
+  "games.timeattack.title": "Time Attack",
   "games.title": "Jogos Disponíveis",
   "hero.description": "NDQuest é a plataforma de jogos da Nodra: quizzes e desafios interativos feitos para eventos, comunidades e criadores. Escolha um jogo abaixo pra começar.",
   "hero.title": "Teste seu conhecimento.<br>Escolha seu desafio.",
-  "meta.title": "NDQuest — Quiz e Ativações de Evento",
-  "nav.games": "Jogos",
-  "nav.nodra": "Nodra"
+  "meta.title": "NDQuest: Quiz e Ativações de Evento",
+  "nav.nodra": "Nodra",
+  "nav.x": "X"
 }
