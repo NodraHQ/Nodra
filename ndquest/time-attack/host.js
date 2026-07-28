@@ -9,7 +9,7 @@ import translations from './i18n/translations.js';
 // Idioma
 // --------------------------------------------------------
 
-let currentLanguage = localStorage.getItem('quest-drop:language') || 'pt';
+let currentLanguage = localStorage.getItem('time-attack:language') || 'pt';
 
 function t(key) {
     const dict = translations[currentLanguage] || translations.pt;
@@ -107,7 +107,7 @@ function setActiveLanguageButton() {
 
 function changeLanguage(lang) {
     currentLanguage = lang;
-    localStorage.setItem('quest-drop:language', lang);
+    localStorage.setItem('time-attack:language', lang);
     applyTranslations();
     setActiveLanguageButton();
     populatePackSelect();

@@ -65,7 +65,7 @@
   "moduleSecurity.introduction.p2": "This lesson is written from a defender's perspective. It explains what these attacks look like and why they work, so you can recognize the pattern, not how to carry one out.",
   "moduleSecurity.introduction.p3": "By the end of this lesson you'll be able to recognize common phishing patterns, understand what a smart contract audit does and doesn't guarantee, spot the warning signs of a rug pull, and build the personal habits that remove most realistic risk.",
   "moduleSecurity.introduction.title": "Introduction",
-  "moduleSecurity.meta.title": "Security — Nodra Academy",
+  "moduleSecurity.meta.title": "Security: Nodra Academy",
   "moduleSecurity.opsec.eyebrow": "07. Personal Security Habits",
   "moduleSecurity.opsec.li1": "<strong>Separate wallets by purpose.</strong> Keep a small \"hot\" wallet for everyday interactions and a hardware wallet for meaningful holdings, exactly the hot/cold split covered in Module 02.",
   "moduleSecurity.opsec.li2": "<strong>Never share your seed phrase.</strong> No legitimate wallet, exchange, or support channel will ever need it, anyone asking for it is attacking you.",
@@ -165,7 +165,9 @@
   "moduleSecurity.toc.summary": "Summary",
   "moduleSecurity.toc.title": "Contents",
   "moduleSecurity.visual.defenseLabel": "Best Defense",
+  "moduleSecurity.visual.defenseValue": "Read Before You Sign",
   "moduleSecurity.visual.riskLabel": "Risk Category",
   "moduleSecurity.visual.statusLabel": "Preventable",
-  "moduleSecurity.visual.vectorLabel": "Most Common Vector"
+  "moduleSecurity.visual.vectorLabel": "Most Common Vector",
+  "moduleSecurity.visual.vectorValue": "Malicious Approval"
 }

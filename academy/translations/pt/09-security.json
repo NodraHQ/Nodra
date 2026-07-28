@@ -65,7 +65,7 @@
   "moduleSecurity.introduction.p2": "Esta lição é escrita da perspectiva de quem se defende. Ela explica como esses ataques se parecem e por que funcionam, para que você reconheça o padrão, não como executar um.",
   "moduleSecurity.introduction.p3": "Ao final desta lição você será capaz de reconhecer padrões comuns de phishing, entender o que uma auditoria de smart contract garante e o que não garante, identificar os sinais de alerta de um rug pull, e construir os hábitos pessoais que eliminam a maior parte do risco realista.",
   "moduleSecurity.introduction.title": "Introdução",
-  "moduleSecurity.meta.title": "Segurança — Nodra Academy",
+  "moduleSecurity.meta.title": "Segurança: Nodra Academy",
   "moduleSecurity.opsec.eyebrow": "07. Hábitos Pessoais de Segurança",
   "moduleSecurity.opsec.li1": "<strong>Separe carteiras por finalidade.</strong> Mantenha uma carteira \"quente\" pequena para interações do dia a dia e uma carteira de hardware para valores significativos, exatamente a separação hot/cold coberta no Módulo 02.",
   "moduleSecurity.opsec.li2": "<strong>Nunca compartilhe sua seed phrase.</strong> Nenhuma carteira, exchange, ou canal de suporte legítimo jamais vai precisar dela, qualquer um que peça está atacando você.",
@@ -165,7 +165,9 @@
   "moduleSecurity.toc.summary": "Resumo",
   "moduleSecurity.toc.title": "Conteúdo",
   "moduleSecurity.visual.defenseLabel": "Melhor Defesa",
+  "moduleSecurity.visual.defenseValue": "Leia Antes de Assinar",
   "moduleSecurity.visual.riskLabel": "Categoria de Risco",
   "moduleSecurity.visual.statusLabel": "Evitável",
-  "moduleSecurity.visual.vectorLabel": "Vetor Mais Comum"
+  "moduleSecurity.visual.vectorLabel": "Vetor Mais Comum",
+  "moduleSecurity.visual.vectorValue": "Aprovação Maliciosa"
 }

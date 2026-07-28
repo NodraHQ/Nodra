@@ -645,6 +645,12 @@
     border-radius: var(--radius-sm);
 }
 
+.quiz-item__feedback a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 .quiz-item__feedback--correct {
     color: var(--success);
     background: rgba(40, 199, 111, .1);

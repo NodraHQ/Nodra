@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="blockchain.meta.title">Blockchain Fundamentals — Nodra Academy</title>
+<title data-i18n="blockchain.meta.title">Blockchain Fundamentals: Nodra Academy</title>
 <meta name="description" content="Learn how blockchain works from the ground up: blocks, hashes, consensus, layers, wallets and security.">
 <link rel="stylesheet" href="../assets/css/variables.css">
 <link rel="stylesheet" href="../assets/css/components.css">
@@ -163,7 +163,7 @@
 
             <!-- INTRODUCTION -->
             <section class="section lesson-section reveal" id="introduction">
-                <span class="tag" data-i18n="blockchain.introduction.eyebrow">01 — Introduction</span>
+                <span class="tag" data-i18n="blockchain.introduction.eyebrow">01. Introduction</span>
                 <h2 class="section-title" data-i18n="blockchain.introduction.title">Introduction</h2>
                 <p class="section-description" data-i18n="blockchain.introduction.p1">
                     A blockchain is a distributed ledger: a database that is copied and synchronized across
@@ -172,11 +172,7 @@
                     history is agreed upon collectively rather than dictated by a central authority.
                 </p>
                 <p class="section-description" data-i18n="blockchain.introduction.p2">
-                    The term "blockchain" describes the structure of that ledger: data is grouped into
-                    blocks, and each block is cryptographically linked to the one before it, forming a
-                    chain. Once a block is added and confirmed by the network, altering it would require
-                    rewriting every block that came after it on every copy of the ledger at the same time
-                    — which is what makes the record practically immutable.
+                    The term "blockchain" describes the structure of that ledger: data is grouped into blocks, and each block is cryptographically linked to the one before it, forming a chain. Once a block is added and confirmed by the network, altering it would require rewriting every block that came after it on every copy of the ledger at the same time: which is what makes the record practically immutable.
                 </p>
                 <p class="section-description" data-i18n="blockchain.introduction.p3">
                     This lesson walks through the core mechanics behind that idea: how blocks are built,
@@ -187,7 +183,7 @@
 
             <!-- HOW BLOCKCHAIN WORKS -->
             <section class="section lesson-section reveal" id="how-it-works">
-                <span class="tag" data-i18n="blockchain.howItWorks.eyebrow">02 — How Blockchain Works</span>
+                <span class="tag" data-i18n="blockchain.howItWorks.eyebrow">02. How Blockchain Works</span>
                 <h2 class="section-title" data-i18n="blockchain.howItWorks.title">How Blockchain Works</h2>
                 <p class="section-description" data-i18n="blockchain.howItWorks.intro">
                     At a high level, a blockchain network performs four repeating actions: transactions are
@@ -214,7 +210,7 @@
                         <div>
                             <div class="module-number" data-i18n="blockchain.howItWorks.card3.number">03</div>
                             <h4 data-i18n="blockchain.howItWorks.card3.title">Validation</h4>
-                            <p data-i18n="blockchain.howItWorks.card3.text">Nodes check that a transaction follows the protocol's rules — correct signature, sufficient balance, no double-spending — before including it in a block.</p>
+                            <p data-i18n="blockchain.howItWorks.card3.text">Nodes check that a transaction follows the protocol's rules (correct signature, sufficient balance, no double-spending) before including it in a block.</p>
                         </div>
                     </article>
                     <article class="module glow">
@@ -229,7 +225,7 @@
 
             <!-- ANATOMY OF A BLOCK -->
             <section class="section lesson-section reveal" id="anatomy-of-a-block">
-                <span class="tag" data-i18n="blockchain.anatomy.eyebrow">03 — Anatomy of a Block</span>
+                <span class="tag" data-i18n="blockchain.anatomy.eyebrow">03. Anatomy of a Block</span>
                 <h2 class="section-title" data-i18n="blockchain.anatomy.title">Anatomy of a Block</h2>
                 <p class="section-description" data-i18n="blockchain.anatomy.intro">
                     Every block is made of a header and a body. The header contains metadata used to link
@@ -285,16 +281,16 @@
                 </div>
 
                 <ul class="lesson-list">
-                    <li data-i18n="blockchain.anatomy.li1"><strong>Previous Hash</strong> — links this block to the one before it, forming the chain.</li>
-                    <li data-i18n="blockchain.anatomy.li2"><strong>Merkle Root</strong> — a single hash that summarizes every transaction in the block, allowing quick verification without re-checking each one individually.</li>
-                    <li data-i18n="blockchain.anatomy.li3"><strong>Nonce</strong> — a number miners adjust repeatedly while searching for a valid block hash under Proof of Work.</li>
-                    <li data-i18n="blockchain.anatomy.li4"><strong>Block Hash</strong> — the fingerprint of the entire block header, recalculated by every node to confirm the block is valid.</li>
+                    <li data-i18n="blockchain.anatomy.li1"><strong>Previous Hash</strong>: links this block to the one before it, forming the chain.</li>
+                    <li data-i18n="blockchain.anatomy.li2"><strong>Merkle Root</strong>: a single hash that summarizes every transaction in the block, allowing quick verification without re-checking each one individually.</li>
+                    <li data-i18n="blockchain.anatomy.li3"><strong>Nonce</strong>: a number miners adjust repeatedly while searching for a valid block hash under Proof of Work.</li>
+                    <li data-i18n="blockchain.anatomy.li4"><strong>Block Hash</strong>: the fingerprint of the entire block header, recalculated by every node to confirm the block is valid.</li>
                 </ul>
             </section>
 
             <!-- HASH DEMO -->
             <section class="section lesson-section reveal" id="hash-demo">
-                <span class="tag" data-i18n="blockchain.hashDemo.eyebrow">04 — Hash Demo</span>
+                <span class="tag" data-i18n="blockchain.hashDemo.eyebrow">04. Hash Demo</span>
                 <h2 class="section-title" data-i18n="blockchain.hashDemo.title">Hash Demo</h2>
                 <p class="section-description" data-i18n="blockchain.hashDemo.intro">
                     A cryptographic hash function takes any input and returns a fixed-length string of
@@ -333,7 +329,7 @@
                     <div class="hash-demo__divider"></div>
 
                     <div class="hash-demo__playground">
-                        <label class="hash-demo__playground-label" for="hashDemoInput" data-i18n="blockchain.hashDemo.playgroundLabel">Try it with your own input — hashed live with SHA-256</label>
+                        <label class="hash-demo__playground-label" for="hashDemoInput" data-i18n="blockchain.hashDemo.playgroundLabel">Try it with your own input: hashed live with SHA-256</label>
                         <div class="hash-demo__playground-row">
                             <input type="text" id="hashDemoInput" class="hash-demo__field" maxlength="140" autocomplete="off" spellcheck="false" value="Nodra Academy" placeholder="Type anything…">
                             <span class="hash-demo__arrow" aria-hidden="true">→</span>
@@ -346,16 +342,13 @@
                 </div>
 
                 <p class="section-description" data-i18n="blockchain.hashDemo.note">
-                    Notice the second input only changes the capitalization of one letter, yet the resulting
-                    hash is entirely different from the first — this is called the avalanche effect. Every
-                    hash on this page is computed live in your browser using SHA-256; nothing is sent to a
-                    server.
+                    Notice the second input only changes the capitalization of one letter, yet the resulting hash is entirely different from the first: this is called the avalanche effect. Every hash on this page is computed live in your browser using SHA-256; nothing is sent to a server.
                 </p>
             </section>
 
             <!-- CONSENSUS -->
             <section class="section lesson-section reveal" id="consensus">
-                <span class="tag" data-i18n="blockchain.consensus.eyebrow">05 — Consensus</span>
+                <span class="tag" data-i18n="blockchain.consensus.eyebrow">05. Consensus</span>
                 <h2 class="section-title" data-i18n="blockchain.consensus.title">Consensus</h2>
                 <p class="section-description" data-i18n="blockchain.consensus.intro">
                     Because there is no central authority, the network needs a way for independent nodes
@@ -387,7 +380,7 @@
 
             <!-- LAYER 1 VS LAYER 2 -->
             <section class="section lesson-section reveal" id="layers">
-                <span class="tag" data-i18n="blockchain.layers.eyebrow">06 — Layer 1 vs Layer 2</span>
+                <span class="tag" data-i18n="blockchain.layers.eyebrow">06. Layer 1 vs Layer 2</span>
                 <h2 class="section-title" data-i18n="blockchain.layers.title">Layer 1 vs Layer 2</h2>
                 <p class="section-description" data-i18n="blockchain.layers.intro">
                     As blockchains grew in usage, a single base network struggled to process every
@@ -397,7 +390,7 @@
                 <div class="next-grid">
                     <div class="next-card glow">
                         <h3 data-i18n="blockchain.layers.l1.title">Layer 1</h3>
-                        <p data-i18n="blockchain.layers.l1.text">The base blockchain itself — Bitcoin, Ethereum, Solana. It handles consensus, security, and final settlement directly.</p>
+                        <p data-i18n="blockchain.layers.l1.text">The base blockchain itself: Bitcoin, Ethereum, Solana. It handles consensus, security, and final settlement directly.</p>
                     </div>
                     <div class="next-card glow">
                         <h3 data-i18n="blockchain.layers.l2.title">Layer 2</h3>
@@ -408,7 +401,7 @@
 
             <!-- WALLETS -->
             <section class="section lesson-section reveal" id="wallets">
-                <span class="tag" data-i18n="blockchain.wallets.eyebrow">07 — Wallets</span>
+                <span class="tag" data-i18n="blockchain.wallets.eyebrow">07. Wallets</span>
                 <h2 class="section-title" data-i18n="blockchain.wallets.title">Wallets</h2>
                 <p class="section-description" data-i18n="blockchain.wallets.intro">
                     A wallet does not "store" coins the way a physical wallet stores cash. It stores the
@@ -418,11 +411,11 @@
                 <div class="next-grid">
                     <div class="next-card glow">
                         <h3 data-i18n="blockchain.wallets.hot.title">Hot Wallet</h3>
-                        <p data-i18n="blockchain.wallets.hot.text">Connected to the internet at all times — mobile apps, browser extensions, exchange accounts. Convenient, but more exposed to remote attacks.</p>
+                        <p data-i18n="blockchain.wallets.hot.text">Connected to the internet at all times: mobile apps, browser extensions, exchange accounts. Convenient, but more exposed to remote attacks.</p>
                     </div>
                     <div class="next-card glow">
                         <h3 data-i18n="blockchain.wallets.cold.title">Cold Wallet</h3>
-                        <p data-i18n="blockchain.wallets.cold.text">Keeps private keys offline — hardware devices or paper backups. Far more resistant to remote hacking, at the cost of everyday convenience.</p>
+                        <p data-i18n="blockchain.wallets.cold.text">Keeps private keys offline: hardware devices or paper backups. Far more resistant to remote hacking, at the cost of everyday convenience.</p>
                     </div>
                 </div>
 
@@ -434,7 +427,7 @@
 
             <!-- SECURITY -->
             <section class="section lesson-section reveal" id="security">
-                <span class="tag" data-i18n="blockchain.security.eyebrow">08 — Security</span>
+                <span class="tag" data-i18n="blockchain.security.eyebrow">08. Security</span>
                 <h2 class="section-title" data-i18n="blockchain.security.title">Security</h2>
                 <p class="section-description" data-i18n="blockchain.security.intro">
                     Blockchain security is a mix of cryptography, economic incentives, and network design.
@@ -449,7 +442,7 @@
 
             <!-- FIRST STEPS -->
             <section class="section lesson-section reveal" id="first-steps">
-                <span class="tag" data-i18n="blockchain.firstSteps.eyebrow">09 — First Steps</span>
+                <span class="tag" data-i18n="blockchain.firstSteps.eyebrow">09. First Steps</span>
                 <h2 class="section-title" data-i18n="blockchain.firstSteps.title">First Steps</h2>
                 <p class="section-description" data-i18n="blockchain.firstSteps.intro">
                     A practical path for putting this lesson into practice, from observation to a safe
@@ -489,7 +482,7 @@
 
             <!-- GLOSSARY -->
             <section class="section lesson-section reveal" id="glossary">
-                <span class="tag" data-i18n="blockchain.glossary.eyebrow">10 — Glossary</span>
+                <span class="tag" data-i18n="blockchain.glossary.eyebrow">10. Glossary</span>
                 <h2 class="section-title" data-i18n="blockchain.glossary.title">Glossary</h2>
                 <dl class="glossary-list">
                     <div class="card glossary-list__item">
@@ -529,7 +522,7 @@
 
             <!-- QUIZ -->
             <section class="section lesson-section reveal" id="quiz">
-                <span class="tag" data-i18n="blockchain.quiz.eyebrow">11 — Quiz</span>
+                <span class="tag" data-i18n="blockchain.quiz.eyebrow">11. Quiz</span>
                 <h2 class="section-title" data-i18n="blockchain.quiz.title">Quiz</h2>
                 <p class="section-description" data-i18n="blockchain.quiz.intro">
                     Check your understanding of this lesson before moving on.
@@ -545,8 +538,8 @@
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q1o3">C. A central server assigning order</button>
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q1o4">D. The wallet address of the miner</button>
                         </div>
-                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
-                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="#anatomy-of-a-block">Anatomy of a Block</a> and try again.</p>
                     </div>
 
                     <div class="card quiz-item" data-quiz-item>
@@ -557,8 +550,8 @@
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q2o3">C. Government regulation</button>
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q2o4">D. The size of the Merkle root</button>
                         </div>
-                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
-                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="#consensus">Consensus</a> and try again.</p>
                     </div>
 
                     <div class="card quiz-item" data-quiz-item>
@@ -569,8 +562,8 @@
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q3o3">C. It removes the need for consensus</button>
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q3o4">D. It stores private keys for users</button>
                         </div>
-                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
-                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="#layers">Layer 1 vs Layer 2</a> and try again.</p>
                     </div>
 
                     <div class="card quiz-item" data-quiz-item>
@@ -581,8 +574,8 @@
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q4o3">C. It is faster for daily transactions</button>
                             <button type="button" class="quiz-option" data-correct="false" data-i18n="blockchain.quiz.q4o4">D. It is managed by an exchange</button>
                         </div>
-                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct — well done.</p>
-                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.feedbackIncorrect" hidden>Not quite — review the section above and try again.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="blockchain.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="blockchain.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="#wallets">Wallets</a> and try again.</p>
                     </div>
 
                     <div class="card quiz-summary" id="quizSummary" hidden>
