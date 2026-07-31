@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title data-i18n="meta.title">Roulette: NDQuest</title>
+<meta name="description" content="Entre na roleta de sorteio com seu nome.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="language-toggle" role="group" aria-label="Idioma / Language">
+    <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
+</div>
+
+
+<div class="container">
+
+    <a class="logo-row" href="../../index.html">
+        <img id="logo-img" src="../assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+    </a>
+
+    <!-- ===================================================== -->
+    <!-- TELA 1: ENTRAR NA ROLETA -->
+    <!-- ===================================================== -->
+    <section id="screen-join">
+        <span class="eyebrow" data-i18n="join.eyebrow">Roleta</span>
+        <h1 class="title-display" data-i18n="join.title">Entrar na Roleta</h1>
+        <p class="subtitle" data-i18n="join.subtitle">Digite o código que o host te passou.</p>
+
+        <div class="card">
+            <div class="field">
+                <label for="room-code-input" data-i18n="labels.roomCode">Código da sala</label>
+                <input type="text" id="room-code-input" maxlength="6" style="text-transform:uppercase">
+            </div>
+
+            <div class="field">
+                <label for="nickname-input" data-i18n="labels.nickname">Seu nome</label>
+                <input type="text" id="nickname-input" maxlength="40">
+            </div>
+
+            <p class="field-error" id="join-error"></p>
+
+            <button type="button" class="btn btn-primary" id="join-room-btn" data-i18n="buttons.joinRoom">Entrar</button>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 2: CONFIRMAÇÃO -->
+    <!-- ===================================================== -->
+    <section id="screen-joined" hidden>
+        <div class="card waiting-screen">
+            <span class="eyebrow" data-i18n="joined.eyebrow">Você Está Dentro</span>
+            <h1 class="title-display" data-i18n="joined.title">Você está na roleta! 🎉</h1>
+            <p class="subtitle" data-i18n="joined.subtitle">Fica de olho na tela do host, é lá que o sorteio acontece.</p>
+        </div>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script type="module" src="play.js"></script>
+</body>
+</html>

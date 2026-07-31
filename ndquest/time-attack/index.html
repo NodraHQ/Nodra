@@ -21,7 +21,7 @@
 <div class="container">
 
     <div class="logo-row">
-        <img src="assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+        <img id="logo-img" src="assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
     </div>
 
     <a href="../index.html" class="field-error" style="color:var(--color-text-muted);text-decoration:none;display:inline-block;margin-bottom:20px" data-i18n="nav.back">← NDQuest</a>
@@ -45,6 +45,11 @@
             <div class="field">
                 <label for="pack-select" data-i18n="labels.pack">Pacote de perguntas</label>
                 <select id="pack-select"></select>
+            </div>
+
+            <div class="field">
+                <label for="theme-select" data-i18n="labels.theme">Tema da empresa</label>
+                <select id="theme-select"></select>
             </div>
 
             <div class="custom-questions-panel" id="custom-questions-panel" hidden>

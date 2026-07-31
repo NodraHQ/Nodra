@@ -58,39 +58,87 @@
 
     <section class="games-section" id="games">
         <div class="container">
-            <div class="reveal" style="margin-bottom:32px">
-                <h2 style="font-family:var(--font-display);font-weight:600;font-size:28px;margin:0" data-i18n="games.title">Available Games</h2>
+
+            <div class="category-tabs" role="tablist">
+                <button type="button" class="category-tab is-active" data-category="quiz" data-i18n="games.tabs.quiz">Quiz</button>
+                <button type="button" class="category-tab" data-category="action" data-i18n="games.tabs.action">Action</button>
+                <button type="button" class="category-tab" data-category="raffle" data-i18n="games.tabs.raffle">Raffle</button>
             </div>
 
-            <div class="games-grid">
-
-                <div class="card game-card reveal">
-                    <img class="game-card__image" src="assets/images/quest-drop-preview.png" alt="Quest Drop">
-                    <div class="game-card__body">
-                        <h3 data-i18n="games.questdrop.title">Quest Drop</h3>
-                        <p data-i18n="games.questdrop.description">Pick a difficulty, open a challenge, answer correctly and claim the prize. Built for live events, fully brandable per sponsor.</p>
-                        <a href="quest-drop/index.html" class="btn btn-primary" data-i18n="games.questdrop.cta">Play →</a>
-                    </div>
+            <div class="category-panel" id="category-quiz">
+                <div class="reveal" style="margin-bottom:32px">
+                    <h2 style="font-family:var(--font-display);font-weight:600;font-size:28px;margin:0 0 8px" data-i18n="games.quiz.title">Quiz</h2>
+                    <p style="color:var(--text-secondary);margin:0" data-i18n="games.quiz.description">Test what you know, solo or against the clock, or against everyone else in the room.</p>
                 </div>
 
-                <div class="card game-card reveal">
-                    <img class="game-card__image" src="assets/images/time-attack-preview.png" alt="Time Attack">
-                    <div class="game-card__body">
-                        <h3 data-i18n="games.timeattack.title">Time Attack</h3>
-                        <p data-i18n="games.timeattack.description">Race the clock, right answers add time, wrong ones take it away. Multiple players join the same room from their own phones.</p>
-                        <a href="time-attack/index.html" class="btn btn-primary" data-i18n="games.timeattack.cta">Play →</a>
-                    </div>
-                </div>
+                <div class="games-grid">
 
-                <div class="card game-card game-card--soon reveal">
-                    <div class="game-card__body">
-                        <h3 data-i18n="games.soon.title">More Games Coming</h3>
-                        <p data-i18n="games.soon.description">New NDQuest games launch as they're ready. No fixed dates, just steady progress.</p>
-                        <span class="game-card__status" data-i18n="games.soon.status">Coming Soon</span>
+                    <div class="card game-card reveal">
+                        <img class="game-card__image" src="assets/images/quest-drop-preview.png" alt="Quest Drop">
+                        <div class="game-card__body">
+                            <h3 data-i18n="games.questdrop.title">Quest Drop</h3>
+                            <p data-i18n="games.questdrop.description">Pick a difficulty, open a challenge, answer correctly and claim the prize. Built for live events, fully brandable per sponsor.</p>
+                            <a href="quest-drop/index.html" class="btn btn-primary" data-i18n="games.questdrop.cta">Play →</a>
+                        </div>
                     </div>
-                </div>
 
+                    <div class="card game-card reveal">
+                        <img class="game-card__image" src="assets/images/time-attack-preview.png" alt="Time Attack">
+                        <div class="game-card__body">
+                            <h3 data-i18n="games.timeattack.title">Time Attack</h3>
+                            <p data-i18n="games.timeattack.description">Race the clock, right answers add time, wrong ones take it away. Multiple players join the same room from their own phones.</p>
+                            <a href="time-attack/index.html" class="btn btn-primary" data-i18n="games.timeattack.cta">Play →</a>
+                        </div>
+                    </div>
+
+                    <div class="card game-card reveal">
+                        <img class="game-card__image" src="assets/images/show-down-preview.png" alt="Show Down">
+                        <div class="game-card__body">
+                            <h3 data-i18n="games.showdown.title">Show Down</h3>
+                            <p data-i18n="games.showdown.description">Live, host-paced trivia: everyone answers the same question at once, points reward speed, host controls the pace from question to question.</p>
+                            <a href="show-down/index.html" class="btn btn-primary" data-i18n="games.showdown.cta">Play →</a>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+            <div class="category-panel" id="category-action" hidden>
+                <div class="reveal" style="margin-bottom:32px">
+                    <h2 style="font-family:var(--font-display);font-weight:600;font-size:28px;margin:0 0 8px" data-i18n="games.action.title">Action</h2>
+                    <p style="color:var(--text-secondary);margin:0" data-i18n="games.action.description">It's not about knowing, it's about being fast.</p>
+                </div>
+
+                <div class="games-grid">
+                    <div class="card game-card reveal">
+                        <img class="game-card__image" src="assets/images/tap-rush-preview.png" alt="Tap Rush">
+                        <div class="game-card__body">
+                            <h3 data-i18n="games.taprush.title">Tap Rush</h3>
+                            <p data-i18n="games.taprush.description">Tap as fast as you can. Race solo to a target, or team up in a tug of war against another team.</p>
+                            <a href="tap-rush/index.html" class="btn btn-primary" data-i18n="games.taprush.cta">Play →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-panel" id="category-raffle" hidden>
+                <div class="reveal" style="margin-bottom:32px">
+                    <h2 style="font-family:var(--font-display);font-weight:600;font-size:28px;margin:0 0 8px" data-i18n="games.raffle.title">Raffle</h2>
+                    <p style="color:var(--text-secondary);margin:0" data-i18n="games.raffle.description">Prize time.</p>
+                </div>
+
+                <div class="games-grid">
+                    <div class="card game-card reveal">
+                        <img class="game-card__image" src="assets/images/roulette-preview.png" alt="Roulette">
+                        <div class="game-card__body">
+                            <h3 data-i18n="games.roulette.title">Roulette</h3>
+                            <p data-i18n="games.roulette.description">Gather names, spin the wheel, draw a winner. Pull from a previous game's room, open a QR room, or paste a ready list.</p>
+                            <a href="roulette/index.html" class="btn btn-primary" data-i18n="games.roulette.cta">Play →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 

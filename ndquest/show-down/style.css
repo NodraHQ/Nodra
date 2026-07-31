@@ -1,0 +1,711 @@
+/* =========================================================
+   SHOW DOWN — STYLE.CSS
+   Cópia própria dos tokens de cor da família NDQuest (mesmos
+   valores do Quest Drop e do Time Attack, arquivo independente,
+   sem referência cruzada). Reaproveita os componentes genéricos
+   (cards, botões, sala/QR, placar) e adiciona os específicos do
+   Show Down: barra de tempo por pergunta, sala de espera com
+   nomes, e tela de resultado entre perguntas.
+   ========================================================= */
+:root {
+  --color-bg: #071b30;
+  --color-bg-alt: #0d2846;
+  --color-surface: #123a5e;
+  --color-surface-border: rgba(254, 162, 3, 0.18);
+
+  --color-gold: #fea203;
+  --color-gold-light: #ffc24d;
+
+  --color-paper: #f4ebda;
+
+  --color-text: #eaf2fa;
+  --color-text-muted: #9fb4c9;
+
+  --color-success: #5fa77c;
+  --color-error: #b5544a;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Work Sans', sans-serif;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 20px 96px;
+}
+
+#screen-config,
+#screen-join,
+#screen-waiting-player,
+#screen-question,
+#screen-results,
+#screen-final {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin: 0 0 10px;
+}
+
+h1.title-display {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin: 0 0 12px;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  margin: 0 0 32px;
+  line-height: 1.6;
+}
+
+.logo-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.logo-row img {
+  height: 40px;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.field input,
+.field select {
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field-row .field label {
+  min-height: 3.2em;
+  display: flex;
+  align-items: flex-end;
+}
+
+@media (max-width: 480px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .field-row .field label {
+    min-height: 0;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--color-gold);
+  color: #2b1600;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-surface-border);
+}
+
+.field-error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------------
+   Sala criada: código, QR, link
+   --------------------------------------------------------- */
+
+.room-code-display {
+  text-align: center;
+  padding: 0 0 28px;
+  overflow: hidden;
+}
+
+.room-code-display__banner {
+  background: linear-gradient(160deg, var(--color-gold) 0%, #ff8a3d 100%);
+  padding: 32px 20px 28px;
+  margin-bottom: 20px;
+}
+
+.room-code-display__banner .eyebrow {
+  color: #2b1600;
+  opacity: 0.75;
+}
+
+.room-code-display__code {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  letter-spacing: 0.1em;
+  color: #2b1600;
+  margin: 8px 0 20px;
+}
+
+.room-code-display__qr {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+  border-radius: 14px;
+  background: var(--color-paper);
+  padding: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.room-code-display__qr img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.room-code-display__link {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+  padding: 0 20px;
+}
+
+.room-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
+  margin-top: 16px;
+}
+
+.room-summary__chip {
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.room-summary__chip strong {
+  color: var(--color-gold-light);
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------
+   Placar (host, ao vivo)
+   --------------------------------------------------------- */
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboard-empty {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.leaderboard-row.is-selected {
+  border-color: var(--color-gold);
+  background: rgba(254, 162, 3, 0.08);
+}
+
+.leaderboard-row__rank {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.leaderboard-row__name {
+  flex-grow: 1;
+  font-weight: 600;
+}
+
+.leaderboard-row__score {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ---------------------------------------------------------
+   Tela de jogo (jogador e host) — barra de tempo por pergunta
+   --------------------------------------------------------- */
+
+.timer-bar {
+  margin-bottom: 20px;
+}
+
+.timer-bar__track {
+  width: 100%;
+  height: 10px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.timer-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-gold-light), var(--color-gold));
+  border-radius: 999px;
+  transition: width 0.2s linear;
+}
+
+.timer-bar__fill.is-low {
+  background: var(--color-error);
+}
+
+.timer-bar__seconds {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--color-gold);
+  margin-top: 8px;
+}
+
+.question-index-label {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.question-card {
+  text-align: center;
+}
+
+.question-card__text {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin: 0 0 24px;
+}
+
+.answers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .answers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.answer-btn {
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 12px;
+  padding: 16px;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.answer-btn:hover {
+  background: var(--color-surface);
+  transform: translateY(-2px);
+}
+
+.answer-btn.is-correct {
+  background: var(--color-success);
+  color: #0a1f14;
+  border-color: var(--color-success);
+}
+
+.answer-btn.is-wrong {
+  background: var(--color-error);
+  color: #2b0a08;
+  border-color: var(--color-error);
+}
+
+.answer-btn.is-selected {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 2px var(--color-gold) inset;
+}
+
+.waiting-screen,
+.results-screen,
+.ranking-screen {
+  text-align: center;
+}
+
+.waiting-screen__players {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0 4px;
+}
+
+.player-chip {
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  color: var(--color-text);
+}
+
+.results-screen__badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  padding: 10px 22px;
+  border-radius: 999px;
+  margin: 8px 0 16px;
+}
+
+.results-screen__badge.is-correct {
+  background: rgba(95, 167, 124, 0.18);
+  color: var(--color-success);
+}
+
+.results-screen__badge.is-wrong {
+  background: rgba(181, 84, 74, 0.18);
+  color: var(--color-error);
+}
+
+.results-screen__points {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.ranking-screen__podium {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: var(--color-gold);
+  margin: 12px 0 4px;
+}
+
+/* ---------------------------------------------------------
+   Painel "Minhas Próprias Perguntas" (host, opcional)
+   --------------------------------------------------------- */
+
+.custom-questions-panel {
+  background: var(--color-bg);
+  border: 1px dashed var(--color-surface-border);
+  border-radius: 12px;
+  padding: 18px;
+  margin: -4px 0 16px;
+}
+
+.hint-text {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.panel-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.panel-toolbar .file-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+#bulk-textarea {
+  width: 100%;
+  min-height: 160px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--color-text);
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.parse-errors {
+  background: rgba(181, 84, 74, 0.15);
+  border: 1px solid rgba(181, 84, 74, 0.4);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 10px 0;
+  font-size: 0.8rem;
+  color: var(--color-error);
+}
+
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.preview-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+}
+
+/* ---------------------------------------------------------
+   Seletor de idioma — fixo, canto superior direito, em toda
+   tela do Time Attack (host e jogador)
+   --------------------------------------------------------- */
+
+.language-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 50;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+}
+
+.language-btn {
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.language-btn.is-active {
+  background: linear-gradient(180deg, var(--color-gold-light), var(--color-gold));
+  color: var(--color-bg);
+}
+
+@media (max-width: 480px) {
+  .language-toggle {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* ---------------------------------------------------------
+   Layout da sala em duas colunas: QR/código mais estreito à
+   esquerda, placar com mais espaço e destaque à direita
+   --------------------------------------------------------- */
+
+.room-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.room-sidebar .room-code-display {
+  padding-bottom: 20px;
+}
+
+.leaderboard-card {
+  min-height: 320px;
+}
+
+.leaderboard-card .eyebrow {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 760px) {
+  .room-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.copy-link-btn {
+  width: auto;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  margin: 0 20px 20px;
+}
+
+.copy-link-btn.is-copied {
+  background: var(--color-success);
+  color: #0a1f14;
+  border-color: var(--color-success);
+}
+
+.leaderboard-playing-now {
+  font-size: 0.85rem;
+  color: var(--color-gold-light);
+  background: rgba(254, 162, 3, 0.1);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+}
+
+.join-existing-link {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--color-gold-light);
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+
+.join-existing-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------------------
+   Faixa persistente de código/QR (host) — mesmo visual do banner
+   da tela de espera (room-code-display), só ~30% menor e sem a
+   linha de link embaixo. Aparece discreta em toda tela depois que
+   a sala é criada, pra quem chegar atrasado ainda conseguir entrar
+   sem precisar voltar pra tela de espera.
+   --------------------------------------------------------- */
+
+.persistent-room-code {
+  width: 220px;
+  margin: 0 auto 24px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.persistent-room-code__banner {
+  background: linear-gradient(160deg, var(--color-gold) 0%, #ff8a3d 100%);
+  padding: 18px 14px 16px;
+  text-align: center;
+}
+
+.persistent-room-code__banner .eyebrow {
+  color: #2b1600;
+  opacity: 0.75;
+  font-size: 0.7rem;
+  margin-bottom: 4px;
+}
+
+.persistent-room-code__code {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.1em;
+  color: #2b1600;
+  margin: 4px 0 12px;
+}
+
+.persistent-room-code__qr {
+  width: 108px;
+  height: 108px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background: var(--color-paper);
+  padding: 6px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+.persistent-room-code__qr img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

@@ -4,6 +4,7 @@
 
 import questionPacks from '../questions/questions-manifest.js';
 import translations from '../i18n/translations.js';
+import themes from '../branding/branding-manifest.js';
 
 // --------------------------------------------------------
 // Idioma
@@ -51,6 +52,7 @@ const screenJoin = document.getElementById('screen-join');
 const screenReady = document.getElementById('screen-ready');
 const screenGame = document.getElementById('screen-game');
 const screenFinished = document.getElementById('screen-finished');
+const logoImg = document.getElementById('logo-img');
 
 const roomCodeInput = document.getElementById('room-code-input');
 const nicknameInput = document.getElementById('nickname-input');
@@ -135,7 +137,98 @@ async function attemptJoinRoom() {
     currentRoom = data;
     currentNickname = nickname;
 
+    const roomTheme = themes.find((th) => th.name === data.theme_name) || themes[0];
+    applyTheme(roomTheme);
+
     showScreen(screenReady);
+}
+
+// --------------------------------------------------------
+// Tema de marca (white label) — mesmo sistema do Quest Drop,
+// cópia própria do branding/. Aqui o tema não é escolhido pelo
+// jogador: ele é lido da própria sala (salvo pelo host na
+// criação) e só aplicado, garantindo que os dois aparelhos
+// mostrem a mesma marca.
+// --------------------------------------------------------
+
+function hexToRgbChannels(hex) {
+    const clean = hex.replace('#', '');
+    const value = parseInt(clean, 16);
+    return `${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}`;
+}
+
+let themeFontStyleEl = null;
+
+function applyThemeFonts(theme) {
+    if (themeFontStyleEl) {
+        themeFontStyleEl.remove();
+        themeFontStyleEl = null;
+    }
+
+    if (theme.fonts.files.length > 0) {
+        const rules = theme.fonts.files
+            .map((file) => `
+@font-face {
+  font-family: '${file.family}';
+  src: url('../${file.path}') format('woff2');
+  font-weight: ${file.weight || '400'};
+  font-style: ${file.style || 'normal'};
+  font-display: swap;
+}`)
+            .join('\n');
+
+        themeFontStyleEl = document.createElement('style');
+        themeFontStyleEl.setAttribute('data-theme-fonts', '');
+        themeFontStyleEl.textContent = rules;
+        document.head.appendChild(themeFontStyleEl);
+    }
+
+    const root = document.documentElement;
+    root.style.setProperty('--font-display', theme.fonts.display);
+    root.style.setProperty('--font-body', theme.fonts.body);
+}
+
+const THEME_CSS_PROPERTIES = [
+    '--color-gold', '--color-gold-light', '--color-gold-rgb',
+    '--color-bg', '--color-bg-alt', '--color-bg-rgb',
+    '--color-surface', '--color-surface-border',
+    '--color-text', '--color-text-muted',
+    '--color-success', '--color-error',
+    '--color-paper', '--color-paper-dark', '--color-paper-shadow',
+    '--font-display', '--font-body'
+];
+
+function applyTheme(theme) {
+    const root = document.documentElement;
+
+    THEME_CSS_PROPERTIES.forEach((prop) => root.style.removeProperty(prop));
+
+    root.style.setProperty('--color-gold', theme.colors.primary);
+    root.style.setProperty('--color-gold-light', theme.colors.primaryLight);
+    root.style.setProperty('--color-gold-rgb', hexToRgbChannels(theme.colors.primary));
+
+    root.style.setProperty('--color-bg', theme.colors.background);
+    root.style.setProperty('--color-bg-alt', theme.colors.backgroundAlt);
+    root.style.setProperty('--color-bg-rgb', hexToRgbChannels(theme.colors.background));
+
+    root.style.setProperty('--color-surface', theme.colors.surface);
+    root.style.setProperty('--color-surface-border', theme.colors.surfaceBorder);
+
+    root.style.setProperty('--color-text', theme.colors.text);
+    root.style.setProperty('--color-text-muted', theme.colors.textMuted);
+
+    root.style.setProperty('--color-success', theme.colors.success);
+    root.style.setProperty('--color-error', theme.colors.error);
+
+    root.style.setProperty('--color-paper', theme.colors.paper);
+    root.style.setProperty('--color-paper-dark', theme.colors.paperDark);
+    root.style.setProperty('--color-paper-shadow', theme.colors.paperShadow);
+
+    applyThemeFonts(theme);
+
+    if (logoImg && theme.logo) {
+        logoImg.src = `../${theme.logo}`;
+    }
 }
 
 joinRoomBtn.addEventListener('click', attemptJoinRoom);

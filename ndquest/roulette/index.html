@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">Roulette: NDQuest</title>
+<meta name="description" content="Monte uma roleta de sorteio: puxe nomes de uma sala anterior, abra uma sala de QR própria, ou cole uma lista pronta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="language-toggle" role="group" aria-label="Idioma / Language">
+    <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
+</div>
+
+
+<div class="container">
+
+    <a class="logo-row" href="../index.html">
+        <img id="logo-img" src="assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+    </a>
+
+    <a href="../index.html" class="join-existing-link" data-i18n="nav.back">← NDQuest</a>
+
+    <!-- ===================================================== -->
+    <!-- TELA 1: MONTAR A ROLETA -->
+    <!-- ===================================================== -->
+    <section id="screen-config">
+        <span class="eyebrow" data-i18n="host.eyebrow">Roleta</span>
+        <h1 class="title-display" data-i18n="host.title">Montar a Roleta</h1>
+        <p class="subtitle" data-i18n="host.subtitle">Junte os nomes de um jeito, gire, sorteie. Sem pergunta, sem pontuação, só o prêmio.</p>
+
+        <a href="play/index.html" class="join-existing-link" data-i18n="host.joinExisting">Já tem um código? Entrar numa sala →</a>
+
+        <div class="card">
+            <div class="field">
+                <label for="host-name-input" data-i18n="labels.hostName">Seu nome</label>
+                <input type="text" id="host-name-input" maxlength="60">
+            </div>
+
+            <div class="field">
+                <label for="theme-select" data-i18n="labels.theme">Tema da empresa</label>
+                <select id="theme-select"></select>
+            </div>
+
+            <div class="method-tabs" role="tablist">
+                <button type="button" class="method-tab is-active" data-method="import" data-i18n="method.import">Buscar de uma Sala</button>
+                <button type="button" class="method-tab" data-method="qr" data-i18n="method.qr">QR / Código</button>
+                <button type="button" class="method-tab" data-method="paste" data-i18n="method.paste">Colar Lista</button>
+            </div>
+
+            <!-- MÉTODO 1: importar de sala do Time Attack / Show Down -->
+            <div class="method-panel" id="method-panel-import">
+                <p class="hint-text" data-i18n="import.hint">Puxa a lista de quem já jogou Time Attack ou Show Down nessa mesma sala, sem precisar ninguém digitar o nome de novo.</p>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="import-game-select" data-i18n="import.gameLabel">Jogo</label>
+                        <select id="import-game-select">
+                            <option value="time-attack" data-i18n="import.gameTimeAttack">Time Attack</option>
+                            <option value="show-down" data-i18n="import.gameShowdown">Show Down</option>
+                            <option value="tap-rush" data-i18n="import.gameTapRush">Tap Rush</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="import-room-code-input" data-i18n="import.roomCodeLabel">Código da sala</label>
+                        <input type="text" id="import-room-code-input" maxlength="6" style="text-transform:uppercase">
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary" id="import-fetch-btn" data-i18n="import.fetchBtn">Buscar Nomes</button>
+                <p class="field-error" id="import-error"></p>
+                <p class="hint-text" id="import-status"></p>
+            </div>
+
+            <!-- MÉTODO 2: sala própria com QR/código -->
+            <div class="method-panel" id="method-panel-qr" hidden>
+                <p class="hint-text" data-i18n="qr.hint">Cria uma sala própria da Roleta: quem escanear o QR ou digitar o código já entra, só com o nome.</p>
+
+                <div id="qr-before-create">
+                    <button type="button" class="btn btn-secondary" id="qr-create-btn" data-i18n="qr.createBtn">Criar Sala da Roleta</button>
+                    <p class="field-error" id="qr-error"></p>
+                </div>
+
+                <div id="qr-after-create" hidden>
+                    <div class="room-code-display">
+                        <div class="room-code-display__banner">
+                            <span class="eyebrow" data-i18n="room.codeLabel">Código da sala</span>
+                            <div class="room-code-display__code" id="qr-room-code-text"></div>
+                            <div class="room-code-display__qr">
+                                <img id="qr-room-qr-img" src="" alt="QR code da sala">
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="eyebrow" data-i18n="qr.waitingTitle">Esperando o Time</span>
+                    <p class="hint-text" data-i18n="qr.waitingSubtitle">Assim que a galera entrar, o nome já aparece aqui embaixo.</p>
+                    <p class="hint-text" id="qr-empty" data-i18n="qr.empty">Ninguém entrou ainda.</p>
+                    <div class="waiting-screen__players" id="qr-players-list"></div>
+                </div>
+            </div>
+
+            <!-- MÉTODO 3: colar lista pronta -->
+            <div class="method-panel" id="method-panel-paste" hidden>
+                <p class="hint-text" data-i18n="paste.hint">Cole um nome por linha.</p>
+                <textarea id="paste-textarea" data-i18n-placeholder="paste.placeholder" placeholder="Ana&#10;Beto&#10;Carla"></textarea>
+                <button type="button" class="btn btn-secondary" id="paste-parse-btn" data-i18n="paste.parseBtn">Processar Lista</button>
+                <p class="hint-text" id="paste-status"></p>
+            </div>
+
+            <p class="field-error" id="config-error"></p>
+            <button type="button" class="btn btn-primary" id="continue-btn" data-i18n="buttons.continueToWheel">Ir pra Roleta →</button>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 2: A ROLETA -->
+    <!-- ===================================================== -->
+    <section id="screen-wheel" hidden>
+
+        <div class="winner-banner" id="winner-banner" hidden>
+            <span class="winner-banner__label" data-i18n="wheel.winnerBanner">Ganhou:</span>
+            <div class="winner-banner__name" id="winner-banner-name"></div>
+        </div>
+
+        <div class="wheel-stage">
+            <div class="wheel-pointer"></div>
+            <svg class="wheel-svg is-idle" id="wheel-svg" viewBox="0 0 300 300"></svg>
+            <div class="wheel-hub"></div>
+        </div>
+
+        <div class="wheel-controls">
+            <button type="button" class="btn btn-primary" id="spin-btn" data-i18n="wheel.spinBtn">Girar 🎡</button>
+            <label class="wheel-remove-toggle">
+                <input type="checkbox" id="remove-winner-toggle" checked>
+                <span data-i18n="wheel.removeWinnerLabel">Remover vencedor da roleta depois de sortear</span>
+            </label>
+        </div>
+
+        <div class="card leaderboard-card">
+            <div class="winners-header">
+                <span class="eyebrow" data-i18n="wheel.winnersTitle">Ganhadores</span>
+                <button type="button" class="winners-copy-btn" id="copy-winners-btn" data-i18n="wheel.copyList">📋 Copiar</button>
+            </div>
+            <p class="hint-text" id="winners-empty" data-i18n="wheel.winnersEmpty">Ninguém sorteado ainda.</p>
+            <div class="winners-list" id="winners-list"></div>
+        </div>
+
+        <div class="wheel-final-actions">
+            <button type="button" class="btn btn-primary" id="spin-again-btn" data-i18n="wheel.spinAgain">Sortear de Novo, Mesmos Nomes →</button>
+            <a href="#" id="change-names-link" class="join-existing-link" data-i18n="wheel.changeNames">Trocar a lista de nomes →</a>
+        </div>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/supabase-client.js"></script>
+<script type="module" src="host.js"></script>
+</body>
+</html>

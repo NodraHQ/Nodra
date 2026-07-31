@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title data-i18n="meta.title">Tap Rush: NDQuest</title>
+<meta name="description" content="Entre numa sala de Tap Rush e clique o mais rápido que conseguir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="language-toggle" role="group" aria-label="Idioma / Language">
+    <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
+</div>
+
+
+<div class="container">
+
+    <a class="logo-row" href="../../index.html">
+        <img id="logo-img" src="../assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+    </a>
+
+    <!-- ===================================================== -->
+    <!-- TELA 1: ENTRAR NA SALA -->
+    <!-- ===================================================== -->
+    <section id="screen-join">
+        <a href="../../index.html" class="join-existing-link" data-i18n="nav.back">← NDQuest</a>
+
+        <span class="eyebrow" data-i18n="join.eyebrow">Tap Rush</span>
+        <h1 class="title-display" data-i18n="join.title">Entrar na Sala</h1>
+        <p class="subtitle" data-i18n="join.subtitle">Digite o código que o host te passou.</p>
+
+        <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:20px" data-i18n="join.createInstead">Quer criar uma sala? Clique aqui →</a>
+
+        <div class="card">
+            <div class="field">
+                <label for="room-code-input" data-i18n="labels.roomCode">Código da sala</label>
+                <input type="text" id="room-code-input" maxlength="6" style="text-transform:uppercase">
+            </div>
+
+            <div class="field">
+                <label for="nickname-input" data-i18n="labels.nickname">Seu apelido</label>
+                <input type="text" id="nickname-input" maxlength="40">
+            </div>
+
+            <p class="field-error" id="join-error"></p>
+
+            <button type="button" class="btn btn-primary" id="join-room-btn" data-i18n="buttons.joinRoom">Entrar</button>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 2: ESPERANDO O HOST INICIAR -->
+    <!-- ===================================================== -->
+    <section id="screen-waiting-player" hidden>
+        <a href="index.html" class="join-existing-link" data-i18n="buttons.leaveRoom">← Sair da sala</a>
+        <div class="card waiting-screen">
+            <span class="eyebrow" data-i18n="waitingPlayer.eyebrow">Você Está Dentro</span>
+            <h1 class="title-display" data-i18n="waitingPlayer.title">Esperando o Host Iniciar</h1>
+            <p class="subtitle" data-i18n="waitingPlayer.subtitleRace">Fique de olho, o botão de clique aparece assim que o host começar.</p>
+            <div id="team-badge-wrap" hidden>
+                <p class="hint-text" data-i18n="waitingPlayer.yourTeam">Seu time:</p>
+                <span class="team-badge" id="team-badge"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 3: CONTAGEM REGRESSIVA -->
+    <!-- ===================================================== -->
+    <section id="screen-countdown-player" hidden>
+        <div class="card countdown-overlay">
+            <div class="countdown-overlay__number" id="countdown-number-player">3</div>
+            <div class="countdown-overlay__label" data-i18n="countdown.getReady">Preparar...</div>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 4: TOCANDO -->
+    <!-- ===================================================== -->
+    <section id="screen-active-player" hidden>
+        <div class="active-timer">
+            <div class="active-timer__seconds" id="active-timer-player"></div>
+            <div class="active-timer__label" data-i18n="active.timeLeft">Tempo restante</div>
+        </div>
+
+        <button type="button" class="tap-button" id="tap-button" data-i18n="game.tapButton">CLICA!</button>
+
+        <div class="tap-count-display">
+            <div class="tap-count-display__value" id="tap-count-value">0</div>
+            <div class="tap-count-display__label" data-i18n="game.yourTaps">Seus cliques</div>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 5: RESULTADO -->
+    <!-- ===================================================== -->
+    <section id="screen-results-player" hidden>
+        <div class="card results-screen">
+            <span class="results-screen__badge" id="results-badge"></span>
+            <p class="results-screen__points" id="results-your-taps"></p>
+        </div>
+
+        <div class="card leaderboard-card">
+            <span class="eyebrow" data-i18n="results.rankingTitle">Ranking</span>
+            <div class="leaderboard-list" id="results-ranking-list"></div>
+        </div>
+
+        <a href="../index.html" class="btn btn-secondary" style="margin-top:16px;text-decoration:none;display:flex" data-i18n="buttons.backToNdquest">← Voltar pro NDQuest</a>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script type="module" src="play.js"></script>
+</body>
+</html>

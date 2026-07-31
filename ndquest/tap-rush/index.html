@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">Tap Rush: NDQuest</title>
+<meta name="description" content="Crie uma sala de Tap Rush: corrida de clique ou cabo de guerra em equipes, ao vivo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="language-toggle" role="group" aria-label="Idioma / Language">
+    <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
+</div>
+
+
+<div class="container">
+
+    <a class="logo-row" href="../index.html">
+        <img id="logo-img" src="assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+    </a>
+
+    <!-- ===================================================== -->
+    <!-- TELA 1: CONFIGURAÇÃO -->
+    <!-- ===================================================== -->
+    <section id="screen-config">
+        <a href="../index.html" class="join-existing-link" data-i18n="nav.back">← NDQuest</a>
+
+        <span class="eyebrow" data-i18n="host.eyebrow">Tap Rush</span>
+        <h1 class="title-display" data-i18n="host.title">Criar Sala</h1>
+        <p class="subtitle" data-i18n="host.subtitle">Ninguém precisa saber nada, só clicar rápido. Escolha o modo e crie a sala.</p>
+
+        <a href="play/index.html" class="join-existing-link" data-i18n="host.joinExisting">Já tem um código? Entrar numa sala →</a>
+
+        <div class="card">
+            <div class="field">
+                <label for="host-name-input" data-i18n="labels.hostName">Seu nome</label>
+                <input type="text" id="host-name-input" maxlength="60">
+            </div>
+
+            <div class="field">
+                <label for="theme-select" data-i18n="labels.theme">Tema da empresa</label>
+                <select id="theme-select"></select>
+            </div>
+
+            <div class="mode-selector mode-selector--three">
+                <button type="button" class="mode-card is-selected" id="mode-card-race" data-mode="race">
+                    <div class="mode-card__title" data-i18n="mode.race">Corrida</div>
+                    <div class="mode-card__description" data-i18n="mode.raceDescription">Cada um clica por si. Quem bater a meta de cliques primeiro, cruza a linha de chegada.</div>
+                </button>
+                <button type="button" class="mode-card" id="mode-card-infinite" data-mode="infinite">
+                    <div class="mode-card__title" data-i18n="mode.infinite">Clique Infinito</div>
+                    <div class="mode-card__description" data-i18n="mode.infiniteDescription">Cada um clica por si, sem meta fixa. Quando o tempo acabar, quem tiver mais cliques vence.</div>
+                </button>
+                <button type="button" class="mode-card" id="mode-card-tugofwar" data-mode="tugofwar">
+                    <div class="mode-card__title" data-i18n="mode.tugofwar">Cabo de Guerra</div>
+                    <div class="mode-card__description" data-i18n="mode.tugofwarDescription">Time A contra Time B. Quem clicar mais durante o tempo, puxa a corda pro seu lado.</div>
+                </button>
+            </div>
+
+            <div id="race-fields">
+                <div class="field-row">
+                    <div class="field">
+                        <label for="target-taps-input" data-i18n="labels.targetTaps">Meta de cliques pra vencer</label>
+                        <input type="number" id="target-taps-input" min="5" step="1" value="60">
+                    </div>
+                    <div class="field">
+                        <label for="max-seconds-input" data-i18n="labels.maxSeconds">Tempo máximo de segurança (segundos)</label>
+                        <input type="number" id="max-seconds-input" min="5" step="1" value="30">
+                    </div>
+                </div>
+            </div>
+
+            <div id="duration-fields" hidden>
+                <div class="field">
+                    <label for="duration-seconds-input" data-i18n="labels.durationSeconds">Duração da rodada (segundos)</label>
+                    <input type="number" id="duration-seconds-input" min="5" step="1" value="20">
+                </div>
+            </div>
+
+            <p class="field-error" id="config-error"></p>
+            <button type="button" class="btn btn-primary" id="create-room-btn" data-i18n="buttons.createRoom">Criar Sala</button>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 2: SALA ABERTA, ESPERANDO JOGADORES -->
+    <!-- ===================================================== -->
+    <section id="screen-waiting-host" hidden>
+        <div class="room-layout">
+
+            <div class="room-sidebar">
+                <div class="card room-code-display">
+                    <div class="room-code-display__banner">
+                        <span class="eyebrow" data-i18n="room.codeLabel">Código da sala</span>
+                        <div class="room-code-display__code" id="room-code-text"></div>
+                        <div class="room-code-display__qr">
+                            <img id="room-qr-img" src="" alt="QR code da sala">
+                        </div>
+                    </div>
+                    <p class="subtitle" style="margin-bottom:8px" data-i18n="room.qrHint">Escaneie o QR ou digite o código pra entrar</p>
+                    <p class="room-code-display__link" id="room-link-text"></p>
+                    <button type="button" class="btn btn-secondary copy-link-btn" id="copy-link-btn" data-i18n="buttons.copyLink">📋 Copiar Link</button>
+                </div>
+
+                <button type="button" class="btn btn-secondary" id="close-room-btn" data-i18n="buttons.closeRoom">Encerrar Sala</button>
+            </div>
+
+            <div class="room-main">
+                <div class="card waiting-screen">
+                    <span class="eyebrow" data-i18n="waiting.title">Esperando o Time</span>
+                    <p class="subtitle" id="waiting-subtitle" data-i18n="waiting.subtitleRace">Os jogadores entram pelo código ou QR. Quando estiver pronto, aperte "Iniciar".</p>
+
+                    <p class="hint-text" id="waiting-empty" data-i18n="waiting.empty">Ninguém entrou ainda.</p>
+                    <div class="waiting-screen__players" id="waiting-players-list"></div>
+
+                    <button type="button" class="btn btn-primary" id="start-round-btn" style="margin-top:20px" data-i18n="buttons.startRound">Iniciar →</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 3: CONTAGEM REGRESSIVA -->
+    <!-- ===================================================== -->
+    <section id="screen-countdown-host" hidden>
+        <div class="card countdown-overlay">
+            <div class="countdown-overlay__number" id="countdown-number-host">3</div>
+            <div class="countdown-overlay__label" data-i18n="countdown.getReady">Preparar...</div>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 4: RODADA ATIVA -->
+    <!-- ===================================================== -->
+    <section id="screen-active-host" hidden>
+
+        <div class="active-timer">
+            <div class="active-timer__seconds" id="active-timer-host"></div>
+            <div class="active-timer__label" data-i18n="active.timeLeft">Tempo restante</div>
+        </div>
+
+        <div id="race-view">
+            <div class="race-track" id="race-track"></div>
+        </div>
+
+        <div id="tug-view" hidden>
+            <div class="tug-stage">
+                <div class="tug-teams-row">
+                    <span class="tug-teams-row__a" id="tug-score-a">0</span>
+                    <span class="tug-teams-row__b" id="tug-score-b">0</span>
+                </div>
+                <div class="tug-track">
+                    <div class="tug-track__center-line"></div>
+                    <div class="tug-track__knot" id="tug-knot"></div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 5: RESULTADO -->
+    <!-- ===================================================== -->
+    <section id="screen-results-host" hidden>
+        <div class="card ranking-screen">
+            <span class="eyebrow" data-i18n="results.title">Fim de Rodada</span>
+            <h1 class="title-display" id="results-winner-name"></h1>
+        </div>
+
+        <div class="results-room-code" id="results-room-code">
+            <span class="results-room-code__label" data-i18n="results.roomCodeHint">Código da sala</span>
+            <div class="results-room-code__row">
+                <span class="results-room-code__value" id="results-room-code-value"></span>
+                <button type="button" class="winners-copy-btn" id="copy-results-code-btn" data-i18n="buttons.copyCode">📋 Copiar</button>
+            </div>
+        </div>
+
+        <div class="card leaderboard-card">
+            <div class="winners-header">
+                <span class="eyebrow" data-i18n="results.rankingTitle">Ranking</span>
+                <button type="button" class="winners-copy-btn" id="copy-ranking-btn" data-i18n="buttons.copyRanking">📋 Copiar</button>
+            </div>
+            <div class="leaderboard-list" id="results-ranking-list"></div>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="play-again-btn" style="margin-top:16px" data-i18n="buttons.playAgain">Jogar de Novo →</button>
+        <button type="button" class="btn btn-secondary" id="close-room-btn-final" style="margin-top:12px" data-i18n="buttons.closeRoom">Encerrar Sala</button>
+        <a href="../index.html" class="join-existing-link" style="text-align:center;margin-top:14px" data-i18n="buttons.backToNdquest">← Voltar pro NDQuest</a>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/supabase-client.js"></script>
+<script type="module" src="host.js"></script>
+</body>
+</html>
