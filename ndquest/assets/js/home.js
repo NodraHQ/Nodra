@@ -25,3 +25,23 @@ window.addEventListener("scroll", () => {
         navbar.classList.remove("navbar-solid");
     }
 });
+
+// --------------------------------------------------------
+// Abas de categoria (Quiz / Ação / Sorteio) — troca qual painel
+// de jogos aparece embaixo. Puro toggle de hidden, sem framework,
+// consistente com o resto do site.
+// --------------------------------------------------------
+
+const categoryTabs = document.querySelectorAll(".category-tab");
+const categoryPanels = document.querySelectorAll(".category-panel");
+
+categoryTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+        const category = tab.dataset.category;
+
+        categoryTabs.forEach((t) => t.classList.toggle("is-active", t === tab));
+        categoryPanels.forEach((panel) => {
+            panel.hidden = panel.id !== `category-${category}`;
+        });
+    });
+});
