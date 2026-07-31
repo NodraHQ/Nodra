@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="meta.title">About — Nodra</title>
+<title data-i18n="meta.title">About: Nodra</title>
 <meta name="description" content="The mission, principles and roadmap behind Nodra.">
 <link rel="stylesheet" href="assets/css/variables.css">
 <link rel="stylesheet" href="assets/css/components.css">
@@ -95,7 +95,7 @@
             <div class="principles-grid">
                 <div class="card principle-card glow">
                     <h3 data-i18n="principles.card1.title">Independent Products</h3>
-                    <p data-i18n="principles.card1.text">Academy, Engage, and everything that comes after are built as separate products under one brand, each free to evolve at its own pace.</p>
+                    <p data-i18n="principles.card1.text">Academy, NDQuest, and everything that comes after are built as separate products under one brand, each free to evolve at its own pace.</p>
                 </div>
                 <div class="card principle-card glow">
                     <h3 data-i18n="principles.card2.title">Free, Open Content</h3>
@@ -118,33 +118,123 @@
             <div class="about-section__header reveal">
                 <span class="tag" data-i18n="roadmap.eyebrow">03. Roadmap</span>
                 <h2 class="section-title" data-i18n="roadmap.title">Where Things Stand</h2>
-                <p class="section-description" data-i18n="roadmap.description">Nodra grows one vertical at a time. Here's what's live, what's being built, and what's next.</p>
+                <p class="section-description" data-i18n="roadmap.description">Nodra grows one vertical at a time. Here's what's live, and what's next.</p>
             </div>
 
             <div class="roadmap-list">
 
                 <div class="card roadmap-item reveal">
-                    <div class="roadmap-item__body">
-                        <h3 data-i18n="roadmap.academy.title">Nodra Academy</h3>
-                        <p data-i18n="roadmap.academy.description">10 free modules covering blockchain fundamentals, DeFi and security, each with a quiz to check understanding.</p>
+                    <button type="button" class="roadmap-item__header" data-roadmap-toggle aria-expanded="false">
+                        <div class="roadmap-item__body">
+                            <h3 data-i18n="roadmap.academy.title">Nodra Academy</h3>
+                            <p data-i18n="roadmap.academy.description">10 free modules covering blockchain fundamentals, DeFi and security, each with a quiz to check understanding.</p>
+                        </div>
+                        <span class="roadmap-item__chevron" aria-hidden="true">⌄</span>
+                    </button>
+                    <div class="roadmap-item__details">
+                        <div class="roadmap-item__details-inner">
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m1.title">01. Blockchain</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m1.text">The foundation: distributed ledgers, blocks and hashes, consensus, and where wallets fit in.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m2.title">02. Wallets</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m2.text">Undoes the most common misunderstanding in the space: a wallet manages keys, it doesn't hold currency.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m3.title">03. Networks</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m3.text">Different blockchains are separate networks, each with its own rules, validators and gas fees.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m4.title">04. Assets</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m4.text">Currency, token, stablecoin, NFT: each one built for a different purpose.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m5.title">05. DeFi</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m5.text">Exchanges, liquidity pools and automated market makers: the other participants in the system.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m6.title">06. Lending</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m6.text">Borrowing against collateral, and the real risk behind it: liquidation.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m7.title">07. Yield</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m7.text">Where returns in DeFi actually come from, and how to spot what's unsustainable.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m8.title">08. Stablecoins</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m8.text">What actually keeps the price stable, collateral, algorithm or reserve, and why "stable" is a design goal, not a guarantee.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m9.title">09. Security</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m9.text">Most losses come from phishing and avoidable mistakes, not sophisticated attacks.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m10.title">10. Final Project</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m10.text">A guided review that ties every module before it back together.</p>
+                            </div>
+                        </div>
                     </div>
-                    <span class="roadmap-item__status roadmap-item__status--live" data-i18n="status.live">Live</span>
                 </div>
 
                 <div class="card roadmap-item reveal">
-                    <div class="roadmap-item__body">
-                        <h3 data-i18n="roadmap.engage.title">Nodra Engage</h3>
-                        <p data-i18n="roadmap.engage.description">Quizzes, minigames and community tools for events, creators and communities, currently in development.</p>
+                    <button type="button" class="roadmap-item__header" data-roadmap-toggle aria-expanded="false">
+                        <div class="roadmap-item__body">
+                            <h3 data-i18n="roadmap.ndquest.title">NDQuest</h3>
+                            <p data-i18n="roadmap.ndquest.description">Five games live today, across three formats: quiz, action and raffle. Built for events, creators and communities, with more games joining as the platform grows.</p>
+                        </div>
+                        <span class="roadmap-item__chevron" aria-hidden="true">⌄</span>
+                    </button>
+                    <div class="roadmap-item__details">
+                        <div class="roadmap-item__details-inner">
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g1.title">Quest Drop</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g1.text">Pick a difficulty, open a challenge, answer correctly and claim the prize. Built for live events, fully brandable per sponsor.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g2.title">Time Attack</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g2.text">Race the clock, right answers add time, wrong ones take it away. Multiple players join the same room from their own phones.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g3.title">Show Down</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g3.text">Live, host-paced trivia: everyone answers the same question at once, points reward speed, host controls the pace.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g4.title">Tap Rush</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g4.text">Tap as fast as you can. Race solo to a target, or team up in a tug of war against another team.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g5.title">Roulette</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g5.text">Gather names, spin the wheel, draw a winner. Pull from a previous game's room, open a QR room, or paste a ready list.</p>
+                            </div>
+                        </div>
                     </div>
-                    <span class="roadmap-item__status" data-i18n="status.developing">In Development</span>
                 </div>
 
                 <div class="card roadmap-item reveal">
-                    <div class="roadmap-item__body">
-                        <h3 data-i18n="roadmap.next.title">What's Next</h3>
-                        <p data-i18n="roadmap.next.description">New verticals launch as they're ready. No fixed dates, no overpromising, just steady progress.</p>
+                    <button type="button" class="roadmap-item__header" data-roadmap-toggle aria-expanded="false">
+                        <div class="roadmap-item__body">
+                            <h3 data-i18n="roadmap.next.title">What's Next</h3>
+                            <p data-i18n="roadmap.next.description">A real account system, achievements worth earning, and taking that record onchain.</p>
+                        </div>
+                        <span class="roadmap-item__chevron" aria-hidden="true">⌄</span>
+                    </button>
+                    <div class="roadmap-item__details">
+                        <div class="roadmap-item__details-inner">
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.next.g1.title">Accounts</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.next.g1.text">Not just a login. A real account system across Academy and NDQuest, so progress is tied to a person, not a browser tab. Module completions, quiz scores, games hosted or played: all of it persists and travels with you instead of resetting every session.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.next.g2.title">Badges</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.next.g2.text">Once accounts exist, achievements become something real to earn. Finishing a module, acing a quiz, winning a round, hosting an event: badges turn scattered activity into a visible record of what someone has actually done.</p>
+                            </div>
+                            <div class="roadmap-detail">
+                                <div class="roadmap-detail__title" data-i18n="roadmap.next.g3.title">Onchain</div>
+                                <p class="roadmap-detail__text" data-i18n="roadmap.next.g3.text">The natural next step once badges exist: put them onchain. Proof of what someone learned and did, not just a row in a database, something they actually own.</p>
+                            </div>
+                        </div>
                     </div>
-                    <span class="roadmap-item__status" data-i18n="status.planned">Planned</span>
                 </div>
 
             </div>

@@ -41,3 +41,16 @@ window.addEventListener("scroll", () => {
         navbar.classList.remove("navbar-solid");
     }
 });
+
+// ===============================
+// ROADMAP — cards clicáveis que expandem pra mostrar os detalhes
+// (módulos, jogos, metas), em vez de um selo de status fixo.
+// ===============================
+
+document.querySelectorAll("[data-roadmap-toggle]").forEach((header) => {
+    header.addEventListener("click", () => {
+        const item = header.closest(".roadmap-item");
+        const isOpen = item.classList.toggle("is-open");
+        header.setAttribute("aria-expanded", String(isOpen));
+    });
+});

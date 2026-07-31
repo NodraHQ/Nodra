@@ -69,11 +69,37 @@
 }
 
 .roadmap-item{
+    padding:0;
+    overflow:hidden;
+}
+
+.roadmap-item__header{
+    appearance:none;
+    -webkit-appearance:none;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    width:100%;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:24px;
     padding:28px 32px;
+    background:none;
+    border:none;
+    outline:none;
+    cursor:pointer;
+    text-align:left;
+    font-family:inherit;
+    color:inherit;
+}
+
+.roadmap-item__header:focus{
+    outline:none;
+}
+
+.roadmap-item__header:focus-visible{
+    box-shadow:inset 0 0 0 2px var(--primary);
+    border-radius:16px;
 }
 
 .roadmap-item__body h3{
@@ -90,18 +116,48 @@
     max-width:56ch;
 }
 
-.roadmap-item__status{
+.roadmap-item__chevron{
     flex-shrink:0;
-    border:1px solid var(--border);
-    padding:6px 12px;
-    border-radius:999px;
-    font-size:12px;
+    font-size:20px;
     color:var(--text-muted);
+    transition:transform .25s ease;
 }
 
-.roadmap-item__status--live{
+.roadmap-item.is-open .roadmap-item__chevron{
+    transform:rotate(180deg);
+}
+
+.roadmap-item__details{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .35s ease;
+}
+
+.roadmap-item.is-open .roadmap-item__details{
+    max-height:1400px;
+}
+
+.roadmap-item__details-inner{
+    padding:20px 32px 32px;
+    border-top:1px solid var(--border);
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+    gap:24px 40px;
+}
+
+.roadmap-detail__title{
+    font-family:var(--font-heading);
+    text-transform:uppercase;
+    font-size:13px;
+    letter-spacing:.03em;
     color:var(--primary);
-    border-color:var(--border-light);
+    margin-bottom:6px;
+}
+
+.roadmap-detail__text{
+    color:var(--text-secondary);
+    font-size:14px;
+    line-height:1.7;
 }
 
 /* ==========================================================================
@@ -113,7 +169,7 @@
         grid-template-columns:1fr;
     }
 
-    .roadmap-item{
+    .roadmap-item__header{
         flex-direction:column;
         align-items:flex-start;
         gap:12px;
