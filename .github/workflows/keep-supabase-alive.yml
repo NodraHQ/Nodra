@@ -1,0 +1,27 @@
+name: Keep Supabase Alive
+
+# O Supabase pausa projetos no plano free depois de 7 dias sem
+# nenhuma atividade de banco. Isso roda a cada 3 dias (folga de
+# sobra em relação ao limite de 7) e faz uma consulta bem simples
+# numa tabela pequena, só pra contar como atividade de verdade.
+#
+# A chave usada aqui é a PUBLISHABLE key do Supabase (sb_publishable_...),
+# a mesma que já fica exposta em todo o código do navegador (Time
+# Attack, Show Down, Roulette, Tap Rush) — não é segredo, pode ficar
+# direto no workflow sem problema.
+
+on:
+  schedule:
+    - cron: '0 12 */3 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        run: |
+          curl --fail --silent --show-error \
+            "https://tndiyjitylqjajtlneyi.supabase.co/rest/v1/time_attack_rooms?select=id&limit=1" \
+            -H "apikey: sb_publishable_LNbUGyVXxa9Z-j4uFjWhxQ_5LONKXqI" \
+            -H "Authorization: Bearer sb_publishable_LNbUGyVXxa9Z-j4uFjWhxQ_5LONKXqI"
