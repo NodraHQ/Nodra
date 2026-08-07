@@ -708,6 +708,14 @@ function applyLanguage(lang) {
   if (state.theme) {
     applyTheme(state.theme);
   }
+
+  // Textos dinâmicos (com valor interpolado, tipo "{values}" ou
+  // "{total}") não têm data-i18n porque são montados na hora em JS —
+  // por isso precisam ser regerados manualmente aqui, ou ficam presos
+  // no idioma em que foram gerados da primeira vez.
+  updateDifficultySummary();
+  updateRewardBalanceWarning();
+  updateFixedTotalPreview();
 }
 
 languageButtons.forEach((btn) => {
