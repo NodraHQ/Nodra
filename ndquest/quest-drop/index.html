@@ -50,9 +50,15 @@
             </select>
           </div>
 
-          <div class="field budget-mode-only">
+          <div class="field budget-mode-only reward-weight-only">
             <label for="budget-input" data-i18n="labels.budget">Orçamento total</label>
             <input type="number" id="budget-input" inputmode="decimal" min="0.01" step="0.01" placeholder="Ex: 300 ou 1.5" data-i18n-placeholder="placeholders.budget">
+            <p class="prize-total" id="reward-balance-warning-main" hidden></p>
+          </div>
+
+          <div class="field budget-mode-only reward-fixed-only" hidden>
+            <label data-i18n="labels.budgetComputed">Orçamento total (calculado)</label>
+            <p class="pack-custom-status" id="budget-computed-display"></p>
           </div>
 
           <div class="field budget-mode-only">
@@ -231,22 +237,51 @@
         </div>
       </div>
 
-      <div class="field-group budget-mode-only">
-        <label class="field-group-label" data-i18n="labels.budgetDistribution">Distribuição do orçamento (%)</label>
+      <div class="field budget-mode-only">
+        <label for="reward-mode-select" data-i18n="labels.rewardMode">Como distribuir a recompensa</label>
+        <select id="reward-mode-select">
+          <option value="weight" data-i18n="rewardMode.weight">Peso proporcional (orçamento total dividido por peso)</option>
+          <option value="fixed" data-i18n="rewardMode.fixed">Valor fixo por envelope (você digita quanto cada um vale)</option>
+        </select>
+      </div>
+
+      <div class="field-group budget-mode-only reward-weight-only">
+        <label class="field-group-label" data-i18n="labels.budgetDistribution">Peso por dificuldade</label>
+        <p class="pack-custom-hint" data-i18n="rewardMode.weightHint">Não precisa somar 100, é uma proporção. Ex: 3/5/7 faz o difícil valer mais que o dobro do fácil.</p>
         <div class="percent-row">
           <div class="percent-field">
             <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
-            <input type="number" id="budget-easy" inputmode="numeric" min="0" max="100" step="1" value="33">
+            <input type="number" id="budget-easy" inputmode="numeric" min="0" step="1" value="3">
           </div>
           <div class="percent-field">
             <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
-            <input type="number" id="budget-medium" inputmode="numeric" min="0" max="100" step="1" value="33">
+            <input type="number" id="budget-medium" inputmode="numeric" min="0" step="1" value="5">
           </div>
           <div class="percent-field">
             <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
-            <input type="number" id="budget-hard" inputmode="numeric" min="0" max="100" step="1" value="34">
+            <input type="number" id="budget-hard" inputmode="numeric" min="0" step="1" value="7">
           </div>
         </div>
+        <p class="prize-total" id="reward-balance-warning" hidden></p>
+      </div>
+
+      <div class="field-group budget-mode-only reward-fixed-only" hidden>
+        <label class="field-group-label" data-i18n="labels.fixedPerEnvelope">Valor por envelope, em cada dificuldade</label>
+        <div class="percent-row">
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.easy">🟢 Fácil</span>
+            <input type="number" id="fixed-easy" inputmode="decimal" min="0" step="0.01" value="3">
+          </div>
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.medium">🟡 Médio</span>
+            <input type="number" id="fixed-medium" inputmode="decimal" min="0" step="0.01" value="5">
+          </div>
+          <div class="percent-field">
+            <span class="percent-label" data-i18n="percent.hard">🔴 Difícil</span>
+            <input type="number" id="fixed-hard" inputmode="decimal" min="0" step="0.01" value="7">
+          </div>
+        </div>
+        <p class="prize-total" id="fixed-total-summary"></p>
       </div>
 
       <button type="button" class="btn btn-primary" id="difficulty-modal-done-btn" data-i18n="pack.doneBtn">Concluído</button>

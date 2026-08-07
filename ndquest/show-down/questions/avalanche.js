@@ -28,21 +28,21 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Qual é o principal objetivo da Avalanche?",
-          "en": "What is Avalanche's main goal?"
+          "pt": "Qual desses melhor descreve o objetivo da Avalanche?",
+          "en": "Which of these best describes Avalanche's objective?"
         },
         "answers": {
           "pt": [
-            "Ser uma blockchain rápida, escalável e de baixas taxas",
-            "Substituir completamente a internet",
-            "Servir apenas para NFTs",
-            "Criar jogos exclusivamente"
+            "Ser uma blockchain rápida, escalável e barata",
+            "Substituir completamente a internet tradicional",
+            "Servir apenas pra criação de NFTs",
+            "Substituir os bancos tradicionais"
           ],
           "en": [
-            "Being a fast, scalable, low-fee blockchain",
-            "Completely replacing the internet",
-            "Serving only for NFTs",
-            "Creating games exclusively"
+            "Being a fast, scalable, cheap blockchain",
+            "Completely replacing the traditional internet",
+            "Serving only for NFT creation",
+            "Replacing traditional banks"
           ]
         },
         "correct": 0
@@ -112,8 +112,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Qual é o ticker utilizado pela criptomoeda da Avalanche?",
-          "en": "What is the ticker used by Avalanche's cryptocurrency?"
+          "pt": "Você vai comprar o token da Avalanche numa exchange. Qual sigla procurar?",
+          "en": "You're going to buy Avalanche's token on an exchange. Which ticker do you look for?"
         },
         "answers": {
           "pt": [
@@ -133,21 +133,21 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "O token AVAX pode ser utilizado para:",
-          "en": "The AVAX token can be used for:"
+          "pt": "Ao usar a Avalanche, pra que dá pra usar o token AVAX?",
+          "en": "When using Avalanche, what can you use the AVAX token for?"
         },
         "answers": {
           "pt": [
             "Pagamento de taxas e staking",
             "Comprar ações na bolsa",
             "Emitir cartões de crédito",
-            "Pagar boletos bancários obrigatoriamente"
+            "Comprar imóveis diretamente"
           ],
           "en": [
             "Paying fees and staking",
             "Buying stocks on the exchange",
             "Issuing credit cards",
-            "Mandatory bill payments"
+            "Buying real estate directly"
           ]
         },
         "correct": 0
@@ -159,14 +159,14 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "Subnets",
-            "Rollups",
+            "Avalanche L1s",
+            "Rollups de outra blockchain",
             "Sidechains",
             "Parachains"
           ],
           "en": [
-            "Subnets",
-            "Rollups",
+            "Avalanche L1s",
+            "Rollups from another blockchain",
             "Sidechains",
             "Parachains"
           ]
@@ -196,8 +196,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Qual destas carteiras também pode ser utilizada para acessar aplicações da Avalanche?",
-          "en": "Which of these wallets can also be used to access Avalanche applications?"
+          "pt": "Além da Core Wallet, qual carteira também acessa apps na Avalanche?",
+          "en": "Besides Core Wallet, which wallet also accesses apps on Avalanche?"
         },
         "answers": {
           "pt": [
@@ -217,8 +217,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Para participar da segurança da rede Avalanche, usuários podem:",
-          "en": "To take part in securing the Avalanche network, users can:"
+          "pt": "Pra ajudar a proteger a rede Avalanche, o que dá pra fazer com seu AVAX?",
+          "en": "To help secure the Avalanche network, what can you do with your AVAX?"
         },
         "answers": {
           "pt": [
@@ -238,20 +238,20 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "As taxas pagas na Avalanche são:",
-          "en": "Fees paid on Avalanche are:"
+          "pt": "Você paga uma taxa numa transação na Avalanche. O que acontece com ela?",
+          "en": "You pay a fee on an Avalanche transaction. What happens to it?"
         },
         "answers": {
           "pt": [
             "Queimadas (burn)",
             "Enviadas para um banco",
-            "Convertidas automaticamente em Bitcoin",
+            "Devolvidas pra quem validou o bloco",
             "Distribuídas para exchanges"
           ],
           "en": [
             "Burned",
             "Sent to a bank",
-            "Automatically converted into Bitcoin",
+            "Given back to whoever validated the block",
             "Distributed to exchanges"
           ]
         },
@@ -259,8 +259,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Qual destas características é frequentemente associada à Avalanche?",
-          "en": "Which of these traits is often associated with Avalanche?"
+          "pt": "Sua transação na Avalanche confirma quase na hora. Que característica é essa?",
+          "en": "Your Avalanche transaction confirms almost instantly. What characteristic is that?"
         },
         "answers": {
           "pt": [
@@ -307,13 +307,13 @@ const questionPack = {
         "answers": {
           "pt": [
             "Aplicações descentralizadas (dApps)",
-            "Somente envio de e-mails",
+            "Apenas armazenamento de arquivos na nuvem",
             "Streaming de filmes",
             "Hospedagem de sites"
           ],
           "en": [
             "Decentralized applications (dApps)",
-            "Only sending emails",
+            "Just cloud file storage",
             "Movie streaming",
             "Website hosting"
           ]
@@ -322,8 +322,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "A Avalanche permite que desenvolvedores criem blockchains próprias?",
-          "en": "Does Avalanche allow developers to create their own blockchains?"
+          "pt": "Um desenvolvedor quer lançar a própria blockchain. A Avalanche permite isso?",
+          "en": "A developer wants to launch their own blockchain. Does Avalanche allow that?"
         },
         "answers": {
           "pt": [
@@ -385,21 +385,21 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "O staking de AVAX ajuda principalmente a:",
-          "en": "Staking AVAX mainly helps to:"
+          "pt": "Fazer stake do seu AVAX ajuda a rede principalmente em quê?",
+          "en": "Staking your AVAX mainly helps the network with what?"
         },
         "answers": {
           "pt": [
             "Contribuir para a segurança da rede",
             "Aumentar a velocidade da internet",
-            "Criar NFTs automaticamente",
-            "Enviar PIX"
+            "Aumentar o hashrate da rede",
+            "Minerar blocos usando Proof of Work"
           ],
           "en": [
             "Contribute to the network's security",
             "Increase internet speed",
-            "Create NFTs automatically",
-            "Send PIX payments"
+            "Increase the network's hashrate",
+            "Mining blocks using Proof of Work"
           ]
         },
         "correct": 0
@@ -412,13 +412,13 @@ const questionPack = {
         "answers": {
           "pt": [
             "Projetos de jogos e aplicações Web3",
-            "Somente bancos tradicionais",
+            "Somente bancos tradicionais e seguradoras",
             "Redes sociais centralizadas",
             "Softwares antivírus"
           ],
           "en": [
             "Gaming and Web3 application projects",
-            "Only traditional banks",
+            "Only traditional banks and insurers",
             "Centralized social networks",
             "Antivirus software"
           ]
@@ -429,18 +429,18 @@ const questionPack = {
     "medium": [
       {
         "question": {
-          "pt": "Qual chain da Avalanche é compatível com a Ethereum Virtual Machine (EVM)?",
-          "en": "Which Avalanche chain is compatible with the Ethereum Virtual Machine (EVM)?"
+          "pt": "Você quer rodar contratos compatíveis com Ethereum na Avalanche. Qual chain usar?",
+          "en": "You want to run Ethereum-compatible contracts on Avalanche. Which chain do you use?"
         },
         "answers": {
           "pt": [
-            "C-Chain",
+            "C-Chain, a mais usada",
             "X-Chain",
             "P-Chain",
             "Core-Chain"
           ],
           "en": [
-            "C-Chain",
+            "C-Chain, the most used one",
             "X-Chain",
             "P-Chain",
             "Core-Chain"
@@ -450,8 +450,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Qual chain da Avalanche é responsável pela coordenação dos validadores e das Subnets?",
-          "en": "Which Avalanche chain is responsible for coordinating validators and Subnets?"
+          "pt": "Qual chain da Avalanche é responsável pela coordenação dos validadores e das Avalanche L1s?",
+          "en": "Which Avalanche chain is responsible for coordinating validators and Avalanche L1s?"
         },
         "answers": {
           "pt": [
@@ -471,8 +471,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Qual chain da Avalanche foi criada para transferência de ativos digitais?",
-          "en": "Which Avalanche chain was created for transferring digital assets?"
+          "pt": "Você quer transferir um ativo digital na Avalanche. Qual chain foi feita pra isso?",
+          "en": "You want to transfer a digital asset on Avalanche. Which chain was built for that?"
         },
         "answers": {
           "pt": [
@@ -498,13 +498,13 @@ const questionPack = {
         "answers": {
           "pt": [
             "Ethereum Virtual Machine",
-            "Electronic Value Machine",
+            "Electronic Value Machine, sigla parecida",
             "Ethereum Value Manager",
             "Encrypted Virtual Module"
           ],
           "en": [
             "Ethereum Virtual Machine",
-            "Electronic Value Machine",
+            "Electronic Value Machine, a similar-sounding term",
             "Ethereum Value Manager",
             "Encrypted Virtual Module"
           ]
@@ -513,29 +513,29 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Uma das vantagens das Subnets é:",
-          "en": "One of the advantages of Subnets is:"
+          "pt": "Uma das vantagens das Avalanche L1s é:",
+          "en": "One of the advantages of Avalanche L1s is:"
         },
         "answers": {
           "pt": [
-            "Permitir blockchains customizadas para diferentes aplicações",
+            "Permitir blockchains feitas sob medida",
             "Substituir completamente o token AVAX",
-            "Eliminar validadores",
-            "Criar NFTs automaticamente"
+            "Eliminar a necessidade de validadores",
+            "Permitir mineração com placas de vídeo"
           ],
           "en": [
-            "Allowing custom blockchains for different applications",
+            "Allowing custom-built blockchains",
             "Completely replacing the AVAX token",
-            "Eliminating validators",
-            "Automatically creating NFTs"
+            "Eliminating the need for validators",
+            "Allowing GPU mining"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "Para pagar taxas na C-Chain normalmente utiliza-se:",
-          "en": "To pay fees on the C-Chain, one normally uses:"
+          "pt": "Você paga uma taxa na C-Chain. Normalmente, com qual token?",
+          "en": "You pay a fee on the C-Chain. Normally, with which token?"
         },
         "answers": {
           "pt": [
@@ -561,13 +561,13 @@ const questionPack = {
         "answers": {
           "pt": [
             "A C-Chain é compatível com a EVM",
-            "Ela foi criada pela Ava Labs",
+            "Ela foi criada e é mantida pela Ava Labs",
             "Ela funciona apenas na Avalanche",
             "Ela utiliza Proof of Work"
           ],
           "en": [
             "The C-Chain is compatible with the EVM",
-            "It was created by Ava Labs",
+            "It was created and is maintained by Ava Labs",
             "It only works on Avalanche",
             "It uses Proof of Work"
           ]
@@ -582,14 +582,14 @@ const questionPack = {
         "answers": {
           "pt": [
             "Validação ou delegação",
-            "Mineração GPU",
-            "Proof of Work",
+            "Mineração GPU tradicional",
+            "Proof of Work, como no Bitcoin",
             "Mining Pools"
           ],
           "en": [
             "Validating or delegating",
             "GPU mining",
-            "Proof of Work",
+            "Proof of Work, like on Bitcoin",
             "Mining Pools"
           ]
         },
@@ -666,14 +666,14 @@ const questionPack = {
         "answers": {
           "pt": [
             "Interagir com dApps e gerenciar ativos",
-            "Criar cartões de crédito",
-            "Minerar AVAX",
+            "Criar cartões de crédito físicos",
+            "Minerar AVAX com placa de vídeo",
             "Hospedar nós automaticamente"
           ],
           "en": [
             "Interact with dApps and manage assets",
-            "Create credit cards",
-            "Mine AVAX",
+            "Create physical credit cards",
+            "Mining AVAX with a graphics card",
             "Automatically host nodes"
           ]
         },
@@ -681,20 +681,20 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "O token AVAX possui oferta infinita?",
-          "en": "Does the AVAX token have an infinite supply?"
+          "pt": "Mito ou verdade: o AVAX tem oferta infinita, sem nenhum teto?",
+          "en": "Myth or fact: does AVAX have an infinite supply, with no cap at all?"
         },
         "answers": {
           "pt": [
             "Não",
             "Sim",
-            "Depende da Subnet",
+            "Depende da Avalanche L1",
             "Depende da carteira"
           ],
           "en": [
             "No",
             "Yes",
-            "It depends on the Subnet",
+            "It depends on the Avalanche L1",
             "It depends on the wallet"
           ]
         },
@@ -708,36 +708,36 @@ const questionPack = {
         "answers": {
           "pt": [
             "Reduzir a oferta circulante ao longo do tempo",
-            "Aumentar o supply automaticamente",
-            "Pagar exchanges",
-            "Criar novos tokens"
+            "Aumentar o supply automaticamente sem limite",
+            "Pagar comissão pras exchanges",
+            "Criar novos tokens de recompensa"
           ],
           "en": [
             "Reduce circulating supply over time",
             "Automatically increase supply",
-            "Pay exchanges",
-            "Create new tokens"
+            "Paying a fee to exchanges",
+            "Creating new reward tokens"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "Uma empresa pode utilizar uma Subnet para:",
-          "en": "A company can use a Subnet to:"
+          "pt": "Uma empresa quer lançar sua própria blockchain na Avalanche. Pra que ela usaria uma L1?",
+          "en": "A company wants to launch its own blockchain on Avalanche. What would it use an L1 for?"
         },
         "answers": {
           "pt": [
             "Criar uma blockchain personalizada",
             "Criar uma exchange centralizada",
             "Substituir completamente o AVAX",
-            "Minerar Bitcoin"
+            "Emitir um NFT direto na Ethereum"
           ],
           "en": [
             "Create a custom blockchain",
             "Create a centralized exchange",
             "Completely replace AVAX",
-            "Mine Bitcoin"
+            "Issuing an NFT directly on Ethereum"
           ]
         },
         "correct": 0
@@ -770,14 +770,14 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "Gerenciar validadores e Subnets",
+            "Gerenciar validadores e Avalanche L1s",
             "Executar contratos inteligentes",
             "Transferir NFTs",
             "Armazenar arquivos"
           ],
           "en": [
-            "Managing validators and Subnets",
-            "Executing smart contracts",
+            "Managing validators and Avalanche L1s",
+            "Executing complex smart contracts",
             "Transferring NFTs",
             "Storing files"
           ]
@@ -791,16 +791,16 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "Executar contratos inteligentes compatíveis com Ethereum",
-            "Controlar validadores",
-            "Emitir Bitcoin",
-            "Hospedar sites"
+            "Executar contratos inteligentes tipo Ethereum",
+            "Controlar validadores de toda a rede",
+            "Emitir Bitcoin na Avalanche",
+            "Hospedar sites e imagens"
           ],
           "en": [
-            "Executing Ethereum-compatible smart contracts",
-            "Controlling validators",
-            "Issuing Bitcoin",
-            "Hosting websites"
+            "Running Ethereum-style smart contracts",
+            "Controlling validators across the whole network",
+            "Issuing Bitcoin on Avalanche",
+            "Hosting websites and images"
           ]
         },
         "correct": 0
@@ -813,7 +813,7 @@ const questionPack = {
         "answers": {
           "pt": [
             "Criação e transferência de ativos",
-            "Executar smart contracts",
+            "Executar smart contracts complexos",
             "Controlar staking",
             "Gerenciar NFTs"
           ],
@@ -833,15 +833,15 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "Ela combina velocidade, escalabilidade e suporte a aplicações Web3",
-            "Funciona apenas para NFTs",
-            "É uma blockchain privada",
+            "Ela combina velocidade e suporte a Web3",
+            "Funciona apenas pra jogos de NFTs específicos",
+            "É uma blockchain privada e fechada",
             "Não suporta contratos inteligentes"
           ],
           "en": [
-            "It combines speed, scalability, and support for Web3 applications",
-            "It only works for NFTs",
-            "It is a private blockchain",
+            "It combines speed and support for Web3",
+            "It only works for specific NFT games",
+            "It is a private, closed blockchain",
             "It doesn't support smart contracts"
           ]
         },
@@ -857,54 +857,54 @@ const questionPack = {
         "answers": {
           "pt": [
             "Para especializar diferentes funções da rede",
-            "Para aumentar as taxas",
+            "Para aumentar as taxas da rede",
             "Porque cada uma pertence a uma empresa diferente",
-            "Para substituir Subnets"
+            "Para substituir Avalanche L1s"
           ],
           "en": [
             "To specialize different functions of the network",
-            "To increase fees",
+            "To increase the network's fees",
             "Because each one belongs to a different company",
-            "To replace Subnets"
+            "To replace Avalanche L1s"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "Uma Subnet na Avalanche pode ser definida como:",
-          "en": "A Subnet on Avalanche can be defined as:"
+          "pt": "Uma Avalanche L1 pode ser definida como:",
+          "en": "An Avalanche L1 can be defined as:"
         },
         "answers": {
           "pt": [
-            "Um conjunto de validadores responsável por uma ou mais blockchains",
-            "Uma Layer 2 obrigatória",
+            "Um conjunto de validadores com sua própria blockchain",
+            "Uma Layer 2 obrigatória e exclusiva da Ethereum",
             "Uma bridge entre Ethereum e Bitcoin",
-            "Um token criado na C-Chain"
+            "Um novo token criado na C-Chain"
           ],
           "en": [
-            "A set of validators responsible for one or more blockchains",
-            "A mandatory Layer 2",
+            "A set of validators with their own blockchain",
+            "A mandatory, exclusive Layer 2 of Ethereum",
             "A bridge between Ethereum and Bitcoin",
-            "A token created on the C-Chain"
+            "A new token created on the C-Chain"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "Qual vantagem uma empresa obtém ao utilizar uma Subnet?",
-          "en": "What advantage does a company get from using a Subnet?"
+          "pt": "Qual vantagem uma empresa obtém ao utilizar uma Avalanche L1?",
+          "en": "What advantage does a company get from using an Avalanche L1?"
         },
         "answers": {
           "pt": [
-            "Maior controle sobre regras, validadores e ambiente da blockchain",
+            "Maior controle sobre regras e validadores",
             "Eliminar completamente o uso de AVAX",
             "Minerar Bitcoin dentro da Avalanche",
             "Criar contratos inteligentes sem blockchain"
           ],
           "en": [
-            "Greater control over the blockchain's rules, validators, and environment",
+            "Greater control over rules and validators",
             "Completely eliminating the use of AVAX",
             "Mining Bitcoin within Avalanche",
             "Creating smart contracts without a blockchain"
@@ -914,8 +914,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Qual mecanismo ajuda a Avalanche a atingir finalidade rápida nas transações?",
-          "en": "Which mechanism helps Avalanche achieve fast transaction finality?"
+          "pt": "O que faz uma transação na Avalanche confirmar tão rápido?",
+          "en": "What makes an Avalanche transaction confirm so fast?"
         },
         "answers": {
           "pt": [
@@ -940,45 +940,45 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "Existe um limite máximo de emissão e parte das taxas é queimada",
-            "O supply é infinito",
+            "Tem limite máximo de emissão e queima parte das taxas",
+            "O supply é infinito, sem nenhum teto",
             "Novos AVAX são criados sem limite diariamente",
-            "As taxas aumentam o supply"
+            "As taxas aumentam o supply em circulação"
           ],
           "en": [
-            "There is a maximum issuance cap and part of the fees are burned",
-            "The supply is infinite",
+            "It has a max issuance cap and burns part of the fees",
+            "The supply is infinite, with no cap",
             "New AVAX are created without limit daily",
-            "Fees increase the supply"
+            "Fees increase the circulating supply"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "Qual chain deve ser utilizada para aplicações compatíveis com Ethereum?",
-          "en": "Which chain should be used for Ethereum-compatible applications?"
+          "pt": "Você quer lançar um app compatível com Ethereum na Avalanche. Qual chain escolher?",
+          "en": "You want to launch an Ethereum-compatible app on Avalanche. Which chain do you pick?"
         },
         "answers": {
           "pt": [
             "C-Chain",
             "X-Chain",
             "P-Chain",
-            "Subnet-Chain"
+            "Avalanche L1-Chain"
           ],
           "en": [
             "C-Chain",
             "X-Chain",
             "P-Chain",
-            "Subnet-Chain"
+            "Avalanche L1-Chain"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "Ao criar uma blockchain própria utilizando uma Subnet, um projeto pode:",
-          "en": "By creating its own blockchain using a Subnet, a project can:"
+          "pt": "Um projeto cria sua própria blockchain usando uma Avalanche L1. O que ele ganha com isso?",
+          "en": "A project creates its own blockchain using an Avalanche L1. What does it gain from that?"
         },
         "answers": {
           "pt": [
@@ -1025,14 +1025,14 @@ const questionPack = {
         "answers": {
           "pt": [
             "Segurança e validação da rede",
-            "Criar NFTs automaticamente",
-            "Reduzir o número de Subnets",
+            "Permitir mineração com placas de vídeo",
+            "Reduzir o número de Avalanche L1s",
             "Executar contratos inteligentes sozinho"
           ],
           "en": [
             "Network security and validation",
-            "Automatically creating NFTs",
-            "Reducing the number of Subnets",
+            "Allowing GPU mining",
+            "Reducing the number of Avalanche L1s",
             "Executing smart contracts on its own"
           ]
         },
@@ -1040,21 +1040,21 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Uma das vantagens das Subnets é evitar que:",
-          "en": "One of the advantages of Subnets is avoiding that:"
+          "pt": "Uma das vantagens das Avalanche L1s é evitar que:",
+          "en": "One of the advantages of Avalanche L1s is avoiding that:"
         },
         "answers": {
           "pt": [
-            "Todas as aplicações disputem os mesmos recursos da blockchain principal",
-            "Usuários utilizem carteiras",
-            "Tokens sejam transferidos",
-            "Smart contracts sejam criados"
+            "Aplicações disputarem recursos da blockchain principal",
+            "Usuários precisem trocar de carteira toda hora",
+            "Tokens sejam transferidos entre redes",
+            "Smart contracts sejam implantados na rede"
           ],
           "en": [
-            "All applications compete for the same resources on the main blockchain",
-            "Users use wallets",
-            "Tokens are transferred",
-            "Smart contracts are created"
+            "Applications competing for the main blockchain's resources",
+            "Users needing to switch wallets all the time",
+            "Tokens being transferred between networks",
+            "Smart contracts being deployed on the network"
           ]
         },
         "correct": 0
@@ -1067,13 +1067,13 @@ const questionPack = {
         "answers": {
           "pt": [
             "Escalabilidade sem comprometer desempenho",
-            "Mineração intensiva",
+            "Mineração intensiva de GPU",
             "Centralização dos validadores",
             "Uso exclusivo para bancos"
           ],
           "en": [
             "Scalability without compromising performance",
-            "Intensive mining",
+            "Intensive GPU mining",
             "Centralization of validators",
             "Exclusive use by banks"
           ]
@@ -1109,34 +1109,34 @@ const questionPack = {
         "answers": {
           "pt": [
             "Tokenização de ativos do mundo real (RWA)",
-            "Hospedagem de vídeos",
-            "Streaming musical",
-            "Cloud Storage"
+            "Hospedagem de vídeos e imagens",
+            "Streaming musical ao vivo",
+            "Armazenamento em nuvem"
           ],
           "en": [
             "Tokenization of real-world assets (RWA)",
-            "Video hosting",
-            "Music streaming",
-            "Cloud storage"
+            "Video and image hosting",
+            "Live music streaming",
+            "Cloud file storage"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "O que diferencia uma Subnet de simplesmente implantar um contrato inteligente?",
-          "en": "What sets a Subnet apart from simply deploying a smart contract?"
+          "pt": "Por que criar uma Avalanche L1 é diferente de só implantar um contrato inteligente?",
+          "en": "Why is creating an Avalanche L1 different from just deploying a smart contract?"
         },
         "answers": {
           "pt": [
             "Ela permite criar uma blockchain personalizada inteira",
-            "Ela cria apenas um token",
+            "Ela só cria mais um token dentro da rede",
             "Ela funciona somente para NFTs",
             "Ela substitui a Core Wallet"
           ],
           "en": [
             "It allows creating an entire custom blockchain",
-            "It only creates a token",
+            "It only creates yet another token within the network",
             "It only works for NFTs",
             "It replaces Core Wallet"
           ]
@@ -1153,13 +1153,13 @@ const questionPack = {
             "Eles ajudam a manter a segurança e o consenso da rede",
             "São responsáveis por emitir novos Bitcoins",
             "Funcionam apenas na C-Chain",
-            "Não utilizam staking"
+            "Não utilizam staking nem recompensa"
           ],
           "en": [
             "They help maintain the network's security and consensus",
             "They are responsible for issuing new Bitcoins",
             "They only work on the C-Chain",
-            "They don't use staking"
+            "They don't use staking or rewards"
           ]
         },
         "correct": 0
@@ -1172,15 +1172,15 @@ const questionPack = {
         "answers": {
           "pt": [
             "Desenvolvedores, empresas e usuários Web3",
-            "Somente bancos",
-            "Somente exchanges",
-            "Somente mineradores"
+            "Somente instituições bancárias tradicionais",
+            "Somente grandes exchanges",
+            "Somente mineradores de Bitcoin"
           ],
           "en": [
             "Developers, companies, and Web3 users",
-            "Only banks",
-            "Only exchanges",
-            "Only miners"
+            "Only traditional banking institutions",
+            "Only large exchanges",
+            "Only Bitcoin miners"
           ]
         },
         "correct": 0
@@ -1193,15 +1193,15 @@ const questionPack = {
         "answers": {
           "pt": [
             "Separação de responsabilidades e melhor eficiência",
-            "Duplicar todas as transações",
+            "Duplicar todas as transações sem necessidade",
             "Eliminar contratos inteligentes",
-            "Reduzir a segurança"
+            "Reduzir a segurança da rede toda"
           ],
           "en": [
             "Separation of responsibilities and better efficiency",
             "Duplicating every transaction",
             "Eliminating smart contracts",
-            "Reducing security"
+            "Reducing the entire network's security"
           ]
         },
         "correct": 0
@@ -1213,34 +1213,34 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "A interação dos usuários com todo o ecossistema Avalanche",
-            "A mineração de AVAX",
-            "A criação de exchanges",
-            "A emissão de stablecoins"
+            "A interação com todo o ecossistema Avalanche",
+            "A mineração de AVAX em casa",
+            "A criação de exchanges próprias",
+            "A emissão de stablecoins próprias"
           ],
           "en": [
-            "Users' interaction with the entire Avalanche ecosystem",
-            "AVAX mining",
-            "Creating exchanges",
-            "Issuing stablecoins"
+            "Interaction with the entire Avalanche ecosystem",
+            "Mining AVAX at home",
+            "Creating your own exchange",
+            "Issuing your own stablecoins"
           ]
         },
         "correct": 0
       },
       {
         "question": {
-          "pt": "Uma empresa pode utilizar Avalanche para criar aplicações com regras próprias através de:",
-          "en": "A company can use Avalanche to create applications with their own rules through:"
+          "pt": "Uma empresa quer regras próprias pro seu app na Avalanche, não as da rede principal. O que ela usa?",
+          "en": "A company wants its own rules for its Avalanche app, not the main network's. What does it use?"
         },
         "answers": {
           "pt": [
-            "Subnets",
+            "Avalanche L1s",
             "Mining Pools",
             "Lightning Channels",
             "ASICs"
           ],
           "en": [
-            "Subnets",
+            "Avalanche L1s",
             "Mining Pools",
             "Lightning Channels",
             "ASICs"
@@ -1255,16 +1255,16 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "Uma plataforma de blockchain focada em velocidade, escalabilidade e flexibilidade para aplicações Web3",
+            "Uma blockchain rápida e escalável pra apps Web3",
             "Uma blockchain criada exclusivamente para NFTs",
-            "Uma exchange descentralizada",
-            "Uma carteira de criptomoedas"
+            "Uma exchange descentralizada de criptomoedas",
+            "Uma carteira de criptomoedas multichain"
           ],
           "en": [
-            "A blockchain platform focused on speed, scalability, and flexibility for Web3 applications",
+            "A fast, scalable blockchain for Web3 apps",
             "A blockchain created exclusively for NFTs",
-            "A decentralized exchange",
-            "A cryptocurrency wallet"
+            "A decentralized cryptocurrency exchange",
+            "A multichain cryptocurrency wallet"
           ]
         },
         "correct": 0

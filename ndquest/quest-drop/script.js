@@ -81,6 +81,17 @@ const budgetEasyInput = document.getElementById('budget-easy');
 const budgetMediumInput = document.getElementById('budget-medium');
 const budgetHardInput = document.getElementById('budget-hard');
 
+const rewardModeSelect = document.getElementById('reward-mode-select');
+const rewardWeightOnlyEls = document.querySelectorAll('.reward-weight-only');
+const rewardFixedOnlyEls = document.querySelectorAll('.reward-fixed-only');
+const rewardBalanceWarning = document.getElementById('reward-balance-warning');
+const rewardBalanceWarningMain = document.getElementById('reward-balance-warning-main');
+const fixedEasyInput = document.getElementById('fixed-easy');
+const fixedMediumInput = document.getElementById('fixed-medium');
+const fixedHardInput = document.getElementById('fixed-hard');
+const fixedTotalSummary = document.getElementById('fixed-total-summary');
+const budgetComputedDisplay = document.getElementById('budget-computed-display');
+
 const configError = document.getElementById('config-error');
 const startBtn = document.getElementById('start-btn');
 
@@ -293,16 +304,27 @@ const DIFFICULTY_LEVELS = ['easy', 'medium', 'hard'];
 // e redistribui 100% só entre as que têm.
 function updateDifficultySummary() {
   const isDefault = diffEasyInput.value === '33' && diffMediumInput.value === '33' && diffHardInput.value === '34'
-    && budgetEasyInput.value === '33' && budgetMediumInput.value === '33' && budgetHardInput.value === '34';
+    && budgetEasyInput.value === '3' && budgetMediumInput.value === '5' && budgetHardInput.value === '7'
+    && rewardModeSelect.value === 'weight';
 
   if (isDefault) {
     difficultySummaryStatus.textContent = t('difficulty.usingDefault');
-  } else {
-    difficultySummaryStatus.textContent = t('difficulty.customSummary')
-      .replace('{easy}', diffEasyInput.value || '0')
-      .replace('{medium}', diffMediumInput.value || '0')
-      .replace('{hard}', diffHardInput.value || '0');
+    return;
   }
+
+  const diffPart = t('difficulty.customSummary')
+    .replace('{easy}', diffEasyInput.value || '0')
+    .replace('{medium}', diffMediumInput.value || '0')
+    .replace('{hard}', diffHardInput.value || '0');
+
+  const rewardPart = rewardModeSelect.value === 'fixed'
+    ? t('difficulty.rewardFixedSummary')
+    : t('difficulty.rewardWeightSummary')
+      .replace('{easy}', budgetEasyInput.value || '0')
+      .replace('{medium}', budgetMediumInput.value || '0')
+      .replace('{hard}', budgetHardInput.value || '0');
+
+  difficultySummaryStatus.textContent = `${diffPart} · ${rewardPart}`;
 }
 
 function applyCustomDifficultyAvailability(presentDifficulties) {
@@ -339,10 +361,13 @@ function restoreDifficultyDefaults() {
   diffEasyInput.value = '33';
   diffMediumInput.value = '33';
   diffHardInput.value = '34';
-  budgetEasyInput.value = '33';
-  budgetMediumInput.value = '33';
-  budgetHardInput.value = '34';
+  budgetEasyInput.value = '3';
+  budgetMediumInput.value = '5';
+  budgetHardInput.value = '7';
+  rewardModeSelect.value = 'weight';
+  setRewardModeVisibility('weight');
   updateDifficultySummary();
+  updateRewardBalanceWarning();
 }
 
 [diffEasyInput, diffMediumInput, diffHardInput, budgetEasyInput, budgetMediumInput, budgetHardInput].forEach((input) => {
@@ -389,6 +414,109 @@ prizeModeSelect.addEventListener('change', () => {
   } else {
     closeOverlay(prizeOverlay);
   }
+});
+
+/* =========================================================
+   MODO DE RECOMPENSA — peso proporcional (padrão) ou valor
+   fixo por envelope. Só existe dentro do modo de prêmio
+   "orçamento"; no modo "lista" nenhum dos dois aparece.
+   ========================================================= */
+function currentCountPerLevelForPreview() {
+  const envelopeCount = Math.round(Number(envelopeCountInput.value)) || 0;
+  const difficultyPercentages = {
+    easy: Number(diffEasyInput.value) || 0,
+    medium: Number(diffMediumInput.value) || 0,
+    hard: Number(diffHardInput.value) || 0
+  };
+  if (envelopeCount <= 0 || difficultyPercentages.easy + difficultyPercentages.medium + difficultyPercentages.hard !== 100) {
+    return null;
+  }
+  return distributeByPercentages(envelopeCount, difficultyPercentages);
+}
+
+function setRewardModeVisibility(mode) {
+  const isFixed = mode === 'fixed';
+  rewardWeightOnlyEls.forEach((el) => { el.hidden = isFixed; });
+  rewardFixedOnlyEls.forEach((el) => { el.hidden = !isFixed; });
+}
+
+function currentUnitLabel() {
+  if (unitSelect.value === 'custom') {
+    return unitCustomInput.value.trim() || 'USD';
+  }
+  return unitSelect.value;
+}
+
+function updateRewardBalanceWarning() {
+  if (rewardModeSelect.value !== 'weight') {
+    rewardBalanceWarning.hidden = true;
+    rewardBalanceWarningMain.hidden = true;
+    return;
+  }
+  const countPerLevel = currentCountPerLevelForPreview();
+  const totalDollars = Math.round(Number(budgetInput.value));
+  const weights = {
+    easy: Number(budgetEasyInput.value) || 0,
+    medium: Number(budgetMediumInput.value) || 0,
+    hard: Number(budgetHardInput.value) || 0
+  };
+  if (!countPerLevel || !totalDollars || totalDollars <= 0) {
+    rewardBalanceWarning.hidden = true;
+    rewardBalanceWarningMain.hidden = true;
+    return;
+  }
+  const distribution = distributeWeightWholeDollars(totalDollars, countPerLevel, weights);
+  if (isWeightDistributionBalanced(distribution)) {
+    rewardBalanceWarning.hidden = true;
+    rewardBalanceWarningMain.hidden = true;
+    return;
+  }
+  const nearby = findNearestBalancedTotal(totalDollars, countPerLevel, weights);
+  const unit = currentUnitLabel();
+  let message;
+  if (!nearby) {
+    message = t('rewardMode.unbalancedNoSuggestion');
+  } else {
+    const options = [nearby.down, nearby.up].filter((v) => v !== undefined);
+    message = t('rewardMode.unbalanced').replace('{values}', options.map((v) => `${v} ${unit}`).join(' ' + t('rewardMode.or') + ' '));
+  }
+  rewardBalanceWarning.hidden = false;
+  rewardBalanceWarning.textContent = message;
+  rewardBalanceWarningMain.hidden = false;
+  rewardBalanceWarningMain.textContent = message;
+}
+
+function updateFixedTotalPreview() {
+  const countPerLevel = currentCountPerLevelForPreview();
+  const values = {
+    easy: Number(fixedEasyInput.value) || 0,
+    medium: Number(fixedMediumInput.value) || 0,
+    hard: Number(fixedHardInput.value) || 0
+  };
+  if (!countPerLevel) {
+    fixedTotalSummary.textContent = '';
+    budgetComputedDisplay.textContent = '';
+    return;
+  }
+  const total = values.easy * countPerLevel.easy + values.medium * countPerLevel.medium + values.hard * countPerLevel.hard;
+  const totalText = `${total.toFixed(2)} ${currentUnitLabel()}`;
+  fixedTotalSummary.textContent = t('rewardMode.computedTotal').replace('{total}', totalText);
+  budgetComputedDisplay.textContent = totalText;
+}
+
+rewardModeSelect.addEventListener('change', () => {
+  setRewardModeVisibility(rewardModeSelect.value);
+  updateRewardBalanceWarning();
+  updateFixedTotalPreview();
+  updateDifficultySummary();
+});
+
+[budgetInput, budgetEasyInput, budgetMediumInput, budgetHardInput, envelopeCountInput, diffEasyInput, diffMediumInput, diffHardInput, unitSelect, unitCustomInput].forEach((input) => {
+  input.addEventListener('input', updateRewardBalanceWarning);
+});
+
+[fixedEasyInput, fixedMediumInput, fixedHardInput, envelopeCountInput, diffEasyInput, diffMediumInput, diffHardInput, unitSelect, unitCustomInput].forEach((input) => {
+  input.addEventListener('input', updateFixedTotalPreview);
 });
 
 function renderPrizeTierList(tier) {
@@ -741,15 +869,23 @@ function shuffleArray(array) {
   return copy;
 }
 
-// Gera "count" valores inteiros, todos >= 1, cuja soma é exatamente "total".
+// Gera "count" valores inteiros (em centavos), todos >= 1, cuja soma
+// é exatamente "total". Prioriza igualdade acima de "parecer
+// redondo": divide o total o mais igualmente possível entre os
+// envelopes (base = total/count, arredondado pra baixo). Se sobrar
+// resto (sempre menos que "count" centavos, já que a base já
+// absorveu o resto todo que dava pra dividir igual), esse resto
+// mínimo é espalhado 1 centavo por vez entre alguns envelopes
+// sorteados — é a menor desigualdade matematicamente possível
+// quando o total não é múltiplo exato da quantidade de envelopes.
 function generatePrizes(total, count) {
-  const prizes = new Array(count).fill(1);
-  let remaining = total - count;
+  const base = Math.floor(total / count);
+  const remainder = total - base * count;
 
-  while (remaining > 0) {
-    const idx = Math.floor(Math.random() * count);
-    prizes[idx] += 1;
-    remaining -= 1;
+  const prizes = new Array(count).fill(base);
+  const order = shuffleArray([...Array(count).keys()]);
+  for (let i = 0; i < remainder; i += 1) {
+    prizes[order[i]] += 1;
   }
 
   return shuffleArray(prizes);
@@ -816,6 +952,79 @@ function distributeBudgetAmongActiveLevels(countPerLevel, budgetPercentages, tot
 }
 
 /* =========================================================
+   MODO "PESO PROPORCIONAL" — em vez de porcentagem do
+   orçamento, o host define um peso por dificuldade (padrão
+   3/5/7). O valor final é sempre em dólar inteiro (sem
+   centavo), calculado peso a peso por ENVELOPE individual
+   (não por dificuldade e depois dividido), usando o método dos
+   maiores restos — o mesmo usado pra distribuir cadeira de
+   eleição proporcional. Isso garante que a soma bate exato com
+   o orçamento, e que dentro da mesma dificuldade os envelopes
+   saem idênticos sempre que a divisão permitir.
+   ========================================================= */
+function distributeWeightWholeDollars(totalDollars, countPerLevel, weights) {
+  const levels = ['easy', 'medium', 'hard'];
+
+  const flatWeights = [];
+  levels.forEach((level) => {
+    for (let i = 0; i < countPerLevel[level]; i += 1) {
+      flatWeights.push({ level, weight: weights[level] });
+    }
+  });
+
+  const sumWeights = flatWeights.reduce((sum, item) => sum + item.weight, 0);
+  if (sumWeights <= 0 || flatWeights.length === 0) {
+    const empty = {};
+    levels.forEach((level) => { empty[level] = new Array(countPerLevel[level]).fill(0); });
+    return empty;
+  }
+
+  const raw = flatWeights.map((item) => (totalDollars * item.weight) / sumWeights);
+  const base = raw.map((value) => Math.floor(value));
+  let remaining = totalDollars - base.reduce((sum, value) => sum + value, 0);
+
+  const order = raw
+    .map((value, i) => ({ i, frac: value - base[i] }))
+    .sort((a, b) => b.frac - a.frac);
+
+  const finalValues = [...base];
+  for (let i = 0; i < remaining; i += 1) {
+    finalValues[order[i % order.length].i] += 1;
+  }
+
+  const result = {};
+  levels.forEach((level) => { result[level] = []; });
+  flatWeights.forEach((item, i) => { result[item.level].push(finalValues[i]); });
+  return result;
+}
+
+// Confere se, dentro de cada dificuldade que tem envelope, todos os
+// valores saíram idênticos entre si.
+function isWeightDistributionBalanced(perLevelValues) {
+  return ['easy', 'medium', 'hard'].every((level) => {
+    const values = perLevelValues[level];
+    return values.length === 0 || values.every((v) => v === values[0]);
+  });
+}
+
+// Procura, pra cima e pra baixo a partir do orçamento digitado, o
+// valor mais próximo (em dólar inteiro) que deixaria a distribuição
+// perfeitamente balanceada. Para depois de "maxSearch" tentativas
+// pra cada lado pra nunca travar a interface.
+function findNearestBalancedTotal(startTotal, countPerLevel, weights, maxSearch = 60) {
+  for (let delta = 1; delta <= maxSearch; delta += 1) {
+    const down = startTotal - delta;
+    const up = startTotal + delta;
+    const downOk = down > 0 && isWeightDistributionBalanced(distributeWeightWholeDollars(down, countPerLevel, weights));
+    const upOk = isWeightDistributionBalanced(distributeWeightWholeDollars(up, countPerLevel, weights));
+    if (downOk && upOk) return { down, up };
+    if (downOk) return { down };
+    if (upOk) return { up };
+  }
+  return null;
+}
+
+/* =========================================================
    NAVEGAÇÃO ENTRE TELAS
    ========================================================= */
 function showScreen(screenEl) {
@@ -848,7 +1057,7 @@ startBtn.addEventListener('click', () => {
   }
 
   const prizeMode = prizeModeSelect.value;
-  let budgetPerLevelCents = { easy: 0, medium: 0, hard: 0 };
+  let explicitPrizesCents = null;
   let unit = 'USD';
 
   const envelopeCount = Math.round(Number(envelopeCountInput.value));
@@ -881,25 +1090,6 @@ startBtn.addEventListener('click', () => {
       return;
     }
   } else {
-    const budget = Number(budgetInput.value);
-
-    if (!budget || budget <= 0) {
-      configError.textContent = t('errors.invalidBudget');
-      return;
-    }
-
-    const budgetPercentages = {
-      easy: Number(budgetEasyInput.value) || 0,
-      medium: Number(budgetMediumInput.value) || 0,
-      hard: Number(budgetHardInput.value) || 0
-    };
-
-    const budgetSum = budgetPercentages.easy + budgetPercentages.medium + budgetPercentages.hard;
-    if (budgetSum !== 100) {
-      configError.textContent = t('errors.budgetSum');
-      return;
-    }
-
     unit = unitSelect.value;
     if (unit === 'custom') {
       unit = unitCustomInput.value.trim();
@@ -909,15 +1099,58 @@ startBtn.addEventListener('click', () => {
       }
     }
 
-    const budgetCents = Math.round(budget * CENTS_FACTOR);
-    budgetPerLevelCents = distributeBudgetAmongActiveLevels(countPerLevel, budgetPercentages, budgetCents);
+    const rewardMode = rewardModeSelect.value;
 
-    const insufficientLevel = ['easy', 'medium', 'hard'].find(
-      (level) => countPerLevel[level] > 0 && budgetPerLevelCents[level] < countPerLevel[level]
-    );
-    if (insufficientLevel) {
-      configError.textContent = t('errors.insufficientBudget');
-      return;
+    if (rewardMode === 'fixed') {
+      const fixedValues = {
+        easy: Number(fixedEasyInput.value) || 0,
+        medium: Number(fixedMediumInput.value) || 0,
+        hard: Number(fixedHardInput.value) || 0
+      };
+      const missingValue = ['easy', 'medium', 'hard'].find(
+        (level) => countPerLevel[level] > 0 && fixedValues[level] <= 0
+      );
+      if (missingValue) {
+        configError.textContent = t('errors.invalidFixedValue');
+        return;
+      }
+      explicitPrizesCents = { easy: [], medium: [], hard: [] };
+      ['easy', 'medium', 'hard'].forEach((level) => {
+        const cents = Math.round(fixedValues[level] * CENTS_FACTOR);
+        for (let i = 0; i < countPerLevel[level]; i += 1) explicitPrizesCents[level].push(cents);
+      });
+    } else {
+      const budget = Math.round(Number(budgetInput.value));
+      if (!budget || budget <= 0) {
+        configError.textContent = t('errors.invalidBudget');
+        return;
+      }
+
+      const weights = {
+        easy: Number(budgetEasyInput.value) || 0,
+        medium: Number(budgetMediumInput.value) || 0,
+        hard: Number(budgetHardInput.value) || 0
+      };
+      const weightSum = weights.easy + weights.medium + weights.hard;
+      if (weightSum <= 0) {
+        configError.textContent = t('errors.invalidWeights');
+        return;
+      }
+
+      const distribution = distributeWeightWholeDollars(budget, countPerLevel, weights);
+      const insufficientLevel = ['easy', 'medium', 'hard'].find(
+        (level) => countPerLevel[level] > 0 && distribution[level].some((v) => v <= 0)
+      );
+      if (insufficientLevel) {
+        configError.textContent = t('errors.insufficientBudget');
+        return;
+      }
+
+      explicitPrizesCents = {
+        easy: distribution.easy.map((v) => v * CENTS_FACTOR),
+        medium: distribution.medium.map((v) => v * CENTS_FACTOR),
+        hard: distribution.hard.map((v) => v * CENTS_FACTOR)
+      };
     }
   }
 
@@ -940,17 +1173,18 @@ startBtn.addEventListener('click', () => {
   }
   const selectedTheme = themes[Number(themeSelect.value)];
 
-  startEvent(countPerLevel, budgetPerLevelCents, unit, selectedPack, selectedTheme, prizeMode, customPrizeLists);
+  startEvent(countPerLevel, explicitPrizesCents, unit, selectedPack, selectedTheme, prizeMode, customPrizeLists);
 });
 
 // Modo "lista": gera countPerLevel[level] envelopes por dificuldade,
 // todos com prizeLabel null — o prêmio de cada um só é sorteado do
 // estoque configurado (e descontado) no momento em que a pessoa
 // acerta, não na hora de montar o pool (ver drawPrizeFromStock).
-// Modo "orçamento": mantém exatamente o cálculo de sempre (valor
-// numérico dividido pela quantidade), com o prizeLabel já pronto
-// desde a montagem do pool.
-function buildEnvelopePool(countPerLevel, budgetPerLevelCents, unit, prizeMode) {
+// Modo "orçamento" (peso proporcional ou valor fixo): o valor de
+// cada envelope já vem pronto e exato em "explicitPrizesCents"
+// (calculado antes, em distributeWeightWholeDollars ou direto do
+// valor fixo digitado) — aqui só monta o pool com esses valores.
+function buildEnvelopePool(countPerLevel, explicitPrizesCents, unit, prizeMode) {
   const levels = ['easy', 'medium', 'hard'];
   let pool = [];
 
@@ -967,8 +1201,7 @@ function buildEnvelopePool(countPerLevel, budgetPerLevelCents, unit, prizeMode) 
         pool.push({ prizeLabel: null, difficulty: level, conquered: false });
       }
     } else {
-      const prizesCents = generatePrizes(budgetPerLevelCents[level], countPerLevel[level]);
-      prizesCents.forEach((prizeCents) => {
+      explicitPrizesCents[level].forEach((prizeCents) => {
         pool.push({ prizeLabel: formatPrize(prizeCents / CENTS_FACTOR, unit), difficulty: level, conquered: false });
       });
     }
@@ -978,8 +1211,8 @@ function buildEnvelopePool(countPerLevel, budgetPerLevelCents, unit, prizeMode) 
   return pool;
 }
 
-function startEvent(countPerLevel, budgetPerLevelCents, unit, pack, theme, prizeMode, prizeLists) {
-  state.envelopes = buildEnvelopePool(countPerLevel, budgetPerLevelCents, unit, prizeMode);
+function startEvent(countPerLevel, explicitPrizesCents, unit, pack, theme, prizeMode, prizeLists) {
+  state.envelopes = buildEnvelopePool(countPerLevel, explicitPrizesCents, unit, prizeMode);
   state.unit = unit;
   state.prizeMode = prizeMode;
   // Cópia própria (não referência) do estoque configurado, pra cada

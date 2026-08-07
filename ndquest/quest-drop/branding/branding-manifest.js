@@ -32,6 +32,7 @@ import avalancheTheme from './avalanche/avalanche.js';
 import amuletsTheme from './amulets/amulets.js';
 import pagfinanceTheme from './pagfinance/pagfinance.js';
 import bitgetWalletTheme from './bitget-wallet/bitget-wallet.js';
+import capyfiTheme from './capyfi/capyfi.js';
 import { validateTheme } from './theme-schema.js';
 
 const rawThemes = [
@@ -41,7 +42,8 @@ const rawThemes = [
   { theme: avalancheTheme, source: 'branding/avalanche/avalanche.js' },
   { theme: amuletsTheme, source: 'branding/amulets/amulets.js' },
   { theme: pagfinanceTheme, source: 'branding/pagfinance/pagfinance.js' },
-  { theme: bitgetWalletTheme, source: 'branding/bitget-wallet/bitget-wallet.js' }
+  { theme: bitgetWalletTheme, source: 'branding/bitget-wallet/bitget-wallet.js' },
+  { theme: capyfiTheme, source: 'branding/capyfi/capyfi.js' }
 ];
 
 const themes = rawThemes.map(({ theme, source }) => validateTheme(theme, source));

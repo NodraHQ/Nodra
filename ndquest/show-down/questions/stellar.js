@@ -1,1516 +1,211 @@
-const questionPack = {
-  "name": {
-    "pt": "Stellar",
-    "en": "Stellar"
-  },
-  "questions": {
-    "easy": [
-      {
-        "question": {
-          "pt": "Qual é o principal objetivo da Stellar?",
-          "en": "What is Stellar's main goal?"
-        },
-        "answers": {
-          "pt": [
-            "Facilitar pagamentos rápidos e de baixo custo",
-            "Criar NFTs",
-            "Minerar Bitcoin",
-            "Executar contratos apenas para jogos"
-          ],
-          "en": [
-            "Facilitating fast, low-cost payments",
-            "Creating NFTs",
-            "Mining Bitcoin",
-            "Running contracts only for games"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar foi criada para facilitar transferências de valor em escala global.",
-          "en": "Stellar was created to make value transfers easier at a global scale."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual é a criptomoeda nativa da Stellar?",
-          "en": "What is Stellar's native cryptocurrency?"
-        },
-        "answers": {
-          "pt": [
-            "XLM (Lumens)",
-            "ETH",
-            "BTC",
-            "AVAX"
-          ],
-          "en": [
-            "XLM (Lumens)",
-            "ETH",
-            "BTC",
-            "AVAX"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "XLM é o ativo nativo utilizado na rede Stellar.",
-          "en": "XLM is the native asset used on the Stellar network."
-        }
-      },
-      {
-        "question": {
-          "pt": "Como também é conhecido o token XLM?",
-          "en": "What is the XLM token also known as?"
-        },
-        "answers": {
-          "pt": [
-            "Lumen",
-            "Ether",
-            "Satoshi",
-            "Anchor"
-          ],
-          "en": [
-            "Lumen",
-            "Ether",
-            "Satoshi",
-            "Anchor"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "O nome oficial da moeda nativa é Lumen (XLM).",
-          "en": "The native currency's official name is Lumen (XLM)."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual característica tornou a Stellar popular para pagamentos internacionais?",
-          "en": "Which trait made Stellar popular for international payments?"
-        },
-        "answers": {
-          "pt": [
-            "Transações rápidas e taxas baixas",
-            "Mineração de alta potência",
-            "NFTs gratuitos",
-            "Jogos integrados"
-          ],
-          "en": [
-            "Fast transactions and low fees",
-            "High-power mining",
-            "Free NFTs",
-            "Built-in games"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Velocidade e baixo custo são diferenciais importantes da Stellar.",
-          "en": "Speed and low cost are important differentiators for Stellar."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que normalmente é utilizado para pagar as taxas da rede Stellar?",
-          "en": "What is normally used to pay fees on the Stellar network?"
-        },
-        "answers": {
-          "pt": [
-            "XLM",
-            "USDC",
-            "BTC",
-            "ETH"
-          ],
-          "en": [
-            "XLM",
-            "USDC",
-            "BTC",
-            "ETH"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "As taxas da rede são pagas em Lumens (XLM).",
-          "en": "Network fees are paid in Lumens (XLM)."
-        }
-      },
-      {
-        "question": {
-          "pt": "A Stellar é uma:",
-          "en": "Stellar is a:"
-        },
-        "answers": {
-          "pt": [
-            "Blockchain",
-            "Exchange",
-            "Carteira",
-            "Stablecoin"
-          ],
-          "en": [
-            "Blockchain",
-            "Exchange",
-            "Wallet",
-            "Stablecoin"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Stellar é uma blockchain focada em movimentação de ativos.",
-          "en": "Stellar is a blockchain focused on moving assets."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual destes ativos existe oficialmente na rede Stellar?",
-          "en": "Which of these assets officially exists on the Stellar network?"
-        },
-        "answers": {
-          "pt": [
-            "USDC",
-            "DOGE",
-            "BNB",
-            "SOL"
-          ],
-          "en": [
-            "USDC",
-            "DOGE",
-            "BNB",
-            "SOL"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "O USDC possui emissão oficial na Stellar.",
-          "en": "USDC has an official issuance on Stellar."
-        }
-      },
-      {
-        "question": {
-          "pt": "As taxas da Stellar costumam ser:",
-          "en": "Stellar's fees tend to be:"
-        },
-        "answers": {
-          "pt": [
-            "Muito baixas",
-            "Muito altas",
-            "Sempre gratuitas",
-            "Pagas em dólar"
-          ],
-          "en": [
-            "Very low",
-            "Very high",
-            "Always free",
-            "Paid in dollars"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A rede é conhecida por suas taxas extremamente baixas.",
-          "en": "The network is known for its extremely low fees."
-        }
-      },
-      {
-        "question": {
-          "pt": "A Stellar foi criada principalmente para:",
-          "en": "Stellar was created mainly for:"
-        },
-        "answers": {
-          "pt": [
-            "Transferência de ativos e pagamentos",
-            "Jogos blockchain",
-            "NFTs de arte",
-            "Mineração"
-          ],
-          "en": [
-            "Asset transfers and payments",
-            "Blockchain games",
-            "Art NFTs",
-            "Mining"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Seu foco sempre foi infraestrutura financeira.",
-          "en": "Its focus has always been financial infrastructure."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual destes pode existir dentro da Stellar?",
-          "en": "Which of these can exist within Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Tokens emitidos por terceiros",
-            "Apenas XLM",
-            "Somente NFTs",
-            "Apenas Bitcoin"
-          ],
-          "en": [
-            "Assets issued by third parties",
-            "Only XLM",
-            "Only NFTs",
-            "Only Bitcoin"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar permite emissão de diversos ativos.",
-          "en": "Stellar allows the issuance of several kinds of assets."
-        }
-      },
-      {
-        "question": {
-          "pt": "Quem utiliza a Stellar?",
-          "en": "Who uses Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Pessoas e empresas",
-            "Apenas bancos",
-            "Apenas governos",
-            "Somente mineradores"
-          ],
-          "en": [
-            "People and companies",
-            "Only banks",
-            "Only governments",
-            "Only miners"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A rede pode ser utilizada por qualquer pessoa.",
-          "en": "The network can be used by anyone."
-        }
-      },
-      {
-        "question": {
-          "pt": "As transações na Stellar costumam confirmar em:",
-          "en": "Transactions on Stellar usually confirm in:"
-        },
-        "answers": {
-          "pt": [
-            "Poucos segundos",
-            "Algumas horas",
-            "Vários dias",
-            "Mais de uma semana"
-          ],
-          "en": [
-            "A few seconds",
-            "A few hours",
-            "Several days",
-            "More than a week"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A confirmação normalmente leva apenas alguns segundos.",
-          "en": "Confirmation normally takes only a few seconds."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual destes é um caso de uso comum da Stellar?",
-          "en": "Which of these is a common use case for Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Remessas internacionais",
-            "Mineração residencial",
-            "Renderização 3D",
-            "Streaming de vídeo"
-          ],
-          "en": [
-            "International remittances",
-            "Home mining",
-            "3D rendering",
-            "Video streaming"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar é bastante utilizada em pagamentos internacionais.",
-          "en": "Stellar is widely used for international payments."
-        }
-      },
-      {
-        "question": {
-          "pt": "A Stellar permite criar:",
-          "en": "Stellar allows creating:"
-        },
-        "answers": {
-          "pt": [
-            "Novos ativos digitais",
-            "Novos Bitcoins",
-            "Novos blocos Ethereum",
-            "Novas exchanges"
-          ],
-          "en": [
-            "New digital assets",
-            "New Bitcoins",
-            "New Ethereum blocks",
-            "New exchanges"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Qualquer emissor pode criar ativos na rede.",
-          "en": "Any issuer can create assets on the network."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual organização apoia o desenvolvimento da Stellar?",
-          "en": "Which organization supports Stellar's development?"
-        },
-        "answers": {
-          "pt": [
-            "Stellar Development Foundation",
-            "Ethereum Foundation",
-            "Bitcoin Foundation",
-            "Ripple Labs"
-          ],
-          "en": [
-            "Stellar Development Foundation",
-            "Ethereum Foundation",
-            "Bitcoin Foundation",
-            "Ripple Labs"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar Development Foundation promove o crescimento do ecossistema.",
-          "en": "The Stellar Development Foundation promotes the ecosystem's growth."
-        }
-      },
-      {
-        "question": {
-          "pt": "O XLM serve para:",
-          "en": "What is XLM used for?"
-        },
-        "answers": {
-          "pt": [
-            "Pagar taxas e movimentar valor na rede",
-            "Minerar Bitcoin",
-            "Comprar ações",
-            "Hospedar sites"
-          ],
-          "en": [
-            "Paying fees and moving value on the network",
-            "Mining Bitcoin",
-            "Buying stocks",
-            "Hosting websites"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "XLM é utilizado nas operações da rede.",
-          "en": "XLM is used in the network's operations."
-        }
-      },
-      {
-        "question": {
-          "pt": "A Stellar foi projetada pensando principalmente em:",
-          "en": "Stellar was designed mainly with in mind:"
-        },
-        "answers": {
-          "pt": [
-            "Eficiência nos pagamentos",
-            "Jogos AAA",
-            "Metaverso",
-            "Computação em nuvem"
-          ],
-          "en": [
-            "Payment efficiency",
-            "AAA games",
-            "The metaverse",
-            "Cloud computing"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Seu foco é tornar pagamentos simples e eficientes.",
-          "en": "Its focus is making payments simple and efficient."
-        }
-      },
-      {
-        "question": {
-          "pt": "Uma das vantagens da Stellar é:",
-          "en": "One of Stellar's advantages is:"
-        },
-        "answers": {
-          "pt": [
-            "Baixo custo por transação",
-            "Necessidade de mineração",
-            "Taxas variáveis muito altas",
-            "Uso exclusivo por bancos"
-          ],
-          "en": [
-            "Low cost per transaction",
-            "The need for mining",
-            "Very high variable fees",
-            "Exclusive use by banks"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "As taxas são extremamente pequenas.",
-          "en": "Fees are extremely small."
-        }
-      },
-      {
-        "question": {
-          "pt": "A Stellar funciona apenas para pessoas físicas?",
-          "en": "Does Stellar only work for individuals?"
-        },
-        "answers": {
-          "pt": [
-            "Não, empresas também podem utilizar",
-            "Sim",
-            "Apenas bancos",
-            "Somente governos"
-          ],
-          "en": [
-            "No, companies can use it too",
-            "Yes",
-            "Only banks",
-            "Only governments"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A rede atende diferentes perfis de usuários.",
-          "en": "The network serves different types of users."
-        }
-      },
-      {
-        "question": {
-          "pt": "O objetivo da Stellar é tornar movimentação de dinheiro:",
-          "en": "Stellar's goal is to make moving money:"
-        },
-        "answers": {
-          "pt": [
-            "Mais rápida e acessível",
-            "Mais lenta",
-            "Mais cara",
-            "Mais complexa"
-          ],
-          "en": [
-            "Faster and more accessible",
-            "Slower",
-            "More expensive",
-            "More complex"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Esse é um dos principais objetivos do projeto.",
-          "en": "This is one of the project's main goals."
-        }
-      }
+/* =========================================================
+   PACOTE DE PERGUNTAS — Stellar (reconstruído do zero)
+
+   Fatos verificados por busca em 07/08/2026: layer-1 de
+   pagamentos, fundada em 2014 por Jed McCaleb e Joyce Kim,
+   mantida pela Stellar Development Foundation (SDF), consenso
+   SCP (Federated Byzantine Agreement, sem mineração/staking),
+   supply fixo de 50 bilhões de XLM, saldo mínimo de conta de
+   1 XLM, taxa base de 0.00001 XLM, Soroban (contratos em Rust
+   via WASM, lançado com o Protocol 20 em 2024), David Mazières
+   como cientista-chefe, stablecoins reais na rede (USDC da
+   Circle, YLDS da Figure, MGUSD da MoneyGram/Bridge), parcerias
+   institucionais (Franklin Templeton, DTCC), Quantum
+   Preparedness Plan (ML-DSA, migração de Ed25519). Modelo de
+   pergunta: cenário curto (sem "segundo a documentação"),
+   alternativas plausíveis, formato variado, tamanho balanceado.
+   ========================================================= */
+
+const pack = {
+  name: { pt: "Stellar", en: "Stellar" },
+  questions: {
+    easy: [
+      { question: { pt: "Você quer mandar dinheiro pro exterior gastando pouquíssima taxa. Pra que tipo de uso a Stellar foi desenhada?", en: "You want to send money abroad paying very little in fees. What use case was Stellar designed for?" },
+        answers: { pt: ["Pagamentos rápidos e baratos entre fronteiras", "Mineração intensiva de criptoativos", "Hospedagem de sites descentralizados", "Armazenamento de arquivos grandes"],
+                   en: ["Fast, cheap cross-border payments", "Intensive mining of crypto assets", "Hosting decentralized websites", "Storing large files"] }, correct: 0 },
+      { question: { pt: "Qual é o token nativo da rede Stellar?", en: "What is Stellar's native token?" },
+        answers: { pt: ["XLM (lumen)", "ETH", "SOL", "ATOM"],
+                   en: ["XLM (lumen)", "ETH", "SOL", "ATOM"] }, correct: 0 },
+      { question: { pt: "Quem fundou a Stellar, em 2014?", en: "Who founded Stellar, in 2014?" },
+        answers: { pt: ["Jed McCaleb e Joyce Kim", "Vitalik Buterin, da Ethereum", "Satoshi Nakamoto", "Charles Hoskinson"],
+                   en: ["Jed McCaleb and Joyce Kim", "Vitalik Buterin, of Ethereum", "Satoshi Nakamoto", "Charles Hoskinson"] }, correct: 0 },
+      { question: { pt: "Qual organização sem fins lucrativos mantém o desenvolvimento da Stellar?", en: "Which non-profit organization stewards Stellar's development?" },
+        answers: { pt: ["Stellar Development Foundation", "A Binance", "O Fundo Monetário Internacional", "A Ethereum Foundation"],
+                   en: ["Stellar Development Foundation", "Binance", "The International Monetary Fund", "The Ethereum Foundation"] }, correct: 0 },
+      { question: { pt: "Você envia uma transação na Stellar. Em quanto tempo ela costuma confirmar?", en: "You send a transaction on Stellar. How long does it usually take to confirm?" },
+        answers: { pt: ["Uns 5 segundos", "Cerca de 10 minutos", "Quase 1 hora", "Vários dias"],
+                   en: ["About 5 seconds", "About 10 minutes", "Almost an hour", "Several days"] }, correct: 0 },
+      { question: { pt: "A Stellar usa mineração tradicional, tipo o Bitcoin, pra validar transação?", en: "Does Stellar use traditional mining, like Bitcoin, to validate transactions?" },
+        answers: { pt: ["Não, usa um sistema de consenso sem mineração", "Sim, exatamente igual ao jeito do Bitcoin funcionar sempre", "Sim, mas só em alguns validadores", "Não, usa Proof of Stake puro"],
+                   en: ["No, it uses a mining-free consensus system", "Yes, in exactly the same way Bitcoin has always worked", "Yes, but only on some validators", "No, it uses pure Proof of Stake"] }, correct: 0 },
+      { question: { pt: "Qual é o nome do consenso usado pela Stellar?", en: "What is Stellar's consensus mechanism called?" },
+        answers: { pt: ["Stellar Consensus Protocol (SCP)", "Proof of Work tradicional", "Proof of Stake", "Proof of History"],
+                   en: ["Stellar Consensus Protocol (SCP)", "Traditional Proof of Work", "Proof of Stake", "Proof of History"] }, correct: 0 },
+      { question: { pt: "Pra evitar spam, toda conta na Stellar precisa manter um saldo mínimo. Quanto é isso hoje?", en: "To prevent spam, every Stellar account must keep a minimum balance. How much is that today?" },
+        answers: { pt: ["1 XLM", "1.000 XLM", "0,0001 XLM", "Não existe saldo mínimo"],
+                   en: ["1 XLM", "1,000 XLM", "0.0001 XLM", "There's no minimum balance"] }, correct: 0 },
+      { question: { pt: "Você quer rodar um contrato inteligente na Stellar. Qual plataforma foi feita pra isso?", en: "You want to run a smart contract on Stellar. Which platform was built for that?" },
+        answers: { pt: ["Soroban", "Solidity Chain", "EVM Stellar", "Stellar Script"],
+                   en: ["Soroban", "Solidity Chain", "EVM Stellar", "Stellar Script"] }, correct: 0 },
+      { question: { pt: "Em qual linguagem os contratos do Soroban são escritos?", en: "What language are Soroban contracts written in?" },
+        answers: { pt: ["Rust", "Solidity", "Python", "JavaScript"],
+                   en: ["Rust", "Solidity", "Python", "JavaScript"] }, correct: 0 },
+      { question: { pt: "Mito ou verdade: o supply de XLM é infinito, sem teto nenhum?", en: "Myth or fact: is XLM's supply infinite, with no cap?" },
+        answers: { pt: ["Mito, o supply é fixo em 50 bilhões", "Verdade, cresce sem limite nenhum", "Verdade, mas só até 2030", "Mito, mas ninguém sabe o teto real"],
+                   en: ["Myth, the supply is fixed at 50 billion", "Fact, it grows with absolutely no limit", "Fact, but only until 2030", "Myth, but nobody knows the real cap"] }, correct: 0 },
+      { question: { pt: "Uma stablecoin de dólar bem conhecida, da Circle, roda na Stellar desde 2021. Qual é?", en: "A well-known dollar stablecoin from Circle has run on Stellar since 2021. Which one?" },
+        answers: { pt: ["USDC", "DAI", "USDT", "BUSD"],
+                   en: ["USDC", "DAI", "USDT", "BUSD"] }, correct: 0 },
+      { question: { pt: "A Stellar processa transação usando mineração com placa de vídeo?", en: "Does Stellar process transactions using GPU mining?" },
+        answers: { pt: ["Não, o consenso dela dispensa mineração", "Sim, como no Ethereum antes do Merge", "Sim, mas só nos validadores grandes", "Não, mas exige staking obrigatório"],
+                   en: ["No, its consensus does away with mining", "Yes, like Ethereum before the Merge", "Yes, but only on the big validators", "No, but it requires mandatory staking"] }, correct: 0 },
+      { question: { pt: "Qual termo a Stellar usa pra empresas que conectam a rede a sistemas bancários tradicionais?", en: "What term does Stellar use for companies that bridge the network to traditional banking systems?" },
+        answers: { pt: ["Anchors", "Bridges", "Oráculos", "Validadores"],
+                   en: ["Anchors", "Bridges", "Oracles", "Validators"] }, correct: 0 },
+      { question: { pt: "A MoneyGram, empresa de remessas internacionais, tem parceria com a Stellar. O que essa parceria lançou na rede?", en: "MoneyGram, an international remittance company, partners with Stellar. What did that partnership launch on the network?" },
+        answers: { pt: ["Uma stablecoin (MGUSD)", "Um NFT colecionável qualquer", "Uma moeda de meme", "Um token de governança"],
+                   en: ["A stablecoin (MGUSD)", "Just any collectible NFT", "A meme coin", "A governance token"] }, correct: 0 },
+      { question: { pt: "Além de mover XLM, o que mais a Stellar permite emitir na rede?", en: "Besides moving XLM, what else does Stellar let you issue on the network?" },
+        answers: { pt: ["Outros ativos digitais", "Somente XLM, nada além", "Domínios de internet", "Certificados de nascimento"],
+                   en: ["Other digital assets", "Only XLM, nothing else", "Internet domains", "Birth certificates"] }, correct: 0 },
+      { question: { pt: "Qual é a taxa de transação básica cobrada na rede Stellar?", en: "What is the base transaction fee charged on the Stellar network?" },
+        answers: { pt: ["Uma fração de centavo (0,00001 XLM)", "Cerca de 5 dólares por transação", "1% do valor enviado", "10 XLM fixos"],
+                   en: ["A tiny fraction of a cent (0.00001 XLM)", "About 5 dollars per transaction", "1% of the amount sent", "A flat 10 XLM"] }, correct: 0 },
+      { question: { pt: "Mito ou verdade: pra usar a Stellar, você precisa minerar XLM primeiro?", en: "Myth or fact: to use Stellar, do you need to mine XLM first?" },
+        answers: { pt: ["Mito, XLM se obtém em exchange ou recebendo", "Verdade, é preciso minerar como o Bitcoin faz", "Verdade, só via staking prévio obrigatório", "Mito, mas precisa validar blocos antes"],
+                   en: ["Myth, you get XLM on an exchange or by receiving it", "Fact, you have to mine it just like Bitcoin", "Fact, only through mandatory prior staking", "Myth, but you have to validate blocks first"] }, correct: 0 },
+      { question: { pt: "Quem é o cientista-chefe da Stellar, responsável por desenhar o consenso da rede?", en: "Who is Stellar's chief scientist, responsible for designing the network's consensus?" },
+        answers: { pt: ["David Mazières", "Gavin Wood", "Anatoly Yakovenko", "Silvio Micali"],
+                   en: ["David Mazières", "Gavin Wood", "Anatoly Yakovenko", "Silvio Micali"] }, correct: 0 },
+      { question: { pt: "Uma fintech quer emitir uma stablecoin de real brasileiro na Stellar. Isso é tecnicamente possível?", en: "A fintech wants to issue a Brazilian real stablecoin on Stellar. Is that technically possible?" },
+        answers: { pt: ["Sim, a rede permite emitir qualquer ativo", "Não, só dá pra emitir dólar americano mesmo", "Não, só a própria SDF pode emitir ativo", "Sim, mas só através do Bitcoin"],
+                   en: ["Yes, the network allows issuing any asset", "No, only US dollars specifically can be issued", "No, only SDF itself can issue an asset", "Yes, but only through Bitcoin"] }, correct: 0 }
     ],
-    "medium": [
-      {
-        "question": {
-          "pt": "O que é um Anchor na Stellar?",
-          "en": "What is an Anchor on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Uma entidade que conecta ativos do mundo real à blockchain",
-            "Um tipo de carteira digital",
-            "Um validador da rede",
-            "Um contrato inteligente"
-          ],
-          "en": [
-            "An entity that connects real-world assets to the blockchain",
-            "A type of digital wallet",
-            "A network validator",
-            "A smart contract"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Anchors emitem e resgatam ativos representando moedas ou outros bens na Stellar.",
-          "en": "Anchors issue and redeem assets representing currencies or other goods on Stellar."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que representa um Asset na Stellar?",
-          "en": "What does an Asset represent on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Um ativo emitido na rede por uma conta emissora",
-            "Apenas o XLM",
-            "Um NFT",
-            "Um bloco da blockchain"
-          ],
-          "en": [
-            "An asset issued on the network by an issuing account",
-            "Only XLM",
-            "An NFT",
-            "A blockchain block"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Além do XLM, qualquer emissor pode criar ativos na rede.",
-          "en": "Besides XLM, any issuer can create assets on the network."
-        }
-      },
-      {
-        "question": {
-          "pt": "Para receber um ativo emitido por terceiros, normalmente é necessário criar uma:",
-          "en": "To receive an asset issued by a third party, you normally need to create a:"
-        },
-        "answers": {
-          "pt": [
-            "Trustline",
-            "Seed Phrase",
-            "Pool de Liquidez",
-            "Multisig"
-          ],
-          "en": [
-            "Trustline",
-            "Seed Phrase",
-            "Liquidity Pool",
-            "Multisig"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Trustline demonstra que a conta aceita determinado ativo.",
-          "en": "A Trustline shows that the account accepts a given asset."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual é a função de uma Trustline?",
-          "en": "What is the function of a Trustline?"
-        },
-        "answers": {
-          "pt": [
-            "Autorizar uma conta a manter determinado ativo",
-            "Aumentar a velocidade da rede",
-            "Criar novos blocos",
-            "Reduzir as taxas"
-          ],
-          "en": [
-            "Authorizing an account to hold a given asset",
-            "Increasing network speed",
-            "Creating new blocks",
-            "Reducing fees"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Sem uma Trustline, normalmente o ativo não pode ser recebido.",
-          "en": "Without a Trustline, the asset normally cannot be received."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que é a DEX nativa da Stellar?",
-          "en": "What is Stellar's native DEX?"
-        },
-        "answers": {
-          "pt": [
-            "Uma exchange descentralizada integrada ao protocolo",
-            "Uma carteira oficial",
-            "Um explorador de blocos",
-            "Uma blockchain separada"
-          ],
-          "en": [
-            "A decentralized exchange built into the protocol",
-            "An official wallet",
-            "A block explorer",
-            "A separate blockchain"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar possui uma exchange descentralizada integrada desde sua criação.",
-          "en": "Stellar has had a built-in decentralized exchange since its creation."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual recurso da Stellar pode encontrar automaticamente uma rota entre diferentes ativos?",
-          "en": "Which Stellar feature can automatically find a route between different assets?"
-        },
-        "answers": {
-          "pt": [
-            "Path Payments",
-            "Smart Mining",
-            "Liquidity Mining",
-            "Staking"
-          ],
-          "en": [
-            "Path Payments",
-            "Smart Mining",
-            "Liquidity Mining",
-            "Staking"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Path Payments podem converter ativos automaticamente durante uma transferência.",
-          "en": "Path Payments can automatically convert assets during a transfer."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que um Path Payment permite fazer?",
-          "en": "What does a Path Payment let you do?"
-        },
-        "answers": {
-          "pt": [
-            "Enviar um ativo e o destinatário receber outro",
-            "Minerar XLM",
-            "Criar NFTs",
-            "Executar contratos inteligentes"
-          ],
-          "en": [
-            "Send one asset while the recipient receives another",
-            "Mine XLM",
-            "Create NFTs",
-            "Execute smart contracts"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A própria rede encontra a melhor rota de conversão disponível.",
-          "en": "The network itself finds the best available conversion route."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual linguagem de contratos inteligentes foi introduzida na Stellar?",
-          "en": "Which smart-contract language was introduced on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Soroban",
-            "Solidity",
-            "RustVM",
-            "Move"
-          ],
-          "en": [
-            "Soroban",
-            "Solidity",
-            "RustVM",
-            "Move"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Soroban é a plataforma de smart contracts da Stellar.",
-          "en": "Soroban is Stellar's smart-contract platform."
-        }
-      },
-      {
-        "question": {
-          "pt": "Soroban foi criado para adicionar à Stellar:",
-          "en": "Soroban was created to add to Stellar:"
-        },
-        "answers": {
-          "pt": [
-            "Contratos inteligentes",
-            "Mineração",
-            "NFTs obrigatórios",
-            "Proof of Work"
-          ],
-          "en": [
-            "Smart contracts",
-            "Mining",
-            "Mandatory NFTs",
-            "Proof of Work"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "O Soroban expandiu as capacidades da rede.",
-          "en": "Soroban expanded the network's capabilities."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual é a principal finalidade dos Memos na Stellar?",
-          "en": "What is the main purpose of Memos on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Adicionar informações extras a uma transação",
-            "Reduzir taxas",
-            "Criar ativos",
-            "Validar blocos"
-          ],
-          "en": [
-            "Adding extra information to a transaction",
-            "Reducing fees",
-            "Creating assets",
-            "Validating blocks"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Memos ajudam exchanges e empresas a identificar depósitos.",
-          "en": "Memos help exchanges and companies identify deposits."
-        }
-      },
-      {
-        "question": {
-          "pt": "Por que exchanges costumam exigir um Memo?",
-          "en": "Why do exchanges often require a Memo?"
-        },
-        "answers": {
-          "pt": [
-            "Para identificar corretamente o destinatário do depósito",
-            "Para reduzir a taxa",
-            "Para aumentar a velocidade",
-            "Para criar Trustlines"
-          ],
-          "en": [
-            "To correctly identify the deposit's recipient",
-            "To reduce the fee",
-            "To increase speed",
-            "To create Trustlines"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Várias contas compartilham o mesmo endereço público.",
-          "en": "Several accounts share the same public address."
-        }
-      },
-      {
-        "question": {
-          "pt": "Quem define o nome e o código de um ativo emitido na Stellar?",
-          "en": "Who defines the name and code of an asset issued on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "O emissor do ativo",
-            "A Stellar Development Foundation",
-            "Os validadores",
-            "Os usuários"
-          ],
-          "en": [
-            "The asset's issuer",
-            "The Stellar Development Foundation",
-            "The validators",
-            "The users"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Cada emissor escolhe o código e controla a emissão.",
-          "en": "Each issuer chooses the code and controls the issuance."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que diferencia um ativo emitido de XLM?",
-          "en": "What sets an issued asset apart from XLM?"
-        },
-        "answers": {
-          "pt": [
-            "Ele depende de um emissor",
-            "Ele paga menos taxas",
-            "Ele não usa blockchain",
-            "Ele pode ser minerado"
-          ],
-          "en": [
-            "It depends on an issuer",
-            "It pays lower fees",
-            "It doesn't use blockchain",
-            "It can be mined"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Ativos emitidos possuem uma conta emissora responsável.",
-          "en": "Issued assets have a responsible issuing account."
-        }
-      },
-      {
-        "question": {
-          "pt": "Uma empresa deseja tokenizar dólares na Stellar. O primeiro passo é:",
-          "en": "A company wants to tokenize dollars on Stellar. The first step is:"
-        },
-        "answers": {
-          "pt": [
-            "Criar um ativo emitido",
-            "Minerar XLM",
-            "Criar uma subnet",
-            "Executar staking"
-          ],
-          "en": [
-            "Creating an issued asset",
-            "Mining XLM",
-            "Creating a subnet",
-            "Performing staking"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A empresa atua como emissora daquele ativo.",
-          "en": "The company acts as the issuer of that asset."
-        }
-      },
-      {
-        "question": {
-          "pt": "A DEX da Stellar permite negociar:",
-          "en": "Stellar's DEX allows trading:"
-        },
-        "answers": {
-          "pt": [
-            "Ativos emitidos diretamente na rede",
-            "Apenas XLM",
-            "Somente NFTs",
-            "Apenas Bitcoin"
-          ],
-          "en": [
-            "Assets issued directly on the network",
-            "Only XLM",
-            "Only NFTs",
-            "Only Bitcoin"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Qualquer ativo emitido pode ser negociado na DEX.",
-          "en": "Any issued asset can be traded on the DEX."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual recurso facilita pagamentos entre diferentes moedas sem que ambas as partes precisem possuir o mesmo ativo?",
-          "en": "Which feature makes payments between different currencies easier without both parties needing to hold the same asset?"
-        },
-        "answers": {
-          "pt": [
-            "Path Payments",
-            "Mining",
-            "Halving",
-            "Fork"
-          ],
-          "en": [
-            "Path Payments",
-            "Mining",
-            "Halving",
-            "Fork"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A rede realiza as conversões automaticamente quando existe liquidez.",
-          "en": "The network performs conversions automatically when liquidity exists."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual destes faz parte do ecossistema financeiro da Stellar?",
-          "en": "Which of these is part of Stellar's financial ecosystem?"
-        },
-        "answers": {
-          "pt": [
-            "Anchors",
-            "Miner Pools",
-            "ASICs",
-            "Proof of Work"
-          ],
-          "en": [
-            "Anchors",
-            "Miner Pools",
-            "ASICs",
-            "Proof of Work"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Anchors são peças fundamentais para conectar ativos reais à blockchain.",
-          "en": "Anchors are key pieces connecting real-world assets to the blockchain."
-        }
-      },
-      {
-        "question": {
-          "pt": "Por que uma Trustline também ajuda na segurança?",
-          "en": "Why does a Trustline also help with security?"
-        },
-        "answers": {
-          "pt": [
-            "Evita receber ativos que o usuário não deseja",
-            "Impede ataques hackers",
-            "Aumenta a velocidade",
-            "Reduz o consumo de energia"
-          ],
-          "en": [
-            "It prevents receiving assets the user doesn't want",
-            "It prevents hacker attacks",
-            "It increases speed",
-            "It reduces energy consumption"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "O usuário escolhe explicitamente quais ativos aceita.",
-          "en": "The user explicitly chooses which assets they accept."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual componente é responsável por emitir um ativo na Stellar?",
-          "en": "Which component is responsible for issuing an asset on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "A conta emissora",
-            "A Stellar Development Foundation",
-            "Os validadores",
-            "Os Anchors automaticamente"
-          ],
-          "en": [
-            "The issuing account",
-            "The Stellar Development Foundation",
-            "The validators",
-            "The Anchors automatically"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Todo ativo possui uma conta emissora identificável.",
-          "en": "Every asset has an identifiable issuing account."
-        }
-      },
-      {
-        "question": {
-          "pt": "Uma das principais vantagens da arquitetura da Stellar é:",
-          "en": "One of the main advantages of Stellar's architecture is:"
-        },
-        "answers": {
-          "pt": [
-            "Integrar pagamentos, emissão de ativos e DEX em uma única rede",
-            "Exigir mineração",
-            "Cobrar altas taxas",
-            "Funcionar apenas para bancos"
-          ],
-          "en": [
-            "Integrating payments, asset issuance, and a DEX in a single network",
-            "Requiring mining",
-            "Charging high fees",
-            "Working only for banks"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar reúne diversos recursos financeiros diretamente no protocolo.",
-          "en": "Stellar brings several financial features directly into the protocol."
-        }
-      }
+    medium: [
+      { question: { pt: "O consenso da Stellar (SCP) é uma Federated Byzantine Agreement. O que isso significa na prática?", en: "Stellar's consensus (SCP) is a Federated Byzantine Agreement. What does that mean in practice?" },
+        answers: { pt: ["Validadores confiam em conjuntos escolhidos por reputação", "Todo validador precisa minerar um bloco de cada vez", "Um único validador central aprova tudo", "Validadores competem por recompensa financeira"],
+                   en: ["Validators trust sets chosen by reputation", "Every validator has to mine just one block at a time", "A single central validator approves everything", "Validators compete for a financial reward"] }, correct: 0 },
+      { question: { pt: "Por que a Stellar não paga recompensa financeira direta pra quem roda um nó validador?", en: "Why doesn't Stellar pay a direct financial reward to whoever runs a validator node?" },
+        answers: { pt: ["O consenso depende de reputação e colaboração, não de incentivo on-chain", "Validadores só existem mesmo em teoria, nunca de fato na prática", "A rede é totalmente centralizada num único nó", "Só a SDF tem permissão de validar"],
+                   en: ["Consensus relies on reputation and collaboration, not on-chain incentives", "Validators really only exist in theory, never in practice at all", "The network is fully centralized on a single node", "Only SDF is allowed to validate"] }, correct: 0 },
+      { question: { pt: "Você quer saber por que o Soroban compila contrato pra WASM em vez de rodar Rust direto. Qual é a razão prática?", en: "You want to know why Soroban compiles contracts to WASM instead of running Rust directly. What's the practical reason?" },
+        answers: { pt: ["WASM permite execução segura e portável num ambiente controlado", "Rust não pode ser compilado de jeito nenhum hoje", "WASM é mais lento, mas mais bonito visualmente", "Não tem razão técnica, é só escolha de marketing"],
+                   en: ["WASM allows safe, portable execution in a controlled environment", "Rust can't be compiled at all today", "WASM is slower, but visually nicer", "There's no technical reason, it's just marketing"] }, correct: 0 },
+      { question: { pt: "A SDF guarda uma fatia grande do supply total de XLM. Isso levanta qual tipo de preocupação entre analistas?", en: "SDF holds a large share of XLM's total supply. What kind of concern does that raise among analysts?" },
+        answers: { pt: ["Concentração de posse e influência sobre a rede", "Risco de a rede parar de funcionar já amanhã mesmo", "Impossibilidade legal de vender XLM algum dia", "Nenhuma, é público e sem efeito prático"],
+                   en: ["Concentration of ownership and influence over the network", "Risk of the network shutting down as soon as tomorrow", "A legal impossibility of ever selling XLM", "None, it's public and has no practical effect"] }, correct: 0 },
+      { question: { pt: "Qual é a função de um Anchor dentro do ecossistema Stellar?", en: "What is an Anchor's role within the Stellar ecosystem?" },
+        answers: { pt: ["Fazer a ponte entre moeda tradicional e ativos na rede", "Minerar novos blocos da rede Stellar sozinho", "Validar contratos inteligentes do Soroban", "Emitir o token nativo XLM"],
+                   en: ["Bridging traditional currency and on-network assets", "Mining new Stellar blocks all alone", "Validating Soroban smart contracts", "Issuing the native XLM token"] }, correct: 0 },
+      { question: { pt: "A Stellar é descrita como uma rede onde o XLM não é gas pra tudo, diferente de outras redes de contrato inteligente. O que isso quer dizer?", en: "Stellar is described as a network where XLM isn't gas for everything, unlike other smart contract networks. What does that mean?" },
+        answers: { pt: ["Nem toda operação na rede depende só do XLM como taxa", "XLM não serve mesmo pra pagar taxa nenhuma na prática", "XLM é a única forma de valor que existe na rede", "A rede não cobra taxa de jeito nenhum"],
+                   en: ["Not every network operation depends solely on XLM as its fee", "XLM really doesn't work as a fee at all in practice", "XLM is the only form of value that exists on the network", "The network doesn't charge any fee at all"] }, correct: 0 },
+      { question: { pt: "Qual protocolo específico, lançado em 2024, trouxe contratos inteligentes completos pra Stellar?", en: "Which specific protocol, launched in 2024, brought full smart contracts to Stellar?" },
+        answers: { pt: ["Protocol 20", "Protocol 5", "Protocol 100", "Protocol Zero"],
+                   en: ["Protocol 20", "Protocol 5", "Protocol 100", "Protocol Zero"] }, correct: 0 },
+      { question: { pt: "Por que finalidade rápida ('fast finality') é um diferencial destacado da Stellar frente a redes de Proof of Work?", en: "Why is fast finality highlighted as a Stellar advantage compared to Proof of Work networks?" },
+        answers: { pt: ["A transação fica confirmada em segundos, sem espera de blocos extras", "Finality basicamente significa que a rede nunca cai de jeito nenhum", "Só existe finality em redes com mineração", "Finality é sinônimo de taxa zero"],
+                   en: ["The transaction is confirmed in seconds, no extra block wait needed", "Finality basically means the network never goes down at all", "Finality only exists on mining-based networks", "Finality is synonymous with zero fees"] }, correct: 0 },
+      { question: { pt: "Você é uma instituição financeira regulada avaliando rede pra tokenizar ativos. Por que a Stellar entraria na lista?", en: "You're a regulated financial institution evaluating a network to tokenize assets. Why would Stellar make the list?" },
+        answers: { pt: ["Por ser voltada a pagamento e liquidação regulada, com taxa previsível", "Porque é a única blockchain que existe hoje em dia", "Porque não tem nenhum tipo de taxa cobrada", "Porque exige aprovação prévia de um banco central"],
+                   en: ["For its focus on regulated payment and settlement, with predictable fees", "Because it's the only blockchain that exists nowadays", "Because it charges no fee of any kind", "Because it requires prior central bank approval"] }, correct: 0 },
+      { question: { pt: "O que caracteriza tecnicamente um bridge asset, o papel que o XLM historicamente cumpre?", en: "What technically characterizes a bridge asset, the role XLM has historically played?" },
+        answers: { pt: ["Um ativo intermediário usado pra conectar pares de moedas diferentes", "Um token que só existe dentro de pontes entre blockchains bem diferentes", "Um contrato que trava fundos permanentemente", "Um tipo de NFT de transporte"],
+                   en: ["An intermediary asset used to connect different currency pairs", "A token that only exists inside bridges between quite different blockchains", "A contract that permanently locks funds", "A type of transport NFT"] }, correct: 0 },
+      { question: { pt: "Qual grande gestora de ativos tradicional é citada como parceira da Stellar em iniciativas de tokenização?", en: "Which major traditional asset manager is cited as a Stellar partner in tokenization initiatives?" },
+        answers: { pt: ["Franklin Templeton", "A Coca-Cola, empresa de bebidas", "A Apple", "A OpenAI"],
+                   en: ["Franklin Templeton", "Coca-Cola, the beverage company", "Apple", "OpenAI"] }, correct: 0 },
+      { question: { pt: "Mito ou verdade: a DTCC, que compensa negociações no mercado financeiro dos EUA, também tem envolvimento com a Stellar?", en: "Myth or fact: does DTCC, which clears US financial market trades, also have involvement with Stellar?" },
+        answers: { pt: ["Verdade, é citada como parceira institucional", "Mito, a DTCC nunca teve relação com cripto", "Verdade, mas só rejeitando a rede publicamente", "Mito, é confundida com outra empresa"],
+                   en: ["Fact, it's cited as an institutional partner", "Myth, DTCC never had any relation to crypto", "Fact, but only by publicly rejecting the network", "Myth, it's confused with another company"] }, correct: 0 },
+      { question: { pt: "Por que taxa previsível é considerado um ponto forte da Stellar pro caso de uso de pagamento?", en: "Why is predictable fees considered a Stellar strength for payment use cases?" },
+        answers: { pt: ["Facilita empresas planejarem custo de transação em escala", "Taxa previsível significa taxa zero sempre, sem exceção", "Isso só importa pra quem faz mineração", "Não afeta empresa nenhuma, só usuário final"],
+                   en: ["It helps companies plan transaction cost at scale", "Predictable fees always mean zero fees, no exceptions", "It only matters to miners", "It doesn't affect companies at all, only end users"] }, correct: 0 },
+      { question: { pt: "Qual stablecoin, emitida pela empresa Figure, também roda na rede Stellar?", en: "Which stablecoin, issued by the company Figure, also runs on the Stellar network?" },
+        answers: { pt: ["YLDS", "DAI", "FRAX", "LUSD"],
+                   en: ["YLDS", "DAI", "FRAX", "LUSD"] }, correct: 0 },
+      { question: { pt: "Você quer saber o que significa a Stellar focar em asset issuance além de só mover XLM. O que esse termo descreve?", en: "You want to know what it means for Stellar to focus on asset issuance beyond just moving XLM. What does that term describe?" },
+        answers: { pt: ["A capacidade de criar e emitir outros ativos digitais na rede", "A capacidade de minerar novos blocos de toda a rede", "A emissão exclusiva de NFTs colecionáveis", "A criação de novas blockchains dentro da Stellar"],
+                   en: ["The ability to create and issue other digital assets on the network", "The ability to mine new blocks across the whole network", "The exclusive issuance of collectible NFTs", "Creating new blockchains inside Stellar"] }, correct: 0 },
+      { question: { pt: "O que o Quantum Preparedness Plan da Stellar busca resolver a longo prazo?", en: "What does Stellar's Quantum Preparedness Plan aim to solve in the long run?" },
+        answers: { pt: ["Proteger a rede contra ataques de computação quântica futura", "Aumentar bastante a velocidade de mineração de toda a rede", "Eliminar taxas de transação por completo", "Trocar o consenso da rede pra Proof of Work"],
+                   en: ["Protecting the network against future quantum computing attacks", "Substantially increasing the mining speed of the entire network", "Completely eliminating transaction fees", "Switching the network's consensus to Proof of Work"] }, correct: 0 },
+      { question: { pt: "Qual esquema de assinatura, um padrão do NIST, a Stellar está adotando como parte da resistência quântica?", en: "Which signature scheme, a NIST standard, is Stellar adopting as part of its quantum resistance plan?" },
+        answers: { pt: ["ML-DSA", "RSA-2048", "SHA-256", "ECDSA clássico"],
+                   en: ["ML-DSA", "RSA-2048", "SHA-256", "Classic ECDSA"] }, correct: 0 },
+      { question: { pt: "Por que dá pra dizer que a Stellar não compete diretamente com redes tipo Ethereum, mesmo tendo contrato inteligente via Soroban?", en: "Why can you say Stellar doesn't directly compete with networks like Ethereum, even having smart contracts via Soroban?" },
+        answers: { pt: ["O foco continua sendo pagamento e ativos regulados, não computação geral", "A Stellar não tem mesmo contrato inteligente nenhum disponível", "A Stellar é mais lenta que qualquer outra rede", "A Stellar cobra taxa mais alta que qualquer outra"],
+                   en: ["The focus stays on payments and regulated assets, not general computing", "Stellar really has no smart contracts available at all", "Stellar is slower than any other network", "Stellar charges higher fees than any other network"] }, correct: 0 },
+      { question: { pt: "Qual conferência anual reúne parcerias institucionais e bancárias em torno da Stellar?", en: "Which annual conference brings together institutional and banking partnerships around Stellar?" },
+        answers: { pt: ["Meridian", "DevCon", "Consensus Summit", "Breakpoint"],
+                   en: ["Meridian", "DevCon", "Consensus Summit", "Breakpoint"] }, correct: 0 },
+      { question: { pt: "Uma empresa quer tokenizar dívida corporativa regulada. Por que ela consideraria a Stellar em vez de uma rede genérica?", en: "A company wants to tokenize regulated corporate debt. Why would it consider Stellar over a generic network?" },
+        answers: { pt: ["Pelo histórico de foco em ativos regulados e liquidação previsível", "Porque só mesmo a Stellar permite qualquer tipo de token existir", "Porque outras redes proíbem tokenização por lei", "Porque a Stellar garante valorização do ativo"],
+                   en: ["Its track record with regulated assets and predictable settlement", "Because only Stellar really allows any kind of token to exist", "Because other networks legally prohibit tokenization", "Because Stellar guarantees the asset will appreciate"] }, correct: 0 }
     ],
-    "hard": [
-      {
-        "question": {
-          "pt": "O que é o Stellar Consensus Protocol (SCP)?",
-          "en": "What is the Stellar Consensus Protocol (SCP)?"
-        },
-        "answers": {
-          "pt": [
-            "O mecanismo de consenso utilizado pela Stellar",
-            "Uma carteira oficial",
-            "Um explorador de blocos",
-            "Uma stablecoin"
-          ],
-          "en": [
-            "The consensus mechanism used by Stellar",
-            "An official wallet",
-            "A block explorer",
-            "A stablecoin"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "O SCP é o protocolo que permite aos validadores chegarem a um consenso sem mineração.",
-          "en": "SCP is the protocol that lets validators reach consensus without mining."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual mecanismo de consenso a Stellar utiliza?",
-          "en": "Which consensus mechanism does Stellar use?"
-        },
-        "answers": {
-          "pt": [
-            "Stellar Consensus Protocol (SCP)",
-            "Proof of Work",
-            "Proof of Stake",
-            "Proof of Authority"
-          ],
-          "en": [
-            "Stellar Consensus Protocol (SCP)",
-            "Proof of Work",
-            "Proof of Stake",
-            "Proof of Authority"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar utiliza o Stellar Consensus Protocol, baseado em Federated Byzantine Agreement.",
-          "en": "Stellar uses the Stellar Consensus Protocol, based on Federated Byzantine Agreement."
-        }
-      },
-      {
-        "question": {
-          "pt": "O SCP pertence à família dos protocolos de:",
-          "en": "SCP belongs to which family of protocols?"
-        },
-        "answers": {
-          "pt": [
-            "Federated Byzantine Agreement (FBA)",
-            "Proof of Work",
-            "Proof of Capacity",
-            "Delegated Proof of Stake"
-          ],
-          "en": [
-            "Federated Byzantine Agreement (FBA)",
-            "Proof of Work",
-            "Proof of Capacity",
-            "Delegated Proof of Stake"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "O SCP foi desenvolvido utilizando o modelo Federated Byzantine Agreement.",
-          "en": "SCP was developed using the Federated Byzantine Agreement model."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que são Quorum Slices na Stellar?",
-          "en": "What are Quorum Slices on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Conjuntos de nós confiáveis escolhidos por cada validador",
-            "Blocos menores",
-            "Carteiras multisig",
-            "Pools de liquidez"
-          ],
-          "en": [
-            "Sets of trusted nodes chosen by each validator",
-            "Smaller blocks",
-            "Multisig wallets",
-            "Liquidity pools"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Cada validador escolhe em quais outros nós confia para formar consenso.",
-          "en": "Each validator chooses which other nodes it trusts to form consensus."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual é uma vantagem do SCP em relação ao Proof of Work?",
-          "en": "What is an advantage of SCP over Proof of Work?"
-        },
-        "answers": {
-          "pt": [
-            "Não depende de mineração",
-            "Produz mais blocos por segundo utilizando ASICs",
-            "Requer maior consumo de energia",
-            "Utiliza halving"
-          ],
-          "en": [
-            "It doesn't depend on mining",
-            "It produces more blocks per second using ASICs",
-            "It requires more energy consumption",
-            "It uses halving"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "O SCP elimina a necessidade de mineração para validar transações.",
-          "en": "SCP eliminates the need for mining to validate transactions."
-        }
-      },
-      {
-        "question": {
-          "pt": "Na Stellar, o emissor de um ativo pode:",
-          "en": "On Stellar, an asset's issuer can:"
-        },
-        "answers": {
-          "pt": [
-            "Controlar a emissão daquele ativo",
-            "Controlar toda a blockchain",
-            "Alterar o saldo de qualquer conta",
-            "Modificar transações antigas"
-          ],
-          "en": [
-            "Control the issuance of that asset",
-            "Control the entire blockchain",
-            "Change any account's balance",
-            "Modify old transactions"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Cada emissor controla apenas os ativos que criou.",
-          "en": "Each issuer only controls the assets they created."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual recurso permite que uma conta exija múltiplas assinaturas para autorizar transações?",
-          "en": "Which feature lets an account require multiple signatures to authorize transactions?"
-        },
-        "answers": {
-          "pt": [
-            "Multisig",
-            "Trustline",
-            "Memo",
-            "Path Payment"
-          ],
-          "en": [
-            "Multisig",
-            "Trustline",
-            "Memo",
-            "Path Payment"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar suporta múltiplos níveis de assinatura para aumentar a segurança.",
-          "en": "Stellar supports multiple signature levels to increase security."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual é a principal vantagem do Multisig?",
-          "en": "What is the main advantage of Multisig?"
-        },
-        "answers": {
-          "pt": [
-            "Aumentar a segurança das contas",
-            "Reduzir taxas",
-            "Acelerar o consenso",
-            "Criar novos ativos"
-          ],
-          "en": [
-            "Increasing account security",
-            "Reducing fees",
-            "Speeding up consensus",
-            "Creating new assets"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Exigir várias assinaturas reduz riscos de movimentações não autorizadas.",
-          "en": "Requiring several signatures reduces the risk of unauthorized transfers."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que acontece se não existir liquidez suficiente para um Path Payment?",
-          "en": "What happens if there isn't enough liquidity for a Path Payment?"
-        },
-        "answers": {
-          "pt": [
-            "O pagamento não é executado",
-            "A Stellar cria liquidez automaticamente",
-            "A rede utiliza XLM obrigatoriamente",
-            "O emissor cobre a diferença"
-          ],
-          "en": [
-            "The payment doesn't go through",
-            "Stellar automatically creates liquidity",
-            "The network mandatorily uses XLM",
-            "The issuer covers the difference"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Os Path Payments dependem da existência de liquidez entre os ativos.",
-          "en": "Path Payments depend on liquidity existing between the assets."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual recurso da Stellar permite negociar ativos sem depender de uma exchange centralizada?",
-          "en": "Which Stellar feature allows trading assets without relying on a centralized exchange?"
-        },
-        "answers": {
-          "pt": [
-            "DEX nativa",
-            "Mining Pool",
-            "Bridge",
-            "Validator Hub"
-          ],
-          "en": [
-            "Native DEX",
-            "Mining Pool",
-            "Bridge",
-            "Validator Hub"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A exchange descentralizada faz parte do próprio protocolo.",
-          "en": "The decentralized exchange is part of the protocol itself."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual é um dos principais casos de uso da Stellar atualmente?",
-          "en": "What is one of Stellar's main use cases today?"
-        },
-        "answers": {
-          "pt": [
-            "Tokenização de ativos do mundo real",
-            "Mineração residencial",
-            "NFTs de jogos",
-            "Computação distribuída"
-          ],
-          "en": [
-            "Tokenizing real-world assets",
-            "Home mining",
-            "Game NFTs",
-            "Distributed computing"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar é amplamente utilizada para emissão de ativos tokenizados.",
-          "en": "Stellar is widely used for issuing tokenized assets."
-        }
-      },
-      {
-        "question": {
-          "pt": "Soroban foi desenvolvido principalmente para:",
-          "en": "Soroban was mainly developed to:"
-        },
-        "answers": {
-          "pt": [
-            "Expandir as capacidades de contratos inteligentes da Stellar",
-            "Substituir o XLM",
-            "Criar um novo consenso",
-            "Minerar blocos"
-          ],
-          "en": [
-            "Expand Stellar's smart-contract capabilities",
-            "Replace XLM",
-            "Create a new consensus",
-            "Mine blocks"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Soroban adiciona programabilidade ao ecossistema Stellar.",
-          "en": "Soroban adds programmability to the Stellar ecosystem."
-        }
-      },
-      {
-        "question": {
-          "pt": "Por que o SCP possui baixo consumo energético?",
-          "en": "Why does SCP have low energy consumption?"
-        },
-        "answers": {
-          "pt": [
-            "Porque não utiliza mineração",
-            "Porque possui menos usuários",
-            "Porque roda apenas em servidores oficiais",
-            "Porque utiliza ASICs modernos"
-          ],
-          "en": [
-            "Because it doesn't use mining",
-            "Because it has fewer users",
-            "Because it only runs on official servers",
-            "Because it uses modern ASICs"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Sem Proof of Work, o gasto energético é muito menor.",
-          "en": "Without Proof of Work, energy spending is much lower."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual recurso da Stellar pode ser utilizado para distribuir ativos a usuários específicos futuramente?",
-          "en": "Which Stellar feature can be used to distribute assets to specific users in the future?"
-        },
-        "answers": {
-          "pt": [
-            "Claimable Balances",
-            "Halving",
-            "Liquidity Mining",
-            "Proof of Burn"
-          ],
-          "en": [
-            "Claimable Balances",
-            "Halving",
-            "Liquidity Mining",
-            "Proof of Burn"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Claimable Balances permitem que ativos fiquem disponíveis para resgate pelo destinatário.",
-          "en": "Claimable Balances let assets remain available for the recipient to claim."
-        }
-      },
-      {
-        "question": {
-          "pt": "O que caracteriza um ativo tokenizado na Stellar?",
-          "en": "What characterizes a tokenized asset on Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Representar digitalmente um ativo do mundo real",
-            "Ser sempre um NFT",
-            "Existir apenas em exchanges",
-            "Ser obrigatoriamente XLM"
-          ],
-          "en": [
-            "Digitally representing a real-world asset",
-            "Always being an NFT",
-            "Existing only on exchanges",
-            "Being mandatorily XLM"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Ativos tokenizados representam moedas, commodities, ações e outros bens.",
-          "en": "Tokenized assets represent currencies, commodities, stocks, and other goods."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual destes componentes é essencial para conectar dinheiro tradicional à Stellar?",
-          "en": "Which of these components is essential for connecting traditional money to Stellar?"
-        },
-        "answers": {
-          "pt": [
-            "Anchors",
-            "Validators",
-            "Memos",
-            "Claimable Balances"
-          ],
-          "en": [
-            "Anchors",
-            "Validators",
-            "Memos",
-            "Claimable Balances"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Anchors fazem a ponte entre o sistema financeiro tradicional e a blockchain.",
-          "en": "Anchors bridge the traditional financial system and the blockchain."
-        }
-      },
-      {
-        "question": {
-          "pt": "A arquitetura da Stellar foi projetada priorizando principalmente:",
-          "en": "Stellar's architecture was designed mainly prioritizing:"
-        },
-        "answers": {
-          "pt": [
-            "Eficiência em movimentação de ativos",
-            "Mineração de criptomoedas",
-            "Execução de jogos",
-            "Armazenamento de arquivos"
-          ],
-          "en": [
-            "Efficiency in moving assets",
-            "Cryptocurrency mining",
-            "Running games",
-            "File storage"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Todo o protocolo foi pensado para facilitar pagamentos e emissão de ativos.",
-          "en": "The whole protocol was designed to facilitate payments and asset issuance."
-        }
-      },
-      {
-        "question": {
-          "pt": "Por que empresas utilizam a Stellar para emitir ativos?",
-          "en": "Why do companies use Stellar to issue assets?"
-        },
-        "answers": {
-          "pt": [
-            "Porque a infraestrutura já possui recursos nativos para isso",
-            "Porque exige mineração",
-            "Porque utiliza Proof of Work",
-            "Porque não possui taxas"
-          ],
-          "en": [
-            "Because the infrastructure already has native features for it",
-            "Because it requires mining",
-            "Because it uses Proof of Work",
-            "Because it has no fees"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A emissão de ativos faz parte do protocolo desde sua criação.",
-          "en": "Asset issuance has been part of the protocol since its creation."
-        }
-      },
-      {
-        "question": {
-          "pt": "Qual característica torna a Stellar adequada para infraestrutura financeira global?",
-          "en": "Which trait makes Stellar suitable for global financial infrastructure?"
-        },
-        "answers": {
-          "pt": [
-            "Baixas taxas, rapidez e suporte nativo a ativos",
-            "Alta recompensa de mineração",
-            "Grande consumo energético",
-            "Necessidade de hardware especializado"
-          ],
-          "en": [
-            "Low fees, speed, and native asset support",
-            "High mining rewards",
-            "High energy consumption",
-            "Need for specialized hardware"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "Essas características favorecem pagamentos e tokenização em escala.",
-          "en": "These traits favor payments and tokenization at scale."
-        }
-      },
-      {
-        "question": {
-          "pt": "O principal objetivo da Stellar é servir como:",
-          "en": "Stellar's main goal is to serve as:"
-        },
-        "answers": {
-          "pt": [
-            "Infraestrutura para movimentação e emissão de ativos digitais",
-            "Rede exclusiva para NFTs",
-            "Blockchain focada em mineração",
-            "Sistema de armazenamento em nuvem"
-          ],
-          "en": [
-            "Infrastructure for moving and issuing digital assets",
-            "A network exclusive to NFTs",
-            "A blockchain focused on mining",
-            "A cloud storage system"
-          ]
-        },
-        "correct": 0,
-        "explanation": {
-          "pt": "A Stellar foi desenvolvida para conectar pessoas, empresas e ativos através de uma infraestrutura financeira aberta.",
-          "en": "Stellar was developed to connect people, companies, and assets through open financial infrastructure."
-        }
-      }
+    hard: [
+      { question: { pt: "Por que auditorias independentes de código são citadas como boa prática mesmo pra uma rede madura como a Stellar?", en: "Why are independent code audits cited as good practice even for a mature network like Stellar?" },
+        answers: { pt: ["Reduzem a chance de falhas passarem despercebidas pela equipe interna", "Auditoria independente nunca encontra nada relevante mesmo", "Só redes novas e sem histórico precisam de auditoria", "Isso substitui por completo a necessidade de testes internos"],
+                   en: ["They reduce the chance of flaws slipping past the internal team", "Independent audits never find anything relevant at all", "Only new networks with no track record need audits", "It fully replaces the need for internal testing"] }, correct: 0 },
+      { question: { pt: "A Federated Byzantine Agreement da Stellar não depende de um conjunto único e fixo de validadores globais. O que caracteriza essa flexibilidade?", en: "Stellar's Federated Byzantine Agreement doesn't depend on one single, fixed global validator set. What characterizes that flexibility?" },
+        answers: { pt: ["Cada participante escolhe seus próprios quorum slices de confiança", "Existe mesmo só um validador central definido pela própria SDF", "Todo validador precisa confiar exatamente nos mesmos nós", "A rede sorteia validadores aleatoriamente a cada bloco"],
+                   en: ["Each participant chooses its own trusted quorum slices", "There really is only one central validator defined by SDF itself", "Every validator must trust the exact same nodes", "The network randomly draws validators every block"] }, correct: 0 },
+      { question: { pt: "Qual é a diferença prática entre segurança baseada em Proof of Stake e segurança baseada em reputação de validador, como na Stellar?", en: "What's the practical difference between Proof of Stake security and validator-reputation security, like Stellar's?" },
+        answers: { pt: ["Uma pune financeiramente mau comportamento, a outra depende de credibilidade", "As duas são exatamente equivalentes tecnicamente sempre", "Proof of Stake nunca pode ser usado em pagamento", "Reputação de validador é sempre mais rápida"],
+                   en: ["One financially punishes bad behavior, the other relies on credibility", "The two are always exactly technically equivalent", "Proof of Stake can never be used for payments", "Validator reputation is always faster"] }, correct: 0 },
+      { question: { pt: "Soroban roda contrato num ambiente hospedado com métricas de custo. Qual é o propósito prático disso?", en: "Soroban runs contracts in a metered, hosted environment. What's the practical purpose of that?" },
+        answers: { pt: ["Prever e limitar custo computacional de forma consistente", "Impedir que qualquer contrato seja executado na prática", "Eliminar a necessidade de taxa de rede", "Tornar a linguagem Rust obrigatória em qualquer blockchain"],
+                   en: ["Predicting and limiting computational cost consistently", "Preventing any contract from ever running", "Eliminating the need for network fees", "Making Rust mandatory on any blockchain"] }, correct: 0 },
+      { question: { pt: "Por que ter vários emissores de stablecoin de dólar na mesma rede (USDC, YLDS, MGUSD) é relevante pro ecossistema Stellar?", en: "Why does having several dollar stablecoin issuers on the same network (USDC, YLDS, MGUSD) matter for Stellar's ecosystem?" },
+        answers: { pt: ["Mostra adoção institucional diversificada, não dependência de um emissor só", "Significa que só uma dessas é real, e as outras são cópias falsas", "Prova que a rede obriga todo mundo a usar dólar", "É irrelevante, todas são idênticas tecnicamente"],
+                   en: ["It shows diversified institutional adoption, not reliance on one issuer", "It means only one of them is real, the rest are fake copies", "It proves the network forces everyone to use dollars", "It's irrelevant, they're all technically identical"] }, correct: 0 },
+      { question: { pt: "Qual seria o risco técnico de a SDF concentrar uma fatia tão grande do supply de XLM?", en: "What would be the technical risk of SDF holding such a large share of XLM's supply?" },
+        answers: { pt: ["Influência desproporcional sobre a percepção de descentralização", "Nenhum mesmo, supply concentrado nunca importa de verdade nenhuma", "Isso torna a rede automaticamente mais segura", "Isso é ilegal em qualquer jurisdição do mundo"],
+                   en: ["Disproportionate influence over decentralization perception", "None at all, concentrated supply never really matters in any way", "It automatically makes the network more secure", "It's illegal in every jurisdiction in the world"] }, correct: 0 },
+      { question: { pt: "Por que a resistência quântica é introduzida em estágios, começando pelo Soroban, em vez de de uma vez só?", en: "Why is quantum resistance rolled out in stages, starting with Soroban, instead of all at once?" },
+        answers: { pt: ["Permite migração gradual sem quebrar contas e integrações existentes", "Porque só o Soroban tem valor, e o resto não importa nada", "Porque a criptografia atual já está quebrada hoje", "Porque é mais barato fazer tudo de uma vez, mas escolheram não"],
+                   en: ["It allows gradual migration without breaking existing accounts", "Because only Soroban has value, the rest doesn't matter at all", "Because current cryptography is already broken today", "Because doing it all at once is cheaper, but they chose not to"] }, correct: 0 },
+      { question: { pt: "Qual é a implicação técnica de a Stellar planejar depreciar Ed25519 no estágio final do roadmap quântico?", en: "What's the technical implication of Stellar planning to deprecate Ed25519 in the final stage of its quantum roadmap?" },
+        answers: { pt: ["Contas antigas precisarão migrar pra um novo tipo de chave", "Ed25519 já não é mesmo usado hoje em lugar nenhum de toda a rede", "Depreciar Ed25519 não afeta nenhuma conta existente", "Isso elimina de vez a necessidade de qualquer assinatura"],
+                   en: ["Old accounts will need to migrate to a new key type", "Ed25519 really isn't used anywhere on the entire network today", "Deprecating Ed25519 doesn't affect any existing account", "It fully eliminates the need for any signature"] }, correct: 0 },
+      { question: { pt: "Por que liquidação previsível é um argumento técnico mais específico a favor da Stellar do que só taxa baixa?", en: "Why is predictable settlement a more specific technical argument for Stellar than just low fees?" },
+        answers: { pt: ["Instituições precisam de certeza sobre quando uma transação vira final", "Liquidação previsível e taxa baixa significam exatamente a mesma coisa", "Isso só importa pra usuário final, nunca pra instituição", "Liquidação imprevisível é uma vantagem, não desvantagem"],
+                   en: ["Institutions need certainty about when a transaction becomes final", "Predictable settlement and low fees mean exactly the same thing always", "It only matters to end users, never to institutions", "Unpredictable settlement is an advantage, not a drawback"] }, correct: 0 },
+      { question: { pt: "Qual seria a consequência de um validador Stellar escolher um quorum slice mal conectado ao restante da rede?", en: "What would be the consequence of a Stellar validator picking a quorum slice poorly connected to the rest of the network?" },
+        answers: { pt: ["Risco de o validador ficar isolado do consenso geral", "Nenhuma, quorum slice é só um detalhe decorativo", "A rede inteira para de funcionar imediatamente", "O validador automaticamente vira o novo validador principal"],
+                   en: ["Risk of the validator becoming isolated from general consensus", "None, quorum slice is just a decorative detail", "The entire network stops working immediately", "The validator automatically becomes the new main validator"] }, correct: 0 },
+      { question: { pt: "Por que WASM é considerado mais portável do que rodar bytecode nativo de uma linguagem específica direto na blockchain?", en: "Why is WASM considered more portable than running a specific language's native bytecode directly on the blockchain?" },
+        answers: { pt: ["Roda de forma consistente em diferentes ambientes e implementações", "Só funciona dentro do navegador Chrome, e nada além disso", "Bytecode nativo nunca pode ser auditado por ninguém", "WASM elimina a necessidade de qualquer taxa de rede"],
+                   en: ["It runs consistently across different environments and implementations", "It only works inside the Chrome browser, and nothing else", "Native bytecode can never be audited by anyone", "WASM eliminates the need for any network fee"] }, correct: 0 },
+      { question: { pt: "Qual seria uma limitação real de usar a Stellar pra um caso de uso de computação genérica pesada?", en: "What would be a real limitation of using Stellar for a heavy general-purpose computing use case?" },
+        answers: { pt: ["Ela não foi desenhada com esse tipo de carga como prioridade", "Não existe limitação nenhuma, ela é idêntica ao Ethereum sempre", "A rede proíbe qualquer computação por lei", "Isso é tecnicamente impossível em qualquer rede que exista"],
+                   en: ["It wasn't designed with that kind of load as a priority", "There's no limitation at all, it's always identical to Ethereum", "The network legally prohibits any computation", "That's technically impossible on any network that exists"] }, correct: 0 },
+      { question: { pt: "Por que uma parceria com a DTCC é considerada mais significativa do que uma parceria com uma exchange cripto comum?", en: "Why is a partnership with DTCC considered more significant than one with an ordinary crypto exchange?" },
+        answers: { pt: ["Envolve infraestrutura já usada pelo mercado financeiro regulado", "Exchanges cripto nunca fazem parceria com blockchain nenhuma mesmo", "A DTCC é, tecnicamente, dona da rede Stellar", "Isso garante valorização automática do preço do XLM"],
+                   en: ["It involves infrastructure already used by regulated finance", "Crypto exchanges never really partner with any blockchain at all", "DTCC technically owns the Stellar network", "It guarantees automatic appreciation of XLM's price"] }, correct: 0 },
+      { question: { pt: "Qual é a relação entre o saldo mínimo baixo de conta (1 XLM) e o objetivo de acessibilidade da Stellar?", en: "What's the relationship between the low minimum account balance (1 XLM) and Stellar's accessibility goal?" },
+        answers: { pt: ["Reduz a barreira financeira pra abrir e manter uma conta", "O saldo mínimo não tem relação com acessibilidade nenhuma", "Saldo mínimo alto sempre favorece mais gente entrar", "1 XLM é, na prática, um valor proibitivo pra qualquer um"],
+                   en: ["It lowers the financial barrier to open and keep an account", "The minimum balance has no relation to accessibility at all", "A high minimum balance always helps more people join", "1 XLM is, in practice, a prohibitive amount for anyone"] }, correct: 0 },
+      { question: { pt: "Por que emissão nativa de ativos, sem precisar de contrato inteligente, é uma característica arquitetural distinta da Stellar?", en: "Why is native asset issuance, with no smart contract required, a distinct architectural trait of Stellar?" },
+        answers: { pt: ["Existe desde a base da rede, antes até do Soroban existir", "Só passou a existir depois que o Soroban foi lançado", "Nenhuma rede permite emitir ativo sem contrato inteligente", "Emissão de ativos é exclusividade de rede com Proof of Work"],
+                   en: ["It has existed since the network's base layer, even before Soroban", "It only started existing after Soroban launched", "No network allows issuing an asset without a smart contract", "Asset issuance is exclusive to Proof of Work networks"] }, correct: 0 },
+      { question: { pt: "Qual seria o motivo técnico de uma stablecoin preferir emissão nativa na Stellar em vez de via contrato do Soroban?", en: "What would be the technical reason a stablecoin prefers native issuance on Stellar over a Soroban contract?" },
+        answers: { pt: ["Aproveitar a infraestrutura de emissão já nativa e madura da rede", "Contratos inteligentes não funcionam de jeito nenhum na Stellar hoje", "Emissão nativa é, sempre, tecnicamente mais cara pra fazer", "Só assim o ativo emitido pode ter algum valor de mercado"],
+                   en: ["Leveraging the network's already-native, mature issuance infrastructure", "Smart contracts don't work at all on Stellar today", "Native issuance is always technically more expensive", "Only that way can the issued asset have any market value"] }, correct: 0 },
+      { question: { pt: "Por que diversidade de validadores é citada como fator central pra resiliência, mesmo sem incentivo financeiro direto?", en: "Why is validator diversity cited as central to resilience, even without a direct financial incentive?" },
+        answers: { pt: ["Reduz o risco de um grupo pequeno controlar o consenso", "Diversidade de validador não afeta resiliência de forma nenhuma", "Só existe um único validador oficial permitido na rede", "Mais validadores sempre tornam a rede tecnicamente mais lenta"],
+                   en: ["It reduces the risk of a small group controlling consensus", "Validator diversity doesn't affect resilience in any way", "Only one single official validator is allowed on the network", "More validators always technically make the network slower"] }, correct: 0 },
+      { question: { pt: "Qual é a implicação prática de a Stellar alcançar finality em segundos pro caso de liquidação de pagamento internacional?", en: "What's the practical implication of Stellar reaching finality in seconds for international payment settlement?" },
+        answers: { pt: ["Reduz o tempo de incerteza entre envio e confirmação definitiva", "Finality rápida sempre aumenta bastante o custo de cada transação", "Isso só importa pra quem faz trading puramente especulativo", "Finality rápida elimina de vez a necessidade de qualquer anchor"],
+                   en: ["It reduces the uncertainty window between sending and final confirmation", "Fast finality always significantly raises each transaction's cost", "It only matters to purely speculative traders", "Fast finality fully eliminates the need for any anchor"] }, correct: 0 },
+      { question: { pt: "Por que manter vários SDKs (Java, JavaScript etc) sincronizados é relevante pro ecossistema de desenvolvedores da Stellar?", en: "Why does keeping several SDKs (Java, JavaScript, etc) in sync matter for Stellar's developer ecosystem?" },
+        answers: { pt: ["Reduz a barreira técnica pra integrar a partir de diferentes stacks", "SDKs não têm efeito nenhum real sobre a adoção de rede nenhuma", "Só existe um único SDK oficial, os demais são falsos", "Manter SDKs sincronizados aumenta a taxa cobrada por transação"],
+                   en: ["It lowers the technical barrier to integrate from different stacks", "SDKs have no real effect on any network's adoption at all", "Only one single official SDK exists, the rest are fake", "Keeping SDKs in sync raises the fee charged per transaction"] }, correct: 0 },
+      { question: { pt: "Por que avaliar uma rede como a Stellar exige olhar além do preço do token, pra infraestrutura e parceria que ela sustenta?", en: "Why does evaluating a network like Stellar require looking past the token price, at the infrastructure and partnerships it sustains?" },
+        answers: { pt: ["O valor de uma rede de pagamento também se mede pela adoção institucional real", "Porque o preço do token realmente nunca reflete nada sobre a rede toda", "Porque infraestrutura e parceria nunca afetam o valor de uma rede", "Porque só o preço do token importa de verdade, o resto é ruído"],
+                   en: ["A payment network's value is also measured by real institutional adoption", "Because token price never reflects anything about the whole network", "Because infrastructure and partnerships never affect a network's value", "Because only token price truly matters, the rest is noise"] }, correct: 0 }
     ]
   }
 };
 
-export default questionPack;
+export default pack;

@@ -17,20 +17,18 @@
    ========================================================= */
 import cryptoBasics from "./crypto-basics.js";
 import avalanche from "./avalanche.js";
-import pagfinance from "./pagfinance.js";
-import stellar from "./stellar.js";
-import bitgetWallet from "./bitget-wallet.js";
-import amulets from "./amulets.js";
 import evervalue from "./evervalue.js";
+import capyfi from "./capyfi.js";
+import bitgetWallet from "./bitget-wallet.js";
+import stellar from "./stellar.js";
 
 export const questionPacks = [
   cryptoBasics,
   avalanche,
-  pagfinance,
-  stellar,
+  evervalue,
+  capyfi,
   bitgetWallet,
-  amulets,
-  evervalue
+  stellar
 ];
 
 export default questionPacks;
