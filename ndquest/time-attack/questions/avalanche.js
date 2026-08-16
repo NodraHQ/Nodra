@@ -471,8 +471,8 @@ const questionPack = {
       },
       {
         "question": {
-          "pt": "Você quer transferir um ativo digital na Avalanche. Qual chain foi feita pra isso?",
-          "en": "You want to transfer a digital asset on Avalanche. Which chain was built for that?"
+          "pt": "Você quer usar um protocolo DeFi compatível com Ethereum na Avalanche. Em qual chain você provavelmente vai interagir?",
+          "en": "You want to use an Ethereum-compatible DeFi protocol on Avalanche. Which chain will you most likely interact with?"
         },
         "answers": {
           "pt": [
@@ -488,7 +488,7 @@ const questionPack = {
             "S-Chain"
           ]
         },
-        "correct": 0
+        "correct": 1
       },
       {
         "question": {
@@ -596,26 +596,26 @@ const questionPack = {
         "correct": 0
       },
       {
-        "question": {
-          "pt": "Uma característica importante do consenso Avalanche é:",
-          "en": "An important feature of the Avalanche consensus is:"
-        },
-        "answers": {
-          "pt": [
-            "Alta velocidade de confirmação",
-            "Necessidade de mineração",
-            "Blocos de 10 minutos",
-            "Uso obrigatório de ASICs"
-          ],
-          "en": [
-            "High confirmation speed",
-            "The need for mining",
-            "10-minute blocks",
-            "Mandatory use of ASICs"
-          ]
-        },
-        "correct": 0
-      },
+  "question": {
+    "pt": "O que permite que o consenso Avalanche confirme transações rapidamente sem depender de mineração?",
+    "en": "What allows Avalanche consensus to confirm transactions quickly without relying on mining?"
+  },
+  "answers": {
+    "pt": [
+      "Amostragem repetida entre validadores para chegar a um consenso",
+      "Mineração por ASICs para produzir blocos mais rapidamente",
+      "Blocos fixos de 10 minutos produzidos pelos validadores",
+      "Um único servidor central que confirma todas as transações"
+    ],
+    "en": [
+      "Repeated sampling among validators to reach consensus",
+      "ASIC mining to produce blocks faster",
+      "Fixed 10-minute blocks produced by validators",
+      "A single central server that confirms all transactions"
+    ]
+  },
+  "correct": 0
+},
       {
         "question": {
           "pt": "Qual destas aplicações faz parte do ecossistema Avalanche?",
@@ -686,14 +686,14 @@ const questionPack = {
         },
         "answers": {
           "pt": [
-            "Não",
-            "Sim",
+            "Mito",
+            "Verdade",
             "Depende da Avalanche L1",
             "Depende da carteira"
           ],
           "en": [
-            "No",
-            "Yes",
+            "Myth",
+            "Fact",
             "It depends on the Avalanche L1",
             "It depends on the wallet"
           ]

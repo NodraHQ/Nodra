@@ -1,20 +1,20 @@
 # Nodra Academy Architecture
 
-Version: 2.0
+Version: 2.1
 Status: Stable
-Last Updated: July 2026
+Last Updated: August 2026
 
 ---
 
 # Migration Note (v1.0 to v2.0)
 
-Nodra is growing beyond the Academy. Community, Games, Labs and Tools are planned as independent verticals, each living at the repository root next to academy/.
+Nodra is growing beyond the Academy. NDQuest (the games platform) and the About page already exist as independent, self-contained verticals living at the repository root next to academy/. Community, Labs and Tools remain planned as future independent verticals, following the exact same pattern.
 
 Version 1.0 of this document assumed a single shared assets/ and translations/ folder at the repository root, used by both the Academy and the Nodra home page.
 
-That model does not scale once multiple verticals exist: a single shared folder means changing one vertical (for example, swapping a logo in Games) risks touching files another vertical (Academy) depends on, and a single translation file grows without bound as verticals and modules are added.
+That model does not scale once multiple verticals exist: a single shared folder means changing one vertical (for example, swapping a logo in NDQuest) risks touching files another vertical (Academy) depends on, and a single translation file grows without bound as verticals and modules are added.
 
-Version 2.0 compartmentalizes the Academy: it becomes fully self-contained, with its own assets/ and translations/ living inside academy/ itself. The Nodra home page (the root index.html) is likewise self-contained, with its own assets/ and translations/ at the repository root. Future verticals (community/, games/, etc.) follow the exact same self-contained pattern.
+Version 2.0 compartmentalizes the Academy: it becomes fully self-contained, with its own assets/ and translations/ living inside academy/ itself. The Nodra home page (the root index.html), NDQuest and the About page are likewise self-contained, each with its own assets/ and translations/ (or equivalent i18n setup) inside their own folder. Future verticals (community/, labs/, tools/) follow the exact same self-contained pattern.
 
 Nothing in this migration changes the visual identity, behavior, HTML structure, CSS rules, JavaScript rules, quiz system, glossary system or any other rule in this document. It only changes where shared Academy resources physically live, and how Academy translations are split into files.
 
@@ -44,7 +44,7 @@ Every module should feel like another chapter of the same course instead of an i
 
 Consistency is more important than creativity.
 
-The Academy is also fully self-contained. It does not share assets, translations or JavaScript with the Nodra home page or with any other Nodra vertical. This is intentional: it must be possible to change the Academy without any risk of affecting Community, Games, Labs, Tools or the Nodra home page, and vice versa.
+The Academy is also fully self-contained. It does not share assets, translations or JavaScript with the Nodra home page or with any other Nodra vertical (NDQuest, About, or future verticals). This is intentional: it must be possible to change the Academy without any risk of affecting NDQuest, About, Community, Labs, Tools or the Nodra home page, and vice versa.
 
 ---
 
@@ -55,8 +55,9 @@ The repository root contains one folder per Nodra vertical, plus the Nodra home 
 Repository root:
 
 academy/
+ndquest/ (games platform: quest-drop/, time-attack/, show-down/, tap-rush/, roulette/)
+about/
 community/ (future)
-games/ (future)
 labs/ (future)
 tools/ (future)
 assets/ (home page only)
@@ -135,7 +136,7 @@ Global Academy files must never be modified unless explicitly requested.
 
 Academy modules must reference these assets using paths relative to academy/, never reaching outside of academy/ (for example, never linking to a root-level assets/ folder).
 
-The Nodra home page and any other Nodra vertical maintain their own separate assets/, and must never be referenced from inside academy/, and vice versa. A small amount of duplication (for example, variables.css existing both in academy/assets/ and in the root assets/) is expected and accepted, in exchange for each vertical being independently changeable.
+The Nodra home page and any other Nodra vertical (NDQuest, About, or future verticals) maintain their own separate assets/, and must never be referenced from inside academy/, and vice versa. A small amount of duplication (for example, variables.css existing both in academy/assets/ and in the root assets/) is expected and accepted, in exchange for each vertical being independently changeable.
 
 ---
 
