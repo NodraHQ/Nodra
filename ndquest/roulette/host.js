@@ -1,14 +1,14 @@
 // ==================================================================
-// ROULETTE — host.js
+// ROULETTE - host.js
 //
 // Três formas de montar a lista de nomes:
-//   1. "import"  — puxa quem já jogou Time Attack ou Show Down numa
+//   1. "import"  - puxa quem já jogou Time Attack ou Show Down numa
 //                  sala anterior (consulta direta nas tabelas desses
-//                  jogos, mesmo projeto Supabase — não é import de
+//                  jogos, mesmo projeto Supabase - não é import de
 //                  arquivo, é leitura de dado em tempo de execução).
-//   2. "qr"      — cria uma sala própria da Roleta, código/QR, quem
+//   2. "qr"      - cria uma sala própria da Roleta, código/QR, quem
 //                  entra só digita o nome.
-//   3. "paste"   — cola uma lista pronta, um nome por linha.
+//   3. "paste"   - cola uma lista pronta, um nome por linha.
 //
 // Depois de montada a lista, a tela muda pra roda. Cada giro sorteia
 // um nome, soma na lista de ganhadores, e (se o host deixar marcado)
@@ -33,6 +33,92 @@ function t(key, vars) {
         });
     }
     return text;
+}
+
+// --------------------------------------------------------
+// Badges do jogador - mini-card evoluído do "quadrinho simples só
+// com nome", pedido ao vivo: até 3 badges pequenos que a pessoa
+// escolheu destacar, ao lado do nome na lista de participantes.
+// Cópia própria desta pasta (mesma lógica dos outros jogos).
+// --------------------------------------------------------
+
+const BADGE_ICONS = {
+    trophy: '<path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/>',
+    award: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+    medal: '<path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>',
+    crown: '<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+    gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
+    flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+};
+
+function buildMiniIconSvg(iconKey) {
+    const inner = BADGE_ICONS[iconKey];
+    if (!inner) return '';
+    return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+}
+
+async function loadPlayerBadgeMap(userIds) {
+    const validIds = [...new Set(userIds.filter(Boolean))];
+    if (validIds.length === 0) return new Map();
+
+    const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
+        window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', validIds),
+        window.ndquestSupabase
+            .from('user_badges')
+            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+            .in('user_id', validIds),
+    ]);
+
+    const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
+    const map = new Map();
+
+    (userBadgeRows || []).forEach((row) => {
+        const featuredSet = featuredById.get(row.user_id);
+        const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+        if (!isFeatured) return;
+
+        const list = map.get(row.user_id) || [];
+        if (list.length >= 3) return;
+        list.push(row.badges);
+        map.set(row.user_id, list);
+    });
+
+    return map;
+}
+
+function buildMiniBadgeRow(badges) {
+    if (!badges || badges.length === 0) return '';
+    const chips = badges
+        .map((b) => {
+            if (b.image_url) {
+                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+            }
+            const color = b.icon_color || b.background_color || '#888';
+            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+        })
+        .join('');
+    return `<div class="mini-badge-row">${chips}</div>`;
+}
+
+// --------------------------------------------------------
+// Identidade - se a pessoa estiver logada, host_id fica registrado
+// junto da sala (ver docs/MATCH_HISTORY_ARCHITECTURE.md). Deslogado,
+// fica null - hosteia normal, só não entra no histórico.
+// --------------------------------------------------------
+
+// Bug real confirmado ao vivo: antes isso guardava o resultado em
+// cache pra sempre depois da primeira checagem - numa aba que fica
+// aberta por horas, ou depois de trocar de conta sem recarregar a
+// página, esse valor guardado ficava desatualizado, e o servidor
+// rejeitava porque o host_id/user_id enviado não batia mais com quem
+// a pessoa realmente é agora. getSession() é uma leitura local e
+// barata do Supabase (não faz chamada de rede), então nunca precisou
+// desse cache - checa fresco toda vez.
+async function getCurrentUserId() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.id ?? null;
 }
 
 function applyTranslations() {
@@ -126,7 +212,7 @@ function showScreen(el) {
 }
 
 // --------------------------------------------------------
-// Tema de marca (white label) — mesmo sistema dos outros jogos.
+// Tema de marca (white label) - mesmo sistema dos outros jogos.
 // --------------------------------------------------------
 
 function populateThemeSelect() {
@@ -314,6 +400,7 @@ function generateRoomCode() {
 }
 
 let qrRoomId = null;
+let qrRoomCode = null;
 let qrRealtimeChannel = null;
 
 qrCreateBtn.addEventListener('click', async () => {
@@ -331,6 +418,7 @@ qrCreateBtn.addEventListener('click', async () => {
     qrCreateBtn.disabled = true;
 
     const roomCode = generateRoomCode();
+    const hostUserId = await getCurrentUserId();
 
     const { data, error } = await window.ndquestSupabase
         .from('roulette_rooms')
@@ -338,7 +426,8 @@ qrCreateBtn.addEventListener('click', async () => {
             room_code: roomCode,
             host_name: hostName,
             status: 'open',
-            theme_name: selectedTheme.name
+            theme_name: selectedTheme.name,
+            host_id: hostUserId
         })
         .select()
         .single();
@@ -351,7 +440,22 @@ qrCreateBtn.addEventListener('click', async () => {
         return;
     }
 
+    if (hostUserId) {
+        window.ndquestSupabase
+            .from('match_history')
+            .insert({
+                user_id: hostUserId,
+                role: 'host',
+                game: 'roulette',
+                room_code: roomCode
+            })
+            .then(({ error: historyError }) => {
+                if (historyError) console.error('Roulette host history error:', historyError);
+            });
+    }
+
     qrRoomId = data.id;
+    qrRoomCode = roomCode;
 
     qrBeforeCreate.hidden = true;
     qrAfterCreate.hidden = false;
@@ -367,7 +471,7 @@ qrCreateBtn.addEventListener('click', async () => {
 async function loadQrPlayers(roomId) {
     const { data, error } = await window.ndquestSupabase
         .from('roulette_players')
-        .select('nickname')
+        .select('nickname, user_id')
         .eq('room_id', roomId);
 
     if (error) {
@@ -387,6 +491,12 @@ function renderQrPlayers(players) {
     }
     qrEmpty.hidden = true;
     qrPlayersList.innerHTML = players.map((p) => `<span class="player-chip">${p.nickname}</span>`).join('');
+
+    loadPlayerBadgeMap(players.map((p) => p.user_id)).then((badgeMap) => {
+        qrPlayersList.innerHTML = players
+            .map((p) => `<span class="player-chip">${p.nickname}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`)
+            .join('');
+    });
 }
 
 function subscribeToQrPlayers(roomId) {
@@ -448,6 +558,7 @@ continueBtn.addEventListener('click', () => {
     winners = [];
     renderWinners();
     buildWheel(currentPool, true);
+    syncPoolToRoom();
     showScreen(screenWheel);
 });
 
@@ -470,6 +581,19 @@ function wheelPoint(angleDeg, radius) {
         x: WHEEL_CENTER + radius * Math.sin(rad),
         y: WHEEL_CENTER - radius * Math.cos(rad)
     };
+}
+
+// Sincroniza a lista de nomes da roda pro banco - reportado ao vivo:
+// o jogador nunca via a roleta girando, só "você está dentro". Só
+// faz sentido pro modo "sala própria" (QR/código) - o modo
+// "importar" sorteia nomes de outro jogo, não existe sala de roleta
+// de verdade por trás pra sincronizar com ninguém.
+async function syncPoolToRoom() {
+    if (!qrRoomId) return;
+    await window.ndquestSupabase
+        .from('roulette_rooms')
+        .update({ current_pool: currentPool, spin_status: 'idle' })
+        .eq('id', qrRoomId);
 }
 
 function buildWheel(pool, resetRotation) {
@@ -593,6 +717,23 @@ spinBtn.addEventListener('click', () => {
     const extraSpins = 6 * 360;
     currentRotationDeg += extraSpins + delta;
 
+    // Sincroniza pro banco - reportado ao vivo: jogador nunca via a
+    // roleta girando. Não precisa sincronizar o ângulo exato (cada
+    // tela calcula a própria animação a partir do próprio zero) - só
+    // precisa saber QUEM ganhou e QUANDO começou, pra cada jogador
+    // montar a própria animação de giro chegando no mesmo resultado.
+    if (qrRoomId) {
+        window.ndquestSupabase
+            .from('roulette_rooms')
+            .update({
+                spin_status: 'spinning',
+                spin_started_at: new Date().toISOString(),
+                current_winner_index: winnerIndex,
+                current_winner_name: winnerName,
+            })
+            .eq('id', qrRoomId);
+    }
+
     // Remover a classe "is-idle" e já mandar a transição no mesmo
     // instante às vezes faz o navegador não perceber a virada de
     // estado (a transição simplesmente não dispara, sem erro
@@ -625,6 +766,22 @@ function onSpinComplete(winnerIndex, winnerName) {
     winnerBannerName.textContent = winnerName;
     winnerBanner.hidden = false;
 
+    if (qrRoomId) {
+        window.ndquestSupabase
+            .from('roulette_rooms')
+            .update({ spin_status: 'finished' })
+            .eq('id', qrRoomId);
+    }
+
+    // Grava o resultado de verdade - antes o sorteio só vivia na
+    // tela do host, o histórico do jogador registrava só que ele
+    // entrou, nunca quem ganhou. Só faz sentido pro modo "sala
+    // própria" (QR/código) - o modo "importar" sorteia nomes de OUTRO
+    // jogo, não existe sala de roleta de verdade por trás pra gravar.
+    if (qrRoomId && qrRoomCode) {
+        recordWinnerInHistory(qrRoomId, qrRoomCode, winnerName, winners.length);
+    }
+
     if (removeWinnerToggle.checked) {
         currentPool.splice(winnerIndex, 1);
         if (currentPool.length === 0) {
@@ -632,8 +789,53 @@ function onSpinComplete(winnerIndex, winnerName) {
             spinBtn.textContent = t('wheel.everyoneWon');
         } else {
             buildWheel(currentPool, true);
+            syncPoolToRoom();
         }
     }
+}
+
+// Encontra a linha real do vencedor (via roulette_players, que tem o
+// user_id confiável) e marca o resultado no lugar certo - logado vai
+// pro match_history (via política nova, host só mexe em roleta que
+// ele mesmo hospedou), anônimo vai pro guest_participants. placement
+// é a ordem em que a pessoa foi sorteada, não uma posição de "1º
+// lugar" única - múltiplos sorteios na mesma sala geram várias
+// posições (1, 2, 3...).
+async function recordWinnerInHistory(roomId, roomCode, winnerName, placement) {
+
+    const { data: winnerPlayerRow, error: playerLookupError } = await window.ndquestSupabase
+        .from('roulette_players')
+        .select('user_id, nickname')
+        .eq('room_id', roomId)
+        .eq('nickname', winnerName)
+        .maybeSingle();
+
+    if (playerLookupError || !winnerPlayerRow) {
+        console.error('Roulette: não achou a linha do vencedor pra gravar o resultado', playerLookupError);
+        return;
+    }
+
+    if (winnerPlayerRow.user_id) {
+        const { error } = await window.ndquestSupabase
+            .from('match_history')
+            .update({ placement })
+            .eq('user_id', winnerPlayerRow.user_id)
+            .eq('game', 'roulette')
+            .eq('room_code', roomCode)
+            .eq('role', 'player');
+
+        if (error) console.error('Roulette: erro ao gravar vencedor logado no histórico', error);
+    } else {
+        const { error } = await window.ndquestSupabase
+            .from('guest_participants')
+            .update({ placement })
+            .eq('nickname', winnerPlayerRow.nickname)
+            .eq('game', 'roulette')
+            .eq('room_code', roomCode);
+
+        if (error) console.error('Roulette: erro ao gravar vencedor guest no histórico', error);
+    }
+
 }
 
 // --------------------------------------------------------
@@ -679,6 +881,7 @@ spinAgainBtn.addEventListener('click', () => {
     winnerBanner.hidden = true;
     renderWinners();
     buildWheel(currentPool, true);
+    syncPoolToRoom();
     spinBtn.disabled = false;
     spinBtn.textContent = t('wheel.spinBtn');
 });
@@ -691,6 +894,7 @@ changeNamesLink.addEventListener('click', (event) => {
     originalPool = [];
     winners = [];
     qrRoomId = null;
+    qrRoomCode = null;
 
     if (qrRealtimeChannel) {
         window.ndquestSupabase.removeChannel(qrRealtimeChannel);

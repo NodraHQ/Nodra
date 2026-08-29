@@ -1,0 +1,15 @@
+
+# Dependencies
+node_modules/
+
+# macOS
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# macOS
+.DS_Store
+
+# Supabase CLI
+supabase/.temp/

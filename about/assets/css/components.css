@@ -794,3 +794,121 @@ a:focus{
         flex-wrap:wrap;
     }
 }
+
+/* ==========================================================================
+   NAV-AUTH — widget de login na navbar completa (avatar + nome +
+   dropdown). Ver assets/js/navAuth.js.
+   ========================================================================== */
+
+.nav-auth-signin{
+    font-size:14px;
+    font-weight:600;
+}
+
+.nav-auth-widget{
+    position:relative;
+}
+
+.nav-auth-trigger{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    /* Antes era "sem borda, sem fundo até o hover" — ficava pelado
+       do lado do toggle de idioma, que tem borda e fundo o tempo
+       todo. Bug visual real reportado ao vivo: mesmo tratamento de
+       pílula com contorno que já usamos nos jogos. */
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--border);
+    cursor:pointer;
+    padding:4px 12px 4px 4px;
+    border-radius:999px;
+    color:var(--text);
+}
+
+.nav-auth-trigger:hover{
+    background:rgba(255,255,255,.04);
+}
+
+.nav-auth-avatar-slot{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.nav-auth-avatar-img{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    object-fit:cover;
+    flex-shrink:0;
+    display:block;
+}
+
+.nav-auth-avatar-fallback{
+    /* Branco em vez de quase-preto: contraste garantido em cima do
+       azul de marca, não depende de o azul estar mais claro ou mais
+       escuro em algum contexto específico. */
+    background:var(--primary);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    line-height:1;
+}
+
+.nav-auth-name{
+    font-size:14px;
+    font-weight:600;
+    line-height:1;
+}
+
+.nav-auth-dropdown{
+    position:absolute;
+    top:calc(100% + 8px);
+    right:0;
+    background:#0d1420;
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    min-width:160px;
+    padding:6px;
+    display:none;
+    flex-direction:column;
+    gap:2px;
+    z-index:100;
+}
+
+.nav-auth-dropdown.is-open{
+    display:flex;
+}
+
+.nav-auth-dropdown a,
+.nav-auth-dropdown button{
+    display:block;
+    width:100%;
+    text-align:left;
+    padding:8px 10px;
+    border-radius:6px;
+    font-size:14px;
+    background:none;
+    border:none;
+    color:var(--text);
+    cursor:pointer;
+}
+
+.nav-auth-dropdown a:hover,
+.nav-auth-dropdown button:hover{
+    background:rgba(255,255,255,.06);
+}
+
+/* Regra global de segurança: [hidden] precisa sempre esconder de
+   verdade, mesmo que outra classe do elemento defina display. Sem
+   isso, a especificidade de uma classe cancela silenciosamente o
+   comportamento nativo de hidden — já causou bug real mais de uma
+   vez neste projeto. */
+[hidden]{
+    display:none !important;
+}

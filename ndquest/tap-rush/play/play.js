@@ -1,9 +1,9 @@
 // ==================================================================
-// TAP RUSH — play/play.js
+// TAP RUSH - play/play.js
 //
 // O jogador só toca. O total de toques não é mandado um por um pro
 // banco (ia sobrecarregar rápido com gente tocando várias vezes por
-// segundo) — acumula um contador local e manda o total atualizado
+// segundo) - acumula um contador local e manda o total atualizado
 // pro Supabase a cada ~150ms, só se tiver mudado.
 // ==================================================================
 
@@ -25,6 +25,92 @@ function t(key, vars) {
         });
     }
     return text;
+}
+
+// --------------------------------------------------------
+// Badges do jogador - mini-card evoluído do "quadrinho simples só
+// com nome", pedido ao vivo: até 3 badges pequenos que a pessoa
+// escolheu destacar, no ranking. Cópia própria desta pasta (mesma
+// lógica dos outros jogos).
+// --------------------------------------------------------
+
+const BADGE_ICONS = {
+    trophy: '<path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/>',
+    award: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+    medal: '<path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>',
+    crown: '<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+    gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
+    flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+};
+
+function buildMiniIconSvg(iconKey) {
+    const inner = BADGE_ICONS[iconKey];
+    if (!inner) return '';
+    return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+}
+
+async function loadPlayerBadgeMap(userIds) {
+    const validIds = [...new Set(userIds.filter(Boolean))];
+    if (validIds.length === 0) return new Map();
+
+    const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
+        window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', validIds),
+        window.ndquestSupabase
+            .from('user_badges')
+            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+            .in('user_id', validIds),
+    ]);
+
+    const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
+    const map = new Map();
+
+    (userBadgeRows || []).forEach((row) => {
+        const featuredSet = featuredById.get(row.user_id);
+        const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+        if (!isFeatured) return;
+
+        const list = map.get(row.user_id) || [];
+        if (list.length >= 3) return;
+        list.push(row.badges);
+        map.set(row.user_id, list);
+    });
+
+    return map;
+}
+
+function buildMiniBadgeRow(badges) {
+    if (!badges || badges.length === 0) return '';
+    const chips = badges
+        .map((b) => {
+            if (b.image_url) {
+                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+            }
+            const color = b.icon_color || b.background_color || '#888';
+            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+        })
+        .join('');
+    return `<div class="mini-badge-row">${chips}</div>`;
+}
+
+// --------------------------------------------------------
+// Identidade - se a pessoa estiver logada, user_id fica registrado
+// junto do jogador (ver docs/MATCH_HISTORY_ARCHITECTURE.md).
+// Deslogado, fica null - joga normal, só não entra no histórico.
+// --------------------------------------------------------
+
+// Bug real confirmado ao vivo: antes isso guardava o resultado em
+// cache pra sempre depois da primeira checagem - numa aba que fica
+// aberta por horas, ou depois de trocar de conta sem recarregar a
+// página, esse valor guardado ficava desatualizado, e o servidor
+// rejeitava porque o host_id/user_id enviado não batia mais com quem
+// a pessoa realmente é agora. getSession() é uma leitura local e
+// barata do Supabase (não faz chamada de rede), então nunca precisou
+// desse cache - checa fresco toda vez.
+async function getCurrentUserId() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.id ?? null;
 }
 
 function applyTranslations() {
@@ -96,7 +182,7 @@ if (roomFromUrl) {
 }
 
 // --------------------------------------------------------
-// Tema de marca — lido da sala, só aplicado.
+// Tema de marca - lido da sala, só aplicado.
 // --------------------------------------------------------
 
 function hexToRgbChannels(hex) {
@@ -206,62 +292,133 @@ joinRoomBtn.addEventListener('click', async () => {
 
     joinRoomBtn.disabled = true;
 
-    const { data, error } = await window.ndquestSupabase
-        .from('tap_rush_rooms')
-        .select('*')
-        .eq('room_code', roomCode)
-        .maybeSingle();
+    // try/finally garante que o botão só reabilita no fim de tudo -
+    // mesmo bug de corrida corrigido no Show Down: antes reabilitava
+    // logo depois da busca da sala, com a criação da linha do
+    // jogador ainda rodando por baixo, abrindo brecha pra clique
+    // duplo criar duas linhas pra mesma conta.
+    try {
 
-    joinRoomBtn.disabled = false;
+        const { data, error } = await window.ndquestSupabase
+            .from('tap_rush_rooms')
+            .select('*')
+            .eq('room_code', roomCode)
+            .maybeSingle();
 
-    if (error || !data) {
-        joinError.textContent = t('errors.roomNotFound');
-        return;
+        if (error || !data) {
+            joinError.textContent = t('errors.roomNotFound');
+            return;
+        }
+
+        if (data.status === 'closed') {
+            joinError.textContent = t('errors.roomClosed');
+            return;
+        }
+
+        currentRoom = data;
+
+        const joinUserId = await getCurrentUserId();
+
+        // Se a pessoa está logada e já tem uma linha nessa sala, reaproveita
+        // em vez de duplicar (mesma correção do Time Attack) - inclusive o
+        // time já sorteado antes, não recalcula.
+        let playerRow = null;
+        let playerError = null;
+        let team = null;
+
+        if (joinUserId) {
+            const { data: existing } = await window.ndquestSupabase
+                .from('tap_rush_players')
+                .select('*')
+                .eq('room_id', data.id)
+                .eq('user_id', joinUserId)
+                .maybeSingle();
+
+            if (existing) {
+                playerRow = existing;
+                myTeam = existing.team;
+                team = existing.team;
+            }
+        }
+
+        if (!playerRow) {
+
+            // Impede nome repetido dentro da mesma sala - vale pra
+            // logado e pra quem entra sem login. Não bloqueia a própria
+            // pessoa reconectando (checa pelo user_id, quando existe).
+            const { data: existingWithName } = await window.ndquestSupabase
+                .from('tap_rush_players')
+                .select('id, user_id')
+                .eq('room_id', data.id)
+                .ilike('nickname', nickname);
+
+            const nameTaken = (existingWithName || []).some((p) => {
+                if (!joinUserId) return true;
+                return !!p.user_id && p.user_id !== joinUserId;
+            });
+
+            let finalNameTaken = nameTaken;
+
+            // Guest também não pode usar um nome que já é username de
+            // alguma conta real, mesmo que essa conta nunca tenha entrado
+            // nesta sala - prioridade é de quem tem conta, sempre.
+            if (!finalNameTaken && !joinUserId) {
+                const { data: isRegisteredUsername } = await window.ndquestSupabase
+                    .rpc('username_is_taken', { check_username: nickname });
+                if (isRegisteredUsername) finalNameTaken = true;
+            }
+
+            if (finalNameTaken) {
+                joinError.textContent = t('errors.nicknameTaken');
+                return;
+            }
+
+            let teamCandidate = null;
+            if (data.mode === 'tugofwar') {
+                const { data: existingPlayers } = await window.ndquestSupabase
+                    .from('tap_rush_players')
+                    .select('id')
+                    .eq('room_id', data.id);
+                const count = existingPlayers ? existingPlayers.length : 0;
+                teamCandidate = count % 2 === 0 ? 'A' : 'B';
+                myTeam = teamCandidate;
+            }
+            team = teamCandidate;
+
+            const result = await window.ndquestSupabase
+                .from('tap_rush_players')
+                .insert({ room_id: data.id, nickname, team, tap_count: 0, user_id: joinUserId })
+                .select()
+                .single();
+            playerRow = result.data;
+            playerError = result.error;
+        }
+
+        if (playerError || !playerRow) {
+            joinError.textContent = t('errors.joinFailed');
+            console.error('Tap Rush join room error:', playerError);
+            return;
+        }
+
+        currentPlayerId = playerRow.id;
+        startHeartbeat();
+
+        const roomTheme = themes.find((th) => th.name === currentRoom.theme_name) || themes[0];
+        applyTheme(roomTheme);
+
+        if (team) {
+            teamBadgeWrap.hidden = false;
+            teamBadge.textContent = `${t('active.' + (team === 'A' ? 'teamA' : 'teamB'))}`;
+            teamBadge.className = `team-badge team-badge--${team.toLowerCase()}`;
+        }
+
+        subscribeToRoom(currentRoom.id);
+        reactToRoomState(currentRoom);
+
+    } finally {
+        joinRoomBtn.disabled = false;
     }
 
-    if (data.status === 'closed') {
-        joinError.textContent = t('errors.roomClosed');
-        return;
-    }
-
-    currentRoom = data;
-
-    let team = null;
-    if (data.mode === 'tugofwar') {
-        const { data: existingPlayers } = await window.ndquestSupabase
-            .from('tap_rush_players')
-            .select('id')
-            .eq('room_id', data.id);
-        const count = existingPlayers ? existingPlayers.length : 0;
-        team = count % 2 === 0 ? 'A' : 'B';
-        myTeam = team;
-    }
-
-    const { data: playerRow, error: playerError } = await window.ndquestSupabase
-        .from('tap_rush_players')
-        .insert({ room_id: data.id, nickname, team, tap_count: 0 })
-        .select()
-        .single();
-
-    if (playerError || !playerRow) {
-        joinError.textContent = t('errors.joinFailed');
-        console.error('Tap Rush join room error:', playerError);
-        return;
-    }
-
-    currentPlayerId = playerRow.id;
-
-    const roomTheme = themes.find((th) => th.name === currentRoom.theme_name) || themes[0];
-    applyTheme(roomTheme);
-
-    if (team) {
-        teamBadgeWrap.hidden = false;
-        teamBadge.textContent = `${t('active.' + (team === 'A' ? 'teamA' : 'teamB'))}`;
-        teamBadge.className = `team-badge team-badge--${team.toLowerCase()}`;
-    }
-
-    subscribeToRoom(currentRoom.id);
-    reactToRoomState(currentRoom);
 });
 
 // --------------------------------------------------------
@@ -301,6 +458,24 @@ function subscribeToRoom(roomId) {
 }
 
 let roomPollInterval = null;
+let heartbeatInterval = null;
+
+// Sinal de vida - mesmo problema já visto no Time Attack e no Show
+// Down: sem isso, uma sessão abandonada (fecha a aba no meio do
+// jogo) fica pra sempre marcada como ativa na tela do host.
+function startHeartbeat() {
+    if (heartbeatInterval) clearInterval(heartbeatInterval);
+    heartbeatInterval = setInterval(() => {
+        if (!currentPlayerId) return;
+        window.ndquestSupabase
+            .from('tap_rush_players')
+            .update({ last_seen_at: new Date().toISOString() })
+            .eq('id', currentPlayerId)
+            .then(({ error }) => {
+                if (error) console.error('Tap Rush: erro no sinal de vida', error);
+            });
+    }, 10000);
+}
 let lastHandledStatus = null;
 
 function reactToRoomState(room) {
@@ -323,6 +498,7 @@ function reactToRoomState(room) {
     if (room.status === 'finished') {
         if (lastHandledStatus === 'finished') return;
         stopTapLoop();
+        if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
         if (roomPollInterval) { clearInterval(roomPollInterval); roomPollInterval = null; }
         lastHandledStatus = 'finished';
         renderResults(room);
@@ -331,6 +507,7 @@ function reactToRoomState(room) {
 
     if (room.status === 'closed') {
         stopTapLoop();
+        if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
         if (roomPollInterval) { clearInterval(roomPollInterval); roomPollInterval = null; }
         joinError.textContent = t('errors.roomClosed');
         showScreen(screenJoin);
@@ -412,7 +589,6 @@ tapButton.addEventListener('click', () => {
 async function syncTapCount() {
     if (localTapCount === lastSyncedCount || !currentPlayerId) return;
     const toSync = localTapCount;
-    lastSyncedCount = toSync;
 
     const { error } = await window.ndquestSupabase
         .from('tap_rush_players')
@@ -420,8 +596,18 @@ async function syncTapCount() {
         .eq('id', currentPlayerId);
 
     if (error) {
+        // Não avança lastSyncedCount aqui de propósito - se a
+        // sincronização falhou (ex: o gatilho de taxa no banco
+        // rejeitou por parecer rápido demais, mesmo que raro com uma
+        // pessoa jogando rápido de verdade), a próxima tentativa
+        // precisa tentar de novo com o valor real, não achar que já
+        // está tudo em dia. Sem isso, o placar gravado ficaria pra
+        // trás do que a pessoa realmente fez, pra sempre.
         console.error('Tap Rush sync tap count error:', error);
+        return;
     }
+
+    lastSyncedCount = toSync;
 }
 
 // --------------------------------------------------------
@@ -438,7 +624,7 @@ async function renderResults(room) {
 
     const { data: players } = await window.ndquestSupabase
         .from('tap_rush_players')
-        .select('id, nickname, team, tap_count')
+        .select('id, user_id, nickname, team, tap_count')
         .eq('room_id', room.id);
 
     const all = players || [];
@@ -464,13 +650,57 @@ async function renderResults(room) {
     resultsBadge.classList.add(iWon ? 'is-correct' : 'is-wrong');
 
     const sorted = [...all].sort((a, b) => b.tap_count - a.tap_count);
+    const badgeMap = await loadPlayerBadgeMap(sorted.map((p) => p.user_id));
     resultsRankingList.innerHTML = sorted
         .map((p, i) => `
             <div class="leaderboard-row ${p.id === currentPlayerId ? 'is-selected' : ''}">
                 <span class="leaderboard-row__rank">#${i + 1}</span>
-                <span class="leaderboard-row__name">${p.nickname}${p.team ? ` (${p.team})` : ''}</span>
+                <span class="leaderboard-row__name-block">
+                    <span class="leaderboard-row__name">${p.nickname}${p.team ? ` (${p.team})` : ''}</span>
+                    ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
+                </span>
                 <span class="leaderboard-row__score">${p.tap_count} ${t('results.tapsLabel')}</span>
             </div>
         `)
         .join('');
+
+    // Histórico de partida - só grava se a pessoa estiver logada (ver
+    // docs/MATCH_HISTORY_ARCHITECTURE.md). A trava lastHandledStatus
+    // (acima, em reactToRoomState) já garante que renderResults só
+    // roda uma vez por partida, então não precisa de trava extra aqui.
+    const historyUserId = await getCurrentUserId();
+    const myPlacement = sorted.findIndex((p) => p.id === currentPlayerId) + 1;
+    const myRow = sorted.find((p) => p.id === currentPlayerId);
+
+    if (historyUserId) {
+        const { error: historyError } = await window.ndquestSupabase
+            .from('match_history')
+            .insert({
+                user_id: historyUserId,
+                role: 'player',
+                game: 'tap_rush',
+                room_code: currentRoom.room_code,
+                placement: myPlacement > 0 ? myPlacement : null,
+                details: { tap_count: myTaps, mode: room.mode, won: iWon }
+            });
+
+        if (historyError) {
+            console.error('Tap Rush match history error:', historyError);
+        }
+    } else if (room.host_id) {
+        const { error: guestError } = await window.ndquestSupabase
+            .from('guest_participants')
+            .insert({
+                host_id: room.host_id,
+                game: 'tap_rush',
+                room_code: currentRoom.room_code,
+                nickname: myRow ? myRow.nickname : '',
+                placement: myPlacement > 0 ? myPlacement : null,
+                details: { tap_count: myTaps, mode: room.mode, won: iWon }
+            });
+
+        if (guestError) {
+            console.error('Tap Rush guest participant error:', guestError);
+        }
+    }
 }

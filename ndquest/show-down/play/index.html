@@ -12,6 +12,8 @@
 </head>
 <body>
 
+<div id="nav-auth-light" hidden></div>
+
 <div class="language-toggle" role="group" aria-label="Idioma / Language">
     <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
     <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
@@ -122,6 +124,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/navAuthLight.js" data-account-url="../../../account/index.html" data-lang-key="show-down:language"></script>
+<script defer src="../assets/js/accountIdentity.js" data-target-input="nickname-input" data-lang-key="show-down:language"></script>
 <script type="module" src="play.js"></script>
 </body>
 </html>

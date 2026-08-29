@@ -1,0 +1,1712 @@
+/* ==========================================================================
+ ACCOUNT.CSS
+ Styles specific to the Nodra Account page (/account/).
+
+ This folder is self-contained, same as /about/: own copies of
+ variables.css and components.css, own translations/ folder.
+
+ Reuse-first check performed before writing this file:
+ - .navbar, .btn / .btn-primary / .btn-secondary, .card, .language-switch
+ all already exist in this folder's own components.css and are reused
+ as-is.
+ - Nothing here duplicates any existing form styling from another
+ folder, because no other folder in the project has a form yet
+ (the game host screens use their own game-specific inputs, not a
+ shared component) - .auth-input and .auth-form are new because
+ there was nothing to reuse.
+ ========================================================================== */
+
+.auth-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px 48px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-card h1 {
+    font-family: var(--font-heading);
+    font-size: var(--text-5xl);
+    font-weight: var(--black);
+    line-height: 1;
+    margin-bottom: 14px;
+}
+
+.auth-card p.auth-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.auth-field label {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.auth-input {
+    height: var(--button-height);
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text);
+    font-size: 15px;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.auth-form .btn {
+    width: 100%;
+    margin-top: 8px;
+}
+
+/* Botões fora do <form> (Google, e o appkit-button na tela de wallet)
+ não herdavam o width:100% acima - ficavam do tamanho do próprio
+ texto e colados à esquerda, desalinhados com o resto do card. Este
+ bug foi reportado ao vivo: o botão "Continue with Google" aparecia
+ descentralizado. */
+.auth-card > .btn,
+.wallet-block > .btn {
+    width: 100%;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.auth-toggle-row {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.auth-toggle-row button {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+
+.auth-message {
+    font-size: 14px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 80, 80, 0.08);
+    border: 1px solid rgba(255, 80, 80, 0.3);
+    color: #ff8080;
+}
+
+.auth-loading {
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.logged-in-username {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.wallet-block {
+    margin: 24px 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+.wallet-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.wallet-address {
+    font-family: monospace;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    margin-bottom: 12px;
+    word-break: break-all;
+}
+
+appkit-button {
+    display: block;
+    width: 100%;
+}
+
+/* ==========================================================================
+ PERFIL - cabeçalho, medidor de completude, cards seccionados.
+ Reutiliza .tag (eyebrow azul) e .card já existentes em components.css,
+ igual ao resto do site - não inventa identidade nova pra esta página.
+ ========================================================================== */
+
+.profile-shell {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ==========================================================================
+ ABA DE TOPO - só "Perfil" e "Histórico". Mesmo estilo de pílula dos
+ filtros de jogo (.profile-history-filter), reaproveitado.
+ ========================================================================== */
+
+/* ==========================================================================
+ ABAS PERFIL/HISTÓRICO - agora vivem dentro da navbar, no lugar de
+ Ecosystem/GitHub, só quando logado com perfil (ver
+ toggleNavbarProfileTabs em account.js). Antes ficava um bloco de
+ pílulas separado embaixo da navbar - reportado ao vivo como "some
+ ao rolar, não fica centralizado, buttons ficam esquisitos ao
+ trocar de aba". A navbar já é fixed, resolve os três problemas de
+ uma vez sem precisar de position:sticky nem centralização manual.
+ ========================================================================== */
+
+.navbar-tab {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.25s;
+}
+
+.navbar-tab:hover {
+    color: var(--primary);
+}
+
+.navbar-tab.is-active {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Sem restrição de largura própria - usa a mesma largura da aba
+ Perfil (1100px, do .profile-shell), pra não ficar essa ilha
+ pequena flutuando no meio de espaço vazio, como foi reportado. */
+
+/* ==========================================================================
+ LAYOUT - sidebar + coluna de conteúdo, dentro da aba "Perfil". Mesmo
+ padrão dos módulos da Academy (.lesson-layout / .lesson-sidebar /
+ .toc), só que academy/ tem seu próprio variables.css com tokens
+ (--sidebar-width, --navbar-height, --space-*) que esta cópia de
+ account/ não tem - por isso os valores aqui são literais (300px,
+ 80px, etc.) em vez de var(), pra não depender silenciosamente de
+ uma variável que não existe nesta pasta.
+ ========================================================================== */
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+}
+
+.profile-sidebar {
+    position: sticky;
+    top: 96px;
+    max-height: calc(100vh - 112px);
+    overflow-y: auto;
+}
+
+.toc__list-wrap {
+    position: relative;
+    margin-top: 12px;
+}
+
+.toc__indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 32px;
+    background: var(--primary);
+    box-shadow: 0 0 20px rgba(77, 166, 255, 0.35);
+    transform: translateY(0);
+    transition:
+        transform 0.25s ease,
+        height 0.25s ease,
+        opacity 0.15s ease;
+    opacity: 0;
+}
+
+.toc__list-wrap.is-tracking .toc__indicator {
+    opacity: 1;
+}
+
+.toc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--border);
+}
+
+.toc__list a {
+    display: block;
+    padding: 8px 0 8px 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: color 0.25s ease;
+}
+
+.toc__list a:hover {
+    color: var(--text);
+}
+
+.toc__list a.is-active {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    /* Respiro extra no fim da coluna: sem isso, a ÚLTIMA seção
+ (Wallet) não tem espaço de rolagem suficiente pra entrar na
+ janela de detecção do scroll-spy (-15% a -55% do viewport) - 
+ rolando manualmente até o fim, o destaque nunca chegava a
+ marcar Wallet como ativa. */
+    padding-bottom: 40vh;
+}
+
+.profile-toc-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Sem isso, clicar num link do sumário rola a seção pro topo
+ exato da página - mas a navbar é fixed e fica por cima,
+ cortando o começo da seção. scroll-margin-top reserva esse
+ espaço no cálculo do navegador antes de parar de rolar. */
+    scroll-margin-top: 96px;
+}
+
+@media (max-width: 900px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .vip-purchase-layout {
+        flex-direction: column;
+    }
+
+    .vip-purchase-card {
+        flex: 1;
+        width: 100%;
+    }
+
+    .profile-sidebar {
+        position: sticky;
+        top: 80px;
+        z-index: 10;
+        max-height: none;
+        margin: 0 -24px;
+        padding: 12px 24px;
+        background: rgba(6, 8, 13, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .profile-sidebar .tag {
+        display: none;
+    }
+
+    .toc__list-wrap {
+        width: max-content;
+        margin-top: 0;
+    }
+
+    .toc__list {
+        display: flex;
+        gap: 4px;
+        border-left: none;
+        white-space: nowrap;
+    }
+
+    .toc__indicator {
+        display: none;
+    }
+
+    .toc__list a {
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+    }
+
+    .toc__list a.is-active {
+        background: rgba(77, 166, 255, 0.12);
+        border-color: var(--border);
+    }
+}
+
+.profile-completion-card {
+    padding: 20px 28px;
+}
+
+.profile-completion-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.profile-completion-top .tag {
+    margin-bottom: 0;
+}
+
+.profile-completion-percent {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: var(--black);
+    color: var(--primary);
+}
+
+.profile-completion-bar {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+.profile-completion-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.profile-completion-hint {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.profile-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 28px;
+}
+
+.profile-social-icons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+}
+
+.profile-social-icons a {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.profile-social-icons a:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: rgba(77, 166, 255, 0.08);
+}
+
+.profile-social-icons svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.profile-avatar-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.profile-avatar-display {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: var(--black);
+    overflow: hidden;
+}
+
+.profile-avatar-display img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-avatar-upload-btn {
+    font-size: 12px;
+    color: var(--primary);
+    cursor: pointer;
+    text-align: center;
+}
+
+.profile-avatar-upload-btn:hover {
+    text-decoration: underline;
+}
+
+.profile-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-header-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.profile-username-edit-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.profile-username-edit-btn:hover {
+    color: var(--primary);
+}
+
+.profile-username-edit-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.profile-username-edit-form .auth-input {
+    max-width: 220px;
+}
+
+.profile-username-edit-form .btn {
+    height: var(--button-height);
+    padding: 0 14px;
+    white-space: nowrap;
+}
+
+.profile-header-name-row h1 {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: var(--black);
+}
+
+.profile-vip-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #111;
+    background: var(--primary);
+    border-radius: 4px;
+    padding: 2px 8px;
+}
+
+.profile-bio-display {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.profile-header-badges-strip {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.profile-header-badges-strip:empty {
+    display: none;
+}
+
+.vip-payment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0 20px;
+    padding: 14px 16px;
+    background: var(--surface-2, #1a2942);
+    border-radius: 10px;
+}
+
+.vip-payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+/* Endereço da tesouraria é sempre longo (endereços de EVM têm 42
+   caracteres) - alinhado à direita ao lado do rótulo, ele quebrava
+   em 2 linhas de um jeito estranho. Empilha o rótulo em cima e o
+   valor embaixo, ocupando a largura toda pra ele mesmo. */
+.vip-payment-row--stacked {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.vip-payment-row--stacked code {
+    text-align: left;
+}
+
+.vip-payment-row code {
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--primary);
+    word-break: break-all;
+    text-align: right;
+}
+
+/* Tela de compra do VIP - inspirada numa referência de pricing page
+   (Programa), mas simplificada pro nosso caso: sem depoimentos nem
+   FAQ, só o essencial pra converter. */
+
+.vip-purchase-layout {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    margin-top: 24px;
+}
+
+.vip-purchase-left {
+    flex: 1;
+    min-width: 0;
+    padding-top: 8px;
+}
+
+.vip-redeem-code-block {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    max-width: 360px;
+}
+
+.vip-purchase-eyebrow {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.vip-purchase-hero h1 {
+    font-size: 34px;
+    margin: 0 0 12px;
+}
+
+.vip-purchase-subheadline {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.vip-purchase-card {
+    flex: 0 0 420px;
+    padding: 32px;
+    background: var(--surface, #101d33);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.vip-purchase-card-header h2 {
+    font-size: 24px;
+    margin: 0 0 6px;
+}
+
+.vip-purchase-card-header p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin: 0 0 20px;
+}
+
+.vip-purchase-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vip-purchase-benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.vip-purchase-benefits li::before {
+    content: "✓";
+    color: var(--color-gold, #fea203);
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.vip-purchase-price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.vip-purchase-price-amount {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.vip-purchase-price-period {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.vip-purchase-instructions {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 16px 0;
+}
+
+.profile-section {
+    position: relative;
+    padding: 24px 28px;
+}
+
+/* Selo de confirmação de save - canto de qualquer card com
+ position:relative (profile-header e profile-section já têm). */
+.save-checkmark {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.5);
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.5);
+}
+
+.save-checkmark.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.save-checkmark svg {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+}
+
+.profile-section-header {
+    margin-bottom: 16px;
+}
+
+.profile-section-header .tag {
+    margin-bottom: 0;
+}
+
+.profile-textarea {
+    width: 100%;
+    min-height: 88px;
+    padding: 12px 16px;
+    resize: vertical;
+    font-family: var(--font-body);
+    margin-bottom: 14px;
+}
+
+.profile-field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+/* Bug real, reportado ao vivo: sem min-width:0, um <input> dentro de
+ uma coluna de grid não encolhe abaixo da largura "de fábrica" do
+ navegador (~170-200px) - com 3 colunas isso ultrapassava a largura
+ do card e vazava pra fora, cortando o campo de Instagram. */
+.profile-field-grid .auth-input {
+    min-width: 0;
+}
+
+.profile-logout-btn {
+    align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    .profile-header-name-row {
+        justify-content: center;
+    }
+    .profile-field-grid {
+        grid-template-columns: 1fr;
+    }
+    /* No mobile o cabeçalho vira coluna centralizada - os ícones
+ ficando fixos no canto absoluto colidiriam com o avatar. Volta
+ pro fluxo normal, embaixo de tudo, centralizado igual o resto. */
+    .profile-social-icons {
+        position: static;
+        justify-content: center;
+        margin-top: 16px;
+    }
+}
+
+/* ==========================================================================
+ HISTÓRICO DE PARTIDAS
+ ========================================================================== */
+
+.profile-history-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.profile-history-filters:last-of-type {
+    margin-bottom: 18px;
+}
+
+.profile-history-filter {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.profile-history-filter:hover {
+    color: var(--text);
+}
+
+.profile-history-filter.is-active {
+    background: rgba(77, 166, 255, 0.12);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Card grande de verdade, não uma faixa fina e larga - reportado ao
+ vivo: largo mas raso fica esquisito, e a página em volta fica com
+ buraco vazio embaixo. min-height dá o "quadrado grande" pedido,
+ flex faz a lista (ou o estado vazio) esticar e usar esse espaço em
+ vez de ficar tudo empilhado no topo com sobra embaixo. */
+.profile-toptab-panel[data-toptab-panel="history"] .card {
+    min-height: min(600px, 70vh);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mesmo problema já resolvido no histórico - reportado ao vivo de
+   novo pras sub-abas "Meus Badges" e "Pacotes Enviados": um card com
+   poucos itens (ou vazio) fica parecendo uma caixinha perdida num mar
+   de espaço em branco. Dá uma altura mínima real, preenchendo mais a
+   tela mesmo com pouco conteúdo dentro. */
+.vip-subtab-panel[data-vip-subtab-panel="my-badges"] .card,
+.vip-subtab-panel[data-vip-subtab-panel="submitted-packs"] .card {
+    min-height: min(500px, 65vh);
+}
+
+.profile-toptab-panel[data-toptab-panel="vip"] {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profile-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.profile-history-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+}
+
+.profile-history-row.is-clickable {
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.profile-history-row.is-clickable:hover {
+    border-color: var(--primary);
+    background: rgba(77, 166, 255, 0.04);
+}
+
+.profile-history-row-chevron {
+    color: var(--text-secondary);
+    font-size: 20px;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.profile-history-row.is-open .profile-history-row-chevron {
+    transform: rotate(90deg);
+    color: var(--primary);
+}
+
+/* ==================================================================
+ BADGES - VIP cria (nome + imagem + formato de escudo + cor),
+ qualquer um vê. O "recorte" em formato de escudo é feito por
+ clip-path na hora de exibir, não uma edição permanente do arquivo
+ enviado - a imagem original fica intacta no armazenamento, o
+ formato é só um efeito visual aplicado toda vez que é mostrado.
+ ================================================================== */
+
+.badge {
+    position: relative;
+    width: 200px;
+    height: 216px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-2, #1a2942);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.badge img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* cover, não contain - testei "contain" primeiro (pensando em
+ nunca cortar a imagem), mas isso deixa espaço vazio/cor de
+ fundo aparecendo quando a proporção da imagem não bate exato
+ com o escudo, reportado ao vivo como "não preenche bem".
+ "cover" preenche o formato inteiro sempre, sem sobra - o
+ usuário não precisa se preocupar com proporção, só envia e já
+ fica certo (o problema original, texto sobreposto, já foi
+ resolvido tirando o texto de dentro da imagem, não precisa
+ mais escolher entre os dois). */
+    object-fit: cover;
+}
+
+.badge-icon {
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.badge-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.badge--classic {
+    clip-path: polygon(50% 0%, 100% 15%, 100% 50%, 50% 100%, 0% 50%, 0% 15%);
+    /* Essas duas formas afinam pra um bico embaixo - centralizar
+ pelo meio geométrico do quadrado deixa o desenho meio baixo
+ visualmente, já que sobra mais forma vazia embaixo do que em
+ cima. Empurra o conteúdo pra cima um pouco pra compensar. */
+    padding-bottom: 23px;
+}
+
+.badge--rounded {
+    clip-path: polygon(50% 0%, 85% 8%, 100% 30%, 100% 55%, 50% 100%, 0% 55%, 0% 30%, 15% 8%);
+    padding-bottom: 23px;
+}
+
+.badge--hex {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    height: 173px;
+}
+
+.badge--small {
+    width: 56px;
+    height: 60px;
+}
+
+.badge--small .badge-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.badge--coin {
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    border-radius: 4px;
+}
+
+.badge--square {
+    height: 200px;
+    border-radius: 8px;
+}
+
+.badge--circle {
+    height: 200px;
+    clip-path: circle(50%);
+}
+
+.vip-png-guide {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+.vip-png-guide-intro,
+.vip-png-guide-footnote {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    max-width: 640px;
+}
+
+.vip-png-guide-footnote {
+    margin-top: 16px;
+}
+
+.vip-png-guide-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-top: 20px;
+}
+
+.vip-png-guide-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.vip-png-guide-badge {
+    width: 90px;
+    height: 97px;
+    position: relative;
+    background: var(--surface-3, #22304a);
+}
+
+.vip-png-guide-badge.badge--hex {
+    height: 78px;
+}
+
+.vip-png-guide-badge.badge--square,
+.vip-png-guide-badge.badge--circle {
+    height: 90px;
+}
+
+.vip-png-safe-zone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px dashed var(--color-gold, #fea203);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.vip-png-guide-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.vip-png-guide-dims {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.vip-png-guide-px {
+    font-size: 10px;
+    color: var(--primary);
+    text-align: center;
+}
+
+.vip-png-guide-recommended-size {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--surface-2, #1a2942);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 16px 0;
+    display: inline-block;
+}
+
+.vip-subtabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.vip-subtab {
+    background: var(--surface-2, #1a2942);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.vip-subtab:hover {
+    color: var(--text);
+}
+
+.vip-subtab.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.vip-submitted-packs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vip-submitted-pack-item {
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2, #1a2942);
+}
+
+.vip-submitted-pack-name {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.vip-submitted-pack-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.vip-submitted-pack-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.vip-submitted-pack-actions .btn {
+    padding: 6px 14px;
+    font-size: 13px;
+}
+
+.vip-my-badge-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 130px;
+}
+
+.vip-my-badge-holders-toggle {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.vip-my-badge-holders-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    background: var(--surface-2, #1a2942);
+    border-radius: 8px;
+}
+
+.vip-my-badge-holder-row {
+    font-size: 12px;
+    color: var(--text);
+}
+
+.vip-my-badge-holders-loading,
+.vip-my-badge-holders-empty {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.badge--small.badge--hex {
+    height: 48px;
+}
+
+.badge--small.badge--square,
+.badge--small.badge--circle {
+    height: 56px;
+}
+
+.badge-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 220px;
+}
+
+.badge-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+}
+
+.badge-card-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.3;
+}
+
+.badge-card--small {
+    max-width: 90px;
+    gap: 2px;
+}
+
+.badge-card--small .badge-card-title {
+    font-size: 10px;
+}
+
+.badge-card--small .badge-card-desc {
+    font-size: 9px;
+}
+
+.perfil-badges-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.profile-badges-hint {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.profile-own-badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.profile-own-badge-item:hover {
+    background: var(--surface-2, rgba(255, 255, 255, 0.03));
+}
+
+.profile-own-badge-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.vip-badge-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Sem max-width aqui - travava o formulário INTEIRO (campos +
+ pré-visualização) numa largura pequena mesmo o card tendo bem
+ mais espaço disponível, reportado ao vivo como "sobra muito
+ espaço vazio". Cada coluna agora controla a própria largura
+ (campos com limite razoável, pré-visualização ocupando o
+ resto). */
+}
+
+.vip-badge-form label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+.vip-badge-form input,
+.vip-badge-form select {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2, #1a2942);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.vip-badge-form-grid {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    max-width: none;
+}
+
+.vip-badge-form-fields {
+    flex: 0 0 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vip-badge-preview-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.vip-badge-preview-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vip-badge-status {
+    font-size: 13px;
+    min-height: 18px;
+}
+
+.vip-badge-status.is-error {
+    color: var(--color-error, #b5544a);
+}
+
+.vip-badge-status.is-success {
+    color: var(--color-success, #5fa77c);
+}
+
+.vip-color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.vip-color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    /* Borda sempre visível, não só quando selecionado - reportado ao
+ vivo: a cor mais escura da paleta quase sumia contra o fundo
+ escuro da própria plataforma, sem nenhuma borda pra separar
+ onde o quadrado termina e o fundo começa. */
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    cursor: pointer;
+    padding: 0;
+}
+
+.vip-color-swatch.is-selected {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
+.vip-icon-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.vip-icon-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    background: var(--surface-2, #1a2942);
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-icon-swatch svg {
+    width: 22px;
+    height: 22px;
+}
+
+.vip-icon-swatch.is-selected {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
+.vip-user-search-wrap {
+    position: relative;
+}
+
+.vip-user-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: var(--surface-2, #1a2942);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.vip-user-search-result {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.vip-user-search-result:hover {
+    background: var(--surface-3, rgba(255, 255, 255, 0.06));
+}
+
+.vip-user-confirmed {
+    font-size: 13px;
+    color: var(--color-success, #5fa77c);
+    margin: 0;
+}
+
+.vip-target-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.vip-target-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px 4px 12px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.vip-target-chip-remove {
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    color: #fff;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-grant-badge-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 8px 12px;
+    background: var(--surface-2, #1a2942);
+    border-radius: 8px;
+}
+
+.vip-grant-badge-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.profile-history-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-history-detail {
+    margin: 2px 0 0 50px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px dashed var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-history-detail-loading,
+.profile-history-detail-empty {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.profile-history-detail-subheading {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+.profile-history-round-block {
+    padding: 8px 0;
+}
+
+.profile-history-round-block + .profile-history-round-block {
+    border-top: 1px dashed var(--border);
+    margin-top: 4px;
+}
+
+.profile-history-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+.profile-history-detail-name {
+    color: var(--text);
+}
+
+.profile-history-detail-name a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition:
+        color 0.2s ease,
+        text-decoration-color 0.2s ease;
+}
+
+.profile-history-detail-name a:hover {
+    color: var(--primary);
+    text-decoration-color: var(--primary);
+}
+
+.profile-history-detail-guest-tag {
+    font-size: 11px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 1px 8px;
+    margin-left: 4px;
+}
+
+.profile-history-detail-result {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.perfil-social-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.perfil-social-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.perfil-social-row:hover {
+    border-color: var(--primary);
+    background: rgba(77, 166, 255, 0.04);
+}
+
+.perfil-social-row-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--primary);
+}
+
+.perfil-social-row-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.perfil-social-row-text strong {
+    color: var(--text);
+    margin-right: 4px;
+}
+
+#perfil-badges-card {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+#perfil-badges-card .profile-history-detail-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.profile-history-row-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(77, 166, 255, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: var(--black);
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.profile-history-row-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-history-row-game {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.profile-history-row-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.profile-history-row-result {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: right;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.profile-history-row-result strong {
+    color: var(--primary);
+}
+
+.profile-history-empty {
+    color: var(--text-secondary);
+    font-size: 15px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

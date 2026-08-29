@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title data-i18n="meta.title">Account: Nodra</title>
+        <meta name="description" content="Sign in to Nodra." />
+        <link rel="stylesheet" href="assets/css/variables.css" />
+        <link rel="stylesheet" href="assets/css/components.css" />
+        <link rel="stylesheet" href="assets/css/account.css" />
+    </head>
+    <body>
+        <nav class="navbar">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon"></div>
+                <span class="logo-text">Nodra</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="../index.html#ecosystem" data-i18n="nav.ecosystem" id="nav-link-ecosystem">Ecosystem</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github" id="nav-link-github"
+                    >GitHub</a
+                >
+
+                <!-- Só aparecem no lugar de Ecosystem/GitHub quando logado com
+ perfil - ver toggleNavbarProfileTabs() em account.js. -->
+                <button
+                    type="button"
+                    class="navbar-tab profile-tab is-active"
+                    data-toptab="profile"
+                    id="navbar-tab-profile"
+                    hidden
+                    data-i18n="profile.topTabProfile"
+                >
+                    Profile
+                </button>
+                <button
+                    type="button"
+                    class="navbar-tab profile-tab"
+                    data-toptab="history"
+                    id="navbar-tab-history"
+                    hidden
+                    data-i18n="profile.topTabHistory"
+                >
+                    History
+                </button>
+                <button
+                    type="button"
+                    class="navbar-tab profile-tab"
+                    data-toptab="vip"
+                    id="navbar-tab-vip"
+                    hidden
+                >
+                    VIP
+                </button>
+
+                <div id="nav-auth"></div>
+
+                <div class="language-switch">
+                    <button id="lang-en">EN</button>
+                    <button id="lang-pt">PT</button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="auth-shell">
+            <!-- ===================================================== -->
+            <!-- LOADING (checando sessão existente) -->
+            <!-- ===================================================== -->
+
+            <div id="auth-loading" class="auth-loading" data-i18n="auth.loading">Loading...</div>
+
+            <!-- ===================================================== -->
+            <!-- DESLOGADO: entrar / criar conta -->
+            <!-- ===================================================== -->
+
+            <div id="auth-section" class="card auth-card" hidden>
+                <span class="tag" data-i18n="auth.eyebrow">Account access</span>
+                <h1 data-i18n="auth.title">Enter Nodra</h1>
+                <p class="auth-subtitle" data-i18n="auth.subtitle">
+                    Sign in to save your progress, claim badges and receive prizes.
+                </p>
+
+                <div id="auth-error" class="auth-message" hidden></div>
+
+                <form id="auth-form" class="auth-form">
+                    <div class="auth-field">
+                        <label for="auth-email" data-i18n="auth.emailLabel">Email</label>
+                        <input class="auth-input" type="email" id="auth-email" autocomplete="email" required />
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="auth-password" data-i18n="auth.passwordLabel">Password</label>
+                        <input
+                            class="auth-input"
+                            type="password"
+                            id="auth-password"
+                            autocomplete="current-password"
+                            required
+                            minlength="6"
+                        />
+                    </div>
+
+                    <button type="submit" id="auth-submit-btn" class="btn btn-primary" data-i18n="auth.signInBtn">
+                        Sign in
+                    </button>
+                </form>
+
+                <div class="auth-divider" data-i18n="auth.orDivider">or</div>
+
+                <button type="button" id="auth-google-btn" class="btn btn-secondary" data-i18n="auth.googleBtn">
+                    Continue with Google
+                </button>
+
+                <div class="auth-toggle-row">
+                    <span id="auth-toggle-prompt" data-i18n="auth.toggleToSignUpPrompt">Don't have an account?</span>
+                    <button type="button" id="auth-toggle-mode" data-i18n="auth.toggleToSignUp">Create one</button>
+                </div>
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- LOGADO, MAS AINDA SEM USERNAME -->
+            <!-- ===================================================== -->
+
+            <div id="username-section" class="card auth-card" hidden>
+                <h1 data-i18n="username.title">Choose your username</h1>
+                <p class="auth-subtitle" data-i18n="username.subtitle">
+                    This is how your public profile will be found. Lowercase letters, numbers and underscore only.
+                </p>
+
+                <div id="username-error" class="auth-message" hidden></div>
+
+                <form id="username-form" class="auth-form">
+                    <div class="auth-field">
+                        <label for="username-input" data-i18n="username.label">Username</label>
+                        <input
+                            class="auth-input"
+                            type="text"
+                            id="username-input"
+                            pattern="[a-zA-Z0-9_]{3,20}"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" data-i18n="username.submitBtn">Save</button>
+                </form>
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- LOGADO, COM USERNAME (estado mínimo - a página de -->
+            <!-- perfil completa é uma etapa futura) -->
+            <!-- ===================================================== -->
+
+            <!-- ===================================================== -->
+            <!-- LOGADO, COM USERNAME - PERFIL COMPLETO -->
+            <!-- ===================================================== -->
+
+            <div id="logged-in-section" class="profile-shell" hidden>
+                <!-- ===== ABA "PERFIL" - sumário lateral com rolagem, como era ===== -->
+                <div class="profile-toptab-panel" data-toptab-panel="profile">
+                    <div class="profile-layout">
+                        <aside class="profile-sidebar" id="profileSidebar">
+                            <nav class="toc" aria-label="Profile sections">
+                                <span class="tag" data-i18n="profile.tocTitle">Sections</span>
+                                <div class="toc__list-wrap" id="profileTocListWrap">
+                                    <span class="toc__indicator" id="profileTocIndicator" aria-hidden="true"></span>
+                                    <ol class="toc__list" id="profileTocList">
+                                        <li>
+                                            <a href="#profile-overview" data-i18n="profile.tocOverview">Overview</a>
+                                        </li>
+                                        <li><a href="#profile-about" data-i18n="profile.tocAbout">About</a></li>
+                                        <li><a href="#profile-social" data-i18n="profile.tocSocial">Social</a></li>
+                                        <li><a href="#profile-wallet" data-i18n="profile.tocWallet">Wallet</a></li>
+                                        <li><a href="#profile-badges" data-i18n="profile.tocBadges">Badges</a></li>
+                                    </ol>
+                                </div>
+                            </nav>
+                        </aside>
+
+                        <div class="profile-content">
+                            <!-- Visão geral: medidor de completude + cabeçalho -->
+                            <section class="profile-toc-section" id="profile-overview">
+                                <div class="card profile-completion-card">
+                                    <div class="profile-completion-top">
+                                        <span class="tag" data-i18n="profile.completionLabel">Profile</span>
+                                        <span id="completion-percent" class="profile-completion-percent">0%</span>
+                                    </div>
+                                    <div class="profile-completion-bar">
+                                        <div id="completion-fill" class="profile-completion-fill"></div>
+                                    </div>
+                                    <p id="completion-hint" class="profile-completion-hint"></p>
+                                </div>
+
+                                <div class="card profile-header">
+                                    <div class="profile-social-icons" id="profile-social-icons"></div>
+
+                                    <div class="profile-avatar-wrap">
+                                        <div id="profile-avatar-display" class="profile-avatar-display"></div>
+                                        <label class="profile-avatar-upload-btn">
+                                            <input
+                                                type="file"
+                                                id="avatar-input"
+                                                accept="image/png,image/jpeg,image/webp"
+                                                hidden
+                                            />
+                                            <span data-i18n="profile.changePhoto">Change photo</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="profile-header-info">
+                                        <div class="profile-header-name-row">
+                                            <h1 id="profile-username-display"></h1>
+                                            <span
+                                                id="profile-vip-badge"
+                                                class="profile-vip-badge"
+                                                hidden
+                                                data-i18n="profile.vip"
+                                                >Vip</span
+                                            >
+                                            <button
+                                                type="button"
+                                                id="username-edit-btn"
+                                                class="profile-username-edit-btn"
+                                                data-i18n="profile.editUsername"
+                                            >
+                                                Edit
+                                            </button>
+                                        </div>
+
+                                        <form id="username-edit-form" class="profile-username-edit-form" hidden>
+                                            <input
+                                                class="auth-input"
+                                                type="text"
+                                                id="username-edit-input"
+                                                pattern="[a-zA-Z0-9_]{3,20}"
+                                                required
+                                            />
+                                            <button type="submit" class="btn btn-secondary" data-i18n="profile.saveBtn">
+                                                Save
+                                            </button>
+                                            <button
+                                                type="button"
+                                                id="username-edit-cancel-btn"
+                                                class="btn btn-secondary"
+                                                data-i18n="profile.cancelBtn"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </form>
+                                        <div id="username-edit-error" class="auth-message" hidden></div>
+
+                                        <p
+                                            id="profile-bio-display"
+                                            class="profile-bio-display"
+                                            data-i18n="profile.noBioYet"
+                                        >
+                                            No bio yet.
+                                        </p>
+
+                                        <!-- Tira compacta de badges, direto no card do topo -
+                                             reportado ao vivo: badge aparecia no quadro de
+                                             curadoria mais abaixo, mas não aqui perto do
+                                             nome/avatar, que é onde a pessoa olha primeiro. -->
+                                        <div id="profile-header-badges" class="profile-header-badges-strip"></div>
+                                    </div>
+                                </div>
+
+                                <div id="avatar-error" class="auth-message" hidden></div>
+                            </section>
+
+                            <!-- Sobre / bio -->
+                            <section class="card profile-section profile-toc-section" id="profile-about">
+                                <div class="profile-section-header">
+                                    <span class="tag" data-i18n="profile.aboutSection">About</span>
+                                </div>
+                                <textarea
+                                    id="bio-input"
+                                    class="auth-input profile-textarea"
+                                    maxlength="200"
+                                    data-i18n-placeholder="profile.bioPlaceholder"
+                                    placeholder="Tell people a little about yourself..."
+                                ></textarea>
+                                <div id="bio-error" class="auth-message" hidden></div>
+                                <button
+                                    type="button"
+                                    id="bio-save-btn"
+                                    class="btn btn-secondary"
+                                    data-i18n="profile.saveBtn"
+                                >
+                                    Save
+                                </button>
+                            </section>
+
+                            <!-- Redes sociais -->
+                            <section class="card profile-section profile-toc-section" id="profile-social">
+                                <div class="profile-section-header">
+                                    <span class="tag" data-i18n="profile.socialSection">Social</span>
+                                </div>
+                                <div class="profile-field-grid">
+                                    <div class="auth-field">
+                                        <label for="x-handle-input">X (Twitter)</label>
+                                        <input
+                                            class="auth-input"
+                                            type="text"
+                                            id="x-handle-input"
+                                            placeholder="@handle"
+                                        />
+                                    </div>
+                                    <div class="auth-field">
+                                        <label for="telegram-handle-input">Telegram</label>
+                                        <input
+                                            class="auth-input"
+                                            type="text"
+                                            id="telegram-handle-input"
+                                            placeholder="@handle"
+                                        />
+                                    </div>
+                                    <div class="auth-field">
+                                        <label for="instagram-handle-input">Instagram</label>
+                                        <input
+                                            class="auth-input"
+                                            type="text"
+                                            id="instagram-handle-input"
+                                            placeholder="@handle"
+                                        />
+                                    </div>
+                                </div>
+                                <div id="social-error" class="auth-message" hidden></div>
+                                <button
+                                    type="button"
+                                    id="social-save-btn"
+                                    class="btn btn-secondary"
+                                    data-i18n="profile.saveBtn"
+                                >
+                                    Save
+                                </button>
+                            </section>
+
+                            <!-- Wallet -->
+                            <section class="card profile-section profile-toc-section" id="profile-wallet">
+                                <div class="profile-section-header">
+                                    <span class="tag" data-i18n="wallet.label">EVM wallet</span>
+                                </div>
+
+                                <div id="wallet-connected-address" class="wallet-address" hidden></div>
+
+                                <appkit-button></appkit-button>
+
+                                <div id="wallet-divider" class="auth-divider" data-i18n="auth.orDivider">or</div>
+
+                                <div id="wallet-error" class="auth-message" hidden></div>
+
+                                <form id="wallet-form" class="auth-form">
+                                    <div class="auth-field">
+                                        <label for="wallet-input" data-i18n="wallet.manualLabel"
+                                            >Paste your address manually</label
+                                        >
+                                        <input class="auth-input" type="text" id="wallet-input" placeholder="0x..." />
+                                    </div>
+                                    <button type="submit" class="btn btn-secondary" data-i18n="wallet.saveBtn">
+                                        Save address
+                                    </button>
+                                </form>
+                            </section>
+
+                            <!-- Badges - mostra tudo que a pessoa ganhou, com
+ checkbox pra escolher quais aparecem no card
+ público (perfil.html). Reportado ao vivo:
+ "não dá pra ver as badges que ele tem" - essa
+ seção nunca tinha sido construída aqui, só no
+ perfil público (que é read-only). -->
+                            <section class="card profile-section profile-toc-section" id="profile-badges">
+                                <div class="profile-section-header">
+                                    <span class="tag" data-i18n="profile.tocBadges">Badges</span>
+                                </div>
+
+                                <p class="profile-badges-hint" data-i18n="profile.badgesCurationHint">
+                                    Choose which badges show on your public profile card.
+                                </p>
+
+                                <div id="profile-own-badges-list" class="perfil-badges-list"></div>
+                                <p
+                                    id="profile-own-badges-empty"
+                                    class="profile-history-detail-empty"
+                                    data-i18n="perfil.badgesEmpty"
+                                    hidden
+                                >
+                                    You haven't earned any badges yet.
+                                </p>
+                            </section>
+
+                            <button
+                                type="button"
+                                id="logout-btn"
+                                class="btn btn-secondary profile-logout-btn"
+                                data-i18n="loggedin.logoutBtn"
+                            >
+                                Sign out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ABA "HISTÓRICO" - separada, sem sumário lateral ===== -->
+                <div class="profile-toptab-panel" data-toptab-panel="history" hidden>
+                    <section class="card profile-section">
+                        <div class="profile-section-header">
+                            <span class="tag" data-i18n="profile.historySection">History</span>
+                        </div>
+
+                        <div class="profile-history-filters" id="history-filters">
+                            <button
+                                type="button"
+                                class="profile-history-filter is-active"
+                                data-game="all"
+                                data-i18n="profile.historyFilterAll"
+                            >
+                                All
+                            </button>
+                            <button type="button" class="profile-history-filter" data-game="time_attack">
+                                Time Attack
+                            </button>
+                            <button type="button" class="profile-history-filter" data-game="show_down">
+                                Show Down
+                            </button>
+                            <button type="button" class="profile-history-filter" data-game="tap_rush">Tap Rush</button>
+                            <button type="button" class="profile-history-filter" data-game="roulette">Roulette</button>
+                        </div>
+
+                        <div class="profile-history-filters" id="history-role-filters">
+                            <button
+                                type="button"
+                                class="profile-history-filter is-active"
+                                data-role="all"
+                                data-i18n="profile.historyFilterAll"
+                            >
+                                All
+                            </button>
+                            <button
+                                type="button"
+                                class="profile-history-filter"
+                                data-role="host"
+                                data-i18n="profile.historyRoleHost"
+                            >
+                                Host
+                            </button>
+                            <button
+                                type="button"
+                                class="profile-history-filter"
+                                data-role="player"
+                                data-i18n="profile.historyRolePlayer"
+                            >
+                                Player
+                            </button>
+                        </div>
+
+                        <div id="history-list" class="profile-history-list"></div>
+                        <p id="history-empty" class="profile-history-empty" data-i18n="profile.historyEmpty" hidden>
+                            No matches yet.
+                        </p>
+                    </section>
+                </div>
+
+                <!-- ===== ABA "VIP" - só aparece se profile.is_vip. Criar
+ badge de comunidade (nome único + imagem + formato de
+ escudo + cor de fundo) e conceder um badge já existente
+ pra alguém. Ver docs/BADGE_INTEGRITY_ARCHITECTURE.md,
+ Path 2. Badge de comunidade é deliberadamente simples - 
+ sem pt/en, sem catálogo grande de formato - isso fica
+ pros badges "oficiais"/protocolo, criados depois por
+ outro caminho. ===== -->
+                <div class="profile-toptab-panel" data-toptab-panel="vip" hidden>
+
+                    <!-- Tela de compra - só aparece pra quem AINDA
+                         NÃO é VIP. Reportado ao vivo: era pra ficar
+                         separada e com mais destaque, não escondida
+                         numa seção da barra lateral do perfil. -->
+                    <div id="vip-purchase-screen" hidden>
+
+                        <div class="vip-purchase-layout">
+
+                            <div class="vip-purchase-left">
+
+                                <span class="vip-purchase-eyebrow" data-i18n="vip.purchaseEyebrow">VIP MEMBERSHIP</span>
+                                <h1 data-i18n="vip.purchaseHeadline">Unlock the VIP area</h1>
+                                <p class="vip-purchase-subheadline" data-i18n="vip.purchaseSubheadline">
+                                    Create community badges, grant them to players, and help curate
+                                    what the community submits.
+                                </p>
+
+                                <!-- Código de convite - alternativa ao
+                                     pagamento, gerado pelo admin (painel
+                                     próprio). Reportado ao vivo: fica
+                                     aqui embaixo do texto, não dentro do
+                                     card de preço. -->
+                                <form id="vip-redeem-code-form" class="vip-badge-form vip-redeem-code-block">
+                                    <label data-i18n="vip.haveCodeLabel">Have an invite code?</label>
+                                    <input type="text" id="vip-redeem-code-input" placeholder="NODRA-XXXX-XXXX" />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-secondary"
+                                        id="vip-redeem-code-btn"
+                                        data-i18n="vip.redeemCodeBtn"
+                                    >
+                                        Redeem Code
+                                    </button>
+                                    <p id="vip-redeem-code-status" class="vip-badge-status"></p>
+                                </form>
+
+                            </div>
+
+                            <div class="vip-purchase-card">
+
+                                <div class="vip-purchase-card-header">
+                                    <h2 data-i18n="vip.purchasePlanName">Vip</h2>
+                                    <p data-i18n="vip.purchasePlanDescription">
+                                        Everything you need to shape the community.
+                                    </p>
+                                </div>
+
+                                <ul class="vip-purchase-benefits">
+                                    <li><span data-i18n="vip.benefitCreateBadges">Create your own community badges</span></li>
+                                    <li><span data-i18n="vip.benefitGrantBadges">Grant badges to any player</span></li>
+                                    <li><span data-i18n="vip.benefitReview">Review community-submitted question packs</span></li>
+                                    <li><span data-i18n="vip.benefitVipTag">VIP tag on your profile</span></li>
+                                </ul>
+
+                                <div class="vip-purchase-price">
+                                    <span class="vip-purchase-price-amount">$5</span>
+                                    <span class="vip-purchase-price-period" data-i18n="vip.perMonth">/ month</span>
+                                </div>
+
+                                <div class="vip-payment-details">
+                                    <div class="vip-payment-row vip-payment-row--stacked">
+                                        <span data-i18n="vip.paymentAddress">Address</span>
+                                        <code id="vip-treasury-address"></code>
+                                    </div>
+                                    <div class="vip-payment-row">
+                                        <span data-i18n="vip.paymentNetwork">Network</span>
+                                        <code>USDT . Avalanche C-Chain</code>
+                                    </div>
+                                </div>
+
+                                <p class="vip-purchase-instructions" data-i18n="vip.paymentInstructions">
+                                    Pay $5 in USDT (Avalanche C-Chain) to the address above, using any
+                                    wallet you like. Then paste the transaction hash below to verify.
+                                </p>
+
+                                <form id="vip-payment-form" class="vip-badge-form">
+                                    <label data-i18n="vip.txHashLabel">Transaction hash</label>
+                                    <input type="text" id="vip-tx-hash-input" placeholder="0x..." required />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        id="vip-verify-payment-btn"
+                                        data-i18n="vip.verifyPaymentBtn"
+                                    >
+                                        Verify Payment
+                                    </button>
+                                    <p id="vip-payment-status" class="vip-badge-status"></p>
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Área VIP de verdade - só aparece pra quem já
+                         é VIP. -->
+                    <div id="vip-area-screen" hidden>
+
+                    <p class="profile-badges-hint" id="vip-area-membership-line">
+                        <span data-i18n="vip.membershipActiveUntil">VIP active until</span>
+                        <strong id="vip-membership-expiry-date"></strong>
+                    </p>
+
+                    <!-- Sub-abas dentro do VIP - reportado ao vivo:
+                         hoje essa aba só tem badge, mas devia ter
+                         outras coisas do VIP também (pacotes
+                         enviados, badges já criados), organizadas em
+                         abas próprias, não tudo numa rolagem só como
+                         o guia do perfil. -->
+                    <nav class="vip-subtabs" role="tablist">
+                        <button type="button" class="vip-subtab is-active" data-vip-subtab="badges" data-i18n="vip.subtabBadges">Create & Grant Badges</button>
+                        <button type="button" class="vip-subtab" data-vip-subtab="my-badges" data-i18n="vip.subtabMyBadges">My Created Badges</button>
+                        <button type="button" class="vip-subtab" data-vip-subtab="submitted-packs" data-i18n="vip.subtabSubmittedPacks">Submitted Packs</button>
+                    </nav>
+
+                    <div class="vip-subtab-panel" data-vip-subtab-panel="badges">
+                    <section class="card profile-section">
+                        <div class="profile-section-header">
+                            <span class="tag" data-i18n="vip.createBadgeSection">Create Community Badge</span>
+                        </div>
+
+                        <form id="create-badge-form" class="vip-badge-form">
+                            <div class="vip-badge-form-grid">
+                                <div class="vip-badge-form-fields">
+                                    <label data-i18n="vip.badgeName">Name</label>
+                                    <input type="text" id="badge-name" required maxlength="40" />
+
+                                    <label data-i18n="vip.badgeDescription">Short description</label>
+                                    <input
+                                        type="text"
+                                        id="badge-description"
+                                        maxlength="80"
+                                        placeholder="Reported a critical bug during beta"
+                                    />
+
+                                    <label data-i18n="vip.badgeShape">Badge shape</label>
+                                    <select id="badge-shape">
+                                        <option value="classic" data-i18n="vip.shapeClassic">Classic</option>
+                                        <option value="rounded" data-i18n="vip.shapeRounded">Rounded</option>
+                                        <option value="hex" data-i18n="vip.shapeHex">Hexagon</option>
+                                        <option value="coin" data-i18n="vip.shapeCoin">Coin</option>
+                                        <option value="square" data-i18n="vip.shapeSquare">Square</option>
+                                        <option value="circle" data-i18n="vip.shapeCircle">Circle</option>
+                                    </select>
+
+                                    <label data-i18n="vip.badgeColor">Background color</label>
+                                    <div id="badge-color-palette" class="vip-color-palette" role="group"></div>
+
+                                    <label data-i18n="vip.badgeIcon">Icon (optional)</label>
+                                    <div id="badge-icon-palette" class="vip-icon-palette" role="group"></div>
+
+                                    <label data-i18n="vip.iconColor">Icon color</label>
+                                    <div id="badge-icon-color-palette" class="vip-color-palette" role="group"></div>
+
+                                    <label data-i18n="vip.iconSize">Icon size</label>
+                                    <input type="range" id="badge-icon-size" min="15" max="70" value="35" />
+
+                                    <label data-i18n="vip.badgeImage">Or upload a custom image (PNG, optional)</label>
+                                    <input type="file" id="badge-image" accept="image/png" />
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        id="create-badge-btn"
+                                        data-i18n="vip.createBadgeBtn"
+                                    >
+                                        Create Badge
+                                    </button>
+                                    <p id="create-badge-status" class="vip-badge-status"></p>
+                                </div>
+
+                                <div class="vip-badge-preview-wrap">
+                                    <span class="vip-badge-preview-label" data-i18n="vip.preview">Preview</span>
+                                    <div class="badge-card">
+                                        <div id="badge-preview" class="badge badge--classic">
+                                            <img id="badge-preview-img" hidden />
+                                            <span id="badge-preview-icon" class="badge-icon" hidden></span>
+                                        </div>
+                                        <span id="badge-preview-name" class="badge-card-title"></span>
+                                        <span id="badge-preview-desc" class="badge-card-desc"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Guia de dimensões - reportado ao vivo: "preciso
+ que detalhe todas as medidas pra encaixar em cada
+ formato sem cortar nem deformar". Números vêm da
+ geometria real do clip-path de cada forma, não
+ são chute - cada forma corta uma quantidade
+ diferente das bordas, então cada uma tem sua
+ própria "zona segura". -->
+                        <div class="vip-png-guide">
+                            <div class="profile-section-header">
+                                <span class="tag" data-i18n="vip.pngGuideTitle">Image size guide</span>
+                            </div>
+
+                            <p class="vip-png-guide-intro" data-i18n="vip.pngGuideIntro">
+                                Every shape crops your image differently to fit its outline. Keep your main subject
+                                (logo, face, symbol) inside the dashed "safe zone" below for each shape - anything
+                                outside it may get cut off. The image itself is never resized or distorted, it always
+                                fills the shape completely (cropping the edges as needed), so proportion matters more
+                                than exact pixel size.
+                            </p>
+
+                            <p class="vip-png-guide-recommended-size" data-i18n="vip.pngGuideRecommendedSize">
+                                Recommended: a square PNG, at least 500×500px (800×800px or larger looks
+                                sharper, especially on high-resolution screens).
+                            </p>
+
+                            <div class="vip-png-guide-grid">
+                                <div class="vip-png-guide-item">
+                                    <div class="badge badge--classic vip-png-guide-badge">
+                                        <div class="vip-png-safe-zone" style="width: 50%; height: 50%"></div>
+                                    </div>
+                                    <span class="vip-png-guide-name" data-i18n="vip.shapeClassic">Classic</span>
+                                    <span class="vip-png-guide-dims">50% × 50%</span>
+                                    <span class="vip-png-guide-px" data-i18n="vip.pxOn500">≈250×250px on a 500×500 upload</span>
+                                </div>
+
+                                <div class="vip-png-guide-item">
+                                    <div class="badge badge--rounded vip-png-guide-badge">
+                                        <div class="vip-png-safe-zone" style="width: 56%; height: 50%"></div>
+                                    </div>
+                                    <span class="vip-png-guide-name" data-i18n="vip.shapeRounded">Rounded</span>
+                                    <span class="vip-png-guide-dims">56% × 50%</span>
+                                    <span class="vip-png-guide-px" data-i18n="vip.pxOn500Rounded">≈280×250px on a 500×500 upload</span>
+                                </div>
+
+                                <div class="vip-png-guide-item">
+                                    <div class="badge badge--hex vip-png-guide-badge">
+                                        <div class="vip-png-safe-zone" style="width: 70%; height: 60%"></div>
+                                    </div>
+                                    <span class="vip-png-guide-name" data-i18n="vip.shapeHex">Hexagon</span>
+                                    <span class="vip-png-guide-dims">70% × 60%</span>
+                                    <span class="vip-png-guide-px" data-i18n="vip.pxOn500Hex">≈350×300px on a 500×500 upload</span>
+                                </div>
+
+                                <div class="vip-png-guide-item">
+                                    <div class="badge badge--coin vip-png-guide-badge">
+                                        <div class="vip-png-safe-zone" style="width: 80%; height: 60%"></div>
+                                    </div>
+                                    <span class="vip-png-guide-name" data-i18n="vip.shapeCoin">Coin</span>
+                                    <span class="vip-png-guide-dims">80% × 60%</span>
+                                    <span class="vip-png-guide-px" data-i18n="vip.pxOn500Coin">≈400×300px on a 500×500 upload</span>
+                                </div>
+
+                                <div class="vip-png-guide-item">
+                                    <div class="badge badge--square vip-png-guide-badge">
+                                        <div class="vip-png-safe-zone" style="width: 100%; height: 100%"></div>
+                                    </div>
+                                    <span class="vip-png-guide-name" data-i18n="vip.shapeSquare">Square</span>
+                                    <span class="vip-png-guide-dims">100% × 100%</span>
+                                    <span class="vip-png-guide-px" data-i18n="vip.pxOn500Square">Whole image is kept, no cropping</span>
+                                </div>
+
+                                <div class="vip-png-guide-item">
+                                    <div class="badge badge--circle vip-png-guide-badge">
+                                        <div class="vip-png-safe-zone" style="width: 71%; height: 71%"></div>
+                                    </div>
+                                    <span class="vip-png-guide-name" data-i18n="vip.shapeCircle">Circle</span>
+                                    <span class="vip-png-guide-dims">71% × 71%</span>
+                                    <span class="vip-png-guide-px" data-i18n="vip.pxOn500Circle">≈355×355px on a 500×500 upload</span>
+                                </div>
+                            </div>
+
+                            <p class="vip-png-guide-footnote" data-i18n="vip.pngGuideFootnote">
+                                Percentages are relative to your source image's own width and height - keep your subject
+                                centered within that inner proportion for any image size. Coin is the most forgiving
+                                shape; Classic and Rounded crop the most from top and bottom (they taper to a point), so
+                                keep tall content centered and avoid placing anything important within the top/bottom
+                                25%.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="card profile-section">
+                        <div class="profile-section-header">
+                            <span class="tag" data-i18n="vip.grantBadgeSection">Grant Badge</span>
+                        </div>
+
+                        <form id="grant-badge-form" class="vip-badge-form">
+                            <label data-i18n="vip.targetUsername">Username</label>
+                            <div class="vip-user-search-wrap">
+                                <input type="text" id="grant-target-search" autocomplete="off" placeholder="alice" />
+                                <div id="grant-target-results" class="vip-user-search-results" hidden></div>
+                            </div>
+                            <div id="grant-target-chips" class="vip-target-chips"></div>
+
+                            <label data-i18n="vip.selectBadges">Badges</label>
+                            <div id="grant-badge-checkboxes" class="vip-grant-badge-checkboxes"></div>
+
+                            <label data-i18n="vip.noteOptional">Note (optional)</label>
+                            <input type="text" id="grant-note" maxlength="140" />
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                id="grant-badge-btn"
+                                disabled
+                                data-i18n="vip.grantBadgeBtn"
+                            >
+                                Grant Badge
+                            </button>
+                            <p id="grant-badge-status" class="vip-badge-status"></p>
+                        </form>
+                    </section>
+                    </div>
+
+                    <div class="vip-subtab-panel" data-vip-subtab-panel="my-badges" hidden>
+                        <section class="card profile-section">
+                            <div class="profile-section-header">
+                                <span class="tag" data-i18n="vip.subtabMyBadges">My Created Badges</span>
+                            </div>
+                            <div id="vip-my-badges-list" class="perfil-badges-list"></div>
+                            <p id="vip-my-badges-empty" class="profile-history-detail-empty" data-i18n="vip.myBadgesEmpty" hidden>You haven't created any badges yet.</p>
+                        </section>
+                    </div>
+
+                    <div class="vip-subtab-panel" data-vip-subtab-panel="submitted-packs" hidden>
+                        <section class="card profile-section">
+                            <div class="profile-section-header">
+                                <span class="tag" data-i18n="vip.subtabSubmittedPacks">Submitted Packs</span>
+                            </div>
+                            <p class="profile-badges-hint" data-i18n="vip.submittedPacksHint">Question packs submitted by the community, waiting for review.</p>
+                            <div id="vip-submitted-packs-list" class="vip-submitted-packs-list"></div>
+                            <p id="vip-submitted-packs-empty" class="profile-history-detail-empty" data-i18n="vip.submittedPacksEmpty" hidden>No submitted packs right now.</p>
+                        </section>
+                    </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <h3 data-i18n="footer.title">Nodra</h3>
+                        <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+                    </div>
+                    <div class="footer-links">
+                        <a href="../academy/index.html" data-i18n="nav.academy">Academy</a>
+                        <a href="../index.html#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a>
+                        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
+                        <a href="https://x.com/NodraHQ" target="_blank" data-i18n="nav.x">X</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!--
+ Reown AppKit (wallet connect) - Project ID já configurado
+ (0cf1700875ea9ea9adbde0934409186f, projeto do Nodra em
+ dashboard.reown.com). Se precisar trocar de projeto Reown algum
+ dia, atualiza só a linha "const REOWN_PROJECT_ID = ..." abaixo - 
+ NUNCA a string "YOUR_REOWN_PROJECT_ID" dentro do if logo depois,
+ que é o valor de comparação do placeholder, não o ID em si.
+ Também precisa o domínio de produção alocado em Settings →
+ Domains do mesmo projeto no dashboard - sem isso o WalletConnect
+ relay rejeita a conexão com erro de CORS.
+
+ Não deu pra testar esta parte de ponta a ponta daqui: o domínio da
+ Reown, assim como o do Supabase, está bloqueado pela rede do
+ sandbox onde isso foi construído. A integração segue a
+ documentação oficial (docs.reown.com/appkit/javascript) à risca,
+ e já foi confirmado funcionando ao vivo pelo usuário.
+-->
+        <script type="module">
+            import { createAppKit } from "https://cdn.jsdelivr.net/npm/@reown/appkit/+esm";
+            import { avalanche } from "https://cdn.jsdelivr.net/npm/@reown/appkit/networks/+esm";
+            import { EthersAdapter } from "https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers/+esm";
+
+            const REOWN_PROJECT_ID = "0cf1700875ea9ea9adbde0934409186f";
+
+            // Bug encontrado ao vivo: sem essa checagem, deixar o placeholder
+            // aqui fazia o AppKit iniciar mesmo assim (o try/catch só protege
+            // o momento de iniciar) e depois ficar tentando se conectar pra
+            // sempre, a cada 1 segundo, contra um projectId que não existe -
+            // uma enxurrada de requisições 401/403 sem fim. IMPORTANTE: a
+            // string "YOUR_REOWN_PROJECT_ID" abaixo é o valor do PLACEHOLDER
+            // pra comparação, não deve ser trocada pelo ID real - só a linha
+            // de cima (REOWN_PROJECT_ID = ...) recebe o ID de verdade. Trocar
+            // as duas quebra a checagem (ela some por igualar ao próprio
+            // valor). Já foi confundido ao vivo nesta sessão.
+            if (REOWN_PROJECT_ID === "YOUR_REOWN_PROJECT_ID") {
+                console.warn("Reown AppKit não iniciado: REOWN_PROJECT_ID ainda é o placeholder.");
+            } else {
+                try {
+                    window.nodraAppKitModal = createAppKit({
+                        adapters: [new EthersAdapter()],
+                        networks: [avalanche],
+                        projectId: REOWN_PROJECT_ID,
+                        metadata: {
+                            name: "Nodra",
+                            description: "Nodra account and wallet",
+                            url: window.location.origin,
+                            icons: [window.location.origin + "/assets/img/logo.png"],
+                        },
+                        features: { analytics: false },
+                    });
+                } catch (err) {
+                    // Não trava a página se o AppKit falhar ao iniciar (CDN
+                    // fora do ar, etc.) - o resto do login e do perfil
+                    // continua funcionando normalmente sem a wallet.
+                    console.error("Reown AppKit failed to initialize:", err);
+                }
+            }
+
+            window.dispatchEvent(new Event("nodra-appkit-ready"));
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="assets/js/supabase-client.js"></script>
+        <script defer src="assets/js/translations.js"></script>
+        <script defer src="assets/js/navAuth.js" data-account-url="index.html"></script>
+        <script defer src="assets/js/account.js"></script>
+    </body>
+</html>

@@ -17,6 +17,8 @@
     <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
 </div>
 
+<div id="nav-auth-light" hidden></div>
+
 
 <div class="container">
 
@@ -122,15 +124,23 @@
                 </div>
 
                 <a id="play-as-host-link" href="#" target="_blank" class="btn btn-secondary" style="margin-bottom:12px;text-decoration:none;display:flex" data-i18n="buttons.playAsHost">Jogar também →</a>
-                <button type="button" class="btn btn-secondary" id="close-room-btn" data-i18n="buttons.closeRoom">Encerrar Sala</button>
             </div>
 
             <div class="room-main">
+                <div class="room-controls">
+                    <button type="button" class="btn btn-secondary" id="allow-new-round-btn" data-i18n="buttons.allowNewRound">Permitir Nova Rodada</button>
+                    <button type="button" class="btn btn-secondary" id="close-room-btn" data-i18n="buttons.closeRoom">Encerrar Sala</button>
+                </div>
                 <div class="card leaderboard-card">
                     <span class="eyebrow" data-i18n="leaderboard.title">Placar ao Vivo</span>
                     <p class="leaderboard-playing-now" id="leaderboard-playing-now" hidden></p>
                     <p class="leaderboard-empty" id="leaderboard-empty" data-i18n="leaderboard.empty">Nenhum jogador terminou ainda.</p>
                     <div class="leaderboard-list" id="leaderboard-list"></div>
+                </div>
+
+                <div class="card previous-rounds-card" id="previous-rounds-card" hidden>
+                    <span class="eyebrow" data-i18n="leaderboard.previousRounds">Rodadas Anteriores</span>
+                    <div id="previous-rounds-list"></div>
                 </div>
             </div>
 
@@ -141,6 +151,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="assets/js/supabase-client.js"></script>
+<script defer src="assets/js/navAuthLight.js" data-account-url="../../account/index.html" data-lang-key="time-attack:language"></script>
+<script defer src="assets/js/accountIdentity.js" data-target-input="host-name-input" data-lang-key="time-attack:language"></script>
 <script type="module" src="host.js"></script>
 </body>
 </html>

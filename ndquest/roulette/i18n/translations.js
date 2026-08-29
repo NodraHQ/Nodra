@@ -1,5 +1,5 @@
 /* =========================================================
-   ROULETTE — i18n/translations.js
+   ROULETTE - i18n/translations.js
    Mesmo padrão dos outros jogos do NDQuest (objeto plano, pt/en),
    arquivo independente.
    ========================================================= */
@@ -70,11 +70,13 @@ const translations = {
     'buttons.joinRoom': 'Entrar',
     'errors.roomCodeRequired': 'Preencha o código da sala.',
     'errors.nicknameRequired': 'Preencha seu nome.',
+    'errors.nicknameTaken': 'Esse nome já está em uso nessa sala. Escolhe outro.',
     'errors.roomNotFound': 'Sala não encontrada. Confira o código.',
 
     'joined.eyebrow': 'Você Está Dentro',
     'joined.title': 'Você está na roleta! 🎉',
-    'joined.subtitle': 'Fica de olho na tela do host, é lá que o sorteio acontece.'
+    'joined.subtitle': 'Aguardando o host começar o sorteio...',
+    'joined.spinning': 'Girando...'
   },
 
   en: {
@@ -141,11 +143,13 @@ const translations = {
     'buttons.joinRoom': 'Join',
     'errors.roomCodeRequired': 'Fill in the room code.',
     'errors.nicknameRequired': 'Fill in your name.',
+    'errors.nicknameTaken': 'That name is already taken in this room. Pick another one.',
     'errors.roomNotFound': 'Room not found. Check the code.',
 
     'joined.eyebrow': "You're In",
     'joined.title': "You're in the roulette! 🎉",
-    'joined.subtitle': "Keep an eye on the host's screen, that's where the draw happens."
+    'joined.subtitle': "Waiting for the host to start the draw...",
+    'joined.spinning': "Spinning..."
   }
 
 };

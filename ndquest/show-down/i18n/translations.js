@@ -72,6 +72,7 @@ const translations = {
     'buttons.leaveRoom': '← Sair da sala',
     'errors.roomCodeRequired': 'Preencha o código da sala.',
     'errors.nicknameRequired': 'Preencha seu apelido.',
+    'errors.nicknameTaken': 'Esse nome já está em uso nessa sala. Escolhe outro.',
     'errors.roomNotFound': 'Sala não encontrada. Confira o código.',
     'errors.roomClosed': 'Essa sala já foi encerrada.',
 
@@ -166,6 +167,7 @@ const translations = {
     'buttons.leaveRoom': '← Leave room',
     'errors.roomCodeRequired': 'Fill in the room code.',
     'errors.nicknameRequired': 'Fill in your nickname.',
+    'errors.nicknameTaken': 'That name is already taken in this room. Pick another one.',
     'errors.roomNotFound': 'Room not found. Check the code.',
     'errors.roomClosed': 'This room has already been closed.',
 

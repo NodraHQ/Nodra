@@ -24,3 +24,8 @@ const ndquestSupabase = supabase.createClient(
     NDQUEST_SUPABASE_URL,
     NDQUEST_SUPABASE_PUBLISHABLE_KEY
 );
+
+// Alias pro nome padrão usado pelo navAuth.js (mesmo cliente, mesmo
+// projeto) — não renomeia o original pra não quebrar submit.js, que
+// já depende do identificador `ndquestSupabase` sem o window.
+window.nodraSupabase = ndquestSupabase;

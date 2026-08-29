@@ -30,6 +30,8 @@
         <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
         <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
 
+        <div id="nav-auth"></div>
+
         <div class="language-switch">
             <button id="lang-en">EN</button>
             <button id="lang-pt">PT</button>
@@ -652,6 +654,9 @@
 <span id="i18nSeedShowLabel" data-i18n="wallets.seedPhrase.toggleShow" hidden>Show phrase</span>
 <span id="i18nSeedHideLabel" data-i18n="wallets.seedPhrase.toggleHide" hidden>Hide phrase</span>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/navAuth.js" data-account-url="../../account/index.html"></script>
 <script defer src="../assets/js/translations.js"></script>
 <script defer src="../assets/js/academy.js"></script>
 <script defer src="../assets/js/wallets.js"></script>

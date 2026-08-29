@@ -29,5 +29,9 @@
   "hero.title": "Play. Compete.<br>Win.",
   "meta.title": "NDQuest: Quiz & Event Activations",
   "nav.nodra": "Nodra",
-  "nav.x": "X"
+  "nav.x": "X",
+  "navAuth.signIn": "Sign in",
+  "navAuth.account": "Account",
+  "navAuth.profile": "Profile",
+  "navAuth.signOut": "Sign out"
 }

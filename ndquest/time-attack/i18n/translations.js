@@ -1,5 +1,5 @@
 /* =========================================================
-   TIME ATTACK — i18n/translations.js
+   TIME ATTACK - i18n/translations.js
    Mesmo padrão do Quest Drop (objeto plano, pt/en), arquivo
    independente, cobre as duas telas: host e jogador.
    ========================================================= */
@@ -10,7 +10,7 @@ const translations = {
     'meta.title': 'Time Attack: NDQuest',
     'nav.back': '← NDQuest',
 
-    // TELA DO HOST — configuração
+    // TELA DO HOST - configuração
     'host.eyebrow': 'Time Attack',
     'host.title': 'Criar Sala',
     'host.subtitle': 'Configure o jogo uma vez, todo mundo que entrar na sala joga com essas regras.',
@@ -36,20 +36,23 @@ const translations = {
     'errors.invalidTimeValues': 'Confira os valores de tempo, todos precisam ser maiores que zero.',
     'errors.roomCreateFailed': 'Não foi possível criar a sala. Tente novamente.',
 
-    // TELA DO HOST — sala criada, placar ao vivo
+    // TELA DO HOST - sala criada, placar ao vivo
     'room.codeLabel': 'Código da sala',
     'buttons.copyLink': '📋 Copiar Link',
     'buttons.linkCopied': '✓ Copiado!',
     'room.qrHint': 'Escaneie o QR ou digite o código pra entrar',
     'room.linkHint': 'Link direto:',
     'leaderboard.title': 'Placar ao Vivo',
+    'leaderboard.previousRounds': 'Rodadas Anteriores',
+    'leaderboard.roundLabel': 'Rodada',
     'leaderboard.playingNow': '🎮 {n} jogando agora',
     'leaderboard.empty': 'Nenhum jogador terminou ainda.',
     'buttons.playAsHost': 'Jogar também →',
     'buttons.closeRoom': 'Encerrar Sala',
+    'buttons.allowNewRound': 'Permitir Nova Rodada',
     'room.closedMessage': 'Sala encerrada. Obrigado por jogar!',
 
-    // TELA DO JOGADOR — entrar
+    // TELA DO JOGADOR - entrar
     'join.eyebrow': 'Time Attack',
     'join.title': 'Entrar na Sala',
     'join.subtitle': 'Digite o código que o host te passou.',
@@ -58,27 +61,31 @@ const translations = {
     'labels.nickname': 'Seu apelido',
     'buttons.joinRoom': 'Entrar',
     'errors.nicknameRequired': 'Preencha um apelido antes de entrar.',
+    'errors.nicknameTaken': 'Esse nome já está em uso nessa sala. Escolhe outro.',
     'errors.roomCodeRequired': 'Preencha o código da sala.',
     'errors.roomNotFound': 'Sala não encontrada. Confira o código.',
     'errors.roomClosed': 'Essa sala já foi encerrada.',
 
-    // TELA DO JOGADOR — pronto pra jogar
+    // TELA DO JOGADOR - pronto pra jogar
     'ready.eyebrow': 'Pronto?',
     'ready.title': 'Teste seu conhecimento',
     'ready.subtitle': 'Cada acerto some tempo ao seu relógio, cada erro tira. Acabou quando o tempo zerar ou bater o limite da partida.',
     'buttons.play': 'Jogar',
 
-    // TELA DO JOGADOR — jogando
+    // TELA DO JOGADOR - jogando
     'game.timeLabel': 'Tempo',
     'game.scorePrefix': 'Acertos:',
 
-    // TELA DO JOGADOR — resultado final
+    // TELA DO JOGADOR - resultado final
     'finished.eyebrow': 'Fim de Jogo',
     'finished.title': 'Tempo esgotado!',
+    'finished.waitingForHost': 'Esperando o host liberar uma nova rodada...',
     'finished.titleCap': 'Partida encerrada!',
     'finished.scoreLabel': 'Você acertou',
     'finished.subtitle': 'Sua pontuação já foi enviada pro host. Confira o placar na tela dele.',
-    'buttons.playAgain': 'Jogar de Novo'
+    'finished.yourPosition': 'Você ficou em {n}º lugar',
+    'buttons.playAgain': 'Jogar de Novo',
+    'buttons.backToNdquest': 'Voltar pro NDQuest'
   },
 
   en: {
@@ -116,10 +123,13 @@ const translations = {
     'room.qrHint': 'Scan the QR code or type the code to join',
     'room.linkHint': 'Direct link:',
     'leaderboard.title': 'Live Leaderboard',
+    'leaderboard.previousRounds': 'Previous Rounds',
+    'leaderboard.roundLabel': 'Round',
     'leaderboard.playingNow': '🎮 {n} playing now',
     'leaderboard.empty': 'No players have finished yet.',
     'buttons.playAsHost': 'Play too →',
     'buttons.closeRoom': 'Close Room',
+    'buttons.allowNewRound': 'Allow New Round',
     'room.closedMessage': 'Room closed. Thanks for playing!',
 
     'join.eyebrow': 'Time Attack',
@@ -130,6 +140,7 @@ const translations = {
     'labels.nickname': 'Your nickname',
     'buttons.joinRoom': 'Join',
     'errors.nicknameRequired': 'Fill in a nickname before joining.',
+    'errors.nicknameTaken': 'That name is already taken in this room. Pick another one.',
     'errors.roomCodeRequired': 'Fill in the room code.',
     'errors.roomNotFound': 'Room not found. Check the code.',
     'errors.roomClosed': 'This room has already closed.',
@@ -144,10 +155,13 @@ const translations = {
 
     'finished.eyebrow': 'Game Over',
     'finished.title': "Time's up!",
+    'finished.waitingForHost': 'Waiting for the host to allow a new round...',
     'finished.titleCap': 'Match ended!',
     'finished.scoreLabel': 'You got',
     'finished.subtitle': "Your score has been sent to the host. Check their screen for the leaderboard.",
-    'buttons.playAgain': 'Play Again'
+    'finished.yourPosition': 'You placed #{n}',
+    'buttons.playAgain': 'Play Again',
+    'buttons.backToNdquest': 'Back to NDQuest'
   }
 
 };

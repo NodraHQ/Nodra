@@ -716,6 +716,8 @@ function applyLanguage(lang) {
   updateDifficultySummary();
   updateRewardBalanceWarning();
   updateFixedTotalPreview();
+  updatePackCustomSummary();
+  updatePrizeSummary();
 }
 
 languageButtons.forEach((btn) => {

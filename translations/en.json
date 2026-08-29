@@ -35,5 +35,9 @@
   "stats.opensource.subtitle": "Source",
   "stats.opensource.title": "Open",
   "stats.verticals.subtitle": "Verticals",
-  "stats.verticals.title": "3"
+  "stats.verticals.title": "3",
+  "navAuth.signIn": "Sign in",
+  "navAuth.account": "Account",
+  "navAuth.profile": "Profile",
+  "navAuth.signOut": "Sign out"
 }

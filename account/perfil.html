@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="perfil.metaTitle">Profile: Nodra</title>
+<meta name="description" content="Nodra public profile.">
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/account.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+        <a href="../index.html#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
+        <div id="nav-auth"></div>
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+    </div>
+
+</nav>
+
+<main class="auth-shell">
+
+    <div id="perfil-loading" class="auth-loading" data-i18n="perfil.loading">Loading...</div>
+
+    <!-- Precisa estar logado pra ver perfil de outra pessoa — mesma
+         regra da view profiles_public (grant só pra authenticated). -->
+    <div id="perfil-signed-out" class="card auth-card" hidden>
+        <span class="tag" data-i18n="perfil.eyebrow">Public profile</span>
+        <h1 data-i18n="perfil.needLoginTitle">Sign in to view this profile</h1>
+        <p class="auth-subtitle" data-i18n="perfil.needLoginSubtitle">Public profiles are visible to any logged-in Nodra account.</p>
+        <a href="index.html" class="btn btn-primary" data-i18n="perfil.goToLogin">Sign in</a>
+    </div>
+
+    <div id="perfil-not-found" class="card auth-card" hidden>
+        <span class="tag" data-i18n="perfil.eyebrow">Public profile</span>
+        <h1 data-i18n="perfil.notFoundTitle">Profile not found</h1>
+        <p class="auth-subtitle" data-i18n="perfil.notFoundSubtitle">No account uses that username.</p>
+    </div>
+
+    <div id="perfil-found" class="profile-shell" hidden>
+
+        <div class="card profile-header">
+
+            <div class="profile-social-icons" id="perfil-social-icons"></div>
+
+            <div class="profile-avatar-wrap">
+                <div id="perfil-avatar-display" class="profile-avatar-display"></div>
+            </div>
+
+            <div class="profile-header-info">
+                <div class="profile-header-name-row">
+                    <h1 id="perfil-username-display"></h1>
+                    <span id="perfil-vip-badge" class="profile-vip-badge" hidden data-i18n="profile.vip">Vip</span>
+                </div>
+                <p id="perfil-bio-display" class="profile-bio-display" data-i18n="profile.noBioYet">No bio yet.</p>
+            </div>
+
+        </div>
+
+        <div class="card profile-section">
+            <div class="profile-section-header">
+                <span class="tag" data-i18n="profile.socialSection">Social</span>
+            </div>
+            <div id="perfil-social-list" class="perfil-social-list"></div>
+            <p id="perfil-social-empty" class="profile-history-detail-empty" data-i18n="perfil.noSocialYet" hidden>No social links yet.</p>
+        </div>
+
+        <div class="card profile-section" id="perfil-badges-card">
+            <div class="profile-section-header">
+                <span class="tag" data-i18n="perfil.badgesSection">Badges</span>
+            </div>
+            <div id="perfil-badges-list" class="perfil-badges-list"></div>
+            <p id="perfil-badges-empty" class="profile-history-detail-empty" data-i18n="perfil.badgesEmpty" hidden>This person hasn't earned any badges yet.</p>
+        </div>
+
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/supabase-client.js"></script>
+<script defer src="assets/js/translations.js"></script>
+<script defer src="assets/js/navAuth.js" data-account-url="index.html"></script>
+<script defer src="assets/js/perfil.js"></script>
+
+</body>
+</html>

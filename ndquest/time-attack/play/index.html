@@ -12,6 +12,8 @@
 </head>
 <body>
 
+<div id="nav-auth-light" hidden></div>
+
 <div class="language-toggle" role="group" aria-label="Idioma / Language">
     <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
     <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
@@ -21,7 +23,9 @@
 <div class="container">
 
     <div class="logo-row">
-        <img id="logo-img" src="../assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+        <a href="../../index.html">
+            <img id="logo-img" src="../assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+        </a>
     </div>
 
     <!-- ===================================================== -->
@@ -92,8 +96,11 @@
             <h1 class="title-display" id="finished-title" data-i18n="finished.title">Tempo esgotado!</h1>
             <p class="subtitle" style="margin-bottom:0" data-i18n="finished.scoreLabel">Você acertou</p>
             <div class="finished-screen__score" id="final-score"></div>
-            <p class="subtitle" data-i18n="finished.subtitle">Sua pontuação já foi enviada pro host. Confira o placar na tela dele.</p>
+            <p id="finished-position" class="subtitle"></p>
+            <div id="finished-ranking-list" class="finished-ranking-list"></div>
             <button type="button" class="btn btn-secondary" id="play-again-btn" data-i18n="buttons.playAgain">Jogar de Novo</button>
+            <p id="waiting-host-hint" class="finished-waiting-hint" data-i18n="finished.waitingForHost" hidden>Waiting for the host to allow a new round...</p>
+            <a href="../../index.html" class="btn btn-secondary" style="margin-top:10px;display:block;text-align:center" data-i18n="buttons.backToNdquest">Voltar pro NDQuest</a>
         </div>
     </section>
 
@@ -101,6 +108,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/navAuthLight.js" data-account-url="../../../account/index.html" data-lang-key="time-attack:language"></script>
+<script defer src="../assets/js/accountIdentity.js" data-target-input="nickname-input" data-lang-key="time-attack:language"></script>
 <script type="module" src="play.js"></script>
 </body>
 </html>

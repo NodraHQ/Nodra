@@ -1,5 +1,5 @@
 // ==================================================================
-// SHOW DOWN — host.js
+// SHOW DOWN - host.js
 //
 // Fluxo: host cria a sala (define pacote, tempo por pergunta e
 // quantidade de perguntas) → jogadores entram e ficam numa sala de
@@ -13,7 +13,6 @@
 // inscritos nela via Realtime e reagem sozinhos, sem precisar de F5.
 // ==================================================================
 
-import questionPacks from './questions/questions-manifest.js';
 import translations from './i18n/translations.js';
 import themes from './branding/branding-manifest.js';
 
@@ -32,6 +31,92 @@ function t(key, vars) {
         });
     }
     return text;
+}
+
+// --------------------------------------------------------
+// Badges do jogador - mini-card evoluído do "quadrinho simples só
+// com nome", pedido ao vivo: até 3 badges pequenos que a pessoa
+// escolheu destacar, ao lado do nome, na sala de espera e no
+// ranking. Cópia própria desta pasta (mesma lógica dos outros jogos).
+// --------------------------------------------------------
+
+const BADGE_ICONS = {
+    trophy: '<path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/>',
+    award: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+    medal: '<path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>',
+    crown: '<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+    gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
+    flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+};
+
+function buildMiniIconSvg(iconKey) {
+    const inner = BADGE_ICONS[iconKey];
+    if (!inner) return '';
+    return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+}
+
+async function loadPlayerBadgeMap(userIds) {
+    const validIds = [...new Set(userIds.filter(Boolean))];
+    if (validIds.length === 0) return new Map();
+
+    const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
+        window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', validIds),
+        window.ndquestSupabase
+            .from('user_badges')
+            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+            .in('user_id', validIds),
+    ]);
+
+    const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
+    const map = new Map();
+
+    (userBadgeRows || []).forEach((row) => {
+        const featuredSet = featuredById.get(row.user_id);
+        const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+        if (!isFeatured) return;
+
+        const list = map.get(row.user_id) || [];
+        if (list.length >= 3) return;
+        list.push(row.badges);
+        map.set(row.user_id, list);
+    });
+
+    return map;
+}
+
+function buildMiniBadgeRow(badges) {
+    if (!badges || badges.length === 0) return '';
+    const chips = badges
+        .map((b) => {
+            if (b.image_url) {
+                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+            }
+            const color = b.icon_color || b.background_color || '#888';
+            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+        })
+        .join('');
+    return `<div class="mini-badge-row">${chips}</div>`;
+}
+
+// --------------------------------------------------------
+// Identidade - se a pessoa estiver logada, host_id fica registrado
+// junto da sala (ver docs/MATCH_HISTORY_ARCHITECTURE.md). Deslogado,
+// fica null - hosteia normal, só não entra no histórico.
+// --------------------------------------------------------
+
+// Bug real confirmado ao vivo: antes isso guardava o resultado em
+// cache pra sempre depois da primeira checagem - numa aba que fica
+// aberta por horas, ou depois de trocar de conta sem recarregar a
+// página, esse valor guardado ficava desatualizado, e o servidor
+// rejeitava porque o host_id/user_id enviado não batia mais com quem
+// a pessoa realmente é agora. getSession() é uma leitura local e
+// barata do Supabase (não faz chamada de rede), então nunca precisou
+// desse cache - checa fresco toda vez.
+async function getCurrentUserId() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.id ?? null;
 }
 
 function applyTranslations() {
@@ -124,17 +209,38 @@ function showScreen(el) {
 }
 
 // --------------------------------------------------------
-// Popular pacotes de perguntas
+// Popular pacotes de perguntas - vem do banco agora (tabela
+// question_packs), não mais de um arquivo local. Ver
+// docs/BADGE_INTEGRITY_ARCHITECTURE.md (Mecanismo B). Mesmo pacotes
+// que o Time Attack usa (applicable_games inclui os dois jogos),
+// evita conteúdo duplicado.
 // --------------------------------------------------------
 
-function populatePackSelect() {
+let availablePacks = [];
+
+async function populatePackSelect() {
     const previousValue = packSelect.value;
+
+    const { data, error } = await window.ndquestSupabase
+        .from('question_packs')
+        .select('slug, name_pt, name_en')
+        .eq('tier', 'official')
+        .contains('applicable_games', ['show_down'])
+        .order('name_pt');
+
+    if (error) {
+        console.error('Show Down: erro ao carregar pacotes', error);
+        availablePacks = [];
+    } else {
+        availablePacks = data || [];
+    }
+
     packSelect.innerHTML = '';
 
-    questionPacks.forEach((pack, index) => {
+    availablePacks.forEach((pack) => {
         const option = document.createElement('option');
-        option.value = String(index);
-        option.textContent = pack.name[currentLanguage] || pack.name.pt;
+        option.value = pack.slug;
+        option.textContent = currentLanguage === 'en' ? pack.name_en : pack.name_pt;
         packSelect.appendChild(option);
     });
 
@@ -157,7 +263,7 @@ packSelect.addEventListener('change', () => {
 });
 
 // --------------------------------------------------------
-// Tema de marca (white label) — mesmo sistema do Quest Drop,
+// Tema de marca (white label) - mesmo sistema do Quest Drop,
 // cópia própria do branding/, arquivo independente. O tema
 // escolhido é aplicado aqui na tela do host e também salvo na
 // sala, pra o jogador (em outro aparelho) aplicar o mesmo tema
@@ -257,7 +363,7 @@ function applyTheme(theme) {
 }
 
 // --------------------------------------------------------
-// Minhas Próprias Perguntas — mesmo formato do Quest Drop /
+// Minhas Próprias Perguntas - mesmo formato do Quest Drop /
 // Time Attack, cópia própria da lógica de parsing.
 // --------------------------------------------------------
 
@@ -398,19 +504,27 @@ function shuffleArray(array) {
     return copy;
 }
 
-function buildFlatPool(pack) {
-    return [
-        ...(pack.questions.easy || []),
-        ...(pack.questions.medium || []),
-        ...(pack.questions.hard || [])
-    ];
+async function callGameFunction(name, payload) {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    const token = session?.access_token || window.ndquestSupabaseAnonKey;
+
+    const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/${name}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+    });
+
+    return response.json();
 }
 
-function buildQuestionsForPack(packSlug, numQuestionsWanted) {
+async function buildQuestionsForPack(packSlug, numQuestionsWanted) {
 
     if (packSlug === 'custom') {
         if (customQuestions.length === 0) {
-            return { questions: null, errorKey: 'errors.customQuestionsRequired' };
+            return { questionIds: null, customQuestions: null, errorKey: 'errors.customQuestionsRequired' };
         }
         let questions = customQuestions.map((q) => ({
             question: q.question,
@@ -426,37 +540,25 @@ function buildQuestionsForPack(packSlug, numQuestionsWanted) {
             const newCorrectIndex = q.answers.pt.indexOf(correctTextPt);
             return { ...q, correct: newCorrectIndex, answers: { pt: q.answers.pt, en: q.answers.pt } };
         });
-        return { questions, errorKey: null };
+        return { questionIds: null, customQuestions: questions, errorKey: null };
     }
 
-    const packIndex = Number(packSlug);
-    const pack = questionPacks[packIndex];
-    if (!pack) {
-        return { questions: null, errorKey: 'errors.roomCreateFailed' };
-    }
-    const pool = buildFlatPool(pack);
-    if (pool.length < numQuestionsWanted) {
-        return { questions: null, errorKey: 'errors.notEnoughQuestions' };
-    }
-    const shuffledPool = shuffleArray(pool);
-    const picked = shuffledPool.slice(0, numQuestionsWanted);
-    const questions = picked.map((q) => {
-        const correctTextPt = q.answers.pt[q.correct];
-        const answersEnSource = q.answers.en || q.answers.pt;
-        // Embaralha pt uma vez e espelha a mesma posição em en,
-        // pareando pelo texto correspondente de cada idioma.
-        const shuffledPt = shuffleArray(q.answers.pt);
-        const shuffledEn = shuffledPt.map((ptText) => {
-            const idx = q.answers.pt.indexOf(ptText);
-            return answersEnSource[idx];
-        });
-        return {
-            question: q.question,
-            answers: { pt: shuffledPt, en: shuffledEn },
-            correct: shuffledPt.indexOf(correctTextPt)
-        };
+    // Pacote oficial - as perguntas em si (com a resposta certa)
+    // nunca chegam neste arquivo. Só pede à Edge Function pra
+    // sortear N IDs do pacote; o conteúdo é buscado depois, pergunta
+    // por pergunta, também via Edge Function. Ver
+    // docs/BADGE_INTEGRITY_ARCHITECTURE.md (Mecanismo B).
+    const result = await callGameFunction('showdown-pick-questions', {
+        pack_slug: packSlug,
+        count: numQuestionsWanted,
     });
-    return { questions, errorKey: null };
+
+    if (result.error || !Array.isArray(result.question_ids)) {
+        return { questionIds: null, customQuestions: null, errorKey: 'errors.notEnoughQuestions' };
+    }
+
+    return { questionIds: result.question_ids, customQuestions: null, errorKey: null };
+
 }
 
 // --------------------------------------------------------
@@ -465,6 +567,7 @@ function buildQuestionsForPack(packSlug, numQuestionsWanted) {
 
 let activeRoomId = null;
 let selectedQuestions = [];
+let selectedQuestionIds = [];
 let numQuestionsTotal = 0;
 let questionSecondsValue = 30;
 let currentQuestionIndex = -1;
@@ -492,7 +595,7 @@ createRoomBtn.addEventListener('click', async () => {
 
     const packSlug = packSelect.value;
 
-    const { questions, errorKey } = buildQuestionsForPack(packSlug, numQuestionsWanted);
+    const { questionIds, customQuestions: builtCustomQuestions, errorKey } = await buildQuestionsForPack(packSlug, numQuestionsWanted);
     if (errorKey) {
         configError.textContent = t(errorKey);
         return;
@@ -508,17 +611,27 @@ createRoomBtn.addEventListener('click', async () => {
     createRoomBtn.disabled = true;
 
     const roomCode = generateRoomCode();
+    const hostUserId = await getCurrentUserId();
 
+    // Modo custom continua guardando o conteúdo na própria sala
+    // (escopo menor de propósito - só afeta a sala do próprio host,
+    // ver mesma decisão tomada no Time Attack). Pacote oficial agora
+    // guarda só os IDs sorteados (selected_question_ids), nunca mais
+    // o conteúdo com resposta certa - antes ficava tudo em
+    // `questions`, incluindo o gabarito, visível pra qualquer um que
+    // entrasse na sala.
     const roomPayload = {
         room_code: roomCode,
         host_name: hostName,
         pack_slug: packSlug,
         question_seconds: questionSeconds,
-        num_questions: questions.length,
-        questions,
+        num_questions: builtCustomQuestions ? builtCustomQuestions.length : questionIds.length,
+        questions: builtCustomQuestions || null,
+        selected_question_ids: builtCustomQuestions ? null : questionIds,
         status: 'waiting',
         current_question_index: -1,
-        theme_name: selectedTheme.name
+        theme_name: selectedTheme.name,
+        host_id: hostUserId
     };
 
     const { data, error } = await window.ndquestSupabase
@@ -535,9 +648,24 @@ createRoomBtn.addEventListener('click', async () => {
         return;
     }
 
+    if (hostUserId) {
+        window.ndquestSupabase
+            .from('match_history')
+            .insert({
+                user_id: hostUserId,
+                role: 'host',
+                game: 'show_down',
+                room_code: roomCode
+            })
+            .then(({ error: historyError }) => {
+                if (historyError) console.error('Show Down host history error:', historyError);
+            });
+    }
+
     currentPackSlug = packSlug;
     activeRoomId = data.id;
     selectedQuestions = data.questions;
+    selectedQuestionIds = data.selected_question_ids;
     numQuestionsTotal = data.num_questions;
     questionSecondsValue = data.question_seconds;
 
@@ -566,25 +694,34 @@ function showWaitingScreen(roomCode) {
     document.querySelectorAll('.room-mini-qr').forEach((el) => { el.src = qrApiUrl; });
 
     subscribeToPlayers(activeRoomId);
+    subscribeToAnswers(activeRoomId);
 }
 
 function renderWaitingPlayers(players) {
-    if (players.length === 0) {
+    const activePlayers = players.filter((p) => !isPlayerStale(p));
+
+    if (activePlayers.length === 0) {
         waitingEmpty.hidden = false;
         waitingPlayersList.innerHTML = '';
         return;
     }
 
     waitingEmpty.hidden = true;
-    waitingPlayersList.innerHTML = players
+    waitingPlayersList.innerHTML = activePlayers
         .map((p) => `<span class="player-chip">${p.nickname}</span>`)
         .join('');
+
+    loadPlayerBadgeMap(activePlayers.map((p) => p.user_id)).then((badgeMap) => {
+        waitingPlayersList.innerHTML = activePlayers
+            .map((p) => `<span class="player-chip">${p.nickname}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`)
+            .join('');
+    });
 }
 
 async function loadPlayers(roomId) {
     const { data, error } = await window.ndquestSupabase
         .from('showdown_players')
-        .select('id, nickname, total_score')
+        .select('id, user_id, nickname, total_score, last_seen_at')
         .eq('room_id', roomId)
         .order('joined_at', { ascending: true });
 
@@ -593,6 +730,17 @@ async function loadPlayers(roomId) {
         return [];
     }
     return data || [];
+}
+
+// Sessão abandonada - mesmo problema já visto no Time Attack, mas
+// aqui tem uma consequência funcional a mais: sem isso, "encerra
+// sozinho quando todo mundo responde" (checkIfEveryoneAnswered)
+// ficaria travado pra sempre esperando alguém que já fechou a aba.
+const STALE_THRESHOLD_MS = 30000;
+
+function isPlayerStale(player) {
+    if (!player.last_seen_at) return true;
+    return (Date.now() - new Date(player.last_seen_at).getTime()) > STALE_THRESHOLD_MS;
 }
 
 function subscribeToPlayers(roomId) {
@@ -619,6 +767,7 @@ function subscribeToPlayers(roomId) {
 async function goToQuestion(index) {
 
     currentQuestionIndex = index;
+    questionEndingInProgress = false;
     const startedAt = new Date().toISOString();
 
     const { error } = await window.ndquestSupabase
@@ -642,16 +791,36 @@ startQuizBtn.addEventListener('click', () => {
     goToQuestion(0);
 });
 
-function renderQuestionScreen(index, startedAtISO) {
+async function renderQuestionScreen(index, startedAtISO) {
 
     showScreen(screenQuestion);
 
     questionIndexLabel.textContent = t('question.indexLabel', { current: index + 1, total: numQuestionsTotal });
 
-    const q = selectedQuestions[index];
-    const answers = q.answers[currentLanguage] || q.answers.pt;
+    if (selectedQuestions) {
+        // Modo custom - conteúdo já está local, sem precisar de rede.
+        const q = selectedQuestions[index];
+        const answers = q.answers[currentLanguage] || q.answers.pt;
+        hostQuestionText.textContent = q.question[currentLanguage] || q.question.pt;
+        renderHostAnswerButtons(answers);
+    } else {
+        // Pacote oficial - busca da Edge Function, sem resposta certa
+        // incluída (não precisa dela aqui, só mostra a pergunta).
+        const data = await callGameFunction('showdown-get-question', { room_id: activeRoomId });
+        if (data.error) {
+            console.error('Show Down: erro ao buscar pergunta pro host', data.error);
+            return;
+        }
+        const text = currentLanguage === 'en' ? data.question_en : data.question_pt;
+        const answers = shuffleArray(data.options).map((opt) => currentLanguage === 'en' ? opt.en : opt.pt);
+        hostQuestionText.textContent = text;
+        renderHostAnswerButtons(answers);
+    }
 
-    hostQuestionText.textContent = q.question[currentLanguage] || q.question.pt;
+    startQuestionTimer(startedAtISO);
+}
+
+function renderHostAnswerButtons(answers) {
     hostAnswersGrid.innerHTML = '';
     answers.forEach((answerText) => {
         const btn = document.createElement('button');
@@ -661,8 +830,6 @@ function renderQuestionScreen(index, startedAtISO) {
         btn.disabled = true;
         hostAnswersGrid.appendChild(btn);
     });
-
-    startQuestionTimer(startedAtISO);
 }
 
 function startQuestionTimer(startedAtISO) {
@@ -701,7 +868,16 @@ endQuestionBtn.addEventListener('click', () => {
     endCurrentQuestion();
 });
 
+let questionEndingInProgress = false;
+
 async function endCurrentQuestion() {
+
+    // Trava contra disparo duplo - pode acontecer do temporizador
+    // estourar bem no mesmo instante que o último jogador responde
+    // (auto-encerrar por "todo mundo já respondeu"), os dois tentando
+    // fechar a pergunta ao mesmo tempo.
+    if (questionEndingInProgress) return;
+    questionEndingInProgress = true;
 
     const { error } = await window.ndquestSupabase
         .from('showdown_rooms')
@@ -715,15 +891,87 @@ async function endCurrentQuestion() {
     await renderResultsScreen(currentQuestionIndex);
 }
 
+// Encerra a pergunta sozinho assim que todo mundo já respondeu, sem
+// precisar esperar o tempo estourar nem o host clicar em nada.
+// Escuta cada resposta chegando (showdown_answers) e compara com o
+// total de jogadores da sala.
+let answersRealtimeChannel = null;
+
+function subscribeToAnswers(roomId) {
+
+    if (answersRealtimeChannel) {
+        window.ndquestSupabase.removeChannel(answersRealtimeChannel);
+    }
+
+    answersRealtimeChannel = window.ndquestSupabase
+        .channel(`show-down-answers-${roomId}`)
+        .on(
+            'postgres_changes',
+            { event: 'INSERT', schema: 'public', table: 'showdown_answers', filter: `room_id=eq.${roomId}` },
+            () => checkIfEveryoneAnswered(roomId)
+        )
+        .subscribe();
+
+}
+
+async function checkIfEveryoneAnswered(roomId) {
+
+    // Só faz sentido checar durante a pergunta em si - se a sala já
+    // não está mais em 'question' (encerrou por outro caminho, ou
+    // ainda nem começou), não tem o que auto-encerrar.
+    if (questionTimerInterval === null) return;
+
+    // Só conta quem realmente ainda está por aqui - sem isso, uma
+    // pessoa que abandonou no meio da pergunta travaria o
+    // auto-encerramento pra sempre, esperando uma resposta que nunca
+    // vai chegar.
+    const staleThreshold = new Date(Date.now() - STALE_THRESHOLD_MS).toISOString();
+
+    const [{ count: totalPlayers }, { count: totalAnswers }] = await Promise.all([
+        window.ndquestSupabase
+            .from('showdown_players')
+            .select('id', { count: 'exact', head: true })
+            .eq('room_id', roomId)
+            .gte('last_seen_at', staleThreshold),
+        window.ndquestSupabase
+            .from('showdown_answers')
+            .select('id', { count: 'exact', head: true })
+            .eq('room_id', roomId)
+            .eq('question_index', currentQuestionIndex),
+    ]);
+
+    if (totalPlayers !== null && totalAnswers !== null && totalPlayers > 0 && totalAnswers >= totalPlayers) {
+        if (questionTimerInterval) {
+            clearInterval(questionTimerInterval);
+            questionTimerInterval = null;
+        }
+        endCurrentQuestion();
+    }
+
+}
+
 async function renderResultsScreen(index) {
 
     showScreen(screenResults);
 
     resultsIndexLabel.textContent = t('question.indexLabel', { current: index + 1, total: numQuestionsTotal });
 
-    const q = selectedQuestions[index];
-    const answers = q.answers[currentLanguage] || q.answers.pt;
-    resultsCorrectAnswer.textContent = answers[q.correct];
+    if (selectedQuestions) {
+        const q = selectedQuestions[index];
+        const answers = q.answers[currentLanguage] || q.answers.pt;
+        resultsCorrectAnswer.textContent = answers[q.correct];
+    } else {
+        // Pacote oficial - a Edge Function só inclui correct_index se
+        // a sala já estiver com status 'results' (checado no
+        // servidor, não confia em quando o cliente pede).
+        const data = await callGameFunction('showdown-get-question', { room_id: activeRoomId });
+        if (data.error || data.correct_index === undefined) {
+            console.error('Show Down: erro ao buscar resposta certa pro resultado', data.error);
+        } else {
+            const correctOption = data.options.find((opt) => opt.index === data.correct_index);
+            resultsCorrectAnswer.textContent = correctOption ? (currentLanguage === 'en' ? correctOption.en : correctOption.pt) : '';
+        }
+    }
 
     const players = await loadPlayers(activeRoomId);
     renderRankingList(resultsRankingList, players);
@@ -732,13 +980,17 @@ async function renderResultsScreen(index) {
     nextQuestionBtn.textContent = isLastQuestion ? t('buttons.seeFinalRanking') : t('buttons.nextQuestion');
 }
 
-function renderRankingList(container, players) {
+async function renderRankingList(container, players) {
     const sorted = [...players].sort((a, b) => b.total_score - a.total_score);
+    const badgeMap = await loadPlayerBadgeMap(sorted.map((p) => p.user_id));
     container.innerHTML = sorted
         .map((p, i) => `
             <div class="leaderboard-row">
                 <span class="leaderboard-row__rank">#${i + 1}</span>
-                <span class="leaderboard-row__name">${p.nickname}</span>
+                <span class="leaderboard-row__name-block">
+                    <span class="leaderboard-row__name">${p.nickname}</span>
+                    ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
+                </span>
                 <span class="leaderboard-row__score">${p.total_score} ${t('ranking.pointsLabel')}</span>
             </div>
         `)
@@ -771,7 +1023,7 @@ async function finishGame() {
 }
 
 // --------------------------------------------------------
-// Jogar de novo: mesma sala, mesmo código, mesmos jogadores —
+// Jogar de novo: mesma sala, mesmo código, mesmos jogadores -
 // só sorteia um novo conjunto de perguntas e zera o placar.
 // --------------------------------------------------------
 
@@ -779,7 +1031,7 @@ playAgainBtn.addEventListener('click', async () => {
 
     playAgainBtn.disabled = true;
 
-    const { questions, errorKey } = buildQuestionsForPack(currentPackSlug, numQuestionsTotal);
+    const { questionIds, customQuestions: builtCustomQuestions, errorKey } = await buildQuestionsForPack(currentPackSlug, numQuestionsTotal);
     if (errorKey) {
         // Não deveria acontecer (mesmo pacote que já funcionou antes),
         // mas se acontecer, mantém a tela como está em vez de travar.
@@ -803,11 +1055,14 @@ playAgainBtn.addEventListener('click', async () => {
         .update({ total_score: 0 })
         .eq('room_id', activeRoomId);
 
+    const newNumQuestions = builtCustomQuestions ? builtCustomQuestions.length : questionIds.length;
+
     const { error } = await window.ndquestSupabase
         .from('showdown_rooms')
         .update({
-            questions,
-            num_questions: questions.length,
+            questions: builtCustomQuestions || null,
+            selected_question_ids: builtCustomQuestions ? null : questionIds,
+            num_questions: newNumQuestions,
             status: 'waiting',
             current_question_index: -1,
             question_started_at: null
@@ -821,7 +1076,8 @@ playAgainBtn.addEventListener('click', async () => {
         return;
     }
 
-    selectedQuestions = questions;
+    selectedQuestions = builtCustomQuestions;
+    selectedQuestionIds = questionIds;
     currentQuestionIndex = -1;
 
     const roomCode = roomCodeText.textContent;

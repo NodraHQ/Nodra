@@ -1,8 +1,7 @@
 // ==================================================================
-// TIME ATTACK — host.js
+// TIME ATTACK - host.js
 // ==================================================================
 
-import questionPacks from './questions/questions-manifest.js';
 import translations from './i18n/translations.js';
 import themes from './branding/branding-manifest.js';
 
@@ -15,6 +14,108 @@ let currentLanguage = localStorage.getItem('time-attack:language') || 'pt';
 function t(key) {
     const dict = translations[currentLanguage] || translations.pt;
     return dict[key] !== undefined ? dict[key] : key;
+}
+
+// --------------------------------------------------------
+// Badges do jogador - mini-card evoluído do "quadrinho simples só
+// com nome", pedido ao vivo: pega o card de perfil, resume (sem
+// redes sociais, sem bio), mostra só os badges que a pessoa escolheu
+// destacar. Cópia própria desta pasta, mesmo padrão de sempre -
+// mesmos ícones/cores usados na tela de criar badge (account/).
+// --------------------------------------------------------
+
+const BADGE_ICONS = {
+    trophy: '<path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/>',
+    award: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+    medal: '<path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>',
+    crown: '<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+    gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
+    flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+};
+
+function buildMiniIconSvg(iconKey) {
+    const inner = BADGE_ICONS[iconKey];
+    if (!inner) return '';
+    return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+}
+
+// Busca os badges em destaque de vários jogadores de uma vez só -
+// mesma regra do perfil público: se a pessoa já escolheu quais
+// destacar, mostra só esses; se ainda não escolheu nenhum, mostra
+// todos (até o limite de 3 aqui, por causa do espaço apertado).
+// Cache por user_id - reportado ao vivo: o placar atualiza toda hora
+// (sinal de vida dos jogadores, não só quando alguém termina), e sem
+// cache isso disparava uma busca de rede nova a cada atualização,
+// mesmo sem nada mudar nos badges de ninguém. Badge não muda no meio
+// de uma partida, cachear é seguro.
+const playerBadgeCache = new Map();
+
+async function loadPlayerBadgeMap(userIds) {
+    const validIds = [...new Set(userIds.filter(Boolean))];
+    const uncached = validIds.filter((id) => !playerBadgeCache.has(id));
+
+    if (uncached.length > 0) {
+        const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
+            window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', uncached),
+            window.ndquestSupabase
+                .from('user_badges')
+                .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+                .in('user_id', uncached),
+        ]);
+
+        const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
+        uncached.forEach((id) => playerBadgeCache.set(id, []));
+
+        (userBadgeRows || []).forEach((row) => {
+            const featuredSet = featuredById.get(row.user_id);
+            const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+            if (!isFeatured) return;
+
+            const list = playerBadgeCache.get(row.user_id) || [];
+            if (list.length >= 3) return;
+            list.push(row.badges);
+            playerBadgeCache.set(row.user_id, list);
+        });
+    }
+
+    const map = new Map();
+    validIds.forEach((id) => map.set(id, playerBadgeCache.get(id) || []));
+    return map;
+}
+
+function buildMiniBadgeRow(badges) {
+    if (!badges || badges.length === 0) return '';
+    const chips = badges
+        .map((b) => {
+            if (b.image_url) {
+                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+            }
+            const color = b.icon_color || b.background_color || '#888';
+            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+        })
+        .join('');
+    return `<div class="mini-badge-row">${chips}</div>`;
+}
+
+// --------------------------------------------------------
+// Identidade - se a pessoa estiver logada, host_id fica registrado
+// junto da sala (ver docs/MATCH_HISTORY_ARCHITECTURE.md). Deslogado,
+// fica null - hosteia normal, só não entra no histórico.
+// --------------------------------------------------------
+
+// Bug real confirmado ao vivo: antes isso guardava o resultado em
+// cache pra sempre depois da primeira checagem - numa aba que fica
+// aberta por horas, ou depois de trocar de conta sem recarregar a
+// página, esse valor guardado ficava desatualizado, e o servidor
+// rejeitava porque o host_id/user_id enviado não batia mais com quem
+// a pessoa realmente é agora. getSession() é uma leitura local e
+// barata do Supabase (não faz chamada de rede), então nunca precisou
+// desse cache - checa fresco toda vez.
+async function getCurrentUserId() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.id ?? null;
 }
 
 function applyTranslations() {
@@ -57,6 +158,7 @@ const leaderboardEmpty = document.getElementById('leaderboard-empty');
 const leaderboardPlayingNow = document.getElementById('leaderboard-playing-now');
 const playAsHostLink = document.getElementById('play-as-host-link');
 const closeRoomBtn = document.getElementById('close-room-btn');
+const allowNewRoundBtn = document.getElementById('allow-new-round-btn');
 
 const customQuestionsPanel = document.getElementById('custom-questions-panel');
 const bulkTextarea = document.getElementById('bulk-textarea');
@@ -68,18 +170,40 @@ const previewStatus = document.getElementById('preview-status');
 const previewList = document.getElementById('preview-list');
 
 // --------------------------------------------------------
-// Popular pacotes de perguntas (reaproveitado ao trocar idioma,
-// já que os nomes dos pacotes não usam data-i18n)
+// Popular pacotes de perguntas - agora vem do banco (tabela
+// question_packs), não mais de um arquivo local. Ver
+// docs/BADGE_INTEGRITY_ARCHITECTURE.md (Mecanismo B): as perguntas
+// em si (com a resposta certa) NUNCA chegam nesta tela nem em
+// nenhuma outra do lado do cliente - só nome e slug do pacote, que
+// não são sigilosos. Só filtra 'official' por enquanto; os outros
+// níveis (pacote pessoal de VIP, temporário, etc.) entram aqui
+// depois, quando essa parte for construída.
 // --------------------------------------------------------
 
-function populatePackSelect() {
+let availablePacks = [];
+
+async function populatePackSelect() {
     const previousValue = packSelect.value;
+
+    const { data, error } = await window.ndquestSupabase
+        .from('question_packs')
+        .select('slug, name_pt, name_en')
+        .eq('tier', 'official')
+        .order('name_pt');
+
+    if (error) {
+        console.error('Time Attack: erro ao carregar pacotes', error);
+        availablePacks = [];
+    } else {
+        availablePacks = data || [];
+    }
+
     packSelect.innerHTML = '';
 
-    questionPacks.forEach((pack, index) => {
+    availablePacks.forEach((pack) => {
         const option = document.createElement('option');
-        option.value = String(index);
-        option.textContent = pack.name[currentLanguage] || pack.name.pt;
+        option.value = pack.slug;
+        option.textContent = currentLanguage === 'en' ? pack.name_en : pack.name_pt;
         packSelect.appendChild(option);
     });
 
@@ -100,7 +224,7 @@ packSelect.addEventListener('change', () => {
 });
 
 // --------------------------------------------------------
-// Tema de marca (white label) — mesmo sistema do Quest Drop,
+// Tema de marca (white label) - mesmo sistema do Quest Drop,
 // cópia própria do branding/, arquivo independente. O tema
 // escolhido é aplicado aqui na tela do host e também salvo na
 // sala, pra o jogador (em outro aparelho) aplicar o mesmo tema
@@ -227,7 +351,7 @@ setActiveLanguageButton();
 // --------------------------------------------------------
 
 // --------------------------------------------------------
-// Minhas Próprias Perguntas — cola/envia, processa, usa só
+// Minhas Próprias Perguntas - cola/envia, processa, usa só
 // nesta sala (fica guardado na própria sala no banco, porque os
 // jogadores estão em aparelhos diferentes do host, diferente do
 // Quest Drop que fica tudo local no mesmo navegador).
@@ -360,7 +484,9 @@ function generateRoomCode() {
 // --------------------------------------------------------
 
 let activeRoomId = null;
+let activeRoomCode = null;
 let realtimeChannel = null;
+let leaderboardStalenessInterval = null;
 
 createRoomBtn.addEventListener('click', async () => {
 
@@ -399,6 +525,7 @@ createRoomBtn.addEventListener('click', async () => {
     createRoomBtn.disabled = true;
 
     const roomCode = generateRoomCode();
+    const hostUserId = await getCurrentUserId();
 
     const roomPayload = {
         room_code: roomCode,
@@ -408,7 +535,8 @@ createRoomBtn.addEventListener('click', async () => {
         time_bonus_correct: timeBonus,
         time_penalty_wrong: timePenalty,
         time_cap_seconds: timeCap,
-        theme_name: selectedTheme.name
+        theme_name: selectedTheme.name,
+        host_id: hostUserId
     };
 
     if (packSlug === 'custom') {
@@ -429,7 +557,26 @@ createRoomBtn.addEventListener('click', async () => {
         return;
     }
 
+    // Histórico de "hosteou uma sala" - só grava se logado. Registra
+    // já na criação (não existe um "fim de sala" único e confiável do
+    // lado do host pra esperar por ele - o host pode fechar a aba a
+    // qualquer momento).
+    if (hostUserId) {
+        window.ndquestSupabase
+            .from('match_history')
+            .insert({
+                user_id: hostUserId,
+                role: 'host',
+                game: 'time_attack',
+                room_code: roomCode
+            })
+            .then(({ error: historyError }) => {
+                if (historyError) console.error('Time Attack host history error:', historyError);
+            });
+    }
+
     activeRoomId = data.id;
+    activeRoomCode = roomCode;
     applyTheme(selectedTheme);
     showRoomScreen(roomCode, data, hostName);
 });
@@ -445,10 +592,10 @@ function showRoomScreen(roomCode, roomData, hostName) {
 
     roomCodeText.textContent = roomCode;
 
-    const pack = questionPacks[Number(roomData.pack_slug)];
+    const pack = availablePacks.find((p) => p.slug === roomData.pack_slug);
     const packName = roomData.pack_slug === 'custom'
         ? t('pack.customOption')
-        : (pack ? (pack.name[currentLanguage] || pack.name.pt) : roomData.pack_slug);
+        : (pack ? (currentLanguage === 'en' ? pack.name_en : pack.name_pt) : roomData.pack_slug);
 
     roomSummary.innerHTML = `
         <span class="room-summary__chip"><strong>${packName}</strong></span>
@@ -460,7 +607,7 @@ function showRoomScreen(roomCode, roomData, hostName) {
 
     const baseUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}play/index.html`;
 
-    // Link/QR público, sem nome nenhum — é o que qualquer jogador vê e usa.
+    // Link/QR público, sem nome nenhum - é o que qualquer jogador vê e usa.
     const publicPlayUrl = `${baseUrl}?room=${roomCode}`;
     roomLinkText.textContent = publicPlayUrl;
 
@@ -476,10 +623,26 @@ function showRoomScreen(roomCode, roomData, hostName) {
     subscribeToLeaderboard(roomData.id);
 }
 
-function renderLeaderboard(players) {
+async function renderLeaderboard(players) {
+
+    // Sessão abandonada - reportado ao vivo: se a pessoa fecha a aba
+    // no meio do jogo, a linha dela fica pra sempre sem finished_at,
+    // e aparecia como "jogando agora" indefinidamente, mesmo horas
+    // depois. last_seen_at é um sinal de vida que o próprio jogador
+    // atualiza periodicamente (ver play.js) - se isso não chega há
+    // mais de 30s, trata como abandonada, não como "ainda jogando".
+    const STALE_THRESHOLD_MS = 30000;
+    const now = Date.now();
+
+    const isStale = (player) => {
+        if (player.finished_at) return false;
+        if (!player.last_seen_at) return true; // nunca mandou sinal nenhum, trata como abandonada
+        return (now - new Date(player.last_seen_at).getTime()) > STALE_THRESHOLD_MS;
+    };
 
     const finished = players.filter((p) => p.finished_at !== null);
-    const playingCount = players.length - finished.length;
+    const stillActive = players.filter((p) => p.finished_at === null && !isStale(p));
+    const playingCount = stillActive.length;
 
     if (playingCount > 0) {
         leaderboardPlayingNow.hidden = false;
@@ -488,9 +651,8 @@ function renderLeaderboard(players) {
         leaderboardPlayingNow.hidden = true;
     }
 
-    leaderboardList.innerHTML = '';
-
     if (finished.length === 0) {
+        leaderboardList.innerHTML = '';
         leaderboardEmpty.hidden = false;
         return;
     }
@@ -504,12 +666,25 @@ function renderLeaderboard(players) {
         return new Date(a.finished_at) - new Date(b.finished_at);
     });
 
+    // Busca os badges ANTES de mexer na tela - reportado ao vivo:
+    // limpar a lista e só depois esperar a busca (que é uma chamada
+    // de rede) fazia a tela "piscar vazia" toda vez que atualizava,
+    // já que essa função roda a cada sinal de vida dos jogadores
+    // (bem frequente). Agora só limpa e redesenha de uma vez, depois
+    // que os dados já estão prontos.
+    const badgeMap = await loadPlayerBadgeMap(sorted.map((p) => p.user_id));
+
+    leaderboardList.innerHTML = '';
+
     sorted.forEach((player, index) => {
         const row = document.createElement('div');
         row.className = 'leaderboard-row';
         row.innerHTML = `
             <span class="leaderboard-row__rank">#${index + 1}</span>
-            <span class="leaderboard-row__name">${player.nickname}</span>
+            <span class="leaderboard-row__name-block">
+                <span class="leaderboard-row__name">${player.nickname}</span>
+                ${buildMiniBadgeRow(badgeMap.get(player.user_id))}
+            </span>
             <span class="leaderboard-row__score">${player.correct_answers}</span>
         `;
         leaderboardList.appendChild(row);
@@ -519,7 +694,7 @@ function renderLeaderboard(players) {
 async function loadLeaderboard(roomId) {
     const { data, error } = await window.ndquestSupabase
         .from('time_attack_players')
-        .select('nickname, correct_answers, finished_at')
+        .select('user_id, nickname, correct_answers, finished_at, last_seen_at')
         .eq('room_id', roomId);
 
     if (error) {
@@ -542,6 +717,14 @@ function subscribeToLeaderboard(roomId) {
             () => loadLeaderboard(roomId)
         )
         .subscribe();
+
+    // Re-checa a cada 10s mesmo sem nenhuma mudança nova no banco -
+    // sem isso, uma sessão que fica "velha" (ninguém mais manda sinal
+    // de vida) só seria detectada se algum OUTRO evento disparasse
+    // uma atualização, o que podia nunca acontecer numa sala parada.
+    if (leaderboardStalenessInterval) clearInterval(leaderboardStalenessInterval);
+    leaderboardStalenessInterval = setInterval(() => loadLeaderboard(roomId), 10000);
+
 }
 
 // --------------------------------------------------------
@@ -569,6 +752,8 @@ closeRoomBtn.addEventListener('click', async () => {
 
     closeRoomBtn.disabled = true;
 
+    await recordFinalRanking(activeRoomId, activeRoomCode);
+
     await window.ndquestSupabase
         .from('time_attack_rooms')
         .update({ status: 'closed' })
@@ -581,4 +766,174 @@ closeRoomBtn.addEventListener('click', async () => {
     if (realtimeChannel) {
         window.ndquestSupabase.removeChannel(realtimeChannel);
     }
+
+    if (leaderboardStalenessInterval) {
+        clearInterval(leaderboardStalenessInterval);
+        leaderboardStalenessInterval = null;
+    }
 });
+
+// Libera uma nova rodada pra sala inteira - reportado ao vivo: "não
+// dá pra esperar o jogador ficar recomeçando infinito sozinho, tem
+// que ser o host permitindo, igual no Show Down". Incrementa
+// round_number (o jogador escuta essa mudança em tempo real e só
+// destrava o botão "Jogar de novo" quando o número aumentar) e zera
+// o progresso de todo mundo, pra ninguém começar a nova rodada já na
+// frente por causa da rodada anterior.
+allowNewRoundBtn.addEventListener('click', async () => {
+
+    if (!activeRoomId) return;
+
+    allowNewRoundBtn.disabled = true;
+
+    // supabase-js não expõe um jeito simples de "incrementar" via
+    // update direto sem RPC - busca o valor atual e escreve +1, é
+    // seguro aqui porque só o host clica nisso, sem concorrência real
+    // (não é um contador de visitas que várias pessoas mexem ao
+    // mesmo tempo).
+    const { data: currentRoomData, error: fetchError } = await window.ndquestSupabase
+        .from('time_attack_rooms')
+        .select('round_number')
+        .eq('id', activeRoomId)
+        .maybeSingle();
+
+    if (fetchError) console.error('Time Attack: erro ao buscar round_number atual', fetchError);
+
+    const roundBeingClosed = currentRoomData?.round_number || 1;
+    const nextRound = roundBeingClosed + 1;
+
+    // Captura o placar ANTES de resetar - reportado ao vivo: "quero
+    // ver os ganhadores das rodadas anteriores, não só a atual".
+    // Guarda em memória (não no banco - isso é só pra tela ao vivo
+    // desta sessão, o histórico de verdade já fica salvo em
+    // match_history/guest_participants por rodada, isso aqui é
+    // conveniência visual pro host acompanhar sem sair da tela).
+    const { data: finishedPlayers } = await window.ndquestSupabase
+        .from('time_attack_players')
+        .select('nickname, correct_answers')
+        .eq('room_id', activeRoomId)
+        .not('finished_at', 'is', null);
+
+    if (finishedPlayers && finishedPlayers.length > 0) {
+        const sorted = [...finishedPlayers].sort((a, b) => (b.correct_answers || 0) - (a.correct_answers || 0));
+        previousRounds.push({ roundNumber: roundBeingClosed, results: sorted });
+        renderPreviousRounds();
+    }
+
+    const { error: roundUpdateError } = await window.ndquestSupabase
+        .from('time_attack_rooms')
+        .update({ round_number: nextRound })
+        .eq('id', activeRoomId);
+
+    if (roundUpdateError) console.error('Time Attack: erro ao liberar nova rodada', roundUpdateError);
+
+    const { error: resetError } = await window.ndquestSupabase
+        .from('time_attack_players')
+        .update({ correct_answers: 0, finished_at: null })
+        .eq('room_id', activeRoomId);
+
+    if (resetError) console.error('Time Attack: erro ao resetar jogadores pra nova rodada', resetError);
+
+    allowNewRoundBtn.disabled = false;
+
+});
+
+let previousRounds = [];
+
+function renderPreviousRounds() {
+
+    const card = document.getElementById('previous-rounds-card');
+    const list = document.getElementById('previous-rounds-list');
+    if (!card || !list) return;
+
+    if (previousRounds.length === 0) {
+        card.hidden = true;
+        return;
+    }
+
+    card.hidden = false;
+    list.innerHTML = '';
+
+    // Mais recente primeiro
+    [...previousRounds].reverse().forEach((round) => {
+
+        const block = document.createElement('div');
+        block.className = 'previous-round-block';
+
+        const title = document.createElement('p');
+        title.className = 'previous-round-title';
+        title.textContent = `${t('leaderboard.roundLabel')} ${round.roundNumber}`;
+        block.appendChild(title);
+
+        round.results.forEach((player, index) => {
+            const row = document.createElement('div');
+            row.className = 'previous-round-row';
+            row.innerHTML = `<span>#${index + 1} ${player.nickname}</span><span>${player.correct_answers}</span>`;
+            block.appendChild(row);
+        });
+
+        list.appendChild(block);
+
+    });
+
+}
+
+// Calcula a posição de cada jogador comparando os acertos de todo
+// mundo na sala, e grava isso no lugar certo (match_history pra
+// logado, guest_participants pra anônimo) - reportado ao vivo: o
+// histórico do Time Attack mostrava a contagem de acertos crua em
+// vez da posição, diferente dos outros 3 jogos, porque nunca existia
+// comparação nenhuma entre os jogadores, só a pontuação individual
+// de cada um. Só dá pra calcular isso quando a sala encerra, porque
+// antes disso as pessoas ainda podem estar jogando.
+async function recordFinalRanking(roomId, roomCode) {
+
+    const { data: roomData } = await window.ndquestSupabase
+        .from('time_attack_rooms')
+        .select('round_number')
+        .eq('id', roomId)
+        .maybeSingle();
+
+    const roundNumber = roomData?.round_number || 1;
+
+    const { data: players, error } = await window.ndquestSupabase
+        .from('time_attack_players')
+        .select('user_id, nickname, correct_answers')
+        .eq('room_id', roomId);
+
+    if (error || !players || players.length === 0) {
+        if (error) console.error('Time Attack: erro ao buscar jogadores pro ranking', error);
+        return;
+    }
+
+    const sorted = [...players].sort((a, b) => (b.correct_answers || 0) - (a.correct_answers || 0));
+
+    for (let i = 0; i < sorted.length; i++) {
+        const player = sorted[i];
+        const placement = i + 1;
+
+        if (player.user_id) {
+            const { error: historyError } = await window.ndquestSupabase
+                .from('match_history')
+                .update({ placement })
+                .eq('user_id', player.user_id)
+                .eq('game', 'time_attack')
+                .eq('room_code', roomCode)
+                .eq('role', 'player')
+                .eq('round_number', roundNumber);
+
+            if (historyError) console.error('Time Attack: erro ao gravar posição (logado)', historyError);
+        } else {
+            const { error: guestError } = await window.ndquestSupabase
+                .from('guest_participants')
+                .update({ placement })
+                .eq('nickname', player.nickname)
+                .eq('game', 'time_attack')
+                .eq('room_code', roomCode)
+                .eq('round_number', roundNumber);
+
+            if (guestError) console.error('Time Attack: erro ao gravar posição (guest)', guestError);
+        }
+    }
+
+}

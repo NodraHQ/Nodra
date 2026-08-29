@@ -20,3 +20,11 @@ window.ndquestSupabase = supabase.createClient(
     NDQUEST_SUPABASE_URL,
     NDQUEST_SUPABASE_PUBLISHABLE_KEY
 );
+
+// Exposto separado — precisa pra montar a URL das Edge Functions
+// (${URL}/functions/v1/nome-da-funcao), usadas pelo Mecanismo B (ver
+// docs/BADGE_INTEGRITY_ARCHITECTURE.md): o navegador nunca mais
+// calcula sozinho se acertou uma pergunta, quem faz isso é a Edge
+// Function, que é a única que enxerga a resposta certa.
+window.ndquestSupabaseUrl = NDQUEST_SUPABASE_URL;
+window.ndquestSupabaseAnonKey = NDQUEST_SUPABASE_PUBLISHABLE_KEY;

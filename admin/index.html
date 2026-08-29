@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">Admin: Nodra</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra <span class="admin-tag">Admin</span></span>
+    </a>
+    <div class="nav-links">
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+    </div>
+</nav>
+
+<main class="admin-shell">
+
+    <div id="state-loading" class="admin-message" data-i18n="state.loading">Checking access...</div>
+
+    <div id="state-signed-out" class="admin-message" hidden>
+        <p data-i18n="state.signedOut">You need to sign in first.</p>
+        <a href="../account/index.html" class="btn btn-primary" data-i18n="state.signInLink">Go to sign in</a>
+    </div>
+
+    <div id="state-not-admin" class="admin-message" hidden data-i18n="state.notAdmin">
+        Not authorized.
+    </div>
+
+    <div id="panel" class="admin-panel" hidden>
+
+        <div class="admin-tabs">
+            <button class="admin-tab is-active" data-tab="rooms" data-i18n="tabs.rooms">Live Rooms</button>
+            <button class="admin-tab" data-tab="users" data-i18n="tabs.users">Users</button>
+            <button class="admin-tab" data-tab="badges" data-i18n="tabs.badges">Badges</button>
+            <button class="admin-tab" data-tab="analytics" data-i18n="tabs.analytics">Analytics</button>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- SALAS AO VIVO                                          -->
+        <!-- ===================================================== -->
+
+        <section id="tab-rooms" class="admin-tab-panel is-active">
+            <div class="admin-toolbar">
+                <button id="rooms-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            </div>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="rooms.game">Game</th>
+                        <th data-i18n="rooms.code">Code</th>
+                        <th data-i18n="rooms.host">Host</th>
+                        <th data-i18n="rooms.status">Status</th>
+                        <th data-i18n="rooms.created">Created</th>
+                    </tr>
+                </thead>
+                <tbody id="rooms-tbody"></tbody>
+            </table>
+            <p id="rooms-empty" class="admin-empty" data-i18n="rooms.empty" hidden>No rooms found.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- USUÁRIOS                                               -->
+        <!-- ===================================================== -->
+
+        <section id="tab-users" class="admin-tab-panel">
+
+            <!-- Código de convite pra VIP - reportado ao vivo:
+                 "continua pelo painel de admin, mas gera um código
+                 legal pra organizar" - em vez de só ligar/desligar
+                 VIP direto num usuário específico (isso já existe,
+                 botão na tabela abaixo), gera um código
+                 compartilhável por fora, que qualquer um resgata
+                 sozinho depois. -->
+            <div class="admin-toolbar" style="flex-direction:column; align-items:flex-start; gap:12px; margin-bottom:24px;">
+                <form id="generate-vip-code-form" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+                    <div>
+                        <label style="display:block; font-size:12px; margin-bottom:4px;" data-i18n="vipCode.days">Days</label>
+                        <input type="number" id="vip-code-days" class="auth-input" value="30" min="1" style="width:90px;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; margin-bottom:4px;" data-i18n="vipCode.maxUses">Max uses</label>
+                        <input type="number" id="vip-code-max-uses" class="auth-input" value="1" min="1" style="width:90px;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; margin-bottom:4px;" data-i18n="vipCode.expiresInDays">Code expires in (days, optional)</label>
+                        <input type="number" id="vip-code-expires-in" class="auth-input" min="1" style="width:90px;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; margin-bottom:4px;" data-i18n="vipCode.note">Note (optional)</label>
+                        <input type="text" id="vip-code-note" class="auth-input" style="width:200px;">
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-i18n="vipCode.generateBtn">Generate Code</button>
+                </form>
+                <p id="vip-code-result" style="font-family:monospace; font-size:16px;"></p>
+            </div>
+
+            <!-- Histórico de ativações - pagamento e código
+                 misturados numa lista só, mais recente primeiro. -->
+            <h3 data-i18n="vipHistory.activationsTitle" style="margin-top:32px;">VIP Activations</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="users.username">Username</th>
+                        <th data-i18n="vipHistory.method">Method</th>
+                        <th data-i18n="vipHistory.detail">Detail</th>
+                        <th data-i18n="users.joined">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="vip-activations-tbody"></tbody>
+            </table>
+            <p id="vip-activations-empty" class="admin-empty" data-i18n="vipHistory.activationsEmpty" hidden>No activations yet.</p>
+
+            <!-- Histórico de códigos - todo código já gerado, quem
+                 resgatou, e quais ainda estão livres. -->
+            <h3 data-i18n="vipHistory.codesTitle" style="margin-top:32px;">Invite Codes</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="vipHistory.code">Code</th>
+                        <th data-i18n="vipHistory.uses">Uses</th>
+                        <th data-i18n="vipHistory.redeemedBy">Redeemed by</th>
+                        <th data-i18n="vipHistory.expires">Expires</th>
+                        <th data-i18n="users.joined">Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="vip-codes-tbody"></tbody>
+            </table>
+            <p id="vip-codes-empty" class="admin-empty" data-i18n="vipHistory.codesEmpty" hidden>No codes generated yet.</p>
+            <button id="vip-activity-refresh-btn" class="btn btn-secondary" style="margin-top:8px;" data-i18n="rooms.refresh">Refresh</button>
+
+            <div class="admin-toolbar" style="margin-top:32px;">
+                <input type="text" id="users-search" class="auth-input" data-i18n-placeholder="users.searchPlaceholder" placeholder="Search by username...">
+                <button id="users-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            </div>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="users.username">Username</th>
+                        <th data-i18n="users.wallet">Wallet</th>
+                        <th data-i18n="users.vip">VIP</th>
+                        <th data-i18n="users.joined">Joined</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+            </table>
+            <p id="users-empty" class="admin-empty" data-i18n="users.empty" hidden>No users found.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- ANALYTICS                                              -->
+        <!-- ===================================================== -->
+
+        <!-- ===================================================== -->
+        <!-- BADGES - reportado ao vivo como urgente: todo badge já
+             criado (de qualquer VIP), quem tem cada um, e apagar
+             daqui se precisar. -->
+        <!-- ===================================================== -->
+
+        <section id="tab-badges" class="admin-tab-panel">
+            <div class="admin-toolbar">
+                <button id="badges-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            </div>
+            <div id="admin-badges-grid" class="admin-badges-grid"></div>
+            <p id="admin-badges-empty" class="admin-empty" data-i18n="badges.empty" hidden>No badges created yet.</p>
+        </section>
+
+        <section id="tab-analytics" class="admin-tab-panel">
+            <div class="admin-stat-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-value" id="stat-total-users">-</div>
+                    <div class="admin-stat-label" data-i18n="analytics.totalUsers">Total users</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-value" id="stat-total-rooms">-</div>
+                    <div class="admin-stat-label" data-i18n="analytics.totalRooms">Rooms created</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-value" id="stat-badges-minted">-</div>
+                    <div class="admin-stat-label" data-i18n="analytics.badgesMinted">Badges minted</div>
+                </div>
+            </div>
+
+            <h2 class="admin-section-title" data-i18n="analytics.signupsTitle">Signups, last 30 days</h2>
+            <div id="signups-chart" class="admin-bar-chart"></div>
+        </section>
+
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/supabase-client.js"></script>
+<script defer src="assets/js/translations.js"></script>
+<script defer src="assets/js/admin.js"></script>
+
+</body>
+</html>

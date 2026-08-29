@@ -35,5 +35,9 @@
   "stats.opensource.subtitle": "Aberto",
   "stats.opensource.title": "Código",
   "stats.verticals.subtitle": "Verticais",
-  "stats.verticals.title": "3"
+  "stats.verticals.title": "3",
+  "navAuth.signIn": "Entrar",
+  "navAuth.account": "Conta",
+  "navAuth.profile": "Perfil",
+  "navAuth.signOut": "Sair"
 }

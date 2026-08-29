@@ -12,6 +12,8 @@
 </head>
 <body>
 
+<div id="nav-auth-light" hidden></div>
+
 <div class="language-toggle" role="group" aria-label="Idioma / Language">
     <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
     <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
@@ -50,20 +52,45 @@
     </section>
 
     <!-- ===================================================== -->
-    <!-- TELA 2: CONFIRMAÇÃO -->
+    <!-- TELA 2: ACOMPANHAR A ROLETA AO VIVO - reportado ao vivo:
+         antes só mostrava "você está dentro", mandando olhar a tela
+         do host. Agora mostra a própria roda, gira junto quando o
+         host gira, e revela o resultado na hora. -->
     <!-- ===================================================== -->
     <section id="screen-joined" hidden>
-        <div class="card waiting-screen">
-            <span class="eyebrow" data-i18n="joined.eyebrow">Você Está Dentro</span>
-            <h1 class="title-display" data-i18n="joined.title">Você está na roleta! 🎉</h1>
-            <p class="subtitle" data-i18n="joined.subtitle">Fica de olho na tela do host, é lá que o sorteio acontece.</p>
+
+        <span class="eyebrow" data-i18n="joined.eyebrow">Você Está Dentro</span>
+        <h1 class="title-display" id="joined-title" data-i18n="joined.title">Você está na roleta! 🎉</h1>
+        <p class="subtitle" id="joined-status-text" data-i18n="joined.subtitle">Aguardando o host começar o sorteio...</p>
+
+        <div class="winner-banner" id="winner-banner" hidden>
+            <span class="winner-banner__label" data-i18n="wheel.winnerBanner">Ganhou:</span>
+            <div class="winner-banner__name" id="winner-banner-name"></div>
+            <div class="winner-badge-row" id="winner-badge-row"></div>
         </div>
+
+        <div class="wheel-stage">
+            <div class="wheel-pointer"></div>
+            <svg class="wheel-svg is-idle" id="wheel-svg" viewBox="0 0 300 300"></svg>
+            <div class="wheel-hub"></div>
+        </div>
+
+        <div class="card leaderboard-card">
+            <div class="winners-header">
+                <span class="eyebrow" data-i18n="wheel.winnersTitle">Ganhadores</span>
+            </div>
+            <p class="hint-text" id="winners-empty" data-i18n="wheel.winnersEmpty">Ninguém sorteado ainda.</p>
+            <div class="winners-list" id="winners-list"></div>
+        </div>
+
     </section>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/navAuthLight.js" data-account-url="../../../account/index.html" data-lang-key="roulette:language"></script>
+<script defer src="../assets/js/accountIdentity.js" data-target-input="nickname-input" data-lang-key="roulette:language"></script>
 <script type="module" src="play.js"></script>
 </body>
 </html>

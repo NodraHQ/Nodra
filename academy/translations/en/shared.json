@@ -21,5 +21,9 @@
   "modulePlaceholder.toc.prerequisites": "Prerequisites",
   "modulePlaceholder.toc.title": "Contents",
   "tracks.defi.title": "DeFi",
-  "tracks.security.title": "Security"
+  "tracks.security.title": "Security",
+  "navAuth.signIn": "Sign in",
+  "navAuth.account": "Account",
+  "navAuth.profile": "Profile",
+  "navAuth.signOut": "Sign out"
 }

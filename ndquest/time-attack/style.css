@@ -1,5 +1,5 @@
 /* =========================================================
-   TIME ATTACK — STYLE.CSS
+   TIME ATTACK - STYLE.CSS
    Cópia própria dos tokens de cor da família NDQuest (mesmos
    valores do Quest Drop, arquivo independente, sem referência
    cruzada). Resto do arquivo é enxuto de propósito: sem grid de
@@ -309,9 +309,63 @@ h1.title-display {
   font-weight: 600;
 }
 
+/* Mini-card do jogador - evolução do "quadrinho simples só com
+   nome" pedida ao vivo: pega o mesmo conceito do card de perfil,
+   resumido (sem redes sociais, sem bio), só nome + até 3 badges
+   pequenos que a pessoa escolheu mostrar. Usado em toda lista de
+   jogador do jogo - sala de espera e placar durante a partida. */
+.leaderboard-row__name-block {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-badge-row {
+  display: flex;
+  gap: 4px;
+}
+
+.mini-badge {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.mini-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mini-badge-icon {
+  width: 11px;
+  height: 11px;
+}
+
 .leaderboard-row__score {
   color: var(--color-text-muted);
   font-size: 0.9rem;
+}
+
+.leaderboard-row.is-selected {
+  border-color: var(--color-gold);
+  background: color-mix(in srgb, var(--color-gold) 12%, var(--color-bg));
+}
+
+.finished-ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin: 12px 0;
+  max-height: 320px;
+  overflow-y: auto;
 }
 
 /* ---------------------------------------------------------
@@ -399,6 +453,17 @@ h1.title-display {
   border-color: var(--color-error);
 }
 
+/* Feedback instantâneo ao clicar, antes da Edge Function responder
+   se acertou ou não - sem isso, o clique parecia não ter feito nada
+   até a resposta do servidor chegar, mesmo já dando disabled nos
+   botões por trás. Neutro de propósito (não é verde nem vermelho,
+   já que ainda não se sabe o resultado). */
+.answer-btn.is-selected {
+  background: var(--color-surface);
+  border-color: var(--color-gold);
+  opacity: 0.85;
+}
+
 .ready-screen,
 .finished-screen {
   text-align: center;
@@ -484,7 +549,7 @@ h1.title-display {
 }
 
 /* ---------------------------------------------------------
-   Seletor de idioma — fixo, canto superior direito, em toda
+   Seletor de idioma - fixo, canto superior direito, em toda
    tela do Time Attack (host e jogador)
    --------------------------------------------------------- */
 
@@ -547,6 +612,48 @@ h1.title-display {
   min-height: 320px;
 }
 
+.previous-rounds-card {
+  margin-top: 20px;
+}
+
+.previous-round-block {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.previous-round-block:last-child {
+  border-bottom: none;
+}
+
+.previous-round-title {
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 8px;
+}
+
+.previous-round-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.9rem;
+}
+
+.room-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.room-controls .btn {
+  flex: 1;
+}
+
+@media (max-width: 480px) {
+  .room-controls {
+    flex-direction: column;
+  }
+}
+
 .leaderboard-card .eyebrow {
   font-size: 0.95rem;
 }
@@ -590,4 +697,148 @@ h1.title-display {
 
 .join-existing-link:hover {
   text-decoration: underline;
+}
+
+/* ==========================================================================
+   NAV-AUTH-LIGHT - indicador de login leve (avatar + nome, sem
+   dropdown), fica ao lado do toggle de idioma. Ver
+   assets/js/navAuthLight.js.
+   ========================================================================== */
+
+#nav-auth-light{
+    position:fixed;
+    top:16px;
+    /* Valor de fallback só pro instante antes do JS calcular a
+       posição real (positionNextToLanguageToggle, em
+       navAuthLight.js) - depois disso o "right" é ajustado
+       dinamicamente com base na largura de verdade do toggle de
+       idioma, não um número fixo chutado. */
+    right:96px;
+    z-index:50;
+}
+
+.nav-auth-light-widget{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px 6px 4px;
+    background:var(--color-surface, rgba(255,255,255,.04));
+    border:1px solid var(--color-surface-border, rgba(255,255,255,.12));
+    border-radius:999px;
+    box-shadow:var(--shadow-soft, none);
+    text-decoration:none;
+    color:inherit;
+}
+
+.nav-auth-light-signin{
+    display:flex;
+    align-items:center;
+    padding:6px 14px;
+    background:var(--color-gold);
+    color:var(--color-bg);
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    text-decoration:none;
+    white-space:nowrap;
+}
+
+.nav-auth-light-avatar-slot{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.nav-auth-light-avatar-img{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    object-fit:cover;
+    flex-shrink:0;
+    display:block;
+}
+
+.nav-auth-light-avatar-fallback{
+    /* Cor de marca do jogo (dourado, mesma da cor ativa do toggle de
+       idioma), não um azul genérico solto - era um bug de
+       inconsistência real: o avatar usava #3b82f6, uma cor que não
+       existe em nenhum outro lugar da identidade do jogo. */
+    background:var(--color-gold);
+    color:var(--color-bg);
+    font-size:11px;
+    font-weight:700;
+    line-height:1;
+}
+
+.nav-auth-light-name{
+    font-size:12px;
+    font-weight:600;
+    /* Sem isso, a altura de linha padrão do navegador (normalmente
+       1.4-1.6x o tamanho da fonte) deixa o texto com uma "caixa"
+       maior que o círculo de 22px do avatar - align-items:center no
+       container só centraliza a CAIXA da linha, não o texto visual
+       dentro dela, então o resultado parecia desalinhado mesmo com
+       tudo "centralizado" corretamente por fora. */
+    line-height:1;
+}
+
+@media (max-width: 640px){
+    #nav-auth-light{
+        top:10px;
+        right:86px;
+    }
+}
+
+/* ==========================================================================
+   ACCOUNT IDENTITY CHIP - "Logado como X / Trocar", substitui o campo de
+   nome quando a pessoa já está logada na conta. Ver assets/js/accountIdentity.js.
+   ========================================================================== */
+
+.account-identity-chip{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border-radius:var(--radius-md);
+    background:var(--color-surface);
+    border:1px solid var(--color-surface-border);
+    font-size:14px;
+}
+
+.account-identity-chip-label{
+    color:var(--color-text-muted);
+}
+
+.account-identity-chip-name{
+    color:var(--color-gold);
+}
+
+.account-identity-switch-btn{
+    margin-left:auto;
+    background:none;
+    border:none;
+    color:var(--color-text-muted);
+    text-decoration:underline;
+    cursor:pointer;
+    font-size:13px;
+    padding:0;
+}
+
+.account-identity-switch-btn:hover{
+    color:var(--color-gold);
+}
+
+/* Regra global de segurança: [hidden] precisa sempre esconder de
+   verdade, mesmo que outra classe do elemento defina display. Sem
+   isso, a especificidade de uma classe (ex.: .account-identity-chip
+   {display:flex}) cancela silenciosamente o comportamento nativo de
+   hidden - já foi bug real várias vezes neste projeto (dropdown da
+   navbar, badge VIP, e agora o chip de identidade). */
+[hidden]{
+    display:none !important;
 }

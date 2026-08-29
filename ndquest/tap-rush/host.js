@@ -1,15 +1,15 @@
 // ==================================================================
-// TAP RUSH — host.js
+// TAP RUSH - host.js
 //
 // Dois modos, mesma sala:
-//   "race"     — cada jogador toca por si, primeiro a bater a meta
+//   "race"     - cada jogador toca por si, primeiro a bater a meta
 //                de toques vence (com um tempo máximo de segurança
 //                caso ninguém bata a meta).
-//   "tugofwar" — dividido em Time A / Time B (por ordem de entrada,
+//   "tugofwar" - dividido em Time A / Time B (por ordem de entrada,
 //                automático), dura um tempo fixo, time com mais
 //                toques no total vence.
 //
-// Os toques não vão um por um pro banco — cada celular acumula
+// Os toques não vão um por um pro banco - cada celular acumula
 // localmente e manda o total atualizado a cada ~150ms. O host fica
 // inscrito nos jogadores via Realtime e só desenha a tela com o que
 // chega. O início da rodada usa um timestamp no FUTURO
@@ -37,6 +37,111 @@ function t(key, vars) {
         });
     }
     return text;
+}
+
+// --------------------------------------------------------
+// Badges do jogador - mini-card evoluído do "quadrinho simples só
+// com nome", pedido ao vivo: até 3 badges pequenos que a pessoa
+// escolheu destacar. Cópia própria desta pasta (mesma lógica dos
+// outros jogos), MAS com cache - a pista de corrida (race-lane)
+// atualiza a cada toque, muito rápido pra buscar badge de novo toda
+// vez (desperdiça rede e pode travar a animação). Badge não muda no
+// meio de uma partida, então cachear por user_id é seguro.
+// --------------------------------------------------------
+
+const BADGE_ICONS = {
+    trophy: '<path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/>',
+    award: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+    medal: '<path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>',
+    crown: '<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+    gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
+    flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+};
+
+function buildMiniIconSvg(iconKey) {
+    const inner = BADGE_ICONS[iconKey];
+    if (!inner) return '';
+    return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+}
+
+const playerBadgeCache = new Map(); // user_id -> array de badges (ou [])
+
+async function loadPlayerBadgeMap(userIds) {
+    const validIds = [...new Set(userIds.filter(Boolean))];
+    const uncached = validIds.filter((id) => !playerBadgeCache.has(id));
+
+    if (uncached.length > 0) {
+        const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
+            window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', uncached),
+            window.ndquestSupabase
+                .from('user_badges')
+                .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+                .in('user_id', uncached),
+        ]);
+
+        const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
+        uncached.forEach((id) => playerBadgeCache.set(id, [])); // garante entrada mesmo pra quem não tem badge nenhum
+
+        (userBadgeRows || []).forEach((row) => {
+            const featuredSet = featuredById.get(row.user_id);
+            const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+            if (!isFeatured) return;
+
+            const list = playerBadgeCache.get(row.user_id) || [];
+            if (list.length >= 3) return;
+            list.push(row.badges);
+            playerBadgeCache.set(row.user_id, list);
+        });
+    }
+
+    const map = new Map();
+    validIds.forEach((id) => map.set(id, playerBadgeCache.get(id) || []));
+    return map;
+}
+
+function buildMiniBadgeRow(badges) {
+    if (!badges || badges.length === 0) return '';
+    const chips = badges
+        .map((b) => {
+            if (b.image_url) {
+                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+            }
+            const color = b.icon_color || b.background_color || '#888';
+            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+        })
+        .join('');
+    return `<div class="mini-badge-row">${chips}</div>`;
+}
+
+// Leitura síncrona do cache - pra usar dentro do loop de renderização
+// da pista de corrida (que roda a cada toque, não pode esperar rede).
+// Devolve [] se ainda não tiver sido aquecido pra essa pessoa - o
+// badge simplesmente aparece um instante depois, quando o cache
+// aquecer, sem travar a corrida em si.
+function getBadgesFromCacheSync(userId) {
+    if (!userId) return [];
+    return playerBadgeCache.get(userId) || [];
+}
+
+// --------------------------------------------------------
+// Identidade - se a pessoa estiver logada, host_id fica registrado
+// junto da sala (ver docs/MATCH_HISTORY_ARCHITECTURE.md). Deslogado,
+// fica null - hosteia normal, só não entra no histórico.
+// --------------------------------------------------------
+
+// Bug real confirmado ao vivo: antes isso guardava o resultado em
+// cache pra sempre depois da primeira checagem - numa aba que fica
+// aberta por horas, ou depois de trocar de conta sem recarregar a
+// página, esse valor guardado ficava desatualizado, e o servidor
+// rejeitava porque o host_id/user_id enviado não batia mais com quem
+// a pessoa realmente é agora. getSession() é uma leitura local e
+// barata do Supabase (não faz chamada de rede), então nunca precisou
+// desse cache - checa fresco toda vez.
+async function getCurrentUserId() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.id ?? null;
 }
 
 function applyTranslations() {
@@ -313,6 +418,9 @@ createRoomBtn.addEventListener('click', async () => {
 
     createRoomBtn.disabled = true;
 
+    const hostUserId = await getCurrentUserId();
+    roomPayload.host_id = hostUserId;
+
     const { data, error } = await window.ndquestSupabase
         .from('tap_rush_rooms')
         .insert(roomPayload)
@@ -325,6 +433,20 @@ createRoomBtn.addEventListener('click', async () => {
         configError.textContent = t('errors.roomCreateFailed');
         console.error('Tap Rush create room error:', error);
         return;
+    }
+
+    if (hostUserId) {
+        window.ndquestSupabase
+            .from('match_history')
+            .insert({
+                user_id: hostUserId,
+                role: 'host',
+                game: 'tap_rush',
+                room_code: data.room_code
+            })
+            .then(({ error: historyError }) => {
+                if (historyError) console.error('Tap Rush host history error:', historyError);
+            });
     }
 
     activeRoomId = data.id;
@@ -358,7 +480,7 @@ function showWaitingScreen(roomCode) {
 async function loadPlayers(roomId) {
     const { data, error } = await window.ndquestSupabase
         .from('tap_rush_players')
-        .select('id, nickname, team, tap_count')
+        .select('id, user_id, nickname, team, tap_count, last_seen_at')
         .eq('room_id', roomId)
         .order('joined_at', { ascending: true });
 
@@ -369,23 +491,41 @@ async function loadPlayers(roomId) {
     return data || [];
 }
 
+const STALE_THRESHOLD_MS = 30000;
+
+function isPlayerStale(player) {
+    if (!player.last_seen_at) return true;
+    return (Date.now() - new Date(player.last_seen_at).getTime()) > STALE_THRESHOLD_MS;
+}
+
 let latestPlayers = [];
 
 function renderWaitingPlayers(players) {
     latestPlayers = players;
 
-    if (players.length === 0) {
+    const activePlayers = players.filter((p) => !isPlayerStale(p));
+
+    if (activePlayers.length === 0) {
         waitingEmpty.hidden = false;
         waitingPlayersList.innerHTML = '';
         return;
     }
     waitingEmpty.hidden = true;
-    waitingPlayersList.innerHTML = players
+    waitingPlayersList.innerHTML = activePlayers
         .map((p) => {
             const teamTag = p.team ? ` (${p.team})` : '';
             return `<span class="player-chip">${p.nickname}${teamTag}</span>`;
         })
         .join('');
+
+    loadPlayerBadgeMap(activePlayers.map((p) => p.user_id)).then((badgeMap) => {
+        waitingPlayersList.innerHTML = activePlayers
+            .map((p) => {
+                const teamTag = p.team ? ` (${p.team})` : '';
+                return `<span class="player-chip">${p.nickname}${teamTag}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`;
+            })
+            .join('');
+    });
 }
 
 function subscribeToPlayers(roomId) {
@@ -407,13 +547,20 @@ function subscribeToPlayers(roomId) {
                 // Aplica a mudança direto em memória a partir do que já
                 // vem na notificação, sem buscar tudo de novo no banco.
                 // Antes, cada toque de cada jogador (a cada ~150ms)
-                // disparava uma busca completa da tabela inteira — com
+                // disparava uma busca completa da tabela inteira - com
                 // 3-4 pessoas tocando rápido isso empilhava pedidos e
                 // travava a tela por um tempo.
                 if (payload.eventType === 'INSERT') {
                     latestPlayers = [...latestPlayers, payload.new];
                 } else if (payload.eventType === 'UPDATE') {
-                    latestPlayers = latestPlayers.map((p) => (p.id === payload.new.id ? payload.new : p));
+                    // Mescla em vez de substituir - bug real já
+                    // confirmado ao vivo em outro jogo: o pacote de
+                    // UPDATE às vezes só traz os campos que mudaram,
+                    // não a linha inteira. Substituir por completo
+                    // apagaria nickname/team/tap_count sempre que só
+                    // last_seen_at mudasse (o sinal de vida do
+                    // jogador, a cada 10s).
+                    latestPlayers = latestPlayers.map((p) => (p.id === payload.new.id ? { ...p, ...payload.new } : p));
                 } else if (payload.eventType === 'DELETE') {
                     latestPlayers = latestPlayers.filter((p) => p.id !== payload.old.id);
                 }
@@ -469,7 +616,7 @@ let roundEnded = false;
 
 startRoundBtn.addEventListener('click', async () => {
 
-    // 3 segundos de contagem regressiva a partir de agora — host e
+    // 3 segundos de contagem regressiva a partir de agora - host e
     // jogadores calculam a mesma coisa a partir desse timestamp
     // compartilhado, sem precisar de um estado "countdown" à parte.
     const startsAt = new Date(Date.now() + 3000).toISOString();
@@ -550,7 +697,7 @@ function renderActiveView(players) {
 
     if (roundConfig.mode === 'race' || roundConfig.mode === 'infinite') {
         // Corrida tem meta fixa (target_taps). Clique Infinito não tem
-        // meta nenhuma — a barra de cada um escala em relação a quem
+        // meta nenhuma - a barra de cada um escala em relação a quem
         // está na frente no momento, pra sempre dar pra ver quem lidera
         // mesmo sem um número alvo definido.
         const target = roundConfig.mode === 'race'
@@ -563,12 +710,21 @@ function renderActiveView(players) {
                 return `
                     <div class="race-lane">
                         <div class="race-lane__fill" style="width:${pct}%"></div>
-                        <div class="race-lane__label"><span>${p.nickname}</span><span>${p.tap_count}</span></div>
+                        <div class="race-lane__label">
+                            <span class="race-lane__name-block"><span>${p.nickname}</span>${buildMiniBadgeRow(getBadgesFromCacheSync(p.user_id))}</span>
+                            <span>${p.tap_count}</span>
+                        </div>
                         <div class="race-lane__finish"></div>
                     </div>
                 `;
             })
             .join('');
+
+        // Aquece o cache em segundo plano - a corrida em si nunca
+        // espera essa chamada, o badge só aparece assim que estiver
+        // pronto, na próxima atualização (que já vai acontecer sozinha
+        // no próximo toque de qualquer jogador).
+        loadPlayerBadgeMap(players.map((p) => p.user_id));
     } else {
         const teamA = players.filter((p) => p.team === 'A').reduce((sum, p) => sum + p.tap_count, 0);
         const teamB = players.filter((p) => p.team === 'B').reduce((sum, p) => sum + p.tap_count, 0);
@@ -616,7 +772,7 @@ async function endRound(winnerPlayerIdFromRace) {
 
     // O vencedor é decidido AQUI, uma única vez, e gravado na sala.
     // Antes, cada jogador calculava "quem ganhou" sozinho comparando
-    // os próprios números — se dois jogadores ficassem com cliques
+    // os próprios números - se dois jogadores ficassem com cliques
     // parecidos bem na hora que a rodada fecha (o botão de cada um
     // não trava no exato mesmo instante), cada tela podia "decidir"
     // um vencedor diferente. Agora só existe uma resposta certa, e
@@ -629,7 +785,7 @@ async function endRound(winnerPlayerIdFromRace) {
     renderResults(players, winnerPlayerId, winnerTeam);
 }
 
-function renderResults(players, winnerPlayerId, winnerTeam) {
+async function renderResults(players, winnerPlayerId, winnerTeam) {
 
     showScreen(screenResults);
 
@@ -643,13 +799,18 @@ function renderResults(players, winnerPlayerId, winnerTeam) {
 
         resultsWinnerName.textContent = winner ? `${t('results.winnerLabel')} ${winner.nickname}` : '';
 
-        lastRankingForCopy = sorted.map((p) => `${p.nickname} — ${p.tap_count}`);
+        lastRankingForCopy = sorted.map((p) => `${p.nickname} - ${p.tap_count}`);
+
+        const badgeMap = await loadPlayerBadgeMap(sorted.map((p) => p.user_id));
 
         resultsRankingList.innerHTML = sorted
             .map((p, i) => `
                 <div class="leaderboard-row">
                     <span class="leaderboard-row__rank">#${i + 1}</span>
-                    <span class="leaderboard-row__name">${p.nickname}</span>
+                    <span class="leaderboard-row__name-block">
+                        <span class="leaderboard-row__name">${p.nickname}</span>
+                        ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
+                    </span>
                     <span class="leaderboard-row__score">${p.tap_count} ${t('results.tapsLabel')}</span>
                 </div>
             `)
@@ -665,13 +826,18 @@ function renderResults(players, winnerPlayerId, winnerTeam) {
 
         const sorted = [...players].sort((a, b) => b.tap_count - a.tap_count);
 
-        lastRankingForCopy = sorted.map((p) => `${p.nickname} (${p.team}) — ${p.tap_count}`);
+        lastRankingForCopy = sorted.map((p) => `${p.nickname} (${p.team}) - ${p.tap_count}`);
+
+        const badgeMap = await loadPlayerBadgeMap(sorted.map((p) => p.user_id));
 
         resultsRankingList.innerHTML = sorted
             .map((p, i) => `
                 <div class="leaderboard-row">
                     <span class="leaderboard-row__rank">#${i + 1}</span>
-                    <span class="leaderboard-row__name">${p.nickname} (${p.team})</span>
+                    <span class="leaderboard-row__name-block">
+                        <span class="leaderboard-row__name">${p.nickname} (${p.team})</span>
+                        ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
+                    </span>
                     <span class="leaderboard-row__score">${p.tap_count} ${t('results.tapsLabel')}</span>
                 </div>
             `)

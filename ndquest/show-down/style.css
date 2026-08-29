@@ -1,5 +1,5 @@
 /* =========================================================
-   SHOW DOWN — STYLE.CSS
+   SHOW DOWN - STYLE.CSS
    Cópia própria dos tokens de cor da família NDQuest (mesmos
    valores do Quest Drop e do Time Attack, arquivo independente,
    sem referência cruzada). Reaproveita os componentes genéricos
@@ -316,13 +316,56 @@ h1.title-display {
   font-weight: 600;
 }
 
+/* Mini-card do jogador - evolução do "quadrinho simples só com
+   nome" pedida ao vivo: pega o card de perfil, resume (sem redes
+   sociais, sem bio), mostra só os badges destacados. */
+.leaderboard-row__name-block {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-badge-row {
+  display: flex;
+  gap: 4px;
+}
+
+.mini-badge {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.mini-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mini-badge-icon {
+  width: 11px;
+  height: 11px;
+}
+
 .leaderboard-row__score {
   color: var(--color-text-muted);
   font-size: 0.9rem;
 }
 
 /* ---------------------------------------------------------
-   Tela de jogo (jogador e host) — barra de tempo por pergunta
+   Tela de jogo (jogador e host) - barra de tempo por pergunta
    --------------------------------------------------------- */
 
 .timer-bar {
@@ -550,7 +593,7 @@ h1.title-display {
 }
 
 /* ---------------------------------------------------------
-   Seletor de idioma — fixo, canto superior direito, em toda
+   Seletor de idioma - fixo, canto superior direito, em toda
    tela do Time Attack (host e jogador)
    --------------------------------------------------------- */
 
@@ -659,7 +702,7 @@ h1.title-display {
 }
 
 /* ---------------------------------------------------------
-   Faixa persistente de código/QR (host) — mesmo visual do banner
+   Faixa persistente de código/QR (host) - mesmo visual do banner
    da tela de espera (room-code-display), só ~30% menor e sem a
    linha de link embaixo. Aparece discreta em toda tela depois que
    a sala é criada, pra quem chegar atrasado ainda conseguir entrar
@@ -708,4 +751,142 @@ h1.title-display {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+/* ==========================================================================
+   NAV-AUTH-LIGHT - indicador de login leve (avatar + nome, sem
+   dropdown), fica ao lado do toggle de idioma. Ver
+   assets/js/navAuthLight.js.
+   ========================================================================== */
+
+#nav-auth-light{
+    position:fixed;
+    top:16px;
+    /* Valor de fallback só pro instante antes do JS calcular a
+       posição real (positionNextToLanguageToggle, em
+       navAuthLight.js) - depois disso o "right" é ajustado
+       dinamicamente com base na largura de verdade do toggle de
+       idioma, não um número fixo chutado. */
+    right:96px;
+    z-index:50;
+}
+
+.nav-auth-light-widget{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px 6px 4px;
+    background:var(--color-surface, rgba(255,255,255,.04));
+    border:1px solid var(--color-surface-border, rgba(255,255,255,.12));
+    border-radius:999px;
+    box-shadow:var(--shadow-soft, none);
+    text-decoration:none;
+    color:inherit;
+}
+
+.nav-auth-light-signin{
+    display:flex;
+    align-items:center;
+    padding:6px 14px;
+    background:var(--color-gold);
+    color:var(--color-bg);
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    text-decoration:none;
+    white-space:nowrap;
+}
+
+.nav-auth-light-avatar-slot{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.nav-auth-light-avatar-img{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    object-fit:cover;
+    flex-shrink:0;
+    display:block;
+}
+
+.nav-auth-light-avatar-fallback{
+    /* Cor de marca do jogo (dourado, mesma da cor ativa do toggle de
+       idioma), não um azul genérico solto - era um bug de
+       inconsistência real: o avatar usava #3b82f6, uma cor que não
+       existe em nenhum outro lugar da identidade do jogo. */
+    background:var(--color-gold);
+    color:var(--color-bg);
+    font-size:11px;
+    font-weight:700;
+    line-height:1;
+}
+
+.nav-auth-light-name{
+    font-size:12px;
+    font-weight:600;
+    line-height:1;
+}
+
+@media (max-width: 640px){
+    #nav-auth-light{
+        top:10px;
+        right:86px;
+    }
+}
+
+/* ==========================================================================
+   ACCOUNT IDENTITY CHIP - "Logado como X / Trocar", substitui o campo de
+   nome quando a pessoa já está logada na conta. Ver assets/js/accountIdentity.js.
+   ========================================================================== */
+
+.account-identity-chip{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border-radius:var(--radius-md);
+    background:var(--color-surface);
+    border:1px solid var(--color-surface-border);
+    font-size:14px;
+}
+
+.account-identity-chip-label{
+    color:var(--color-text-muted);
+}
+
+.account-identity-chip-name{
+    color:var(--color-gold);
+}
+
+.account-identity-switch-btn{
+    margin-left:auto;
+    background:none;
+    border:none;
+    color:var(--color-text-muted);
+    text-decoration:underline;
+    cursor:pointer;
+    font-size:13px;
+    padding:0;
+}
+
+.account-identity-switch-btn:hover{
+    color:var(--color-gold);
+}
+
+/* Regra global de segurança: [hidden] precisa sempre esconder de
+   verdade, mesmo que outra classe do elemento defina display. Sem
+   isso, a especificidade de uma classe (ex.: .account-identity-chip
+   {display:flex}) cancela silenciosamente o comportamento nativo de
+   hidden - já foi bug real várias vezes neste projeto (dropdown da
+   navbar, badge VIP, e agora o chip de identidade). */
+[hidden]{
+    display:none !important;
 }

@@ -66,5 +66,9 @@
   "roadmap.next.g3.title": "Onchain",
   "roadmap.next.g3.text": "The natural next step once badges exist: put them onchain. Proof of what someone learned and did, not just a row in a database, something they actually own.",
   "roadmap.next.title": "What's Next",
-  "roadmap.title": "Where Things Stand"
+  "roadmap.title": "Where Things Stand",
+  "navAuth.signIn": "Sign in",
+  "navAuth.account": "Account",
+  "navAuth.profile": "Profile",
+  "navAuth.signOut": "Sign out"
 }

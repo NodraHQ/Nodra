@@ -1029,3 +1029,91 @@ body {
     font-size: 27px;
   }
 }
+
+/* ==========================================================================
+   NAV-AUTH-LIGHT — indicador de login leve (avatar + nome, sem
+   dropdown), fica ao lado do toggle de idioma. Ver
+   assets/js/navAuthLight.js.
+   ========================================================================== */
+
+#nav-auth-light{
+    position:fixed;
+    top:16px;
+    /* Valor de fallback só pro instante antes do JS calcular a
+       posição real (positionNextToLanguageToggle, em
+       navAuthLight.js) — depois disso o "right" é ajustado
+       dinamicamente com base na largura de verdade do toggle de
+       idioma, não um número fixo chutado. */
+    right:96px;
+    z-index:50;
+}
+
+.nav-auth-light-widget{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px 6px 4px;
+    background:var(--color-surface, rgba(255,255,255,.04));
+    border:1px solid var(--color-surface-border, rgba(255,255,255,.12));
+    border-radius:999px;
+    box-shadow:var(--shadow-soft, none);
+    text-decoration:none;
+    color:inherit;
+}
+
+.nav-auth-light-avatar-slot{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.nav-auth-light-avatar-img{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    object-fit:cover;
+    flex-shrink:0;
+    display:block;
+}
+
+.nav-auth-light-avatar-fallback{
+    /* Cor de marca do jogo (dourado), não um azul genérico solto —
+       mesma inconsistência já corrigida nos outros jogos, achada de
+       graça ao mexer nesse arquivo por outro motivo. */
+    background:var(--color-gold);
+    color:var(--color-bg);
+    font-size:11px;
+    font-weight:700;
+    line-height:1;
+}
+
+.nav-auth-light-signin{
+    display:flex;
+    align-items:center;
+    padding:6px 14px;
+    background:var(--color-gold);
+    color:var(--color-bg);
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    text-decoration:none;
+    white-space:nowrap;
+}
+
+.nav-auth-light-name{
+    font-size:12px;
+    font-weight:600;
+    line-height:1;
+}
+
+@media (max-width: 640px){
+    #nav-auth-light{
+        top:10px;
+        right:86px;
+    }
+}

@@ -66,5 +66,9 @@
   "roadmap.next.g3.title": "Onchain",
   "roadmap.next.g3.text": "O passo natural depois que os distintivos existirem: colocar eles onchain. Prova do que a pessoa aprendeu e fez, não só uma linha num banco de dados, algo que ela realmente possui.",
   "roadmap.next.title": "O Que Vem a Seguir",
-  "roadmap.title": "Onde Estamos"
+  "roadmap.title": "Onde Estamos",
+  "navAuth.signIn": "Entrar",
+  "navAuth.account": "Conta",
+  "navAuth.profile": "Perfil",
+  "navAuth.signOut": "Sair"
 }
