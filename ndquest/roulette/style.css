@@ -491,6 +491,33 @@ h1.title-display {
   height: 13px;
 }
 
+/* Dentro do chip pequeno de ganhador (lista do jogador) e da linha
+   de ganhador do host, o badge de 22px fica grande demais - usa uma
+   versão menor só nesses dois contextos. */
+.winner-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.winner-chip .mini-badge,
+.winner-row__name-block .mini-badge {
+  width: 16px;
+  height: 16px;
+}
+
+.winner-chip .mini-badge-icon,
+.winner-row__name-block .mini-badge-icon {
+  width: 10px;
+  height: 10px;
+}
+
+.winner-row__name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .wheel-controls {
   display: flex;
   flex-direction: column;
@@ -532,6 +559,50 @@ h1.title-display {
 
 .winner-row__name {
   font-weight: 700;
+}
+
+/* Nome clicável indo pro perfil - reportado ao vivo: "quero clicar
+   no nome no ranking/rodada e ir pro perfil, pro host conseguir ver
+   e dar a recompensa". Sublinhado tracejado (não link azul genérico)
+   sinaliza "isso é clicável" sem destoar do resto do tema. */
+.player-name-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.player-name-link:hover {
+  color: var(--color-gold);
+}
+
+/* Rodadas anteriores - mesmo esquema do Time Attack, mesma
+   nomenclatura de classe. */
+.previous-rounds-card {
+  margin-top: 20px;
+}
+
+.previous-round-block {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.previous-round-block:last-child {
+  border-bottom: none;
+}
+
+.previous-round-title {
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 8px;
+}
+
+.previous-round-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+  font-size: 0.9rem;
 }
 
 .winners-header {

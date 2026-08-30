@@ -1607,6 +1607,30 @@ appkit-button {
     gap: 10px;
 }
 
+.perfil-wallet-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface-2, #1a2942);
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.perfil-wallet-row code {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--primary);
+    word-break: break-all;
+}
+
+.perfil-wallet-copy-btn {
+    padding: 6px 14px;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
 .perfil-social-row {
     display: flex;
     align-items: center;

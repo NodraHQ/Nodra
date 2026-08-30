@@ -97,6 +97,9 @@
                                 <img id="qr-room-qr-img" src="" alt="QR code da sala">
                             </div>
                         </div>
+                        <p class="subtitle" style="margin-bottom:8px" data-i18n="room.qrHint">Escaneie o QR ou digite o código pra entrar</p>
+                        <p class="room-code-display__link" id="qr-room-link-text"></p>
+                        <button type="button" class="btn btn-secondary copy-link-btn" id="qr-copy-link-btn" data-i18n="buttons.copyLink">📋 Copiar Link</button>
                     </div>
 
                     <span class="eyebrow" data-i18n="qr.waitingTitle">Esperando o Time</span>
@@ -150,6 +153,15 @@
             </div>
             <p class="hint-text" id="winners-empty" data-i18n="wheel.winnersEmpty">Ninguém sorteado ainda.</p>
             <div class="winners-list" id="winners-list"></div>
+        </div>
+
+        <!-- Rodadas anteriores - mesmo esquema já usado no Time
+             Attack: quando "Sortear de Novo" reinicia a lista atual,
+             a rodada que acabou de fechar fica guardada aqui embaixo,
+             separada, em vez de simplesmente desaparecer. -->
+        <div class="card previous-rounds-card" id="previous-rounds-card" hidden>
+            <span class="eyebrow" data-i18n="wheel.previousRoundsTitle">Rodadas Anteriores</span>
+            <div id="previous-rounds-list"></div>
         </div>
 
         <div class="wheel-final-actions">

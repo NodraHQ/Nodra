@@ -66,15 +66,24 @@ function buildMiniIconSvg(iconKey) {
     return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 }
 
-const playerBadgeCache = new Map(); // user_id -> array de badges (ou [])
+// Cache por user_id, com validade de 60s (não pra sempre) -
+// reportado ao vivo: um cache sem validade mostrava dado velho se a
+// pessoa mudasse a curadoria dos próprios badges no meio da partida
+// depois que essa tela já tinha guardado os badges antigos.
+const playerBadgeCache = new Map(); // user_id -> { badges: [...], cachedAt: number }
+const BADGE_CACHE_TTL_MS = 60 * 1000;
 
 async function loadPlayerBadgeMap(userIds) {
     const validIds = [...new Set(userIds.filter(Boolean))];
-    const uncached = validIds.filter((id) => !playerBadgeCache.has(id));
+    const now = Date.now();
+    const uncached = validIds.filter((id) => {
+        const cached = playerBadgeCache.get(id);
+        return !cached || now - cached.cachedAt > BADGE_CACHE_TTL_MS;
+    });
 
     if (uncached.length > 0) {
         const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
-            window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', uncached),
+            window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', uncached),
             window.ndquestSupabase
                 .from('user_badges')
                 .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
@@ -82,22 +91,22 @@ async function loadPlayerBadgeMap(userIds) {
         ]);
 
         const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
-        uncached.forEach((id) => playerBadgeCache.set(id, [])); // garante entrada mesmo pra quem não tem badge nenhum
+        uncached.forEach((id) => playerBadgeCache.set(id, { badges: [], cachedAt: now }));
 
         (userBadgeRows || []).forEach((row) => {
             const featuredSet = featuredById.get(row.user_id);
             const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
             if (!isFeatured) return;
 
-            const list = playerBadgeCache.get(row.user_id) || [];
-            if (list.length >= 3) return;
-            list.push(row.badges);
-            playerBadgeCache.set(row.user_id, list);
+            const entry = playerBadgeCache.get(row.user_id) || { badges: [], cachedAt: now };
+            if (entry.badges.length >= 3) return;
+            entry.badges.push(row.badges);
+            playerBadgeCache.set(row.user_id, entry);
         });
     }
 
     const map = new Map();
-    validIds.forEach((id) => map.set(id, playerBadgeCache.get(id) || []));
+    validIds.forEach((id) => map.set(id, playerBadgeCache.get(id)?.badges || []));
     return map;
 }
 
@@ -117,12 +126,15 @@ function buildMiniBadgeRow(badges) {
 
 // Leitura síncrona do cache - pra usar dentro do loop de renderização
 // da pista de corrida (que roda a cada toque, não pode esperar rede).
-// Devolve [] se ainda não tiver sido aquecido pra essa pessoa - o
-// badge simplesmente aparece um instante depois, quando o cache
-// aquecer, sem travar a corrida em si.
+// Devolve [] se ainda não tiver sido aquecido (ou se já expirou) pra
+// essa pessoa - o badge simplesmente aparece um instante depois,
+// quando o próximo aquecimento em segundo plano terminar, sem travar
+// a corrida em si.
 function getBadgesFromCacheSync(userId) {
     if (!userId) return [];
-    return playerBadgeCache.get(userId) || [];
+    const cached = playerBadgeCache.get(userId);
+    if (!cached || Date.now() - cached.cachedAt > BADGE_CACHE_TTL_MS) return [];
+    return cached.badges;
 }
 
 // --------------------------------------------------------

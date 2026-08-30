@@ -3,10 +3,10 @@
 //
 // Mostra o perfil público de qualquer usuário via ?u=username.
 // Precisa estar logado pra ver (mesma regra da view profiles_public,
-// que só concede select pra authenticated). Mostra só a camada
-// pública: avatar, username, bio, VIP, redes sociais - NUNCA wallet
-// (isso fica reservado pro host de uma sala específica, política
-// própria ainda não construída - ver docs/MATCH_HISTORY_ARCHITECTURE.md).
+// que só concede select pra authenticated). Mostra: avatar,
+// username, bio, VIP, redes sociais, badges, e a wallet - reportado
+// ao vivo: "é o mais importante", pra quem tem que mandar recompensa
+// de verdade pra essa pessoa conseguir ver o endereço.
 // ==================================================================
 
 const supabaseClient = window.nodraSupabase;
@@ -182,6 +182,17 @@ async function boot() {
     const vipBadge = document.getElementById("perfil-vip-badge");
     if (vipBadge) vipBadge.hidden = !profile.is_vip;
 
+    const walletCard = document.getElementById("perfil-wallet-card");
+    const walletAddressEl = document.getElementById("perfil-wallet-address");
+    if (walletCard && walletAddressEl) {
+        if (profile.wallet_evm) {
+            walletCard.hidden = false;
+            walletAddressEl.textContent = profile.wallet_evm;
+        } else {
+            walletCard.hidden = true;
+        }
+    }
+
     renderAvatar(profile);
     renderSocialIcons(profile);
     renderSocialList(profile);
@@ -308,3 +319,17 @@ async function loadAndRenderBadges(userId, featuredIds) {
 }
 
 boot();
+
+document.getElementById("perfil-wallet-copy-btn")?.addEventListener("click", async (event) => {
+    const btn = event.currentTarget;
+    const address = document.getElementById("perfil-wallet-address").textContent;
+    try {
+        await navigator.clipboard.writeText(address);
+        const original = btn.textContent;
+        btn.textContent =
+            window.nodraTranslator?.translations?.["perfil.walletCopied"] || "✓ Copiado!";
+        setTimeout(() => { btn.textContent = original; }, 1800);
+    } catch (err) {
+        console.error("Erro ao copiar wallet:", err);
+    }
+});

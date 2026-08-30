@@ -64,7 +64,7 @@ async function loadPlayerBadgeMap(userIds) {
     if (validIds.length === 0) return new Map();
 
     const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
-        window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', validIds),
+        window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', validIds),
         window.ndquestSupabase
             .from('user_badges')
             .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
@@ -100,6 +100,18 @@ function buildMiniBadgeRow(badges) {
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
+}
+
+// Nome clicável, indo pro perfil público de quem tem conta -
+// reportado ao vivo: "quero clicar no nome no ranking/dentro da
+// rodada e ir pro card de perfil, pro host conseguir ver e dar a
+// recompensa". Sem username (jogador convidado, sem conta), mostra
+// só o texto puro, sem link nenhum.
+function buildPlayerNameLink(name, username) {
+    const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (!username) return safeName;
+    const profileUrl = `../../account/perfil.html?u=${encodeURIComponent(username)}`;
+    return `<a href="${profileUrl}" target="_blank" rel="noopener" class="player-name-link">${safeName}</a>`;
 }
 
 // --------------------------------------------------------
@@ -330,6 +342,7 @@ methodTabs.forEach((tab) => {
 
 let activeMethod = 'import';
 let namesPool = [];
+let nicknameToUserId = new Map();
 
 // --------------------------------------------------------
 // Método 1: importar de uma sala do Time Attack / Show Down
@@ -464,8 +477,26 @@ qrCreateBtn.addEventListener('click', async () => {
     const baseUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}play/index.html`;
     const publicPlayUrl = `${baseUrl}?room=${roomCode}`;
     qrRoomQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(publicPlayUrl)}`;
+    qrRoomLinkText.textContent = publicPlayUrl;
 
     subscribeToQrPlayers(qrRoomId);
+});
+
+const qrRoomLinkText = document.getElementById('qr-room-link-text');
+const qrCopyLinkBtn = document.getElementById('qr-copy-link-btn');
+qrCopyLinkBtn?.addEventListener('click', async () => {
+    try {
+        await navigator.clipboard.writeText(qrRoomLinkText.textContent);
+        const originalLabel = qrCopyLinkBtn.textContent;
+        qrCopyLinkBtn.textContent = t('buttons.linkCopied');
+        qrCopyLinkBtn.classList.add('is-copied');
+        setTimeout(() => {
+            qrCopyLinkBtn.textContent = originalLabel;
+            qrCopyLinkBtn.classList.remove('is-copied');
+        }, 1800);
+    } catch (err) {
+        console.error('Roulette: erro ao copiar o link', err);
+    }
 });
 
 async function loadQrPlayers(roomId) {
@@ -483,6 +514,11 @@ async function loadQrPlayers(roomId) {
 
 function renderQrPlayers(players) {
     namesPool = players.map((p) => p.nickname);
+
+    // Guarda nome -> user_id - usado depois pra achar o badge de
+    // quem ganhar (o pool da roda só tem os nomes, não o user_id de
+    // cada um).
+    nicknameToUserId = new Map(players.map((p) => [p.nickname, p.user_id]));
 
     if (players.length === 0) {
         qrEmpty.hidden = false;
@@ -590,10 +626,13 @@ function wheelPoint(angleDeg, radius) {
 // de verdade por trás pra sincronizar com ninguém.
 async function syncPoolToRoom() {
     if (!qrRoomId) return;
-    await window.ndquestSupabase
+    const { error } = await window.ndquestSupabase
         .from('roulette_rooms')
         .update({ current_pool: currentPool, spin_status: 'idle' })
         .eq('id', qrRoomId);
+    if (error) {
+        console.error('Roulette: erro ao sincronizar a roda pro banco (jogador não vai ver a roda atualizar)', error);
+    }
 }
 
 function buildWheel(pool, resetRotation) {
@@ -731,7 +770,10 @@ spinBtn.addEventListener('click', () => {
                 current_winner_index: winnerIndex,
                 current_winner_name: winnerName,
             })
-            .eq('id', qrRoomId);
+            .eq('id', qrRoomId)
+            .then(({ error }) => {
+                if (error) console.error('Roulette: erro ao sincronizar início do giro pro banco', error);
+            });
     }
 
     // Remover a classe "is-idle" e já mandar a transição no mesmo
@@ -754,23 +796,37 @@ spinBtn.addEventListener('click', () => {
     });
 });
 
-function onSpinComplete(winnerIndex, winnerName) {
+async function onSpinComplete(winnerIndex, winnerName) {
 
     isSpinning = false;
     spinBtn.disabled = false;
     spinBtn.textContent = t('wheel.spinBtn');
 
-    winners.push(winnerName);
-    renderWinners();
+    const winnerUserId = nicknameToUserId.get(winnerName) || null;
+    let winnerUsername = null;
+    if (winnerUserId) {
+        const { data: profileData } = await window.ndquestSupabase
+            .from('profiles_public')
+            .select('username')
+            .eq('id', winnerUserId)
+            .maybeSingle();
+        winnerUsername = profileData?.username || null;
+    }
 
-    winnerBannerName.textContent = winnerName;
+    winners.push({ name: winnerName, userId: winnerUserId, username: winnerUsername });
+    await renderWinners();
+
+    winnerBannerName.innerHTML = buildPlayerNameLink(winnerName, winnerUsername);
     winnerBanner.hidden = false;
 
     if (qrRoomId) {
         window.ndquestSupabase
             .from('roulette_rooms')
             .update({ spin_status: 'finished' })
-            .eq('id', qrRoomId);
+            .eq('id', qrRoomId)
+            .then(({ error }) => {
+                if (error) console.error('Roulette: erro ao sincronizar fim do giro pro banco', error);
+            });
     }
 
     // Grava o resultado de verdade - antes o sorteio só vivia na
@@ -842,25 +898,32 @@ async function recordWinnerInHistory(roomId, roomCode, winnerName, placement) {
 // Lista de ganhadores
 // --------------------------------------------------------
 
-function renderWinners() {
+async function renderWinners() {
     if (winners.length === 0) {
         winnersEmpty.hidden = false;
         winnersList.innerHTML = '';
         return;
     }
     winnersEmpty.hidden = true;
+
+    const allWinnerIds = winners.map((w) => w.userId).filter(Boolean);
+    const badgeMap = await loadPlayerBadgeMap(allWinnerIds);
+
     winnersList.innerHTML = winners
-        .map((name, i) => `
+        .map((w, i) => `
             <div class="winner-row">
                 <span class="winner-row__position">#${i + 1}</span>
-                <span class="winner-row__name">${name}</span>
+                <span class="winner-row__name-block">
+                    <span class="winner-row__name">${buildPlayerNameLink(w.name, w.username)}</span>
+                    ${buildMiniBadgeRow(w.userId ? badgeMap.get(w.userId) : null)}
+                </span>
             </div>
         `)
         .join('');
 }
 
 copyWinnersBtn.addEventListener('click', async () => {
-    const text = winners.map((name, i) => `${i + 1}. ${name}`).join('\n');
+    const text = winners.map((w, i) => `${i + 1}. ${w.name}`).join('\n');
     try {
         await navigator.clipboard.writeText(text);
         const original = copyWinnersBtn.textContent;
@@ -875,7 +938,53 @@ copyWinnersBtn.addEventListener('click', async () => {
 // Sortear de novo (mesmos nomes) / trocar a lista de nomes
 // --------------------------------------------------------
 
+let previousRounds = [];
+let roundCounter = 1;
+
+function renderPreviousRounds() {
+    const card = document.getElementById('previous-rounds-card');
+    const list = document.getElementById('previous-rounds-list');
+    if (!card || !list) return;
+
+    if (previousRounds.length === 0) {
+        card.hidden = true;
+        return;
+    }
+
+    card.hidden = false;
+    list.innerHTML = '';
+
+    // Mais recente primeiro - mesmo padrão do Time Attack.
+    [...previousRounds].reverse().forEach((round) => {
+        const block = document.createElement('div');
+        block.className = 'previous-round-block';
+
+        const title = document.createElement('p');
+        title.className = 'previous-round-title';
+        title.textContent = `${t('wheel.roundLabel')} ${round.roundNumber}`;
+        block.appendChild(title);
+
+        round.results.forEach((winner) => {
+            const row = document.createElement('div');
+            row.className = 'previous-round-row';
+            row.innerHTML = buildPlayerNameLink(winner.name, winner.username);
+            block.appendChild(row);
+        });
+
+        list.appendChild(block);
+    });
+}
+
 spinAgainBtn.addEventListener('click', () => {
+    // Arquiva a rodada que está fechando, em vez de só apagar -
+    // reportado ao vivo: "quero esse esquema de rodada 1, rodada 2
+    // que tem no Time Attack, aqui também".
+    if (winners.length > 0) {
+        previousRounds.push({ roundNumber: roundCounter, results: [...winners] });
+        roundCounter += 1;
+        renderPreviousRounds();
+    }
+
     currentPool = [...originalPool];
     winners = [];
     winnerBanner.hidden = true;
@@ -893,6 +1002,8 @@ changeNamesLink.addEventListener('click', (event) => {
     currentPool = [];
     originalPool = [];
     winners = [];
+    previousRounds = [];
+    roundCounter = 1;
     qrRoomId = null;
     qrRoomCode = null;
 
@@ -903,6 +1014,7 @@ changeNamesLink.addEventListener('click', (event) => {
 
     qrBeforeCreate.hidden = false;
     qrAfterCreate.hidden = true;
+    document.getElementById('previous-rounds-card').hidden = true;
     importStatus.textContent = '';
     pasteStatus.textContent = '';
     pasteTextarea.value = '';

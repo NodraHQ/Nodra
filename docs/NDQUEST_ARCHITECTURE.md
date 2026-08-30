@@ -26,7 +26,11 @@ ndquest/
   time-attack/          (race-the-clock quiz)
   show-down/          (live synchronized quiz, everyone answers together)
   tap-rush/          (tap race: target, endless, or tug of war)
-  roulette/          (name wheel: import, QR/code, or paste a list)
+  roulette/          (name wheel: import, QR/code, or paste a list.
+                      QR mode syncs live to watching players via
+                      roulette_rooms columns: current_pool, spin_status,
+                      spin_started_at, current_winner_name/index.
+                      Import mode has no live room behind it, host-only.)
 
 # Rule: No Cross-Imports
 

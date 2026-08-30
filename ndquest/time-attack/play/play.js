@@ -40,32 +40,52 @@ function buildMiniIconSvg(iconKey) {
     return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 }
 
+// Cache por user_id - reportado ao vivo: o ranking agora atualiza em
+// tempo real conforme cada jogador termina, e sem cache isso
+// dispararia uma busca de rede nova a cada atualização, mesmo sem
+// nada mudar nos badges de ninguém já visto antes.
+//
+// Guarda com validade de 60s (não pra sempre) - reportado ao vivo:
+// um cache sem validade mostrava dado velho se a pessoa mudasse a
+// curadoria dos próprios badges NO MEIO da partida depois que essa
+// tela já tinha guardado os badges antigos.
+const playerBadgeCache = new Map();
+const BADGE_CACHE_TTL_MS = 60 * 1000;
+
 async function loadPlayerBadgeMap(userIds) {
     const validIds = [...new Set(userIds.filter(Boolean))];
-    if (validIds.length === 0) return new Map();
-
-    const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
-        window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', validIds),
-        window.ndquestSupabase
-            .from('user_badges')
-            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
-            .in('user_id', validIds),
-    ]);
-
-    const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
-    const map = new Map();
-
-    (userBadgeRows || []).forEach((row) => {
-        const featuredSet = featuredById.get(row.user_id);
-        const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
-        if (!isFeatured) return;
-
-        const list = map.get(row.user_id) || [];
-        if (list.length >= 3) return;
-        list.push(row.badges);
-        map.set(row.user_id, list);
+    const now = Date.now();
+    const uncached = validIds.filter((id) => {
+        const cached = playerBadgeCache.get(id);
+        return !cached || now - cached.cachedAt > BADGE_CACHE_TTL_MS;
     });
 
+    if (uncached.length > 0) {
+        const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
+            window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', uncached),
+            window.ndquestSupabase
+                .from('user_badges')
+                .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+                .in('user_id', uncached),
+        ]);
+
+        const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
+        uncached.forEach((id) => playerBadgeCache.set(id, { badges: [], cachedAt: now }));
+
+        (userBadgeRows || []).forEach((row) => {
+            const featuredSet = featuredById.get(row.user_id);
+            const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+            if (!isFeatured) return;
+
+            const entry = playerBadgeCache.get(row.user_id) || { badges: [], cachedAt: now };
+            if (entry.badges.length >= 3) return;
+            entry.badges.push(row.badges);
+            playerBadgeCache.set(row.user_id, entry);
+        });
+    }
+
+    const map = new Map();
+    validIds.forEach((id) => map.set(id, playerBadgeCache.get(id)?.badges || []));
     return map;
 }
 
@@ -881,6 +901,33 @@ async function renderFinishedRanking(roomId) {
         .join('');
 }
 
+// Mantém o ranking vivo depois que EU termino - reportado ao vivo: o
+// ranking era uma "foto" tirada só uma vez, no exato momento que eu
+// terminava. Como o Time Attack é assíncrono (cada um termina na
+// própria hora), quem terminava primeiro só via quem já tinha
+// terminado até aquele instante - nunca via quem terminava DEPOIS.
+// Essa assinatura reage a qualquer mudança na sala e refaz o
+// ranking, então continua atualizando enquanto a tela ficar aberta.
+// Guarda contra assinar duas vezes a mesma sala (ex: "jogar de novo"
+// chamando isso de novo sem derrubar a assinatura anterior).
+let subscribedRankingRoomId = null;
+
+function subscribeToFinishedRanking(roomId) {
+    if (subscribedRankingRoomId === roomId) return;
+    subscribedRankingRoomId = roomId;
+
+    window.ndquestSupabase
+        .channel(`time-attack-finished-ranking-${roomId}`)
+        .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'time_attack_players', filter: `room_id=eq.${roomId}` },
+            () => {
+                renderFinishedRanking(roomId);
+            }
+        )
+        .subscribe();
+}
+
 async function endGame(reason) {
 
     // Trava contra endGame ser chamado mais de uma vez pra mesma
@@ -914,6 +961,7 @@ async function endGame(reason) {
     updatePlayAgainButtonState();
 
     renderFinishedRanking(currentRoom.id);
+    subscribeToFinishedRanking(currentRoom.id);
 
     const userId = await getCurrentUserId();
 

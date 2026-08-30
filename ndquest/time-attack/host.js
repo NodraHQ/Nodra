@@ -48,17 +48,29 @@ function buildMiniIconSvg(iconKey) {
 // Cache por user_id - reportado ao vivo: o placar atualiza toda hora
 // (sinal de vida dos jogadores, não só quando alguém termina), e sem
 // cache isso disparava uma busca de rede nova a cada atualização,
-// mesmo sem nada mudar nos badges de ninguém. Badge não muda no meio
-// de uma partida, cachear é seguro.
+// mesmo sem nada mudar nos badges de ninguém.
+//
+// Guarda com validade de 60s (não pra sempre) - reportado ao vivo:
+// um cache sem validade mostrava dado velho se a pessoa mudasse a
+// curadoria dos próprios badges NO MEIO da partida (escolher quais
+// mostrar) depois que essa tela já tinha guardado os badges antigos.
+// 60s é tempo suficiente pra evitar buscar de novo a cada
+// atualização rápida seguida, mas curto o bastante pra não ficar
+// preso a dado desatualizado por muito tempo.
 const playerBadgeCache = new Map();
+const BADGE_CACHE_TTL_MS = 60 * 1000;
 
 async function loadPlayerBadgeMap(userIds) {
     const validIds = [...new Set(userIds.filter(Boolean))];
-    const uncached = validIds.filter((id) => !playerBadgeCache.has(id));
+    const now = Date.now();
+    const uncached = validIds.filter((id) => {
+        const cached = playerBadgeCache.get(id);
+        return !cached || now - cached.cachedAt > BADGE_CACHE_TTL_MS;
+    });
 
     if (uncached.length > 0) {
         const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
-            window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', uncached),
+            window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', uncached),
             window.ndquestSupabase
                 .from('user_badges')
                 .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
@@ -66,22 +78,22 @@ async function loadPlayerBadgeMap(userIds) {
         ]);
 
         const featuredById = new Map((profiles || []).map((p) => [p.id, new Set(p.featured_badge_ids || [])]));
-        uncached.forEach((id) => playerBadgeCache.set(id, []));
+        uncached.forEach((id) => playerBadgeCache.set(id, { badges: [], cachedAt: now }));
 
         (userBadgeRows || []).forEach((row) => {
             const featuredSet = featuredById.get(row.user_id);
             const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
             if (!isFeatured) return;
 
-            const list = playerBadgeCache.get(row.user_id) || [];
-            if (list.length >= 3) return;
-            list.push(row.badges);
-            playerBadgeCache.set(row.user_id, list);
+            const entry = playerBadgeCache.get(row.user_id) || { badges: [], cachedAt: now };
+            if (entry.badges.length >= 3) return;
+            entry.badges.push(row.badges);
+            playerBadgeCache.set(row.user_id, entry);
         });
     }
 
     const map = new Map();
-    validIds.forEach((id) => map.set(id, playerBadgeCache.get(id) || []));
+    validIds.forEach((id) => map.set(id, playerBadgeCache.get(id)?.badges || []));
     return map;
 }
 

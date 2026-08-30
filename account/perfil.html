@@ -34,7 +34,7 @@
 
     <div id="perfil-loading" class="auth-loading" data-i18n="perfil.loading">Loading...</div>
 
-    <!-- Precisa estar logado pra ver perfil de outra pessoa — mesma
+    <!-- Precisa estar logado pra ver perfil de outra pessoa - mesma
          regra da view profiles_public (grant só pra authenticated). -->
     <div id="perfil-signed-out" class="card auth-card" hidden>
         <span class="tag" data-i18n="perfil.eyebrow">Public profile</span>
@@ -75,6 +75,20 @@
             </div>
             <div id="perfil-social-list" class="perfil-social-list"></div>
             <p id="perfil-social-empty" class="profile-history-detail-empty" data-i18n="perfil.noSocialYet" hidden>No social links yet.</p>
+        </div>
+
+        <!-- Wallet - reportado ao vivo: "é o mais importante", pra
+             quem tem que mandar recompensa de verdade pra essa
+             pessoa (ex: host de uma roleta dando prêmio pro
+             vencedor) conseguir ver o endereço direto no perfil. -->
+        <div class="card profile-section" id="perfil-wallet-card" hidden>
+            <div class="profile-section-header">
+                <span class="tag" data-i18n="perfil.walletSection">Wallet</span>
+            </div>
+            <div class="perfil-wallet-row">
+                <code id="perfil-wallet-address"></code>
+                <button type="button" class="btn btn-secondary perfil-wallet-copy-btn" id="perfil-wallet-copy-btn" data-i18n="perfil.copyWallet">📋 Copiar</button>
+            </div>
         </div>
 
         <div class="card profile-section" id="perfil-badges-card">

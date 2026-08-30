@@ -1,5 +1,5 @@
 // ==================================================================
-// navAuthLight.js — indicador de login leve, pros jogos (sem navbar,
+// navAuthLight.js - indicador de login leve, pros jogos (sem navbar,
 // só o toggle de idioma). Diferente do navAuth.js completo: sem
 // dropdown, e não mostra nada quando deslogado (não faz sentido
 // empurrar login numa tela de host/play rápida). Cópia própria desta
@@ -21,7 +21,7 @@
         const container = document.getElementById("nav-auth-light");
         // Os jogos usam window.ndquestSupabase (nome já estabelecido
         // nesta pasta), diferente do window.nodraSupabase usado em
-        // account/ e admin/ — mantém o nome que já existe aqui em vez
+        // account/ e admin/ - mantém o nome que já existe aqui em vez
         // de renomear e arriscar quebrar o resto do jogo.
         const client = window.ndquestSupabase;
         if (!container || !client) return;
@@ -40,7 +40,7 @@
         const initial = (username || "?").charAt(0).toUpperCase();
 
         // Constrói o avatar via DOM, não via innerHTML com a URL
-        // solta — mesma razão de segurança do account.js.
+        // solta - mesma razão de segurança do account.js.
         container.innerHTML = `
             <a href="${ACCOUNT_URL}" class="nav-auth-light-widget">
                 <span class="nav-auth-light-avatar-slot"></span>

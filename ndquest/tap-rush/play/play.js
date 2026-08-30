@@ -56,7 +56,7 @@ async function loadPlayerBadgeMap(userIds) {
     if (validIds.length === 0) return new Map();
 
     const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
-        window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', validIds),
+        window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', validIds),
         window.ndquestSupabase
             .from('user_badges')
             .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')

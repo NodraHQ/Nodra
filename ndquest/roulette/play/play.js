@@ -56,7 +56,7 @@ async function loadPlayerBadgeMap(userIds) {
     if (validIds.length === 0) return new Map();
 
     const [{ data: profiles }, { data: userBadgeRows }] = await Promise.all([
-        window.ndquestSupabase.from('profiles').select('id, featured_badge_ids').in('id', validIds),
+        window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', validIds),
         window.ndquestSupabase
             .from('user_badges')
             .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
@@ -92,6 +92,18 @@ function buildMiniBadgeRow(badges) {
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
+}
+
+// Nome clicável, indo pro perfil público de quem tem conta -
+// reportado ao vivo: "quero clicar no nome no ranking/dentro da
+// rodada e ir pro card de perfil, pro host conseguir ver e dar a
+// recompensa". Sem username (jogador convidado, sem conta), mostra
+// só o texto puro, sem link nenhum.
+function buildPlayerNameLink(name, username) {
+    const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (!username) return safeName;
+    const profileUrl = `../../../account/perfil.html?u=${encodeURIComponent(username)}`;
+    return `<a href="${profileUrl}" target="_blank" rel="noopener" class="player-name-link">${safeName}</a>`;
 }
 
 // --------------------------------------------------------
@@ -187,8 +199,45 @@ const WHEEL_CENTER = 150;
 const WHEEL_RADIUS = 145;
 let currentRotationDeg = 0;
 let renderedPool = null; // controla se precisa redesenhar a roda (evita redesenhar toda atualização de realtime à toa)
+let lastKnownPoolSize = 0; // controla se um "idle" é rodada nova de verdade (roda cresceu de volta) ou só o vencedor sendo removido (roda encolheu)
 let lastHandledSpinStartedAt = null; // controla se já reagiu a ESSE giro específico (evita girar duas vezes pro mesmo evento)
 let winnersHistory = [];
+let previousRounds = [];
+let roundCounter = 1;
+
+function renderPreviousRounds() {
+    const card = document.getElementById('previous-rounds-card');
+    const list = document.getElementById('previous-rounds-list');
+    if (!card || !list) return;
+
+    if (previousRounds.length === 0) {
+        card.hidden = true;
+        return;
+    }
+
+    card.hidden = false;
+    list.innerHTML = '';
+
+    [...previousRounds].reverse().forEach((round) => {
+        const block = document.createElement('div');
+        block.className = 'previous-round-block';
+
+        const title = document.createElement('p');
+        title.className = 'previous-round-title';
+        title.textContent = `${t('wheel.roundLabel')} ${round.roundNumber}`;
+        block.appendChild(title);
+
+        round.results.forEach((winner) => {
+            const row = document.createElement('div');
+            row.className = 'previous-round-row';
+            row.innerHTML = buildPlayerNameLink(winner.name, winner.username);
+            block.appendChild(row);
+        });
+
+        list.appendChild(block);
+    });
+}
+
 
 function wheelPoint(angleDeg, radius) {
     const rad = (angleDeg * Math.PI) / 180;
@@ -289,7 +338,7 @@ function spinToIndex(poolLength, winnerIndex) {
     });
 }
 
-async function renderWinnerReveal(winnerName) {
+async function renderWinnerReveal(winnerName, roomId) {
     winnerBanner.hidden = false;
     winnerBannerName.textContent = winnerName;
 
@@ -297,21 +346,67 @@ async function renderWinnerReveal(winnerName) {
     // reconhece direto na tela, sem precisar comparar nome.
     winnerBanner.classList.toggle('is-me', winnerName === currentNickname);
 
-    winnersHistory.push(winnerName);
-    winnersEmpty.hidden = winnersHistory.length > 0;
-    winnersList.innerHTML = winnersHistory.map((w) => `<span class="winner-chip">${w}</span>`).join('');
+    // Acha o dono do nome vencedor (user_id e username) - reportado
+    // ao vivo: só mostrava badge quando o vencedor era a própria
+    // pessoa olhando. O pool da roda guarda só os nomes (não o
+    // user_id de cada um), então busca o dono do nome na lista de
+    // jogadores da sala. O username (diferente do apelido digitado
+    // nesse jogo) é o que serve pra montar o link do perfil público -
+    // reportado ao vivo: "quero clicar no nome no ranking/rodada e ir
+    // pro perfil, pro host conseguir ver e dar a recompensa".
+    let winnerUserId = await getCurrentUserId();
+    let winnerUsername = null;
+    if (winnerName !== currentNickname) {
+        winnerUserId = null;
+        const { data: matchingPlayers } = await window.ndquestSupabase
+            .from('roulette_players')
+            .select('user_id')
+            .eq('room_id', roomId)
+            .eq('nickname', winnerName)
+            .limit(1);
+        winnerUserId = matchingPlayers?.[0]?.user_id || null;
+    }
 
-    const userId = await getCurrentUserId();
-    if (userId && winnerName === currentNickname) {
-        const badgeMap = await loadPlayerBadgeMap([userId]);
-        winnerBadgeRow.innerHTML = buildMiniBadgeRow(badgeMap.get(userId));
+    if (winnerUserId) {
+        const { data: profileData } = await window.ndquestSupabase
+            .from('profiles_public')
+            .select('username')
+            .eq('id', winnerUserId)
+            .maybeSingle();
+        winnerUsername = profileData?.username || null;
+    }
+
+    winnerBannerName.innerHTML = buildPlayerNameLink(winnerName, winnerUsername);
+
+    const badgeMap = winnerUserId ? await loadPlayerBadgeMap([winnerUserId]) : new Map();
+
+    if (winnerUserId) {
+        winnerBadgeRow.innerHTML = buildMiniBadgeRow(badgeMap.get(winnerUserId));
     } else {
         winnerBadgeRow.innerHTML = '';
     }
+
+    // Guarda o user_id e o username junto do nome na lista de
+    // ganhadores - assim a lista embaixo também consegue mostrar o
+    // badge e o link do perfil de cada um. Busca os badges de TODO
+    // MUNDO já na lista de uma vez (não só do vencedor mais recente),
+    // senão quem ganhou antes perderia o próprio badge assim que um
+    // novo vencedor for revelado.
+    winnersHistory.push({ name: winnerName, userId: winnerUserId, username: winnerUsername });
+    winnersEmpty.hidden = winnersHistory.length > 0;
+
+    const allWinnerIds = winnersHistory.map((w) => w.userId).filter(Boolean);
+    const allBadgesMap = await loadPlayerBadgeMap(allWinnerIds);
+
+    winnersList.innerHTML = winnersHistory
+        .map((w) => `<span class="winner-chip">${buildPlayerNameLink(w.name, w.username)}${buildMiniBadgeRow(w.userId ? allBadgesMap.get(w.userId) : null)}</span>`)
+        .join('');
 }
 
 function reactToRoomState(room) {
     const pool = room.current_pool || [];
+    const previousPoolSize = lastKnownPoolSize;
+    lastKnownPoolSize = pool.length;
 
     if (JSON.stringify(pool) !== JSON.stringify(renderedPool)) {
         renderedPool = pool;
@@ -331,11 +426,38 @@ function reactToRoomState(room) {
             // com o giro terminando na tela de quem está assistindo.
             setTimeout(() => {
                 joinedStatusText.textContent = t('joined.subtitle');
-                renderWinnerReveal(room.current_winner_name);
+                renderWinnerReveal(room.current_winner_name, room.id);
             }, 4500);
         }
     } else if (room.spin_status === 'idle') {
         joinedStatusText.textContent = t('joined.subtitle');
+
+        // Arquiva a rodada que fechou (mesmo esquema do Time Attack:
+        // "Rodada 1", "Rodada 2") em vez de só apagar - reportado ao
+        // vivo: o host resetava a PRÓPRIA lista ao clicar "Sortear de
+        // Novo, Mesmos Nomes", mas cada jogador guarda a lista por
+        // conta própria (local), e nunca era avisado pra também
+        // resetar.
+        //
+        // MAS: "idle" também acontece toda vez que um vencedor é
+        // REMOVIDO da roda depois de sortear (a roda é reconstruída
+        // com a lista menor) - isso NÃO é rodada nova, é a MESMA
+        // rodada continuando. Reportado ao vivo: sem essa distinção,
+        // cada vencedor virava a própria "rodada", ignorando a ordem
+        // de verdade. Só é rodada nova quando a roda CRESCE de volta
+        // (volta pro tamanho cheio) - remover vencedor só ENCOLHE, só
+        // "Sortear de Novo" enche de volta.
+        const isGenuineNewRound = pool.length > previousPoolSize;
+
+        if (isGenuineNewRound && winnersHistory.length > 0) {
+            previousRounds.push({ roundNumber: roundCounter, results: [...winnersHistory] });
+            roundCounter += 1;
+            renderPreviousRounds();
+
+            winnersHistory = [];
+            winnersEmpty.hidden = false;
+            winnersList.innerHTML = '';
+        }
     }
 }
 
@@ -384,6 +506,10 @@ joinRoomBtn.addEventListener('click', async () => {
         .maybeSingle();
 
     joinRoomBtn.disabled = false;
+
+    if (error) {
+        console.error('Roulette: erro ao buscar a sala', error);
+    }
 
     if (error || !data) {
         joinError.textContent = t('errors.roomNotFound');
