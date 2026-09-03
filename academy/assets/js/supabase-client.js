@@ -14,3 +14,10 @@ window.nodraSupabase = supabase.createClient(
     NODRA_SUPABASE_URL,
     NODRA_SUPABASE_PUBLISHABLE_KEY
 );
+
+// Exposto separado - precisa pra montar a URL das Edge Functions
+// (${URL}/functions/v1/nome-da-funcao). Academy não chamava nenhuma
+// até agora, passou a precisar com academy-grant-module-badge (ver
+// cada módulo/*.js) - mesmo padrão que o resto do site já usava.
+window.nodraSupabaseUrl = NODRA_SUPABASE_URL;
+window.nodraSupabaseAnonKey = NODRA_SUPABASE_PUBLISHABLE_KEY;

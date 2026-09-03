@@ -425,7 +425,7 @@ h1.title-display {
 
 .race-lane {
   position: relative;
-  height: 40px;
+  height: 48px;
   background: var(--color-bg);
   border: 1px solid var(--color-surface-border);
   border-radius: 999px;
@@ -678,8 +678,7 @@ h1.title-display {
    nome" pedida ao vivo: pega o card de perfil, resume (sem redes
    sociais, sem bio), mostra só os badges destacados. Usado no
    ranking, na sala de espera, e na pista de corrida ao vivo. */
-.leaderboard-row__name-block,
-.race-lane__name-block {
+.leaderboard-row__name-block {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -703,13 +702,53 @@ h1.title-display {
 .mini-badge {
   width: 18px;
   height: 18px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
 }
+/* Recorte por formato de verdade, igual a badge em tamanho grande
+   (mesmos polígonos de account.css .badge--*, só que numa escala
+   pequena - clip-path em porcentagem funciona em qualquer tamanho) -
+   bug real reportado ao vivo: "não pode cortar, qual o sentido
+   disso?" - antes SEMPRE cortava em círculo, não importa a forma
+   escolhida na criação da badge, cortando pontas de hexágono e
+   qualquer número/detalhe no topo do desenho. */
+.mini-badge--circle {
+  clip-path: circle(50%);
+}
+
+.mini-badge--hex {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.mini-badge--coin {
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+}
+
+.mini-badge--square {
+  clip-path: none;
+  border-radius: 3px;
+}
+
+.mini-badge--classic {
+  clip-path: polygon(50% 0%, 100% 15%, 100% 50%, 50% 100%, 0% 50%, 0% 15%);
+}
+
+.mini-badge--rounded {
+  clip-path: polygon(50% 0%, 85% 8%, 100% 30%, 100% 55%, 50% 100%, 0% 55%, 0% 30%, 15% 8%);
+}
+
+.mini-badge--image {
+  clip-path: none;
+  background: none;
+}
+
+.mini-badge--image img {
+  object-fit: contain;
+}
+
 
 .mini-badge img {
   width: 100%;
@@ -722,14 +761,13 @@ h1.title-display {
   height: 11px;
 }
 
-.race-lane__name-block .mini-badge {
-  width: 13px;
-  height: 13px;
-}
-
-.race-lane__name-block .mini-badge-icon {
-  width: 8px;
-  height: 8px;
+/* Fallback quando o badge não tem ícone nem imagem (só forma+cor,
+   opção válida na hora de criar) - mesmo espírito de um avatar sem
+   foto, mostra a inicial do nome. */
+.mini-badge__initial {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .leaderboard-row__score {
@@ -1031,6 +1069,32 @@ h1.title-display {
 
 .leaderboard-card .eyebrow {
   font-size: 0.95rem;
+}
+
+.previous-rounds-card {
+  margin-top: 20px;
+}
+
+.previous-round-block {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.previous-round-block:last-child {
+  border-bottom: none;
+}
+
+.previous-round-title {
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 8px;
+}
+
+.previous-round-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 760px) {

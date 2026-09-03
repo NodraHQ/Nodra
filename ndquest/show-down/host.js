@@ -14,7 +14,13 @@
 // ==================================================================
 
 import translations from './i18n/translations.js';
-import themes from './branding/branding-manifest.js';
+import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
+
+// Começa só com o tema padrão (mesma aparência de sempre, na hora),
+// depois é substituído pela lista completa (padrão + Supabase) assim
+// que a busca terminar - ver a chamada de loadRemoteThemes logo
+// abaixo de populateThemeSelect().
+let themes = getStaticThemes();
 
 // --------------------------------------------------------
 // Idioma
@@ -65,7 +71,7 @@ async function loadPlayerBadgeMap(userIds) {
         window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', validIds),
         window.ndquestSupabase
             .from('user_badges')
-            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+            .select('user_id, badge_id, badges(name_pt, background_color, icon, icon_color, image_url, badge_shape)')
             .in('user_id', validIds),
     ]);
 
@@ -90,11 +96,44 @@ function buildMiniBadgeRow(badges) {
     if (!badges || badges.length === 0) return '';
     const chips = badges
         .map((b) => {
+            // Respeita a forma de verdade da badge (hex, coin, square...)
+            // em vez de sempre forçar círculo - bug real reportado ao
+            // vivo: "não pode cortar, qual o sentido disso?" - uma arte
+            // desenhada pro formato hexagonal (pontas, número no topo)
+            // ficava com as pontas cortadas quando o mini-badge sempre
+            // recortava em círculo, não importa a forma escolhida na
+            // criação. Mesmas classes/recortes que a badge em tamanho
+            // grande já usa (ver account.css .badge--*), só que na
+            // escala pequena - ver .mini-badge--* no CSS deste jogo.
+            // Imagem própria já vem com forma e fundo desenhados nela
+            // mesma - sem recorte extra, sem cor de fundo por trás
+            // (mesma correção aplicada na badge em tamanho grande, ver
+            // account.css .badge--image - senão sobra um "anel" da cor
+            // de fundo em volta da arte, onde o recorte daqui não bate
+            // pixel a pixel com o hexágono já desenhado na imagem).
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+
             if (b.image_url) {
-                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
             }
             const color = b.icon_color || b.background_color || '#888';
-            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+            // Badge sem ícone e sem imagem é uma opção válida na hora de
+            // criar (só forma+cor) - sem isso, ficava um círculo vazio
+            // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
+            // pra inicial do nome, mesmo espírito de um avatar sem foto.
+            // Checa o SVG de verdade, não só se b.icon existe - segunda
+            // rodada do mesmo bug reportada ao vivo: um ícone com valor
+            // que não bate com nenhuma chave conhecida (fora dos 8 que
+            // o sistema reconhece) também gera SVG vazio, e só olhar
+            // "b.icon existe" não pegava esse caso.
+            const iconSvg = b.icon ? buildMiniIconSvg(b.icon) : '';
+            // Cor do texto fixa em branco, não herdada de b.icon_color -
+            // bug real reportado ao vivo: badge sem ícone também não tem
+            // icon_color (não faz sentido ter cor de ícone sem ícone), e
+            // "color" acima cai pro MESMO background_color do fundo -
+            // letra invisível, escondida na própria cor do círculo.
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -271,6 +310,12 @@ packSelect.addEventListener('change', () => {
 // --------------------------------------------------------
 
 function populateThemeSelect() {
+    // Preserva a seleção atual, se a pessoa já tiver escolhido algo -
+    // repopular a lista (depois que os temas do Supabase chegam) não
+    // deveria voltar pro padrão sem avisar, no raro caso de alguém
+    // escolher rápido o suficiente pra isso importar.
+    const previouslySelectedName = themes[Number(themeSelect.value)]?.name;
+
     themeSelect.innerHTML = '';
     themes.forEach((theme, index) => {
         const option = document.createElement('option');
@@ -278,9 +323,22 @@ function populateThemeSelect() {
         option.textContent = theme.name;
         themeSelect.appendChild(option);
     });
+
+    if (previouslySelectedName) {
+        const matchIndex = themes.findIndex((t) => t.name === previouslySelectedName);
+        if (matchIndex >= 0) themeSelect.value = String(matchIndex);
+    }
 }
 
 populateThemeSelect();
+
+// Busca temas do Supabase (públicos + os do próprio host logado) por
+// cima do padrão - não bloqueia nada, o jogo já está usável com só o
+// padrão enquanto isso carrega.
+loadRemoteThemes(window.ndquestSupabase).then((allThemes) => {
+    themes = allThemes;
+    populateThemeSelect();
+});
 
 function hexToRgbChannels(hex) {
     const clean = hex.replace('#', '');
@@ -504,20 +562,36 @@ function shuffleArray(array) {
     return copy;
 }
 
+// Bug real reportado ao vivo (no Tap Rush, mesmo padrão aqui): se a
+// Edge Function não estiver deployada, o servidor devolve uma página
+// de erro HTML, não JSON - response.json() explode sem avisar
+// direito. Sempre devolve { error } em vez de deixar a exceção subir
+// crua.
 async function callGameFunction(name, payload) {
-    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
-    const token = session?.access_token || window.ndquestSupabaseAnonKey;
+    try {
+        const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+        const token = session?.access_token || window.ndquestSupabaseAnonKey;
 
-    const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/${name}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-    });
+        const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/${name}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
 
-    return response.json();
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            console.error(`Show Down: ${name} devolveu ${response.status}`, text.slice(0, 200));
+            return { error: `Erro ${response.status} ao chamar ${name}` };
+        }
+
+        return await response.json();
+    } catch (err) {
+        console.error(`Show Down: erro de rede chamando ${name}`, err);
+        return { error: 'Erro de rede' };
+    }
 }
 
 async function buildQuestionsForPack(packSlug, numQuestionsWanted) {
@@ -573,6 +647,15 @@ let questionSecondsValue = 30;
 let currentQuestionIndex = -1;
 let questionTimerInterval = null;
 let playersRealtimeChannel = null;
+
+// Corrida real confirmada: recriar um canal com o MESMO nome do
+// anterior (mesma sala, rodada nova) não espera o removeChannel()
+// terminar de verdade antes de assinar de novo - o SDK às vezes
+// ainda "lembra" do nome antigo e a nova inscrição não pega, sem
+// erro nenhum aparecendo. Sufixo crescente em cada nome de canal
+// evita a colisão de raiz, em vez de tentar acertar o timing do
+// fechamento. Usado tanto pra players quanto pra answers.
+let realtimeChannelCounter = 0;
 let currentPackSlug = null;
 
 createRoomBtn.addEventListener('click', async () => {
@@ -751,7 +834,7 @@ function subscribeToPlayers(roomId) {
     }
 
     playersRealtimeChannel = window.ndquestSupabase
-        .channel(`show-down-players-${roomId}`)
+        .channel(`show-down-players-${roomId}-${++realtimeChannelCounter}`)
         .on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'showdown_players', filter: `room_id=eq.${roomId}` },
@@ -796,6 +879,14 @@ async function renderQuestionScreen(index, startedAtISO) {
     showScreen(screenQuestion);
 
     questionIndexLabel.textContent = t('question.indexLabel', { current: index + 1, total: numQuestionsTotal });
+
+    // Limpa o conteúdo da pergunta anterior JÁ, antes de qualquer
+    // busca assíncrona - sem isso, quem tem pacote oficial (não
+    // custom) via a pergunta antiga travada na tela durante o tempo
+    // que leva pra buscar a nova (reportado ao vivo: "tem um delay
+    // que carrega a pergunta anterior antes").
+    hostQuestionText.textContent = '';
+    hostAnswersGrid.innerHTML = '';
 
     if (selectedQuestions) {
         // Modo custom - conteúdo já está local, sem precisar de rede.
@@ -904,7 +995,7 @@ function subscribeToAnswers(roomId) {
     }
 
     answersRealtimeChannel = window.ndquestSupabase
-        .channel(`show-down-answers-${roomId}`)
+        .channel(`show-down-answers-${roomId}-${++realtimeChannelCounter}`)
         .on(
             'postgres_changes',
             { event: 'INSERT', schema: 'public', table: 'showdown_answers', filter: `room_id=eq.${roomId}` },
@@ -1023,6 +1114,54 @@ async function finishGame() {
 }
 
 // --------------------------------------------------------
+// Rodadas anteriores - mesmo padrão visual do Time Attack e do
+// Roulette (card "Rodada 1 / Rodada 2", mais recente primeiro).
+// Guardado em memória, só pra tela ao vivo do host nesta sessão -
+// o histórico de verdade já fica gravado em match_history/
+// guest_participants por rodada (ver play.js), isso aqui é
+// conveniência visual, igual nos outros dois jogos.
+// --------------------------------------------------------
+
+let previousRounds = [];
+
+function renderPreviousRounds() {
+
+    const card = document.getElementById('previous-rounds-card');
+    const list = document.getElementById('previous-rounds-list');
+    if (!card || !list) return;
+
+    if (previousRounds.length === 0) {
+        card.hidden = true;
+        return;
+    }
+
+    card.hidden = false;
+    list.innerHTML = '';
+
+    [...previousRounds].reverse().forEach((round) => {
+
+        const block = document.createElement('div');
+        block.className = 'previous-round-block';
+
+        const title = document.createElement('p');
+        title.className = 'previous-round-title';
+        title.textContent = `${t('finalRanking.roundLabel')} ${round.roundNumber}`;
+        block.appendChild(title);
+
+        round.results.forEach((player, index) => {
+            const row = document.createElement('div');
+            row.className = 'previous-round-row';
+            row.innerHTML = `<span>#${index + 1} ${player.nickname}</span><span>${player.total_score} ${t('ranking.pointsLabel')}</span>`;
+            block.appendChild(row);
+        });
+
+        list.appendChild(block);
+
+    });
+
+}
+
+// --------------------------------------------------------
 // Jogar de novo: mesma sala, mesmo código, mesmos jogadores -
 // só sorteia um novo conjunto de perguntas e zera o placar.
 // --------------------------------------------------------
@@ -1030,6 +1169,29 @@ async function finishGame() {
 playAgainBtn.addEventListener('click', async () => {
 
     playAgainBtn.disabled = true;
+
+    // Arquiva o placar da rodada que está fechando, e sobe
+    // round_number na sala - é isso que play.js lê pra saber qual
+    // rodada gravar no histórico de cada jogador (ver
+    // docs/MATCH_HISTORY_ARCHITECTURE.md e o mesmo padrão já usado
+    // no Time Attack). Busca o número atual em vez de confiar numa
+    // variável local, mesma razão do Time Attack: seguro aqui porque
+    // só o host clica nisso, sem concorrência real.
+    const { data: currentRoomData, error: fetchRoundError } = await window.ndquestSupabase
+        .from('showdown_rooms')
+        .select('round_number')
+        .eq('id', activeRoomId)
+        .maybeSingle();
+
+    if (fetchRoundError) console.error('Show Down: erro ao buscar round_number atual', fetchRoundError);
+
+    const roundBeingClosed = currentRoomData?.round_number || 1;
+    const nextRound = roundBeingClosed + 1;
+
+    const { data: finishedPlayers } = await window.ndquestSupabase
+        .from('showdown_players')
+        .select('nickname, total_score')
+        .eq('room_id', activeRoomId);
 
     const { questionIds, customQuestions: builtCustomQuestions, errorKey } = await buildQuestionsForPack(currentPackSlug, numQuestionsTotal);
     if (errorKey) {
@@ -1040,20 +1202,32 @@ playAgainBtn.addEventListener('click', async () => {
         return;
     }
 
-    // Limpa as respostas da partida anterior: sem isso, a trava de
-    // "uma resposta por pergunta por jogador" (unique de player_id +
-    // question_index) impediria qualquer um de responder de novo,
-    // já que os números das perguntas se repetem entre uma partida
-    // e outra na mesma sala.
-    await window.ndquestSupabase
-        .from('showdown_answers')
-        .delete()
-        .eq('room_id', activeRoomId);
+    // Limpa as respostas da partida anterior via Edge Function com
+    // chave de serviço, não direto daqui - sem isso, a trava de "uma
+    // resposta por pergunta por jogador" (unique de player_id +
+    // question_index) impediria qualquer um de responder de novo, já
+    // que os números das perguntas se repetem entre uma partida e
+    // outra na mesma sala. Ver showdown-reset-round: se essa limpeza
+    // falhasse calada por RLS (chamada direta do navegador do host,
+    // que não é o dono dessas linhas), era exatamente isso que
+    // travava o auto-encerramento a partir da 2ª rodada.
+    const resetResult = await callGameFunction('showdown-reset-round', { room_id: activeRoomId });
+    if (resetResult.error) {
+        console.error('Show Down play again error (reset):', resetResult.error);
+        playAgainBtn.disabled = false;
+        return;
+    }
 
-    await window.ndquestSupabase
-        .from('showdown_players')
-        .update({ total_score: 0 })
-        .eq('room_id', activeRoomId);
+    // Só arquiva a rodada DEPOIS do reset confirmado - bug real
+    // reportado ao vivo (no Tap Rush, mesmo padrão aqui): arquivar
+    // antes e resetar depois deixava uma "rodada fantasma" no card
+    // toda vez que o reset falhava (a rodada nunca de fato avançava,
+    // mas ficava registrada como se tivesse).
+    if (finishedPlayers && finishedPlayers.length > 0) {
+        const sorted = [...finishedPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
+        previousRounds.push({ roundNumber: roundBeingClosed, results: sorted });
+        renderPreviousRounds();
+    }
 
     const newNumQuestions = builtCustomQuestions ? builtCustomQuestions.length : questionIds.length;
 
@@ -1065,7 +1239,8 @@ playAgainBtn.addEventListener('click', async () => {
             num_questions: newNumQuestions,
             status: 'waiting',
             current_question_index: -1,
-            question_started_at: null
+            question_started_at: null,
+            round_number: nextRound
         })
         .eq('id', activeRoomId);
 

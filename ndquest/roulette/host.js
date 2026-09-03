@@ -16,7 +16,13 @@
 // ==================================================================
 
 import translations from './i18n/translations.js';
-import themes from './branding/branding-manifest.js';
+import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
+
+// Começa só com o tema padrão (mesma aparência de sempre, na hora),
+// depois é substituído pela lista completa (padrão + Supabase) assim
+// que a busca terminar - ver a chamada de loadRemoteThemes logo
+// abaixo de populateThemeSelect().
+let themes = getStaticThemes();
 
 // --------------------------------------------------------
 // Idioma
@@ -33,6 +39,38 @@ function t(key, vars) {
         });
     }
     return text;
+}
+
+// Mesmo padrão do Show Down/Time Attack/Tap Rush - chama Edge
+// Function com o token de quem estiver logado, ou a chave anônima se
+// ninguém estiver. Nunca deixa uma exceção subir crua (bug real
+// reportado ao vivo no Tap Rush: se a resposta não for JSON válido,
+// response.json() explode sem avisar direito).
+async function callGameFunction(name, payload) {
+    try {
+        const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+        const token = session?.access_token || window.ndquestSupabaseAnonKey;
+
+        const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/${name}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            console.error(`Roulette: ${name} devolveu ${response.status}`, text.slice(0, 200));
+            return { error: `Erro ${response.status} ao chamar ${name}` };
+        }
+
+        return await response.json();
+    } catch (err) {
+        console.error(`Roulette: erro de rede chamando ${name}`, err);
+        return { error: 'Erro de rede' };
+    }
 }
 
 // --------------------------------------------------------
@@ -67,7 +105,7 @@ async function loadPlayerBadgeMap(userIds) {
         window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', validIds),
         window.ndquestSupabase
             .from('user_badges')
-            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+            .select('user_id, badge_id, badges(name_pt, background_color, icon, icon_color, image_url, badge_shape)')
             .in('user_id', validIds),
     ]);
 
@@ -92,11 +130,44 @@ function buildMiniBadgeRow(badges) {
     if (!badges || badges.length === 0) return '';
     const chips = badges
         .map((b) => {
+            // Respeita a forma de verdade da badge (hex, coin, square...)
+            // em vez de sempre forçar círculo - bug real reportado ao
+            // vivo: "não pode cortar, qual o sentido disso?" - uma arte
+            // desenhada pro formato hexagonal (pontas, número no topo)
+            // ficava com as pontas cortadas quando o mini-badge sempre
+            // recortava em círculo, não importa a forma escolhida na
+            // criação. Mesmas classes/recortes que a badge em tamanho
+            // grande já usa (ver account.css .badge--*), só que na
+            // escala pequena - ver .mini-badge--* no CSS deste jogo.
+            // Imagem própria já vem com forma e fundo desenhados nela
+            // mesma - sem recorte extra, sem cor de fundo por trás
+            // (mesma correção aplicada na badge em tamanho grande, ver
+            // account.css .badge--image - senão sobra um "anel" da cor
+            // de fundo em volta da arte, onde o recorte daqui não bate
+            // pixel a pixel com o hexágono já desenhado na imagem).
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+
             if (b.image_url) {
-                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
             }
             const color = b.icon_color || b.background_color || '#888';
-            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+            // Badge sem ícone e sem imagem é uma opção válida na hora de
+            // criar (só forma+cor) - sem isso, ficava um círculo vazio
+            // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
+            // pra inicial do nome, mesmo espírito de um avatar sem foto.
+            // Checa o SVG de verdade, não só se b.icon existe - segunda
+            // rodada do mesmo bug reportada ao vivo: um ícone com valor
+            // que não bate com nenhuma chave conhecida (fora dos 8 que
+            // o sistema reconhece) também gera SVG vazio, e só olhar
+            // "b.icon existe" não pegava esse caso.
+            const iconSvg = b.icon ? buildMiniIconSvg(b.icon) : '';
+            // Cor do texto fixa em branco, não herdada de b.icon_color -
+            // bug real reportado ao vivo: badge sem ícone também não tem
+            // icon_color (não faz sentido ter cor de ícone sem ícone), e
+            // "color" acima cai pro MESMO background_color do fundo -
+            // letra invisível, escondida na própria cor do círculo.
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -228,6 +299,11 @@ function showScreen(el) {
 // --------------------------------------------------------
 
 function populateThemeSelect() {
+    // Preserva a seleção atual, se a pessoa já tiver escolhido algo -
+    // repopular a lista (depois que os temas do Supabase chegam) não
+    // deveria voltar pro padrão sem avisar.
+    const previouslySelectedName = themes[Number(themeSelect.value)]?.name;
+
     themeSelect.innerHTML = '';
     themes.forEach((theme, index) => {
         const option = document.createElement('option');
@@ -235,9 +311,22 @@ function populateThemeSelect() {
         option.textContent = theme.name;
         themeSelect.appendChild(option);
     });
+
+    if (previouslySelectedName) {
+        const matchIndex = themes.findIndex((t) => t.name === previouslySelectedName);
+        if (matchIndex >= 0) themeSelect.value = String(matchIndex);
+    }
 }
 
 populateThemeSelect();
+
+// Busca temas do Supabase (públicos + os do próprio host logado) por
+// cima do padrão - não bloqueia nada, o jogo já está usável com só o
+// padrão enquanto isso carrega.
+loadRemoteThemes(window.ndquestSupabase).then((allThemes) => {
+    themes = allThemes;
+    populateThemeSelect();
+});
 
 function hexToRgbChannels(hex) {
     const clean = hex.replace('#', '');
@@ -414,6 +503,7 @@ function generateRoomCode() {
 
 let qrRoomId = null;
 let qrRoomCode = null;
+let qrRoomHostId = null;
 let qrRealtimeChannel = null;
 
 qrCreateBtn.addEventListener('click', async () => {
@@ -469,6 +559,7 @@ qrCreateBtn.addEventListener('click', async () => {
 
     qrRoomId = data.id;
     qrRoomCode = roomCode;
+    qrRoomHostId = data.host_id;
 
     qrBeforeCreate.hidden = true;
     qrAfterCreate.hidden = false;
@@ -835,7 +926,7 @@ async function onSpinComplete(winnerIndex, winnerName) {
     // própria" (QR/código) - o modo "importar" sorteia nomes de OUTRO
     // jogo, não existe sala de roleta de verdade por trás pra gravar.
     if (qrRoomId && qrRoomCode) {
-        recordWinnerInHistory(qrRoomId, qrRoomCode, winnerName, winners.length);
+        recordWinnerInHistory(qrRoomId, qrRoomCode, winnerName, winners.length, roundCounter);
     }
 
     if (removeWinnerToggle.checked) {
@@ -850,48 +941,28 @@ async function onSpinComplete(winnerIndex, winnerName) {
     }
 }
 
-// Encontra a linha real do vencedor (via roulette_players, que tem o
-// user_id confiável) e marca o resultado no lugar certo - logado vai
-// pro match_history (via política nova, host só mexe em roleta que
-// ele mesmo hospedou), anônimo vai pro guest_participants. placement
-// é a ordem em que a pessoa foi sorteada, não uma posição de "1º
-// lugar" única - múltiplos sorteios na mesma sala geram várias
-// posições (1, 2, 3...).
-async function recordWinnerInHistory(roomId, roomCode, winnerName, placement) {
+// Grava o resultado via Edge Function com chave de serviço, não
+// direto daqui - bug real reportado ao vivo: quem faz a chamada
+// direta é a sessão do HOST, não do vencedor, e a política de
+// segurança do match_history só deixa gravar uma linha sobre você
+// mesmo. Host gravando em nome de outra conta era bloqueado, calado
+// (a pessoa via o resultado certinho na tela ao vivo, mas o histórico
+// dela nunca recebia). Ver docs em roulette-record-winner. placement
+// é a ordem em que a pessoa foi sorteada NAQUELA rodada, não uma
+// posição de "1º lugar" única - múltiplos sorteios na mesma rodada
+// geram várias posições (1, 2, 3...).
+async function recordWinnerInHistory(roomId, roomCode, winnerName, placement, roundNumber) {
+    const result = await callGameFunction('roulette-record-winner', {
+        room_id: roomId,
+        room_code: roomCode,
+        winner_name: winnerName,
+        placement,
+        round_number: roundNumber,
+    });
 
-    const { data: winnerPlayerRow, error: playerLookupError } = await window.ndquestSupabase
-        .from('roulette_players')
-        .select('user_id, nickname')
-        .eq('room_id', roomId)
-        .eq('nickname', winnerName)
-        .maybeSingle();
-
-    if (playerLookupError || !winnerPlayerRow) {
-        console.error('Roulette: não achou a linha do vencedor pra gravar o resultado', playerLookupError);
-        return;
+    if (result.error) {
+        console.error('Roulette: erro ao gravar vencedor no histórico', result.error);
     }
-
-    if (winnerPlayerRow.user_id) {
-        const { error } = await window.ndquestSupabase
-            .from('match_history')
-            .update({ placement })
-            .eq('user_id', winnerPlayerRow.user_id)
-            .eq('game', 'roulette')
-            .eq('room_code', roomCode)
-            .eq('role', 'player');
-
-        if (error) console.error('Roulette: erro ao gravar vencedor logado no histórico', error);
-    } else {
-        const { error } = await window.ndquestSupabase
-            .from('guest_participants')
-            .update({ placement })
-            .eq('nickname', winnerPlayerRow.nickname)
-            .eq('game', 'roulette')
-            .eq('room_code', roomCode);
-
-        if (error) console.error('Roulette: erro ao gravar vencedor guest no histórico', error);
-    }
-
 }
 
 // --------------------------------------------------------
@@ -975,14 +1046,26 @@ function renderPreviousRounds() {
     });
 }
 
-spinAgainBtn.addEventListener('click', () => {
+spinAgainBtn.addEventListener('click', async () => {
     // Arquiva a rodada que está fechando, em vez de só apagar -
     // reportado ao vivo: "quero esse esquema de rodada 1, rodada 2
-    // que tem no Time Attack, aqui também".
+    // que tem no Time Attack, aqui também". round_number sobe junto
+    // na sala (mesmo padrão do Time Attack e do Show Down) - é o que
+    // faz cada vitória gravada em recordWinnerInHistory saber de qual
+    // rodada ela é.
     if (winners.length > 0) {
         previousRounds.push({ roundNumber: roundCounter, results: [...winners] });
         roundCounter += 1;
         renderPreviousRounds();
+
+        if (qrRoomId) {
+            const { error: roundUpdateError } = await window.ndquestSupabase
+                .from('roulette_rooms')
+                .update({ round_number: roundCounter })
+                .eq('id', qrRoomId);
+
+            if (roundUpdateError) console.error('Roulette: erro ao atualizar round_number da sala', roundUpdateError);
+        }
     }
 
     currentPool = [...originalPool];
@@ -1006,6 +1089,7 @@ changeNamesLink.addEventListener('click', (event) => {
     roundCounter = 1;
     qrRoomId = null;
     qrRoomCode = null;
+    qrRoomHostId = null;
 
     if (qrRealtimeChannel) {
         window.ndquestSupabase.removeChannel(qrRealtimeChannel);

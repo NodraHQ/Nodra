@@ -1,16 +1,15 @@
 {
   "meta.title": "Admin: Nodra",
-
   "state.loading": "Checking access...",
   "state.signedOut": "You need to sign in first.",
   "state.signInLink": "Go to sign in",
   "state.notAdmin": "Not authorized.",
-
   "tabs.rooms": "Live Rooms",
   "tabs.users": "Users",
   "tabs.badges": "Badges",
   "tabs.analytics": "Analytics",
-
+  "tabs.packs": "Submitted Packs",
+  "tabs.themes": "Submitted Themes",
   "rooms.refresh": "Refresh",
   "rooms.game": "Game",
   "rooms.code": "Code",
@@ -18,7 +17,6 @@
   "rooms.status": "Status",
   "rooms.created": "Created",
   "rooms.empty": "No rooms found.",
-
   "users.searchPlaceholder": "Search by username...",
   "vipCode.days": "Days",
   "vipCode.maxUses": "Max uses",
@@ -41,11 +39,19 @@
   "users.joined": "Joined",
   "users.empty": "No users found.",
   "badges.empty": "No badges created yet.",
+  "packs.empty": "No pending packs right now.",
+  "packs.approveBtn": "Approve",
+  "packs.rejectBtn": "Reject",
+  "packs.approveSuccess": "Approved! Pack is now live in the games.",
+  "packs.rejectSuccess": "Rejected.",
+  "packs.questionsLabel": "questions",
   "users.grantVip": "Grant VIP",
   "users.revokeVip": "Revoke VIP",
-
   "analytics.totalUsers": "Total users",
   "analytics.totalRooms": "Rooms created",
   "analytics.badgesMinted": "Badges minted",
-  "analytics.signupsTitle": "Signups, last 30 days"
+  "analytics.signupsTitle": "Signups, last 30 days",
+  "themes.empty": "No pending themes right now.",
+  "themes.rejectNotesPlaceholder": "Reason (required to reject)",
+  "themes.rejectNotesRequired": "A reason is required to reject."
 }

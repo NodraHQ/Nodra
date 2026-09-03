@@ -60,7 +60,7 @@ async function loadPlayerBadgeMap(userIds) {
         window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', validIds),
         window.ndquestSupabase
             .from('user_badges')
-            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+            .select('user_id, badge_id, badges(name_pt, background_color, icon, icon_color, image_url, badge_shape)')
             .in('user_id', validIds),
     ]);
 
@@ -85,11 +85,44 @@ function buildMiniBadgeRow(badges) {
     if (!badges || badges.length === 0) return '';
     const chips = badges
         .map((b) => {
+            // Respeita a forma de verdade da badge (hex, coin, square...)
+            // em vez de sempre forçar círculo - bug real reportado ao
+            // vivo: "não pode cortar, qual o sentido disso?" - uma arte
+            // desenhada pro formato hexagonal (pontas, número no topo)
+            // ficava com as pontas cortadas quando o mini-badge sempre
+            // recortava em círculo, não importa a forma escolhida na
+            // criação. Mesmas classes/recortes que a badge em tamanho
+            // grande já usa (ver account.css .badge--*), só que na
+            // escala pequena - ver .mini-badge--* no CSS deste jogo.
+            // Imagem própria já vem com forma e fundo desenhados nela
+            // mesma - sem recorte extra, sem cor de fundo por trás
+            // (mesma correção aplicada na badge em tamanho grande, ver
+            // account.css .badge--image - senão sobra um "anel" da cor
+            // de fundo em volta da arte, onde o recorte daqui não bate
+            // pixel a pixel com o hexágono já desenhado na imagem).
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+
             if (b.image_url) {
-                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
             }
             const color = b.icon_color || b.background_color || '#888';
-            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+            // Badge sem ícone e sem imagem é uma opção válida na hora de
+            // criar (só forma+cor) - sem isso, ficava um círculo vazio
+            // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
+            // pra inicial do nome, mesmo espírito de um avatar sem foto.
+            // Checa o SVG de verdade, não só se b.icon existe - segunda
+            // rodada do mesmo bug reportada ao vivo: um ícone com valor
+            // que não bate com nenhuma chave conhecida (fora dos 8 que
+            // o sistema reconhece) também gera SVG vazio, e só olhar
+            // "b.icon existe" não pegava esse caso.
+            const iconSvg = b.icon ? buildMiniIconSvg(b.icon) : '';
+            // Cor do texto fixa em branco, não herdada de b.icon_color -
+            // bug real reportado ao vivo: badge sem ícone também não tem
+            // icon_color (não faz sentido ter cor de ícone sem ícone), e
+            // "color" acima cai pro MESMO background_color do fundo -
+            // letra invisível, escondida na própria cor do círculo.
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -507,6 +540,15 @@ function reactToRoomState(room) {
         renderedQuestionIndex = -1;
         hasAnsweredThisQuestion = false;
         historyRecordedForRoom = null; // novo round na mesma sala (Jogar de novo) - reabre a trava
+        // Bug real reportado ao vivo (no Tap Rush, mesmo padrão aqui):
+        // reactToRoomState('waiting') pode disparar mais de uma vez
+        // seguida pro mesmo estado. Chamar startHeartbeat() sem essa
+        // trava mata e recria o intervalo do sinal de vida a cada
+        // disparo - se os disparos vierem mais rápido que o intervalo
+        // de 10s do próprio sinal de vida, ele nunca sobrevive tempo
+        // suficiente pra bater uma vez sequer. Só religa se não tiver
+        // um já rodando.
+        if (!heartbeatInterval) startHeartbeat();
         showScreen(screenWaitingPlayer);
         return;
     }
@@ -594,6 +636,15 @@ async function renderQuestion(room) {
         // antes (durante a tela de resultado da anterior) - evita
         // esperar de novo por algo que já está a caminho.
         const usedPrefetch = prefetchedQuestionIndex === index && prefetchedQuestionPromise;
+
+        if (!usedPrefetch) {
+            // Sem pré-carregamento pronto - limpa o texto da pergunta
+            // anterior já, antes do fetch, mesma razão do host (ver
+            // renderQuestionScreen em host.js): sem isso, a pergunta
+            // velha fica travada na tela durante a busca.
+            questionText.textContent = '';
+            answersGrid.innerHTML = '';
+        }
 
         const data = usedPrefetch
             ? await prefetchedQuestionPromise
@@ -856,6 +907,7 @@ async function renderFinal(room) {
                     role: 'player',
                     game: 'show_down',
                     room_code: currentRoom.room_code,
+                    round_number: currentRoom.round_number || 1,
                     placement: myPosition > 0 ? myPosition : null,
                     details: { total_score: myRow ? myRow.total_score : 0 }
                 });
@@ -870,6 +922,7 @@ async function renderFinal(room) {
                     host_id: currentRoom.host_id,
                     game: 'show_down',
                     room_code: currentRoom.room_code,
+                    round_number: currentRoom.round_number || 1,
                     nickname: myRow ? myRow.nickname : '',
                     placement: myPosition > 0 ? myPosition : null,
                     details: { total_score: myRow ? myRow.total_score : 0 }

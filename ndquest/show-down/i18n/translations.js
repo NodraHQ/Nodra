@@ -60,6 +60,9 @@ const translations = {
     // TELA DO HOST — ranking final
     'finalRanking.title': 'Fim de Jogo',
     'finalRanking.subtitle': 'Esse foi o resultado do time.',
+    'finalRanking.previousRounds': 'Rodadas Anteriores',
+    'finalRanking.roundLabel': 'Rodada',
+    'finalRanking.rankingLabel': 'Ranking',
 
     // TELA DO JOGADOR — entrar
     'join.eyebrow': 'Show Down',
@@ -155,6 +158,9 @@ const translations = {
     // HOST SCREEN — final ranking
     'finalRanking.title': 'Game Over',
     'finalRanking.subtitle': "That's how the crew did.",
+    'finalRanking.previousRounds': 'Previous Rounds',
+    'finalRanking.roundLabel': 'Round',
+    'finalRanking.rankingLabel': 'Ranking',
 
     // PLAYER SCREEN — join
     'join.eyebrow': 'Show Down',

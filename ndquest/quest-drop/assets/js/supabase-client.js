@@ -18,3 +18,11 @@ window.ndquestSupabase = supabase.createClient(
     NDQUEST_SUPABASE_URL,
     NDQUEST_SUPABASE_PUBLISHABLE_KEY
 );
+
+// Exposto separado - precisa pra montar a URL das Edge Functions
+// (${URL}/functions/v1/nome-da-funcao). Quest Drop não chamava
+// nenhuma até agora, passou a precisar com ndquest-get-themes (ver
+// branding/branding-manifest.js) - mesmo padrão que os outros jogos
+// já usavam.
+window.ndquestSupabaseUrl = NDQUEST_SUPABASE_URL;
+window.ndquestSupabaseAnonKey = NDQUEST_SUPABASE_PUBLISHABLE_KEY;

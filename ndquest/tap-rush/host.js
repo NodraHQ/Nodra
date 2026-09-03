@@ -20,7 +20,13 @@
 // ==================================================================
 
 import translations from './i18n/translations.js';
-import themes from './branding/branding-manifest.js';
+import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
+
+// Começa só com o tema padrão (mesma aparência de sempre, na hora),
+// depois é substituído pela lista completa (padrão + Supabase) assim
+// que a busca terminar - ver a chamada de loadRemoteThemes logo
+// abaixo de populateThemeSelect().
+let themes = getStaticThemes();
 
 // --------------------------------------------------------
 // Idioma
@@ -66,6 +72,41 @@ function buildMiniIconSvg(iconKey) {
     return `<svg class="mini-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 }
 
+// Mesmo padrão do Show Down/Time Attack - chama Edge Function com o
+// token de quem estiver logado, ou a chave anônima se ninguém estiver
+// (jogar sem login é um caminho válido).
+// Bug real reportado ao vivo: se a Edge Function não estiver
+// deployada (ou a URL vier undefined por algum motivo), o servidor
+// devolve uma página de erro HTML, não JSON - response.json() explode
+// sem avisar direito, e quem chamou nunca fica sabendo que falhou.
+// Sempre devolve { error } em vez de deixar a exceção subir crua.
+async function callGameFunction(name, payload) {
+    try {
+        const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+        const token = session?.access_token || window.ndquestSupabaseAnonKey;
+
+        const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/${name}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            console.error(`Tap Rush: ${name} devolveu ${response.status}`, text.slice(0, 200));
+            return { error: `Erro ${response.status} ao chamar ${name}` };
+        }
+
+        return await response.json();
+    } catch (err) {
+        console.error(`Tap Rush: erro de rede chamando ${name}`, err);
+        return { error: 'Erro de rede' };
+    }
+}
+
 // Cache por user_id, com validade de 60s (não pra sempre) -
 // reportado ao vivo: um cache sem validade mostrava dado velho se a
 // pessoa mudasse a curadoria dos próprios badges no meio da partida
@@ -86,7 +127,7 @@ async function loadPlayerBadgeMap(userIds) {
             window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', uncached),
             window.ndquestSupabase
                 .from('user_badges')
-                .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+                .select('user_id, badge_id, badges(name_pt, background_color, icon, icon_color, image_url, badge_shape)')
                 .in('user_id', uncached),
         ]);
 
@@ -114,27 +155,47 @@ function buildMiniBadgeRow(badges) {
     if (!badges || badges.length === 0) return '';
     const chips = badges
         .map((b) => {
+            // Respeita a forma de verdade da badge (hex, coin, square...)
+            // em vez de sempre forçar círculo - bug real reportado ao
+            // vivo: "não pode cortar, qual o sentido disso?" - uma arte
+            // desenhada pro formato hexagonal (pontas, número no topo)
+            // ficava com as pontas cortadas quando o mini-badge sempre
+            // recortava em círculo, não importa a forma escolhida na
+            // criação. Mesmas classes/recortes que a badge em tamanho
+            // grande já usa (ver account.css .badge--*), só que na
+            // escala pequena - ver .mini-badge--* no CSS deste jogo.
+            // Imagem própria já vem com forma e fundo desenhados nela
+            // mesma - sem recorte extra, sem cor de fundo por trás
+            // (mesma correção aplicada na badge em tamanho grande, ver
+            // account.css .badge--image - senão sobra um "anel" da cor
+            // de fundo em volta da arte, onde o recorte daqui não bate
+            // pixel a pixel com o hexágono já desenhado na imagem).
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+
             if (b.image_url) {
-                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
             }
             const color = b.icon_color || b.background_color || '#888';
-            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+            // Badge sem ícone e sem imagem é uma opção válida na hora de
+            // criar (só forma+cor) - sem isso, ficava um círculo vazio
+            // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
+            // pra inicial do nome, mesmo espírito de um avatar sem foto.
+            // Checa o SVG de verdade, não só se b.icon existe - segunda
+            // rodada do mesmo bug reportada ao vivo: um ícone com valor
+            // que não bate com nenhuma chave conhecida (fora dos 8 que
+            // o sistema reconhece) também gera SVG vazio, e só olhar
+            // "b.icon existe" não pegava esse caso.
+            const iconSvg = b.icon ? buildMiniIconSvg(b.icon) : '';
+            // Cor do texto fixa em branco, não herdada de b.icon_color -
+            // bug real reportado ao vivo: badge sem ícone também não tem
+            // icon_color (não faz sentido ter cor de ícone sem ícone), e
+            // "color" acima cai pro MESMO background_color do fundo -
+            // letra invisível, escondida na própria cor do círculo.
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
-}
-
-// Leitura síncrona do cache - pra usar dentro do loop de renderização
-// da pista de corrida (que roda a cada toque, não pode esperar rede).
-// Devolve [] se ainda não tiver sido aquecido (ou se já expirou) pra
-// essa pessoa - o badge simplesmente aparece um instante depois,
-// quando o próximo aquecimento em segundo plano terminar, sem travar
-// a corrida em si.
-function getBadgesFromCacheSync(userId) {
-    if (!userId) return [];
-    const cached = playerBadgeCache.get(userId);
-    if (!cached || Date.now() - cached.cachedAt > BADGE_CACHE_TTL_MS) return [];
-    return cached.badges;
 }
 
 // --------------------------------------------------------
@@ -250,6 +311,11 @@ function showScreen(el) {
 // --------------------------------------------------------
 
 function populateThemeSelect() {
+    // Preserva a seleção atual, se a pessoa já tiver escolhido algo -
+    // repopular a lista (depois que os temas do Supabase chegam) não
+    // deveria voltar pro padrão sem avisar.
+    const previouslySelectedName = themes[Number(themeSelect.value)]?.name;
+
     themeSelect.innerHTML = '';
     themes.forEach((theme, index) => {
         const option = document.createElement('option');
@@ -257,9 +323,22 @@ function populateThemeSelect() {
         option.textContent = theme.name;
         themeSelect.appendChild(option);
     });
+
+    if (previouslySelectedName) {
+        const matchIndex = themes.findIndex((t) => t.name === previouslySelectedName);
+        if (matchIndex >= 0) themeSelect.value = String(matchIndex);
+    }
 }
 
 populateThemeSelect();
+
+// Busca temas do Supabase (públicos + os do próprio host logado) por
+// cima do padrão - não bloqueia nada, o jogo já está usável com só o
+// padrão enquanto isso carrega.
+loadRemoteThemes(window.ndquestSupabase).then((allThemes) => {
+    themes = allThemes;
+    populateThemeSelect();
+});
 
 function hexToRgbChannels(hex) {
     const clean = hex.replace('#', '');
@@ -387,9 +466,24 @@ let activeRoomCode = null;
 let roundConfig = {};
 let playersRealtimeChannel = null;
 
+// Mesma corrida real confirmada no Show Down: recriar um canal com o
+// MESMO nome do anterior (mesma sala, rodada nova) não espera o
+// removeChannel() terminar de verdade antes de assinar de novo - o
+// SDK às vezes ainda "lembra" do nome antigo e a nova inscrição não
+// pega, sem erro nenhum aparecendo. Sufixo crescente em cada nome de
+// canal evita a colisão de raiz.
+let realtimeChannelCounter = 0;
+
 createRoomBtn.addEventListener('click', async () => {
 
     configError.textContent = '';
+
+    // Bug real reportado ao vivo: criar uma sala nova sem recarregar
+    // a página deixava o card "Rodadas Anteriores" com o resquício
+    // da sala testada antes - o array só é limpo aqui, na criação,
+    // nunca sozinho.
+    previousRounds = [];
+    renderPreviousRounds();
 
     const hostName = hostNameInput.value.trim();
     if (!hostName) {
@@ -540,44 +634,40 @@ function renderWaitingPlayers(players) {
     });
 }
 
+// Mesmo padrão do Show Down/Time Attack: qualquer mudança busca a
+// lista inteira de novo, sem acumular estado em memória por conta
+// própria. O Tap Rush tinha uma versão "otimizada" (mesclava direto
+// da notificação, sem rebuscar) pra aguentar toque rápido sem
+// sobrecarregar - mas essa mesma esperteza é a fonte mais provável
+// do bug real reportado ao vivo: sala 1 certa, sala 2 só o guest
+// aparecia, sala 3 sumiu todo mundo - degradando a cada rodada nova,
+// clássico de estado acumulado em memória que nunca fica
+// perfeitamente sincronizado com o banco entre uma rodada e outra.
+// Correto importa mais que rápido aqui - o batching por
+// requestAnimationFrame (scheduleRenderFromLatestPlayers) continua
+// evitando redesenhar o DOM a cada notificação, só a BUSCA que
+// deixou de ser esperta.
 function subscribeToPlayers(roomId) {
-    loadPlayers(roomId).then((players) => {
-        latestPlayers = players;
-        renderWaitingPlayers(players);
-    });
+
+    function refreshPlayers() {
+        loadPlayers(roomId).then((players) => {
+            latestPlayers = players;
+            scheduleRenderFromLatestPlayers();
+        });
+    }
+
+    refreshPlayers();
 
     if (playersRealtimeChannel) {
         window.ndquestSupabase.removeChannel(playersRealtimeChannel);
     }
 
     playersRealtimeChannel = window.ndquestSupabase
-        .channel(`tap-rush-players-${roomId}`)
+        .channel(`tap-rush-players-${roomId}-${++realtimeChannelCounter}`)
         .on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'tap_rush_players', filter: `room_id=eq.${roomId}` },
-            (payload) => {
-                // Aplica a mudança direto em memória a partir do que já
-                // vem na notificação, sem buscar tudo de novo no banco.
-                // Antes, cada toque de cada jogador (a cada ~150ms)
-                // disparava uma busca completa da tabela inteira - com
-                // 3-4 pessoas tocando rápido isso empilhava pedidos e
-                // travava a tela por um tempo.
-                if (payload.eventType === 'INSERT') {
-                    latestPlayers = [...latestPlayers, payload.new];
-                } else if (payload.eventType === 'UPDATE') {
-                    // Mescla em vez de substituir - bug real já
-                    // confirmado ao vivo em outro jogo: o pacote de
-                    // UPDATE às vezes só traz os campos que mudaram,
-                    // não a linha inteira. Substituir por completo
-                    // apagaria nickname/team/tap_count sempre que só
-                    // last_seen_at mudasse (o sinal de vida do
-                    // jogador, a cada 10s).
-                    latestPlayers = latestPlayers.map((p) => (p.id === payload.new.id ? { ...p, ...payload.new } : p));
-                } else if (payload.eventType === 'DELETE') {
-                    latestPlayers = latestPlayers.filter((p) => p.id !== payload.old.id);
-                }
-                scheduleRenderFromLatestPlayers();
-            }
+            refreshPlayers
         )
         .subscribe();
 
@@ -585,12 +675,7 @@ function subscribeToPlayers(roomId) {
     // isso garante que a lista e a pista/corda sempre acabam
     // atualizando, só um pouco mais devagar (a cada 1.5s).
     if (playersPollInterval) clearInterval(playersPollInterval);
-    playersPollInterval = setInterval(() => {
-        loadPlayers(roomId).then((players) => {
-            latestPlayers = players;
-            scheduleRenderFromLatestPlayers();
-        });
-    }, 1500);
+    playersPollInterval = setInterval(refreshPlayers, 1500);
 }
 
 let playersPollInterval = null;
@@ -723,7 +808,7 @@ function renderActiveView(players) {
                     <div class="race-lane">
                         <div class="race-lane__fill" style="width:${pct}%"></div>
                         <div class="race-lane__label">
-                            <span class="race-lane__name-block"><span>${p.nickname}</span>${buildMiniBadgeRow(getBadgesFromCacheSync(p.user_id))}</span>
+                            <span>${p.nickname}</span>
                             <span>${p.tap_count}</span>
                         </div>
                         <div class="race-lane__finish"></div>
@@ -731,12 +816,6 @@ function renderActiveView(players) {
                 `;
             })
             .join('');
-
-        // Aquece o cache em segundo plano - a corrida em si nunca
-        // espera essa chamada, o badge só aparece assim que estiver
-        // pronto, na próxima atualização (que já vai acontecer sozinha
-        // no próximo toque de qualquer jogador).
-        loadPlayerBadgeMap(players.map((p) => p.user_id));
     } else {
         const teamA = players.filter((p) => p.team === 'A').reduce((sum, p) => sum + p.tap_count, 0);
         const teamB = players.filter((p) => p.team === 'B').reduce((sum, p) => sum + p.tap_count, 0);
@@ -797,6 +876,13 @@ async function endRound(winnerPlayerIdFromRace) {
     renderResults(players, winnerPlayerId, winnerTeam);
 }
 
+// Guarda o resultado da última rodada renderizada, pra arquivar em
+// previousRounds quando o host clicar "Jogar de Novo" - captura aqui
+// (quando o resultado já está fechado) em vez de reconsultar o banco
+// depois, porque playAgainBtn já reseta tap_count antes de qualquer
+// outra coisa poder ler esse número de novo.
+let lastRoundResult = null;
+
 async function renderResults(players, winnerPlayerId, winnerTeam) {
 
     showScreen(screenResults);
@@ -812,6 +898,7 @@ async function renderResults(players, winnerPlayerId, winnerTeam) {
         resultsWinnerName.textContent = winner ? `${t('results.winnerLabel')} ${winner.nickname}` : '';
 
         lastRankingForCopy = sorted.map((p) => `${p.nickname} - ${p.tap_count}`);
+        lastRoundResult = { mode: roundConfig.mode, sorted };
 
         const badgeMap = await loadPlayerBadgeMap(sorted.map((p) => p.user_id));
 
@@ -828,17 +915,16 @@ async function renderResults(players, winnerPlayerId, winnerTeam) {
             `)
             .join('');
     } else {
-        const teamA = players.filter((p) => p.team === 'A').reduce((sum, p) => sum + p.tap_count, 0);
-        const teamB = players.filter((p) => p.team === 'B').reduce((sum, p) => sum + p.tap_count, 0);
-        const winningTeam = teamA === teamB ? null : (teamA > teamB ? 'A' : 'B');
-
-        resultsWinnerName.textContent = winningTeam
-            ? `${t('results.teamWinnerLabel')} ${t(winningTeam === 'A' ? 'active.teamA' : 'active.teamB')}`
+        // winnerTeam já vem calculado e gravado por endRound (fonte
+        // única, ver comentário lá) - não recalcula aqui.
+        resultsWinnerName.textContent = winnerTeam
+            ? `${t('results.teamWinnerLabel')} ${t(winnerTeam === 'A' ? 'active.teamA' : 'active.teamB')}`
             : '🤝';
 
         const sorted = [...players].sort((a, b) => b.tap_count - a.tap_count);
 
         lastRankingForCopy = sorted.map((p) => `${p.nickname} (${p.team}) - ${p.tap_count}`);
+        lastRoundResult = { mode: roundConfig.mode, sorted, winnerTeam };
 
         const badgeMap = await loadPlayerBadgeMap(sorted.map((p) => p.user_id));
 
@@ -855,6 +941,54 @@ async function renderResults(players, winnerPlayerId, winnerTeam) {
             `)
             .join('');
     }
+}
+
+// --------------------------------------------------------
+// Rodadas anteriores - mesmo padrão visual do Time Attack, Roulette
+// e Show Down (card "Rodada 1 / Rodada 2", mais recente primeiro).
+// Só pra tela ao vivo do host nesta sessão - o histórico de verdade
+// já fica gravado em match_history/guest_participants por rodada
+// (ver play.js).
+// --------------------------------------------------------
+
+let previousRounds = [];
+
+function renderPreviousRounds() {
+
+    const card = document.getElementById('previous-rounds-card');
+    const list = document.getElementById('previous-rounds-list');
+    if (!card || !list) return;
+
+    if (previousRounds.length === 0) {
+        card.hidden = true;
+        return;
+    }
+
+    card.hidden = false;
+    list.innerHTML = '';
+
+    [...previousRounds].reverse().forEach((round) => {
+
+        const block = document.createElement('div');
+        block.className = 'previous-round-block';
+
+        const title = document.createElement('p');
+        title.className = 'previous-round-title';
+        title.textContent = `${t('results.roundLabel')} ${round.roundNumber}`;
+        block.appendChild(title);
+
+        round.result.sorted.forEach((player) => {
+            const row = document.createElement('div');
+            row.className = 'previous-round-row';
+            const nameSuffix = round.result.mode === 'tugofwar' ? ` (${player.team})` : '';
+            row.innerHTML = `<span>${player.nickname}${nameSuffix}</span><span>${player.tap_count}</span>`;
+            block.appendChild(row);
+        });
+
+        list.appendChild(block);
+
+    });
+
 }
 
 // --------------------------------------------------------
@@ -888,17 +1022,63 @@ copyRankingBtn.addEventListener('click', async () => {
 
 playAgainBtn.addEventListener('click', async () => {
 
-    await window.ndquestSupabase
-        .from('tap_rush_players')
-        .update({ tap_count: 0 })
-        .eq('room_id', activeRoomId);
+    // Trava contra duplo clique - bug real reportado ao vivo: sem
+    // desabilitar o botão, dois cliques rápidos disparavam duas
+    // execuções em paralelo, cada uma lendo o mesmo round_number
+    // antigo e arquivando a MESMA rodada duas vezes no card (mesmo
+    // placar duplicado). A leitura de round_number continua "segura"
+    // contra outra pessoa mexendo na sala ao mesmo tempo - o risco
+    // real era o próprio host clicando duas vezes, que isso aqui
+    // fecha.
+    if (playAgainBtn.disabled) return;
+    playAgainBtn.disabled = true;
+
+    // Arquiva o resultado da rodada que está fechando, e sobe
+    // round_number na sala - é isso que play.js lê pra saber qual
+    // rodada gravar no histórico de cada jogador (ver
+    // docs/MATCH_HISTORY_ARCHITECTURE.md e o mesmo padrão já usado
+    // no Time Attack e no Show Down).
+    const { data: currentRoomData, error: fetchRoundError } = await window.ndquestSupabase
+        .from('tap_rush_rooms')
+        .select('round_number')
+        .eq('id', activeRoomId)
+        .maybeSingle();
+
+    if (fetchRoundError) console.error('Tap Rush: erro ao buscar round_number atual', fetchRoundError);
+
+    const roundBeingClosed = currentRoomData?.round_number || 1;
+    const nextRound = roundBeingClosed + 1;
+
+    // Zera tap_count via Edge Function com chave de serviço, não
+    // direto daqui - mesmo motivo do Show Down (ver
+    // showdown-reset-round): chamada direta do navegador do host
+    // depende dele ter permissão de RLS pra mexer em linhas que não
+    // são dele, e se não tiver, falha calada, contaminando o
+    // ranking da rodada nova com pontos da anterior. Roda ANTES de
+    // arquivar a rodada - bug real reportado ao vivo: arquivar
+    // primeiro e resetar depois deixava uma "rodada fantasma" no
+    // card sempre que o reset falhava (a rodada nunca de fato
+    // avançava, mas ficava registrada como se tivesse).
+    const resetResult = await callGameFunction('tap-rush-reset-round', { room_id: activeRoomId });
+    if (resetResult.error) {
+        console.error('Tap Rush play again error (reset):', resetResult.error);
+        playAgainBtn.disabled = false;
+        return;
+    }
+
+    if (lastRoundResult) {
+        previousRounds.push({ roundNumber: roundBeingClosed, result: lastRoundResult });
+        renderPreviousRounds();
+    }
 
     const { data, error } = await window.ndquestSupabase
         .from('tap_rush_rooms')
-        .update({ status: 'waiting', round_started_at: null })
+        .update({ status: 'waiting', round_started_at: null, round_number: nextRound })
         .eq('id', activeRoomId)
         .select()
         .single();
+
+    playAgainBtn.disabled = false;
 
     if (error) {
         console.error('Tap Rush play again error:', error);

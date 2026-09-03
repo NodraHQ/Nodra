@@ -12,8 +12,14 @@
    sistema de manifestos, é um terceiro caminho além dele.
    ========================================================= */
 import questionPacks from './questions/questions-manifest.js';
-import themes from './branding/branding-manifest.js';
+import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 import translations from './i18n/translations.js';
+
+// Começa só com o tema padrão (mesma aparência de sempre, na hora),
+// depois é substituído pela lista completa (padrão + Supabase) assim
+// que a busca terminar - ver a chamada de loadRemoteThemes logo
+// abaixo de populateThemeSelect().
+let themes = getStaticThemes();
 
 /* =========================================================
    ESTADO EM MEMÓRIA
@@ -633,6 +639,11 @@ prizeModalDoneBtn.addEventListener('click', () => closeOverlay(prizeOverlay));
    TEMAS DE MARCA (WHITE LABEL) — seletor e aplicação
    ========================================================= */
 function populateThemeSelect() {
+  // Preserva a seleção atual, se a pessoa já tiver escolhido algo -
+  // repopular a lista (depois que os temas do Supabase chegam) não
+  // deveria voltar pro padrão sem avisar.
+  const previouslySelectedName = themes[Number(themeSelect.value)]?.name;
+
   themeSelect.innerHTML = '';
   themes.forEach((theme, index) => {
     const option = document.createElement('option');
@@ -640,8 +651,21 @@ function populateThemeSelect() {
     option.textContent = theme.name;
     themeSelect.appendChild(option);
   });
+
+  if (previouslySelectedName) {
+    const matchIndex = themes.findIndex((t) => t.name === previouslySelectedName);
+    if (matchIndex >= 0) themeSelect.value = String(matchIndex);
+  }
 }
 populateThemeSelect();
+
+// Busca temas do Supabase (públicos + os do próprio host logado) por
+// cima do padrão - não bloqueia nada, o jogo já está usável com só o
+// padrão enquanto isso carrega.
+loadRemoteThemes(window.ndquestSupabase).then((allThemes) => {
+  themes = allThemes;
+  populateThemeSelect();
+});
 
 /* =========================================================
    IDIOMA (PT / EN) — interface e conteúdo das perguntas

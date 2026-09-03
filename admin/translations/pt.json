@@ -1,16 +1,15 @@
 {
   "meta.title": "Admin: Nodra",
-
   "state.loading": "Checando acesso...",
   "state.signedOut": "Você precisa entrar primeiro.",
   "state.signInLink": "Ir pro login",
   "state.notAdmin": "Não autorizado.",
-
   "tabs.rooms": "Salas ao vivo",
   "tabs.users": "Usuários",
   "tabs.badges": "Badges",
   "tabs.analytics": "Analytics",
-
+  "tabs.packs": "Pacotes Enviados",
+  "tabs.themes": "Temas Enviados",
   "rooms.refresh": "Atualizar",
   "rooms.game": "Jogo",
   "rooms.code": "Código",
@@ -18,7 +17,6 @@
   "rooms.status": "Status",
   "rooms.created": "Criada em",
   "rooms.empty": "Nenhuma sala encontrada.",
-
   "users.searchPlaceholder": "Buscar por username...",
   "vipCode.days": "Dias",
   "vipCode.maxUses": "Máximo de usos",
@@ -41,11 +39,19 @@
   "users.joined": "Entrou em",
   "users.empty": "Nenhum usuário encontrado.",
   "badges.empty": "Nenhum badge criado ainda.",
+  "packs.empty": "Nenhum pacote pendente no momento.",
+  "packs.approveBtn": "Aprovar",
+  "packs.rejectBtn": "Rejeitar",
+  "packs.approveSuccess": "Aprovado! Pacote já está disponível nos jogos.",
+  "packs.rejectSuccess": "Rejeitado.",
+  "packs.questionsLabel": "perguntas",
   "users.grantVip": "Dar VIP",
   "users.revokeVip": "Tirar VIP",
-
   "analytics.totalUsers": "Total de usuários",
   "analytics.totalRooms": "Salas criadas",
   "analytics.badgesMinted": "Badges mintadas",
-  "analytics.signupsTitle": "Cadastros, últimos 30 dias"
+  "analytics.signupsTitle": "Cadastros, últimos 30 dias",
+  "themes.empty": "Nenhum tema pendente no momento.",
+  "themes.rejectNotesPlaceholder": "Motivo (obrigatório pra rejeitar)",
+  "themes.rejectNotesRequired": "Motivo obrigatório pra rejeitar."
 }

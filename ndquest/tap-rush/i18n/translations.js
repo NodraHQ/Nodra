@@ -55,6 +55,8 @@ const translations = {
 
     'results.title': 'Fim de Rodada',
     'results.rankingTitle': 'Ranking',
+    'results.previousRounds': 'Rodadas Anteriores',
+    'results.roundLabel': 'Rodada',
     'results.winnerLabel': 'Venceu:',
     'results.teamWinnerLabel': 'Time vencedor:',
     'results.tapsLabel': 'cliques',
@@ -142,6 +144,8 @@ const translations = {
 
     'results.title': 'Round Over',
     'results.rankingTitle': 'Ranking',
+    'results.previousRounds': 'Previous Rounds',
+    'results.roundLabel': 'Round',
     'results.winnerLabel': 'Winner:',
     'results.teamWinnerLabel': 'Winning team:',
     'results.tapsLabel': 'taps',

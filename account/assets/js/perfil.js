@@ -277,11 +277,22 @@ async function loadAndRenderBadges(userId, featuredIds) {
         card.className = "badge-card badge-card--small";
 
         const badgeEl = document.createElement("div");
-        badgeEl.className = `badge badge--small badge--${badge.badge_shape}`;
-        // Fundo sempre é a cor de fundo escolhida - os dois (fundo e
-        // cor do ícone) são independentes agora, cada um com o
-        // próprio valor gravado no banco.
-        badgeEl.style.background = badge.background_color;
+        if (badge.image_url) {
+            // Imagem própria já vem com a forma e o fundo dela
+            // desenhados - não aplica recorte nem cor de fundo por
+            // cima, bug real reportado ao vivo: um "anel" da cor da
+            // badge aparecia em volta de uma arte que já tinha fundo
+            // transparente e moldura própria (o recorte da badge não
+            // batia pixel a pixel com o hexágono já desenhado na
+            // imagem).
+            badgeEl.className = "badge badge--small badge--image";
+        } else {
+            badgeEl.className = `badge badge--small badge--${badge.badge_shape}`;
+            // Fundo sempre é a cor de fundo escolhida - os dois (fundo e
+            // cor do ícone) são independentes agora, cada um com o
+            // próprio valor gravado no banco.
+            badgeEl.style.background = badge.background_color;
+        }
 
         // Imagem enviada e ícone genérico são mutuamente exclusivos
         // (mesma regra da tela de criar) - nunca os dois juntos, e
@@ -297,7 +308,7 @@ async function loadAndRenderBadges(userId, featuredIds) {
             iconSpan.innerHTML = buildPerfilIconSvg(badge.icon);
             iconSpan.style.color = badge.icon_color || badge.background_color;
             const iconSizePct = badge.icon_size || 35;
-            const sizePx = Math.round(56 * (iconSizePct / 100)); // 56px = tamanho do escudo pequeno usado aqui
+            const sizePx = Math.round(78 * (iconSizePct / 100)); // 78px = tamanho do escudo pequeno usado aqui
             iconSpan.style.width = `${sizePx}px`;
             iconSpan.style.height = `${sizePx}px`;
             badgeEl.appendChild(iconSpan);

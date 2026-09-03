@@ -263,3 +263,59 @@
     border-color:#b5544a;
     color:#e08a80;
 }
+
+/* ==================================================================
+   PACOTES ENVIADOS - fila de revisão de submitted_packs, mesma que
+   já existe pro VIP em account (vip-review-submitted-pack), agora
+   acessível pelo admin também. Reportado ao vivo: "hoje não consigo
+   acessar isso, quero acessar pelo painel de admin".
+   ================================================================== */
+
+.admin-packs-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.admin-pack-item{
+    padding:14px 16px;
+    border:1px solid var(--border, #2a3550);
+    border-radius:10px;
+    background:var(--surface-2, #16213a);
+}
+
+.admin-pack-name{
+    font-weight:700;
+    font-size:14px;
+}
+
+.admin-pack-meta{
+    font-size:12px;
+    color:var(--text-secondary, #8a94ad);
+    margin-top:4px;
+}
+
+.admin-pack-actions{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.admin-pack-actions .btn{
+    padding:6px 14px;
+    font-size:13px;
+}
+
+.admin-pack-status{
+    font-size:13px;
+    min-height:18px;
+    margin-top:6px;
+}
+
+.admin-pack-status.is-error{
+    color:var(--danger, #b5544a);
+}
+
+.admin-pack-status.is-success{
+    color:var(--success, #5fa77c);
+}

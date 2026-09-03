@@ -102,7 +102,7 @@ function initTabs() {
 
     const tabs = document.querySelectorAll(".admin-tab");
     const panels = document.querySelectorAll(".admin-tab-panel");
-    const loaded = { rooms: true, users: false, badges: false, analytics: false };
+    const loaded = { rooms: true, users: false, badges: false, packs: false, themes: false, analytics: false };
 
     tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
@@ -116,6 +116,8 @@ function initTabs() {
                 loaded[target] = true;
                 if (target === "users") loadUsers();
                 if (target === "badges") loadAllBadges();
+                if (target === "packs") loadSubmittedPacks();
+                if (target === "themes") loadSubmittedThemes();
                 if (target === "analytics") loadAnalytics();
             }
 
@@ -537,6 +539,252 @@ async function confirmDeleteBadge(badge, cardEl) {
     } catch (err) {
         console.error("Erro ao apagar badge:", err);
         window.alert("Erro ao apagar - confere o console.");
+    }
+
+}
+
+// --------------------------------------------------------
+// Pacotes enviados - fila de submitted_packs (ndquest/submit) já
+// existente pro VIP em account (vip-review-submitted-pack), agora
+// acessível pelo admin também - reportado ao vivo: "hoje não
+// consigo acessar isso, quero acessar pelo painel de admin".
+// --------------------------------------------------------
+
+document.getElementById("packs-refresh-btn")?.addEventListener("click", loadSubmittedPacks);
+
+async function loadSubmittedPacks() {
+
+    const listEl = document.getElementById("admin-packs-list");
+    const emptyEl = document.getElementById("admin-packs-empty");
+    if (!listEl || !emptyEl) return;
+
+    try {
+        const { packs } = await callAdminFunction("admin-list-submitted-packs", { method: "GET" });
+
+        listEl.innerHTML = "";
+        if (!packs || packs.length === 0) {
+            emptyEl.hidden = false;
+            return;
+        }
+        emptyEl.hidden = true;
+
+        const lang = document.documentElement.dataset.lang === "en" ? "en" : "pt";
+
+        packs.forEach((pack) => {
+            const item = document.createElement("div");
+            item.className = "admin-pack-item";
+
+            const name = document.createElement("div");
+            name.className = "admin-pack-name";
+            name.textContent = lang === "en" ? pack.nameEn : pack.namePt;
+
+            const meta = document.createElement("div");
+            meta.className = "admin-pack-meta";
+            const questionsLabel = window.nodraTranslator?.translations?.["packs.questionsLabel"] || "questions";
+            meta.textContent = `${escapeHtml(pack.submitterName)} (${escapeHtml(pack.submitterEmail)}) . ${pack.questionCount} ${questionsLabel} . ${formatDate(pack.createdAt)}`;
+
+            const actions = document.createElement("div");
+            actions.className = "admin-pack-actions";
+
+            const approveBtn = document.createElement("button");
+            approveBtn.type = "button";
+            approveBtn.className = "btn btn-primary";
+            approveBtn.textContent = window.nodraTranslator?.translations?.["packs.approveBtn"] || "Approve";
+            approveBtn.addEventListener("click", () => reviewSubmittedPack(pack.id, "approve", item));
+
+            const rejectBtn = document.createElement("button");
+            rejectBtn.type = "button";
+            rejectBtn.className = "btn btn-secondary";
+            rejectBtn.textContent = window.nodraTranslator?.translations?.["packs.rejectBtn"] || "Reject";
+            rejectBtn.addEventListener("click", () => reviewSubmittedPack(pack.id, "reject", item));
+
+            actions.appendChild(approveBtn);
+            actions.appendChild(rejectBtn);
+
+            const status = document.createElement("p");
+            status.className = "admin-pack-status";
+
+            item.appendChild(name);
+            item.appendChild(meta);
+            item.appendChild(actions);
+            item.appendChild(status);
+            listEl.appendChild(item);
+        });
+    } catch (err) {
+        console.error("Erro ao carregar pacotes enviados:", err);
+    }
+
+}
+
+// Aprova (vira question_packs de verdade, usável pelos jogos) ou
+// rejeita (só marca, não cria nada) um pacote enviado. Mesmo padrão
+// de try/catch dos outros fluxos de admin - botões desabilitam
+// durante a chamada, erro real sempre visível, nunca trava
+// silenciosamente. A linha some da fila depois de aprovada/rejeitada
+// (já não está mais pendente), com um instante pra ler a confirmação
+// primeiro - mesmo comportamento da fila equivalente do VIP.
+async function reviewSubmittedPack(packId, action, itemEl) {
+    const buttons = itemEl.querySelectorAll("button");
+    const statusEl = itemEl.querySelector(".admin-pack-status");
+
+    buttons.forEach((b) => (b.disabled = true));
+    statusEl.textContent = "";
+    statusEl.className = "admin-pack-status";
+
+    try {
+        const result = await callAdminFunction("admin-review-submitted-pack", {
+            method: "POST",
+            body: JSON.stringify({ packId, action }),
+        });
+
+        const successKey = action === "approve" ? "packs.approveSuccess" : "packs.rejectSuccess";
+        const fallback = action === "approve" ? "Approved! Pack is now live." : "Rejected.";
+        statusEl.textContent = window.nodraTranslator?.translations?.[successKey] || fallback;
+        statusEl.className = "admin-pack-status is-success";
+
+        setTimeout(() => itemEl.remove(), 1800);
+    } catch (err) {
+        console.error("Erro ao revisar pacote enviado:", err);
+        statusEl.textContent = err.message || "Erro ao processar";
+        statusEl.className = "admin-pack-status is-error";
+        buttons.forEach((b) => (b.disabled = false));
+    }
+
+}
+
+document.getElementById("themes-refresh-btn")?.addEventListener("click", loadSubmittedThemes);
+
+async function loadSubmittedThemes() {
+
+    const listEl = document.getElementById("admin-themes-list");
+    const emptyEl = document.getElementById("admin-themes-empty");
+    if (!listEl || !emptyEl) return;
+
+    try {
+        const { themes } = await callAdminFunction("admin-list-submitted-themes", { method: "GET" });
+
+        listEl.innerHTML = "";
+        if (!themes || themes.length === 0) {
+            emptyEl.hidden = false;
+            return;
+        }
+        emptyEl.hidden = true;
+
+        const lang = document.documentElement.dataset.lang === "en" ? "en" : "pt";
+
+        themes.forEach((theme) => {
+            const item = document.createElement("div");
+            item.className = "admin-pack-item";
+
+            const header = document.createElement("div");
+            header.style.display = "flex";
+            header.style.alignItems = "center";
+            header.style.gap = "8px";
+
+            const swatch = document.createElement("span");
+            swatch.style.cssText = `display:inline-block;width:16px;height:16px;border-radius:50%;background:${theme.colors?.primary || "#888"};flex-shrink:0;`;
+
+            const name = document.createElement("span");
+            name.className = "admin-pack-name";
+            name.textContent = theme.name;
+
+            header.appendChild(swatch);
+            header.appendChild(name);
+
+            const meta = document.createElement("div");
+            meta.className = "admin-pack-meta";
+            const sloganText = lang === "en" ? theme.sloganEn : theme.sloganPt;
+            meta.textContent = `${escapeHtml(theme.ownerUsername)} . ${(theme.applicableGames || []).join(", ")} . ${formatDate(theme.createdAt)}${sloganText ? ` . "${escapeHtml(sloganText)}"` : ""}`;
+
+            if (theme.logoUrl) {
+                const logoImg = document.createElement("img");
+                logoImg.src = theme.logoUrl;
+                logoImg.alt = "";
+                logoImg.style.cssText = "height:28px;max-width:120px;object-fit:contain;margin-top:8px;display:block;";
+                item.appendChild(header);
+                item.appendChild(meta);
+                item.appendChild(logoImg);
+            } else {
+                item.appendChild(header);
+                item.appendChild(meta);
+            }
+
+            const notesInput = document.createElement("textarea");
+            notesInput.placeholder =
+                window.nodraTranslator?.translations?.["themes.rejectNotesPlaceholder"] ||
+                "Reason (required to reject)";
+            notesInput.className = "admin-pack-meta";
+            notesInput.style.cssText = "width:100%;margin-top:10px;min-height:50px;font-family:inherit;padding:6px;border-radius:6px;";
+
+            const actions = document.createElement("div");
+            actions.className = "admin-pack-actions";
+
+            const approveBtn = document.createElement("button");
+            approveBtn.type = "button";
+            approveBtn.className = "btn btn-primary";
+            approveBtn.textContent = window.nodraTranslator?.translations?.["packs.approveBtn"] || "Approve";
+            approveBtn.addEventListener("click", () => reviewSubmittedTheme(theme.id, "approve", item, notesInput));
+
+            const rejectBtn = document.createElement("button");
+            rejectBtn.type = "button";
+            rejectBtn.className = "btn btn-secondary";
+            rejectBtn.textContent = window.nodraTranslator?.translations?.["packs.rejectBtn"] || "Reject";
+            rejectBtn.addEventListener("click", () => reviewSubmittedTheme(theme.id, "reject", item, notesInput));
+
+            actions.appendChild(approveBtn);
+            actions.appendChild(rejectBtn);
+
+            const status = document.createElement("p");
+            status.className = "admin-pack-status";
+
+            item.appendChild(notesInput);
+            item.appendChild(actions);
+            item.appendChild(status);
+            listEl.appendChild(item);
+        });
+    } catch (err) {
+        console.error("Erro ao carregar temas enviados:", err);
+    }
+
+}
+
+// Aprova (vira tema público de verdade, visível em qualquer sala
+// contanto que o dono continue VIP) ou rejeita (some da fila, o VIP
+// vê o motivo na própria área dele e pode corrigir e reenviar de
+// graça) um tema submetido - mesmo padrão de reviewSubmittedPack.
+async function reviewSubmittedTheme(themeId, action, itemEl, notesInput) {
+    const buttons = itemEl.querySelectorAll("button");
+    const statusEl = itemEl.querySelector(".admin-pack-status");
+
+    if (action === "reject" && !notesInput.value.trim()) {
+        statusEl.textContent =
+            window.nodraTranslator?.translations?.["themes.rejectNotesRequired"] ||
+            "A reason is required to reject.";
+        statusEl.className = "admin-pack-status is-error";
+        return;
+    }
+
+    buttons.forEach((b) => (b.disabled = true));
+    statusEl.textContent = "";
+    statusEl.className = "admin-pack-status";
+
+    try {
+        await callAdminFunction("admin-review-submitted-theme", {
+            method: "POST",
+            body: JSON.stringify({ themeId, action, notes: notesInput.value.trim() || undefined }),
+        });
+
+        const successKey = action === "approve" ? "packs.approveSuccess" : "packs.rejectSuccess";
+        const fallback = action === "approve" ? "Approved! Theme is now live." : "Rejected.";
+        statusEl.textContent = window.nodraTranslator?.translations?.[successKey] || fallback;
+        statusEl.className = "admin-pack-status is-success";
+
+        setTimeout(() => itemEl.remove(), 1800);
+    } catch (err) {
+        console.error("Erro ao revisar tema enviado:", err);
+        statusEl.textContent = err.message || "Erro ao processar";
+        statusEl.className = "admin-pack-status is-error";
+        buttons.forEach((b) => (b.disabled = false));
     }
 
 }

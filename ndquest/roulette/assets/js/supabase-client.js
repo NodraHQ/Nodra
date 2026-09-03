@@ -20,3 +20,10 @@ window.ndquestSupabase = supabase.createClient(
     NDQUEST_SUPABASE_URL,
     NDQUEST_SUPABASE_PUBLISHABLE_KEY
 );
+
+// Exposto separado - precisa pra montar a URL das Edge Functions
+// (${URL}/functions/v1/nome-da-funcao). Roulette não chamava nenhuma
+// até agora, passou a precisar com roulette-record-winner (ver
+// host.js) - mesmo padrão que os outros jogos já usavam.
+window.ndquestSupabaseUrl = NDQUEST_SUPABASE_URL;
+window.ndquestSupabaseAnonKey = NDQUEST_SUPABASE_PUBLISHABLE_KEY;

@@ -43,6 +43,8 @@
             <button class="admin-tab is-active" data-tab="rooms" data-i18n="tabs.rooms">Live Rooms</button>
             <button class="admin-tab" data-tab="users" data-i18n="tabs.users">Users</button>
             <button class="admin-tab" data-tab="badges" data-i18n="tabs.badges">Badges</button>
+            <button class="admin-tab" data-tab="packs" data-i18n="tabs.packs">Submitted Packs</button>
+            <button class="admin-tab" data-tab="themes" data-i18n="tabs.themes">Submitted Themes</button>
             <button class="admin-tab" data-tab="analytics" data-i18n="tabs.analytics">Analytics</button>
         </div>
 
@@ -175,6 +177,22 @@
             </div>
             <div id="admin-badges-grid" class="admin-badges-grid"></div>
             <p id="admin-badges-empty" class="admin-empty" data-i18n="badges.empty" hidden>No badges created yet.</p>
+        </section>
+
+        <section id="tab-packs" class="admin-tab-panel">
+            <div class="admin-toolbar">
+                <button id="packs-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            </div>
+            <div id="admin-packs-list" class="admin-packs-list"></div>
+            <p id="admin-packs-empty" class="admin-empty" data-i18n="packs.empty" hidden>No pending packs right now.</p>
+        </section>
+
+        <section id="tab-themes" class="admin-tab-panel">
+            <div class="admin-toolbar">
+                <button id="themes-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            </div>
+            <div id="admin-themes-list" class="admin-packs-list"></div>
+            <p id="admin-themes-empty" class="admin-empty" data-i18n="themes.empty" hidden>No pending themes right now.</p>
         </section>
 
         <section id="tab-analytics" class="admin-tab-panel">

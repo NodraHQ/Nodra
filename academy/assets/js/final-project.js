@@ -253,6 +253,60 @@
       summary.hidden = false;
       summary.classList.add('reveal', 'show');
       summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      grantModuleBadge();
+    }
+
+    // Concede a badge desse módulo quando o quiz é concluído -
+    // reportado ao vivo: "ao concluir cada quiz em cada módulo o
+    // usuário receba uma badge, e ao completar todos ele ganhe 1
+    // badge especial". Sem login, não tem pra quem conceder - mostra
+    // aviso em vez de tentar (elemento criado na hora, não precisa
+    // de nada novo no HTML). Nota fica dentro do resumo do quiz, que
+    // já é o lugar que a pessoa está olhando nesse momento.
+    function grantModuleBadge() {
+      if (!summary) return;
+
+      var note = document.getElementById('quizBadgeNote');
+      if (!note) {
+        note = document.createElement('p');
+        note.id = 'quizBadgeNote';
+        note.style.marginTop = '12px';
+        note.style.fontSize = '0.9em';
+        summary.appendChild(note);
+      }
+
+      if (!window.nodraSupabase) return;
+
+      window.nodraSupabase.auth.getSession().then(function (result) {
+        var session = result.data.session;
+        if (!session) {
+          note.textContent = 'Faça login pra ganhar a badge deste módulo.';
+          return;
+        }
+
+        fetch(window.nodraSupabaseUrl + '/functions/v1/academy-grant-module-badge', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session.access_token,
+          },
+          body: JSON.stringify({ module_slug: '10-final-project' }),
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (result) {
+            if (result.error) {
+              console.error('Erro ao conceder badge do módulo:', result.error);
+              return;
+            }
+            if (result.grantedModuleBadge) {
+              note.textContent = 'Badge do módulo conquistada!';
+            }
+          })
+          .catch(function (err) {
+            console.error('Erro de rede ao conceder badge do módulo:', err);
+          });
+      });
     }
 
     if (resetBtn) {

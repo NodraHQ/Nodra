@@ -531,20 +531,17 @@
                                 </div>
 
                                 <div class="vip-payment-details">
+                                    <div class="vip-payment-row">
+                                        <span data-i18n="vip.paymentNetwork">Network</span>
+                                        <select id="vip-network-token-select" class="vip-network-select"></select>
+                                    </div>
                                     <div class="vip-payment-row vip-payment-row--stacked">
                                         <span data-i18n="vip.paymentAddress">Address</span>
                                         <code id="vip-treasury-address"></code>
                                     </div>
-                                    <div class="vip-payment-row">
-                                        <span data-i18n="vip.paymentNetwork">Network</span>
-                                        <code>USDT . Avalanche C-Chain</code>
-                                    </div>
                                 </div>
 
-                                <p class="vip-purchase-instructions" data-i18n="vip.paymentInstructions">
-                                    Pay $5 in USDT (Avalanche C-Chain) to the address above, using any
-                                    wallet you like. Then paste the transaction hash below to verify.
-                                </p>
+                                <p class="vip-purchase-instructions" id="vip-payment-instructions"></p>
 
                                 <form id="vip-payment-form" class="vip-badge-form">
                                     <label data-i18n="vip.txHashLabel">Transaction hash</label>
@@ -585,6 +582,7 @@
                         <button type="button" class="vip-subtab is-active" data-vip-subtab="badges" data-i18n="vip.subtabBadges">Create & Grant Badges</button>
                         <button type="button" class="vip-subtab" data-vip-subtab="my-badges" data-i18n="vip.subtabMyBadges">My Created Badges</button>
                         <button type="button" class="vip-subtab" data-vip-subtab="submitted-packs" data-i18n="vip.subtabSubmittedPacks">Submitted Packs</button>
+                        <button type="button" class="vip-subtab" data-vip-subtab="themes" data-i18n="vip.subtabThemes">My Theme</button>
                     </nav>
 
                     <div class="vip-subtab-panel" data-vip-subtab-panel="badges">
@@ -802,6 +800,98 @@
                         </section>
                     </div>
 
+                    <div class="vip-subtab-panel" data-vip-subtab-panel="themes" hidden>
+                        <section class="card profile-section">
+                            <div class="profile-section-header">
+                                <span class="tag" data-i18n="vip.subtabThemes">My Theme</span>
+                            </div>
+                            <p class="profile-badges-hint" data-i18n="vip.themeHint">One included theme per VIP renewal, private and ready to use right away, no review needed.</p>
+
+                            <div id="vip-theme-slot-status" class="vip-theme-slot-status"></div>
+
+                            <form id="create-theme-form" class="vip-badge-form" hidden>
+                                <label data-i18n="vip.themeNameLabel">Theme name</label>
+                                <input type="text" id="theme-name" maxlength="40" required>
+
+                                <label data-i18n="vip.themePrimaryLabel">Brand color</label>
+                                <button type="button" class="vip-theme-hex-row vip-color-trigger" id="theme-primary-trigger">
+                                    <span class="vip-theme-hex-swatch" id="theme-primary-color-swatch"></span>
+                                    <span id="theme-primary-color-value">#fea203</span>
+                                </button>
+
+                                <label data-i18n="vip.themeBackgroundLabel">Background color</label>
+                                <button type="button" class="vip-theme-hex-row vip-color-trigger" id="theme-background-trigger">
+                                    <span class="vip-theme-hex-swatch" id="theme-background-color-swatch"></span>
+                                    <span id="theme-background-color-value">#071b30</span>
+                                </button>
+
+                                <label data-i18n="vip.themeLogoLabel">Logo (optional)</label>
+                                <input type="file" id="theme-logo" accept="image/png,image/svg+xml,image/webp">
+
+                                <label data-i18n="vip.themeSloganPtLabel">Slogan (Portuguese, optional)</label>
+                                <input type="text" id="theme-slogan-pt" maxlength="80">
+
+                                <label data-i18n="vip.themeSloganEnLabel">Slogan (English, optional)</label>
+                                <input type="text" id="theme-slogan-en" maxlength="80">
+
+                                <label data-i18n="vip.themeGamesLabel">Which games should use this theme?</label>
+                                <div class="vip-theme-games-picker">
+                                    <label><input type="checkbox" class="theme-game-check" value="quest_drop"> Quest Drop</label>
+                                    <label><input type="checkbox" class="theme-game-check" value="time_attack"> Time Attack</label>
+                                    <label><input type="checkbox" class="theme-game-check" value="show_down"> Show Down</label>
+                                    <label><input type="checkbox" class="theme-game-check" value="tap_rush"> Tap Rush</label>
+                                    <label><input type="checkbox" class="theme-game-check" value="roulette"> Roulette</label>
+                                </div>
+
+                                <div id="theme-preview" class="vip-theme-preview">
+                                    <span id="theme-preview-name" class="vip-theme-preview-name">CryptoBasics</span>
+                                    <p class="vip-theme-preview-hint" data-i18n="vip.themePreviewHint">Auto-generated from the colors above. Click any swatch to fine-tune it by hand.</p>
+
+                                    <div id="theme-mockup" class="vip-theme-mockup">
+                                        <span class="vip-theme-mockup-logo" id="theme-mockup-name">CryptoBasics</span>
+                                        <img id="theme-mockup-logo-img" class="vip-theme-mockup-logo-img" alt="" hidden>
+                                        <div class="vip-theme-mockup-lang">
+                                            <span class="vip-theme-mockup-lang-btn is-active" id="theme-mockup-lang-active">PT</span>
+                                            <span class="vip-theme-mockup-lang-btn" id="theme-mockup-lang-inactive">EN</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="vip-theme-preview-swatches">
+                                        <button type="button" class="vip-theme-swatch-btn" data-color-key="primary">
+                                            <span id="theme-swatch-primary" class="vip-theme-swatch"></span>
+                                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchPrimary">Primary</span>
+                                        </button>
+                                        <button type="button" class="vip-theme-swatch-btn" data-color-key="primaryLight">
+                                            <span id="theme-swatch-primary-light" class="vip-theme-swatch"></span>
+                                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchPrimaryLight">Primary Light</span>
+                                        </button>
+                                        <button type="button" class="vip-theme-swatch-btn" data-color-key="background">
+                                            <span id="theme-swatch-bg" class="vip-theme-swatch"></span>
+                                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchBg">Background</span>
+                                        </button>
+                                        <button type="button" class="vip-theme-swatch-btn" data-color-key="surface">
+                                            <span id="theme-swatch-surface" class="vip-theme-swatch"></span>
+                                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchSurface">Surface</span>
+                                        </button>
+                                        <button type="button" class="vip-theme-swatch-btn" data-color-key="text">
+                                            <span id="theme-swatch-text" class="vip-theme-swatch"></span>
+                                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchText">Text</span>
+                                        </button>
+                                        <button type="button" class="vip-theme-swatch-btn" data-color-key="paper">
+                                            <span id="theme-swatch-paper" class="vip-theme-swatch"></span>
+                                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchPaper">Paper</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" id="create-theme-btn" class="btn btn-primary" data-i18n="vip.themeCreateBtn">Create Theme</button>
+                                <p id="create-theme-status" class="vip-badge-status"></p>
+                            </form>
+
+                            <div id="vip-my-themes-list" class="vip-my-themes-list"></div>
+                        </section>
+                    </div>
+
                     </div>
 
                 </div>
@@ -891,5 +981,49 @@
         <script defer src="assets/js/translations.js"></script>
         <script defer src="assets/js/navAuth.js" data-account-url="index.html"></script>
         <script defer src="assets/js/account.js"></script>
+
+        <!-- Os dois modais abaixo ficam como filhos diretos do body de
+             propósito - bug real reportado ao vivo: aninhados fundo
+             dentro da tela de perfil, um ancestral no meio criava um
+             contexto de empilhamento que fazia o clique no fundo do
+             modal vazar pro botão "Submeter" que ficava embaixo dele,
+             reabrindo o modal na hora que ele fechava (piscando sem
+             parar, dependendo de onde clicava). Filho direto do body
+             evita esse problema de raiz, sem depender de acertar o
+             z-index certo em cada ancestral. -->
+        <div id="theme-color-picker" class="vip-color-picker" hidden>
+            <div class="vip-color-picker-backdrop" id="theme-color-picker-backdrop"></div>
+            <div class="vip-color-picker-panel">
+                <button type="button" class="vip-modal-close-btn" id="theme-picker-close-btn" aria-label="Close">&times;</button>
+                <div class="vip-color-picker-sv" id="theme-picker-sv">
+                    <div class="vip-color-picker-sv-white"></div>
+                    <div class="vip-color-picker-sv-black"></div>
+                    <div class="vip-color-picker-sv-cursor" id="theme-picker-sv-cursor"></div>
+                </div>
+                <div class="vip-color-picker-hue" id="theme-picker-hue">
+                    <div class="vip-color-picker-hue-cursor" id="theme-picker-hue-cursor"></div>
+                </div>
+                <div class="vip-color-picker-hex-row">
+                    <span>#</span>
+                    <input type="text" id="theme-picker-hex" maxlength="6">
+                </div>
+                <div class="vip-color-palette" id="theme-picker-palette"></div>
+                <button type="button" class="btn btn-primary vip-color-picker-done" id="theme-picker-done" data-i18n="vip.themeSwatchApply">Apply</button>
+            </div>
+        </div>
+
+        <div id="theme-submit-modal" class="vip-color-picker" hidden>
+            <div class="vip-color-picker-backdrop" id="theme-submit-modal-backdrop"></div>
+            <div class="vip-color-picker-panel vip-theme-submit-panel">
+                <button type="button" class="vip-modal-close-btn" id="theme-submit-close-btn" aria-label="Close">&times;</button>
+                <p class="vip-theme-submit-title">Submit "<span id="theme-submit-name"></span>" for public review</p>
+                <p class="vip-theme-submit-hint" id="theme-submit-hint-text">Send exactly <strong id="theme-submit-price">10 USDT</strong> (Avalanche C-Chain) to the address below, then paste the transaction hash to confirm.</p>
+                <select id="theme-submit-network-token-select" class="vip-network-select"></select>
+                <div class="vip-theme-submit-address" id="theme-submit-treasury-address"></div>
+                <input type="text" id="theme-submit-tx-hash" placeholder="0x...">
+                <button type="button" class="btn btn-primary" id="theme-submit-verify-btn" data-i18n="vip.themeSubmitVerifyBtn">Verify Payment</button>
+                <p id="theme-submit-status" class="vip-badge-status"></p>
+            </div>
+        </div>
     </body>
 </html>

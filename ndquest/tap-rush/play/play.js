@@ -59,7 +59,7 @@ async function loadPlayerBadgeMap(userIds) {
         window.ndquestSupabase.from('profiles_public').select('id, featured_badge_ids').in('id', validIds),
         window.ndquestSupabase
             .from('user_badges')
-            .select('user_id, badge_id, badges(background_color, icon, icon_color, image_url)')
+            .select('user_id, badge_id, badges(name_pt, background_color, icon, icon_color, image_url, badge_shape)')
             .in('user_id', validIds),
     ]);
 
@@ -84,11 +84,44 @@ function buildMiniBadgeRow(badges) {
     if (!badges || badges.length === 0) return '';
     const chips = badges
         .map((b) => {
+            // Respeita a forma de verdade da badge (hex, coin, square...)
+            // em vez de sempre forçar círculo - bug real reportado ao
+            // vivo: "não pode cortar, qual o sentido disso?" - uma arte
+            // desenhada pro formato hexagonal (pontas, número no topo)
+            // ficava com as pontas cortadas quando o mini-badge sempre
+            // recortava em círculo, não importa a forma escolhida na
+            // criação. Mesmas classes/recortes que a badge em tamanho
+            // grande já usa (ver account.css .badge--*), só que na
+            // escala pequena - ver .mini-badge--* no CSS deste jogo.
+            // Imagem própria já vem com forma e fundo desenhados nela
+            // mesma - sem recorte extra, sem cor de fundo por trás
+            // (mesma correção aplicada na badge em tamanho grande, ver
+            // account.css .badge--image - senão sobra um "anel" da cor
+            // de fundo em volta da arte, onde o recorte daqui não bate
+            // pixel a pixel com o hexágono já desenhado na imagem).
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+
             if (b.image_url) {
-                return `<span class="mini-badge"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
             }
             const color = b.icon_color || b.background_color || '#888';
-            return `<span class="mini-badge" style="background:${b.background_color || '#333'};color:${color};">${b.icon ? buildMiniIconSvg(b.icon) : ''}</span>`;
+            // Badge sem ícone e sem imagem é uma opção válida na hora de
+            // criar (só forma+cor) - sem isso, ficava um círculo vazio
+            // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
+            // pra inicial do nome, mesmo espírito de um avatar sem foto.
+            // Checa o SVG de verdade, não só se b.icon existe - segunda
+            // rodada do mesmo bug reportada ao vivo: um ícone com valor
+            // que não bate com nenhuma chave conhecida (fora dos 8 que
+            // o sistema reconhece) também gera SVG vazio, e só olhar
+            // "b.icon existe" não pegava esse caso.
+            const iconSvg = b.icon ? buildMiniIconSvg(b.icon) : '';
+            // Cor do texto fixa em branco, não herdada de b.icon_color -
+            // bug real reportado ao vivo: badge sem ícone também não tem
+            // icon_color (não faz sentido ter cor de ícone sem ícone), e
+            // "color" acima cai pro MESMO background_color do fundo -
+            // letra invisível, escondida na própria cor do círculo.
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -438,11 +471,17 @@ function subscribeToRoom(roomId) {
         )
         .subscribe();
 
-    // Rede de segurança: se o Realtime não estiver ativado na tabela
-    // (passo manual no painel do Supabase, fácil de esquecer), o
-    // jogador ficaria preso pra sempre esperando. Essa checagem por
-    // fora garante que o jogo sempre avança, só um pouco mais devagar
-    // (a cada 2s) do que o Realtime de verdade.
+    startRoomPoll(roomId);
+}
+
+// Rede de segurança: se o Realtime não estiver ativado na tabela
+// (passo manual no painel do Supabase, fácil de esquecer), o jogador
+// ficaria preso pra sempre esperando. Essa checagem por fora garante
+// que o jogo sempre avança, só um pouco mais devagar (a cada 2s) do
+// que o Realtime de verdade. Função própria (em vez de só inline em
+// subscribeToRoom) porque precisa ser chamada de novo quando a sala
+// volta pra 'waiting' numa rodada nova - ver reactToRoomState.
+function startRoomPoll(roomId) {
     if (roomPollInterval) clearInterval(roomPollInterval);
     roomPollInterval = setInterval(async () => {
         const { data } = await window.ndquestSupabase
@@ -482,6 +521,18 @@ function reactToRoomState(room) {
 
     if (room.status === 'waiting') {
         stopTapLoop();
+        // Bug real reportado ao vivo (versão 2 desse mesmo problema):
+        // reactToRoomState('waiting') dispara MAIS de uma vez seguida
+        // (o próprio poll de segurança de 2s chama de novo, e o
+        // Realtime também pode reprocessar). Antes, cada disparo
+        // chamava startHeartbeat()/startRoomPoll() incondicionalmente,
+        // matando e recriando o intervalo do sinal de vida (10s) toda
+        // vez - como o poll reseta ele a cada ~2s, o sinal de vida
+        // NUNCA sobrevivia tempo suficiente pra bater uma vez sequer
+        // enquanto a sala ficava esperando. Só religa se não tiver um
+        // já rodando, em vez de sempre matar e recriar.
+        if (!heartbeatInterval) startHeartbeat();
+        if (!roomPollInterval) startRoomPoll(room.id);
         showScreen(screenWaitingPlayer);
         lastHandledStatus = 'waiting';
         return;
@@ -640,10 +691,14 @@ async function renderResults(room) {
         const winner = [...all].sort((a, b) => b.tap_count - a.tap_count)[0];
         iWon = winner && winner.id === currentPlayerId;
     } else {
-        const teamA = all.filter((p) => p.team === 'A').reduce((s, p) => s + p.tap_count, 0);
-        const teamB = all.filter((p) => p.team === 'B').reduce((s, p) => s + p.tap_count, 0);
-        const winningTeam = teamA === teamB ? null : (teamA > teamB ? 'A' : 'B');
-        iWon = winningTeam !== null && myTeam === winningTeam;
+        // Lê o vencedor gravado pelo host (room.winner_team), em vez de
+        // recalcular a soma dos times aqui - mesma razão do host já ter
+        // parado de deixar cada jogador decidir sozinho quem venceu a
+        // corrida (ver comentário em host.js/endRound): se dois clientes
+        // lessem tap_count em instantes levemente diferentes, cada tela
+        // podia "decidir" um time vencedor diferente. Agora só existe
+        // uma resposta certa, gravada uma vez, e todo mundo lê ela.
+        iWon = room.winner_team !== null && myTeam === room.winner_team;
     }
 
     resultsBadge.textContent = iWon ? t('results.youWon') : t('results.youLost');
@@ -669,8 +724,18 @@ async function renderResults(room) {
     // (acima, em reactToRoomState) já garante que renderResults só
     // roda uma vez por partida, então não precisa de trava extra aqui.
     const historyUserId = await getCurrentUserId();
-    const myPlacement = sorted.findIndex((p) => p.id === currentPlayerId) + 1;
     const myRow = sorted.find((p) => p.id === currentPlayerId);
+
+    // No cabo de guerra, placement reflete o TIME, não o toque
+    // individual - 1 pra quem estava no time vencedor, 2 pra quem
+    // estava no time perdedor, independente de quantos toques cada
+    // um deu dentro do próprio time. Empate (winner_team null) não
+    // tem vencedor, então não grava posição nenhuma. Corrida e
+    // Clique Infinito continuam com o ranking individual por toques,
+    // sem mudança.
+    const myPlacement = room.mode === 'tugofwar'
+        ? (room.winner_team === null ? null : (myTeam === room.winner_team ? 1 : 2))
+        : (sorted.findIndex((p) => p.id === currentPlayerId) + 1 || null);
 
     if (historyUserId) {
         const { error: historyError } = await window.ndquestSupabase
@@ -680,7 +745,8 @@ async function renderResults(room) {
                 role: 'player',
                 game: 'tap_rush',
                 room_code: currentRoom.room_code,
-                placement: myPlacement > 0 ? myPlacement : null,
+                round_number: currentRoom.round_number || 1,
+                placement: myPlacement,
                 details: { tap_count: myTaps, mode: room.mode, won: iWon }
             });
 
@@ -694,8 +760,9 @@ async function renderResults(room) {
                 host_id: room.host_id,
                 game: 'tap_rush',
                 room_code: currentRoom.room_code,
+                round_number: currentRoom.round_number || 1,
                 nickname: myRow ? myRow.nickname : '',
-                placement: myPlacement > 0 ? myPlacement : null,
+                placement: myPlacement,
                 details: { tap_count: myTaps, mode: room.mode, won: iWon }
             });
 

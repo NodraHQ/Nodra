@@ -1351,9 +1351,16 @@ function renderRoomParticipants(container, rounds) {
         if (showRoundLabel) {
             const heading = document.createElement("p");
             heading.className = "profile-history-detail-subheading";
-            const roundLabelText =
-                window.nodraTranslator?.translations?.["profile.historyRoundLabel"] || "Round";
-            heading.textContent = `${roundLabelText} ${round.roundNumber || 1}`;
+            // round_number 0 é o grupo de fallback (p.round_number ?? 0)
+            // - junta quem só tem linha de "participou da sala" (join,
+            // sem round_number, sem resultado ainda), não uma rodada de
+            // verdade. Bug real reportado ao vivo: isso aparecia rotulado
+            // "Round 1", confundindo com a rodada 1 de verdade (que tem
+            // seu próprio bloco, com round_number = 1 e resultado).
+            const roundLabelText = round.roundNumber === 0
+                ? (window.nodraTranslator?.translations?.["profile.historyParticipantsLabel"] || "Participants")
+                : `${window.nodraTranslator?.translations?.["profile.historyRoundLabel"] || "Round"} ${round.roundNumber}`;
+            heading.textContent = roundLabelText;
             block.appendChild(heading);
         }
 
@@ -1490,8 +1497,18 @@ function buildIconSvg(iconKey) {
 // criados"), pra não repetir a mesma lógica em 3 lugares.
 function buildSmallBadgeElement(badge) {
     const badgeEl = document.createElement("div");
-    badgeEl.className = `badge badge--small badge--${badge.badge_shape}`;
-    badgeEl.style.background = badge.background_color;
+    if (badge.image_url) {
+        // Imagem própria já vem com a forma e o fundo dela desenhados
+        // - não aplica recorte nem cor de fundo por cima, bug real
+        // reportado ao vivo: um "anel" da cor da badge aparecia em
+        // volta de uma arte que já tinha fundo transparente e moldura
+        // própria (o recorte da badge não batia pixel a pixel com o
+        // hexágono já desenhado na imagem).
+        badgeEl.className = "badge badge--small badge--image";
+    } else {
+        badgeEl.className = `badge badge--small badge--${badge.badge_shape}`;
+        badgeEl.style.background = badge.background_color;
+    }
 
     if (badge.image_url) {
         const img = document.createElement("img");
@@ -1503,7 +1520,7 @@ function buildSmallBadgeElement(badge) {
         iconSpan.className = "badge-icon";
         iconSpan.innerHTML = buildIconSvg(badge.icon);
         iconSpan.style.color = badge.icon_color || badge.background_color;
-        const sizePx = Math.round(56 * ((badge.icon_size || 35) / 100));
+        const sizePx = Math.round(78 * ((badge.icon_size || 35) / 100));
         iconSpan.style.width = `${sizePx}px`;
         iconSpan.style.height = `${sizePx}px`;
         badgeEl.appendChild(iconSpan);
@@ -1670,10 +1687,10 @@ badgeIconSizeInput?.addEventListener("input", () => {
 // sistema operacional, sentido como invasivo). Genérica agora - a
 // mesma função desenha tanto a paleta de fundo quanto a de ícone,
 // já que os dois viraram independentes.
-function renderGenericColorPalette(container, currentValue, onPick) {
+function renderGenericColorPalette(container, currentValue, onPick, colors = BADGE_COLORS) {
     if (!container) return;
     container.innerHTML = "";
-    BADGE_COLORS.forEach((color) => {
+    colors.forEach((color) => {
         const swatch = document.createElement("button");
         swatch.type = "button";
         swatch.className = "vip-color-swatch";
@@ -1708,16 +1725,25 @@ function renderIconColorPalette() {
 // escudo, texto solto.
 function updateBadgePreview() {
     if (!badgePreview) return;
-    badgePreview.className = `badge badge--${badgeShapeSelect.value}`;
 
     const hasIcon = !pendingBadgeImageFile && selectedBadgeIcon;
 
-    // Fundo sempre é a cor de fundo escolhida - reportado ao vivo: a
-    // versão anterior forçava um cinza fixo assim que um ícone era
-    // selecionado, e não dava pra escolher fundo e cor do ícone ao
-    // mesmo tempo. Agora os dois são independentes: o painel do
-    // ícone (mais abaixo) tem a própria paleta pra isso.
-    badgePreview.style.background = selectedBadgeColor;
+    if (pendingBadgeImageFile) {
+        // Imagem própria já vem com a forma e o fundo dela desenhados
+        // - mesma correção usada na exibição de verdade (ver
+        // buildSmallBadgeElement), aplicada aqui também pro preview
+        // já mostrar exatamente como vai ficar.
+        badgePreview.className = "badge badge--image";
+        badgePreview.style.background = "none";
+    } else {
+        badgePreview.className = `badge badge--${badgeShapeSelect.value}`;
+        // Fundo sempre é a cor de fundo escolhida - reportado ao vivo: a
+        // versão anterior forçava um cinza fixo assim que um ícone era
+        // selecionado, e não dava pra escolher fundo e cor do ícone ao
+        // mesmo tempo. Agora os dois são independentes: o painel do
+        // ícone (mais abaixo) tem a própria paleta pra isso.
+        badgePreview.style.background = selectedBadgeColor;
+    }
 
     badgePreviewName.textContent = badgeNameInput.value;
     badgePreviewDesc.textContent = badgeDescriptionInput.value;
@@ -2128,6 +2154,7 @@ grantBadgeForm?.addEventListener("submit", async (event) => {
 let vipSubTabsInitialized = false;
 let myBadgesLoaded = false;
 let submittedPacksLoaded = false;
+let myThemesLoaded = false;
 
 function initVipSubTabs() {
     if (vipSubTabsInitialized) return;
@@ -2152,6 +2179,10 @@ function initVipSubTabs() {
             if (target === "submitted-packs" && !submittedPacksLoaded) {
                 submittedPacksLoaded = true;
                 loadSubmittedPacksForReview();
+            }
+            if (target === "themes" && !myThemesLoaded) {
+                myThemesLoaded = true;
+                loadThemeSlotStatus();
             }
         });
     });
@@ -2197,8 +2228,15 @@ async function loadMyCreatedBadges() {
         card.className = "badge-card badge-card--small";
 
         const badgeEl = document.createElement("div");
-        badgeEl.className = `badge badge--small badge--${badge.badge_shape}`;
-        badgeEl.style.background = badge.background_color;
+        if (badge.image_url) {
+            // Imagem própria já vem com a forma e o fundo dela
+            // desenhados - mesma correção do buildSmallBadgeElement
+            // acima, ver o comentário lá pro motivo completo.
+            badgeEl.className = "badge badge--small badge--image";
+        } else {
+            badgeEl.className = `badge badge--small badge--${badge.badge_shape}`;
+            badgeEl.style.background = badge.background_color;
+        }
 
         if (badge.image_url) {
             const img = document.createElement("img");
@@ -2210,7 +2248,7 @@ async function loadMyCreatedBadges() {
             iconSpan.className = "badge-icon";
             iconSpan.innerHTML = buildIconSvg(badge.icon);
             iconSpan.style.color = badge.icon_color || badge.background_color;
-            const sizePx = Math.round(56 * ((badge.icon_size || 35) / 100));
+            const sizePx = Math.round(78 * ((badge.icon_size || 35) / 100));
             iconSpan.style.width = `${sizePx}px`;
             iconSpan.style.height = `${sizePx}px`;
             badgeEl.appendChild(iconSpan);
@@ -2430,16 +2468,856 @@ async function reviewSubmittedPack(packId, action, itemEl) {
 }
 
 // --------------------------------------------------------
-// VIP mensal pago em USDT (Avalanche C-Chain) - endereço abaixo
-// PRECISA ser trocado pelo real da tesouraria antes de ir pro ar,
-// mesma constante usada na Edge Function verify-vip-payment (as
-// duas têm que bater, se trocar um lado, troca o outro).
+// Tema personalizado do VIP - 1 incluso (grátis) por ciclo de
+// renovação, privado, aplica na hora, sem revisão. Submissão pra
+// virar tema público (patrocínio pago) é uma etapa futura, ainda não
+// implementada aqui - essa tela por enquanto só cobre o tema
+// incluso.
+//
+// A derivação de cor abaixo é uma CÓPIA da mesma lógica que roda em
+// supabase/functions/vip-create-theme/index.ts - só pra preview ao
+// vivo aqui no formulário. Quem decide de verdade o que fica salvo é
+// a Edge Function (mesmo dado, calculado nos dois lados
+// separadamente, de propósito - o preview pode ficar levemente
+// diferente do resultado final por um instante, mas nunca é o
+// preview que grava no banco).
 // --------------------------------------------------------
 
-const VIP_TREASURY_ADDRESS = "0x0000000000000000000000000000000000000000"; // TROCAR pelo endereço real
+function hexToRgbTheme(hex) {
+    const clean = hex.replace("#", "");
+    const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+    const num = parseInt(full, 16);
+    return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+}
 
-const vipTreasuryAddressEl = document.getElementById("vip-treasury-address");
-if (vipTreasuryAddressEl) vipTreasuryAddressEl.textContent = VIP_TREASURY_ADDRESS;
+function rgbToHslTheme(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    const d = max - min;
+    if (d !== 0) {
+        s = d / (1 - Math.abs(2 * l - 1));
+        if (max === r) h = ((g - b) / d) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+    }
+    return [h, s * 100, l * 100];
+}
+
+function hslToHexTheme(h, s, l) {
+    s = Math.max(0, Math.min(100, s)) / 100;
+    l = Math.max(0, Math.min(100, l)) / 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; } else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+    const toHex = (v) => Math.round((v + m) * 255).toString(16).padStart(2, "0");
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function clampTheme(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+}
+
+function deriveThemeColorsPreview(primaryHex, backgroundHex) {
+    const [pr, pg, pb] = hexToRgbTheme(primaryHex);
+    const [ph, ps] = rgbToHslTheme(pr, pg, pb);
+
+    const [br, bgc, bb] = hexToRgbTheme(backgroundHex);
+    const [bh, bs, bl] = rgbToHslTheme(br, bgc, bb);
+    const isDark = bl < 50;
+
+    const primaryLight = hslToHexTheme(ph, clampTheme(ps + 5, 0, 100), isDark ? 62 : 55);
+    const backgroundAlt = hslToHexTheme(bh, bs, clampTheme(bl + (isDark ? 4 : -3), 0, 100));
+    const surface = hslToHexTheme(bh, bs, clampTheme(bl + (isDark ? 8 : -6), 0, 100));
+    const surfaceBorder = `rgba(${pr}, ${pg}, ${pb}, 0.18)`;
+    const text = isDark ? hslToHexTheme(0, 0, 96) : hslToHexTheme(0, 0, 12);
+    const textMuted = isDark
+        ? hslToHexTheme(bh, Math.min(bs, 15), 68)
+        : hslToHexTheme(bh, Math.min(bs, 10), 42);
+    const paperTint = Math.min(ps * 0.15, 12);
+    const paper = hslToHexTheme(ph, paperTint, 94);
+
+    return { primary: primaryHex, primaryLight, background: backgroundHex, backgroundAlt, surface, surfaceBorder, text, textMuted, paper };
+}
+
+const themeNameInput = document.getElementById("theme-name");
+const themeLogoInput = document.getElementById("theme-logo");
+const themeSloganPtInput = document.getElementById("theme-slogan-pt");
+const themeSloganEnInput = document.getElementById("theme-slogan-en");
+const createThemeForm = document.getElementById("create-theme-form");
+const createThemeBtn = document.getElementById("create-theme-btn");
+const createThemeStatus = document.getElementById("create-theme-status");
+const themeSlotStatusEl = document.getElementById("vip-theme-slot-status");
+const themeMyThemesListEl = document.getElementById("vip-my-themes-list");
+
+let pendingThemeLogoFile = null;
+
+// Estado das duas cores-base (não são mais <input type="color"> nem
+// texto solto - vêm do seletor de cor próprio, ver mais abaixo).
+let themePrimaryHex = "#fea203";
+let themeBackgroundHex = "#071b30";
+
+// Sobrescritas manuais por cima do que foi derivado automaticamente -
+// reportado ao vivo: a pessoa quer poder clicar numa cor específica
+// do preview e ajustar ela na mão, sem perder a geração automática
+// das outras. Guarda só o que foi mexido de propósito; o resto
+// continua vindo do cálculo (ver deriveThemeColorsPreview). Isso vai
+// junto no envio pra Edge Function, que faz a mesma mesclagem antes
+// de salvar - ver vip-create-theme/index.ts.
+let themeColorOverrides = {};
+
+// null = criando um tema novo (consome o slot do ciclo). Com um id
+// aqui, o formulário vira "editar esse tema existente" - usado pra
+// corrigir um tema rejeitado antes de reenviar de graça (ver
+// loadThemeIntoEditForm), não consome slot nenhum.
+let editingThemeId = null;
+
+const HEX_INPUT_REGEX = /^#[0-9a-fA-F]{6}$/;
+
+function normalizeHexInput(value) {
+    let v = (value || "").trim();
+    if (v && !v.startsWith("#")) v = `#${v}`;
+    return v;
+}
+
+function updateThemePreview() {
+    const primarySwatch = document.getElementById("theme-primary-color-swatch");
+    const backgroundSwatch = document.getElementById("theme-background-color-swatch");
+    if (primarySwatch) primarySwatch.style.background = themePrimaryHex;
+    if (backgroundSwatch) backgroundSwatch.style.background = themeBackgroundHex;
+    document.getElementById("theme-primary-color-value").textContent = themePrimaryHex;
+    document.getElementById("theme-background-color-value").textContent = themeBackgroundHex;
+
+    const derived = deriveThemeColorsPreview(themePrimaryHex, themeBackgroundHex);
+    const colors = { ...derived, ...themeColorOverrides };
+
+    const themeName = themeNameInput?.value || "CryptoBasics";
+    document.getElementById("theme-preview-name").textContent = themeName;
+
+    const swatchMap = {
+        "theme-swatch-primary": "primary",
+        "theme-swatch-primary-light": "primaryLight",
+        "theme-swatch-bg": "background",
+        "theme-swatch-surface": "surface",
+        "theme-swatch-text": "text",
+        "theme-swatch-paper": "paper",
+    };
+    Object.entries(swatchMap).forEach(([id, key]) => {
+        const el = document.getElementById(id);
+        if (el) el.style.background = colors[key];
+    });
+
+    // Mockup de verdade - reportado ao vivo: "teria como esse preview
+    // ser tipo o cabeçalho de um jogo". Mesma estrutura do header
+    // real (logo à esquerda, seletor de idioma à direita, PT ativo
+    // com o gradiente principal → principal clara).
+    const mockup = document.getElementById("theme-mockup");
+    const mockupLogo = document.getElementById("theme-mockup-name");
+    const mockupLogoImg = document.getElementById("theme-mockup-logo-img");
+    const mockupLangWrap = mockup?.querySelector(".vip-theme-mockup-lang");
+    const mockupLangActive = document.getElementById("theme-mockup-lang-active");
+    const mockupLangInactive = document.getElementById("theme-mockup-lang-inactive");
+
+    if (mockup) mockup.style.background = colors.background;
+
+    // Mesma regra do tema de verdade (ver theme-schema.js): com logo,
+    // mostra a imagem; sem logo, cai pro texto do nome.
+    if (pendingThemeLogoPreviewUrl && mockupLogoImg) {
+        mockupLogoImg.src = pendingThemeLogoPreviewUrl;
+        mockupLogoImg.hidden = false;
+        if (mockupLogo) mockupLogo.hidden = true;
+    } else {
+        if (mockupLogoImg) mockupLogoImg.hidden = true;
+        if (mockupLogo) {
+            mockupLogo.hidden = false;
+            mockupLogo.textContent = themeName;
+            mockupLogo.style.color = colors.text;
+        }
+    }
+    if (mockupLangWrap) {
+        mockupLangWrap.style.background = colors.surface;
+        mockupLangWrap.style.border = `1px solid ${colors.surfaceBorder}`;
+    }
+    if (mockupLangActive) {
+        mockupLangActive.style.background = `linear-gradient(180deg, ${colors.primaryLight}, ${colors.primary})`;
+        mockupLangActive.style.color = colors.background;
+    }
+    if (mockupLangInactive) {
+        mockupLangInactive.style.color = colors.textMuted;
+    }
+
+    return colors;
+}
+
+themeNameInput?.addEventListener("input", updateThemePreview);
+
+let pendingThemeLogoPreviewUrl = null;
+
+themeLogoInput?.addEventListener("change", () => {
+    pendingThemeLogoFile = themeLogoInput.files?.[0] || null;
+
+    // Preview local do arquivo escolhido, antes até de enviar -
+    // reportado ao vivo: "tem como incluir a logo que o cara upar
+    // também". URL.createObjectURL não sobe nada, só lê o arquivo já
+    // selecionado no próprio navegador. Revoga a anterior pra não
+    // acumular URLs soltas na memória se a pessoa trocar de arquivo
+    // várias vezes.
+    if (pendingThemeLogoPreviewUrl) URL.revokeObjectURL(pendingThemeLogoPreviewUrl);
+    pendingThemeLogoPreviewUrl = pendingThemeLogoFile ? URL.createObjectURL(pendingThemeLogoFile) : null;
+
+    updateThemePreview();
+});
+
+// --------------------------------------------------------
+// Seletor de cor próprio - quadrado de saturação/luminosidade (HSV)
+// + barra de matiz + hex + paletas prontas. Reportado ao vivo: o
+// <input type="color"> nativo do navegador tem um "conta-gotas" que
+// deixa clicar em qualquer pixel da tela, até fora do site - achado
+// invasivo. Isso aqui é construído do zero, sem essa ferramenta.
+// Um único popover compartilhado, reaproveitado pros três lugares que
+// precisam escolher cor (principal, fundo, e sobrescrita de swatch
+// individual) - guarda qual callback chamar em onPickerApply.
+// --------------------------------------------------------
+
+function hsvToHex(h, s, v) {
+    s /= 100; v /= 100;
+    const c = v * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = v - c;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; } else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+    const toHex = (val) => Math.round((val + m) * 255).toString(16).padStart(2, "0");
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function hexToHsv(hex) {
+    const clean = normalizeHexInput(hex).replace("#", "");
+    const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+    const num = parseInt(full, 16) || 0;
+    const r = ((num >> 16) & 255) / 255, g = ((num >> 8) & 255) / 255, b = (num & 255) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    let h = 0;
+    if (d !== 0) {
+        if (max === r) h = ((g - b) / d) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+    }
+    const s = max === 0 ? 0 : (d / max) * 100;
+    const v = max * 100;
+    return { h, s, v };
+}
+
+const themeColorPicker = document.getElementById("theme-color-picker");
+const themePickerSv = document.getElementById("theme-picker-sv");
+const themePickerSvCursor = document.getElementById("theme-picker-sv-cursor");
+const themePickerHue = document.getElementById("theme-picker-hue");
+const themePickerHueCursor = document.getElementById("theme-picker-hue-cursor");
+const themePickerHex = document.getElementById("theme-picker-hex");
+const themePickerPalette = document.getElementById("theme-picker-palette");
+const themePickerDone = document.getElementById("theme-picker-done");
+const themeColorPickerBackdrop = document.getElementById("theme-color-picker-backdrop");
+
+let pickerState = { h: 0, s: 0, v: 0 };
+let onPickerApply = null;
+
+function pickerCurrentHex() {
+    return hsvToHex(pickerState.h, pickerState.s, pickerState.v);
+}
+
+function renderPickerCursors() {
+    const svRect = themePickerSv.getBoundingClientRect();
+    themePickerSvCursor.style.left = `${(pickerState.s / 100) * (svRect.width || 248)}px`;
+    themePickerSvCursor.style.top = `${(1 - pickerState.v / 100) * (svRect.height || 160)}px`;
+    themePickerHueCursor.style.left = `${(pickerState.h / 360) * (themePickerHue.getBoundingClientRect().width || 248)}px`;
+    themePickerSv.style.background = `hsl(${pickerState.h}, 100%, 50%)`;
+}
+
+function renderPickerHex() {
+    themePickerHex.value = pickerCurrentHex().replace("#", "").toUpperCase();
+}
+
+function openColorPicker(initialHex, onApply) {
+    pickerState = hexToHsv(initialHex);
+    onPickerApply = onApply;
+    themeColorPicker.hidden = false;
+    renderPickerCursors();
+    renderPickerHex();
+    renderGenericColorPalette(themePickerPalette, null, (color) => {
+        pickerState = hexToHsv(color);
+        renderPickerCursors();
+        renderPickerHex();
+    });
+}
+
+function closeColorPicker() {
+    themeColorPicker.hidden = true;
+    onPickerApply = null;
+}
+
+function setPickerFromPointer(clientX, clientY) {
+    const rect = themePickerSv.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+    pickerState.s = (x / rect.width) * 100;
+    pickerState.v = (1 - y / rect.height) * 100;
+    renderPickerCursors();
+    renderPickerHex();
+}
+
+function setPickerHueFromPointer(clientX) {
+    const rect = themePickerHue.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    pickerState.h = (x / rect.width) * 360;
+    renderPickerCursors();
+    renderPickerHex();
+}
+
+function wireDrag(el, onMove) {
+    let dragging = false;
+    const move = (e) => {
+        if (!dragging) return;
+        const point = e.touches ? e.touches[0] : e;
+        onMove(point.clientX, point.clientY);
+    };
+    const start = (e) => {
+        dragging = true;
+        move(e);
+    };
+    const stop = () => { dragging = false; };
+
+    el.addEventListener("mousedown", start);
+    el.addEventListener("touchstart", start, { passive: true });
+    window.addEventListener("mousemove", move);
+    window.addEventListener("touchmove", move, { passive: true });
+    window.addEventListener("mouseup", stop);
+    window.addEventListener("touchend", stop);
+}
+
+wireDrag(themePickerSv, (x, y) => setPickerFromPointer(x, y));
+wireDrag(themePickerHue, (x) => setPickerHueFromPointer(x));
+
+themePickerHex?.addEventListener("input", () => {
+    const value = normalizeHexInput(`#${themePickerHex.value}`);
+    if (HEX_INPUT_REGEX.test(value)) {
+        pickerState = hexToHsv(value);
+        renderPickerCursors();
+    }
+});
+
+themePickerDone?.addEventListener("click", () => {
+    const hex = pickerCurrentHex();
+    if (onPickerApply) onPickerApply(hex);
+    closeColorPicker();
+});
+
+themeColorPickerBackdrop?.addEventListener("click", closeColorPicker);
+document.getElementById("theme-picker-close-btn")?.addEventListener("click", closeColorPicker);
+
+document.getElementById("theme-primary-trigger")?.addEventListener("click", () => {
+    openColorPicker(themePrimaryHex, (hex) => {
+        themePrimaryHex = hex;
+        // Trocar a cor-base depois de já ter mexido em swatches
+        // individuais invalidaria essas sobrescritas de forma
+        // confusa (a pessoa ajustou "surface" na mão, mas a base
+        // mudou inteira) - mais simples e previsível é limpar.
+        themeColorOverrides = {};
+        updateThemePreview();
+    });
+});
+
+document.getElementById("theme-background-trigger")?.addEventListener("click", () => {
+    openColorPicker(themeBackgroundHex, (hex) => {
+        themeBackgroundHex = hex;
+        themeColorOverrides = {};
+        updateThemePreview();
+    });
+});
+
+// Clicar num swatch do preview abre o mesmo seletor, só pra aquela
+// cor específica - reportado ao vivo: "deveria poder clicar e trocar
+// manualmente 1 cor específica".
+document.querySelectorAll(".vip-theme-swatch-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const key = btn.dataset.colorKey;
+        const currentColors = updateThemePreview();
+        if (!currentColors) return;
+
+        openColorPicker(currentColors[key], (hex) => {
+            themeColorOverrides[key] = hex;
+            updateThemePreview();
+        });
+    });
+});
+
+// Confere se o slot grátis desse ciclo de VIP já foi usado - mesma
+// regra da Edge Function (compara com vip_expires_at atual), só que
+// aqui é uma leitura simples, sem precisar de função nenhuma pra só
+// mostrar o estado pra pessoa.
+async function loadThemeSlotStatus() {
+    if (!currentUserId) return;
+
+    // Bug real reportado ao vivo: VIP concedido direto pelo admin,
+    // sem vip_expires_at registrado, fazia essa função simplesmente
+    // parar sem mostrar nada - nem erro, nem formulário, tela vazia.
+    // Sem uma data de renovação pra comparar, não dá pra calcular
+    // "ciclo" - trata como "1 tema incluso pra sempre" nesse caso
+    // (em vez de "1 por ciclo"), em vez de travar a pessoa numa tela
+    // morta. Mesma lógica espelhada na Edge Function.
+    const hasExpiryTracked = !!currentProfile?.vip_expires_at;
+
+    const query = supabaseClient
+        .from("custom_themes")
+        .select("id, name, status")
+        .eq("owner_id", currentUserId)
+        .eq("is_included_slot", true);
+
+    const { data: existingForCycle } = hasExpiryTracked
+        ? await query.eq("created_for_vip_expiry", currentProfile.vip_expires_at).maybeSingle()
+        : await query.is("created_for_vip_expiry", null).maybeSingle();
+
+    const usedKey = hasExpiryTracked ? "vip.themeSlotUsed" : "vip.themeSlotUsedNoExpiry";
+    const availableKey = "vip.themeSlotAvailable";
+
+    if (existingForCycle) {
+        themeSlotStatusEl.textContent =
+            window.nodraTranslator?.translations?.[usedKey] ||
+            (hasExpiryTracked
+                ? `You've already used this cycle's theme (${existingForCycle.name}). A new one unlocks on your next VIP renewal.`
+                : `You've already used your included theme (${existingForCycle.name}). Your account has no renewal date on file, so contact an admin if you need another one.`);
+        createThemeForm.hidden = true;
+    } else {
+        themeSlotStatusEl.textContent =
+            window.nodraTranslator?.translations?.[availableKey] ||
+            "You have a theme slot available for this cycle.";
+        createThemeForm.hidden = false;
+        updateThemePreview();
+    }
+
+    await loadMyThemesList();
+}
+
+function escapeThemeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value ?? "";
+    return div.innerHTML;
+}
+
+async function loadMyThemesList() {
+    const { data: themes } = await supabaseClient
+        .from("custom_themes")
+        .select("id, name, status, applicable_games, colors, reviewer_notes, slogan_pt, slogan_en, logo_url")
+        .eq("owner_id", currentUserId)
+        .order("created_at", { ascending: false });
+
+    themeMyThemesListEl.innerHTML = "";
+    (themes || []).forEach((theme) => {
+        const item = document.createElement("div");
+        item.className = "vip-submitted-pack-item";
+
+        const swatch = `<span class="vip-theme-swatch" style="background:${theme.colors?.primary || "#888"};display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:6px;"></span>`;
+        const statusKey = `vip.themeStatus.${theme.status}`;
+        const statusLabel = window.nodraTranslator?.translations?.[statusKey] || theme.status;
+
+        let actionsHtml = "";
+        if (theme.status === "private") {
+            actionsHtml = `<button type="button" class="btn btn-secondary vip-theme-submit-btn" data-theme-id="${theme.id}">${window.nodraTranslator?.translations?.["vip.themeSubmitBtn"] || "Submit for public review"}</button>`;
+        } else if (theme.status === "rejected") {
+            actionsHtml = `
+                <p class="vip-theme-reject-note">${escapeThemeHtml(theme.reviewer_notes || "")}</p>
+                <button type="button" class="btn btn-secondary vip-theme-edit-btn" data-theme-id="${theme.id}">${window.nodraTranslator?.translations?.["vip.themeEditResubmitBtn"] || "Edit and resubmit"}</button>
+            `;
+        } else if (theme.status === "pending_review") {
+            actionsHtml = `<span class="vip-theme-pending-note">${window.nodraTranslator?.translations?.["vip.themePendingNote"] || "Waiting for admin review."}</span>`;
+        } else if (theme.status === "public") {
+            actionsHtml = `<span class="vip-theme-public-note">${window.nodraTranslator?.translations?.["vip.themePublicNote"] || "Live - visible to any host while your VIP stays active."}</span>`;
+        }
+
+        item.innerHTML = `
+            <span class="vip-submitted-pack-name">${swatch}${escapeThemeHtml(theme.name)}</span>
+            <span class="vip-submitted-pack-meta">${escapeThemeHtml(statusLabel)} - ${escapeThemeHtml((theme.applicable_games || []).join(", "))}</span>
+            <div class="vip-theme-item-actions">${actionsHtml}</div>
+        `;
+        themeMyThemesListEl.appendChild(item);
+
+        item.querySelector(".vip-theme-submit-btn")?.addEventListener("click", () => openThemeSubmitModal(theme.id, theme.name));
+        item.querySelector(".vip-theme-edit-btn")?.addEventListener("click", () => loadThemeIntoEditForm(theme));
+    });
+}
+
+createThemeForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    createThemeStatus.textContent = "";
+    createThemeStatus.className = "vip-badge-status";
+    createThemeBtn.disabled = true;
+
+    const selectedGames = [...document.querySelectorAll(".theme-game-check:checked")].map((c) => c.value);
+
+    if (selectedGames.length === 0) {
+        createThemeStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.themeNoGameSelected"] || "Choose at least one game.";
+        createThemeStatus.className = "vip-badge-status is-error";
+        createThemeBtn.disabled = false;
+        return;
+    }
+
+    // Logo é opcional, mesmo espírito do badge - upload só se tiver
+    // um arquivo pendente de verdade. Editando sem trocar a logo,
+    // manda null - vip-update-theme trata null como "sem logo"
+    // (mesmo comportamento de criar sem logo, não existe "manter a
+    // antiga" hoje - reenviar a mesma imagem é o caminho por agora).
+    let logoUrl = null;
+    if (pendingThemeLogoFile) {
+        const ext = pendingThemeLogoFile.name.split(".").pop() || "png";
+        const fileName = `${currentUserId}-${Date.now()}.${ext}`;
+
+        const { error: uploadError } = await supabaseClient.storage
+            .from("theme-logos")
+            .upload(fileName, pendingThemeLogoFile);
+
+        if (uploadError) {
+            console.error("Erro ao enviar logo do tema:", uploadError);
+            createThemeStatus.textContent =
+                window.nodraTranslator?.translations?.["vip.uploadFailed"] || "Failed to upload image.";
+            createThemeStatus.className = "vip-badge-status is-error";
+            createThemeBtn.disabled = false;
+            return;
+        }
+
+        const { data: publicUrlData } = supabaseClient.storage.from("theme-logos").getPublicUrl(fileName);
+        logoUrl = publicUrlData.publicUrl;
+    }
+
+    const isEditing = !!editingThemeId;
+
+    try {
+        const {
+            data: { session },
+        } = await supabaseClient.auth.getSession();
+
+        const payload = {
+            name: themeNameInput.value,
+            primary_color: themePrimaryHex,
+            background_color: themeBackgroundHex,
+            color_overrides: themeColorOverrides,
+            logo_url: logoUrl,
+            slogan_pt: themeSloganPtInput.value || null,
+            slogan_en: themeSloganEnInput.value || null,
+            applicable_games: selectedGames,
+        };
+        if (isEditing) payload.themeId = editingThemeId;
+
+        const response = await fetch(
+            `${window.nodraSupabaseUrl}/functions/v1/${isEditing ? "vip-update-theme" : "vip-create-theme"}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify(payload),
+            },
+        );
+
+        const result = await response.json();
+
+        if (result.error) {
+            createThemeStatus.textContent = result.error;
+            createThemeStatus.className = "vip-badge-status is-error";
+            createThemeBtn.disabled = false;
+            return;
+        }
+
+        // Editar um tema rejeitado já reenvia pra revisão em seguida,
+        // no mesmo clique - reportado ao vivo: "libera ele pra enviar
+        // um submit novo gratuitamente", sem passo extra.
+        if (isEditing) {
+            const resubmitResponse = await fetch(`${window.nodraSupabaseUrl}/functions/v1/vip-resubmit-theme`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ themeId: editingThemeId }),
+            });
+            const resubmitResult = await resubmitResponse.json();
+            if (resubmitResult.error) {
+                createThemeStatus.textContent = resubmitResult.error;
+                createThemeStatus.className = "vip-badge-status is-error";
+                createThemeBtn.disabled = false;
+                return;
+            }
+        }
+
+        createThemeStatus.textContent = isEditing
+            ? window.nodraTranslator?.translations?.["vip.themeResubmitSuccess"] || "Saved and resubmitted for review!"
+            : window.nodraTranslator?.translations?.["vip.themeCreateSuccess"] || "Theme created! Already live in your games.";
+        createThemeStatus.className = "vip-badge-status is-success";
+
+        pendingThemeLogoFile = null;
+        if (pendingThemeLogoPreviewUrl) URL.revokeObjectURL(pendingThemeLogoPreviewUrl);
+        pendingThemeLogoPreviewUrl = null;
+        themeColorOverrides = {};
+        themePrimaryHex = "#fea203";
+        themeBackgroundHex = "#071b30";
+        editingThemeId = null;
+        createThemeBtn.textContent =
+            window.nodraTranslator?.translations?.["vip.themeCreateBtn"] || "Create Theme";
+        createThemeForm.reset();
+        updateThemePreview();
+        await loadThemeSlotStatus();
+    } catch (err) {
+        console.error("Erro ao salvar tema:", err);
+        createThemeStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.themeCreateFailed"] || "Something went wrong. Check the console.";
+        createThemeStatus.className = "vip-badge-status is-error";
+        createThemeBtn.disabled = false;
+    }
+});
+
+// Reabre o formulário de criação já preenchido com os dados de um
+// tema rejeitado, pra corrigir e reenviar - mesmo formulário, modo
+// diferente (ver isEditing no handler de submit acima). Editar não
+// consome slot nenhum, é sempre grátis.
+function loadThemeIntoEditForm(theme) {
+    editingThemeId = theme.id;
+
+    themeNameInput.value = theme.name;
+    themePrimaryHex = theme.colors?.primary || "#fea203";
+    themeBackgroundHex = theme.colors?.background || "#071b30";
+
+    // Não guardamos separadamente quais cores foram mexidas na mão -
+    // recalcula o que seria automático a partir de primary/background
+    // e trata qualquer diferença encontrada como sobrescrita manual.
+    const autoColors = deriveThemeColorsPreview(themePrimaryHex, themeBackgroundHex);
+    themeColorOverrides = {};
+    ["primaryLight", "surface", "text", "paper"].forEach((key) => {
+        if (theme.colors?.[key] && theme.colors[key] !== autoColors[key]) {
+            themeColorOverrides[key] = theme.colors[key];
+        }
+    });
+
+    themeSloganPtInput.value = theme.slogan_pt || "";
+    themeSloganEnInput.value = theme.slogan_en || "";
+
+    document.querySelectorAll(".theme-game-check").forEach((cb) => {
+        cb.checked = (theme.applicable_games || []).includes(cb.value);
+    });
+
+    createThemeBtn.textContent =
+        window.nodraTranslator?.translations?.["vip.themeSaveResubmitBtn"] || "Save and Resubmit";
+    createThemeForm.hidden = false;
+    updateThemePreview();
+    createThemeForm.scrollIntoView({ behavior: "smooth" });
+}
+
+// --------------------------------------------------------
+// Redes/tokens aceitos pra pagamento - reportado ao vivo: "tem como
+// adicionar mais redes?". Mesma configuração (endereços, ordem)
+// espelhada no back (ver supabase/functions/_shared/
+// paymentVerification.ts) - se trocar um endereço aqui, troca lá
+// também. Uma carteira EVM comum recebe no MESMO endereço em
+// qualquer rede EVM (por isso só existe um endereço EVM, reusado pra
+// Avalanche e Base); Solana usa outro formato de endereço inteiramente.
+// Definido aqui, antes de qualquer coisa que use - bug real que eu
+// mesmo quase deixei passar: código no topo do arquivo rodando antes
+// de um "const" mais abaixo já ter sido inicializado quebra a página
+// inteira (erro "Cannot access before initialization").
+// --------------------------------------------------------
+
+const EVM_TREASURY_ADDRESS = "0x0000000000000000000000000000000000000000"; // TROCAR - mesmo endereço serve Avalanche e Base
+const SOLANA_TREASURY_ADDRESS_FOR_PAYMENTS = "REPLACE_WITH_SOLANA_TREASURY_ADDRESS"; // TROCAR - formato diferente do EVM
+
+const NETWORK_TOKEN_OPTIONS = [
+    { network: "avalanche", token: "USDT", label: "USDT - Avalanche C-Chain", address: EVM_TREASURY_ADDRESS },
+    { network: "base", token: "USDC", label: "USDC - Base", address: EVM_TREASURY_ADDRESS },
+    { network: "solana", token: "USDC", label: "USDC - Solana", address: SOLANA_TREASURY_ADDRESS_FOR_PAYMENTS },
+    { network: "solana", token: "USDT", label: "USDT - Solana", address: SOLANA_TREASURY_ADDRESS_FOR_PAYMENTS },
+];
+
+// Preenche um <select> com as opções acima e devolve uma função pra
+// pegar a opção escolhida no momento - reaproveitado pelo pagamento
+// de VIP e pelo de submissão de tema, mesma lista nos dois.
+function setupNetworkTokenSelect(selectEl) {
+    if (!selectEl) return () => NETWORK_TOKEN_OPTIONS[0];
+    selectEl.innerHTML = "";
+    NETWORK_TOKEN_OPTIONS.forEach((opt, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = opt.label;
+        selectEl.appendChild(option);
+    });
+    return () => NETWORK_TOKEN_OPTIONS[Number(selectEl.value)] || NETWORK_TOKEN_OPTIONS[0];
+}
+
+// --------------------------------------------------------
+// Modal de pagamento pra submeter um tema pro público - mesmo
+// espírito do pagamento de VIP (endereço fixo, cola o hash da
+// transação, confere) - ver verify-theme-submission-payment.
+// --------------------------------------------------------
+
+const THEME_SUBMISSION_PRICE_USDT = 10;
+
+const themeSubmitModal = document.getElementById("theme-submit-modal");
+const themeSubmitNameEl = document.getElementById("theme-submit-name");
+const themeSubmitTxHashInput = document.getElementById("theme-submit-tx-hash");
+const themeSubmitStatus = document.getElementById("theme-submit-status");
+const themeSubmitVerifyBtn = document.getElementById("theme-submit-verify-btn");
+const themeSubmitNetworkSelect = document.getElementById("theme-submit-network-token-select");
+const getSelectedThemeSubmitNetworkToken = setupNetworkTokenSelect(themeSubmitNetworkSelect);
+
+let submittingThemeId = null;
+
+function renderThemeSubmitAddress() {
+    const addressEl = document.getElementById("theme-submit-treasury-address");
+    if (addressEl) addressEl.textContent = getSelectedThemeSubmitNetworkToken().address;
+}
+themeSubmitNetworkSelect?.addEventListener("change", renderThemeSubmitAddress);
+
+function openThemeSubmitModal(themeId, themeName) {
+    submittingThemeId = themeId;
+
+    const lang = window.nodraTranslator?.currentLanguage === "pt" ? "pt" : "en";
+
+    // Não usa data-i18n nesses dois parágrafos de propósito - bug
+    // real reportado ao vivo: o tradutor faz element.innerHTML =
+    // texto, que apaga qualquer elemento filho (o <strong> do preço,
+    // o <span> do nome) toda vez que a página troca de idioma.
+    // Monta a frase na mão aqui, com o nome do tema sempre via
+    // textContent (nunca innerHTML) - evita repetir esse bug e evita
+    // que um nome de tema com HTML dentro vire código na página.
+    themeSubmitNameEl.textContent = themeName;
+
+    const hintText = lang === "pt" ? "Envie exatamente" : "Send exactly";
+    const hintTail =
+        lang === "pt"
+            ? "pro endereço abaixo, na rede escolhida, depois cole o hash da transação pra confirmar."
+            : "to the address below, on the network you pick, then paste the transaction hash to confirm.";
+
+    const hintEl = document.getElementById("theme-submit-hint-text");
+    hintEl.textContent = "";
+    hintEl.appendChild(document.createTextNode(`${hintText} `));
+    const priceEl = document.createElement("strong");
+    priceEl.id = "theme-submit-price";
+    priceEl.textContent = `${THEME_SUBMISSION_PRICE_USDT} USDT`;
+    hintEl.appendChild(priceEl);
+    hintEl.appendChild(document.createTextNode(` ${hintTail}`));
+
+    renderThemeSubmitAddress();
+    themeSubmitTxHashInput.value = "";
+    themeSubmitStatus.textContent = "";
+    themeSubmitStatus.className = "vip-badge-status";
+    themeSubmitModal.hidden = false;
+}
+
+function closeThemeSubmitModal() {
+    themeSubmitModal.hidden = true;
+    submittingThemeId = null;
+}
+
+document.getElementById("theme-submit-modal-backdrop")?.addEventListener("click", closeThemeSubmitModal);
+document.getElementById("theme-submit-close-btn")?.addEventListener("click", closeThemeSubmitModal);
+
+// Esc fecha qualquer um dos dois modais - saída de emergência extra,
+// além do X e do clique fora, mesmo motivo (reportado ao vivo: sem
+// um jeito óbvio de sair, dava impressão de tela travada).
+document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (themeColorPicker && !themeColorPicker.hidden) closeColorPicker();
+    if (themeSubmitModal && !themeSubmitModal.hidden) closeThemeSubmitModal();
+});
+
+themeSubmitVerifyBtn?.addEventListener("click", async () => {
+    if (!submittingThemeId) return;
+
+    themeSubmitStatus.textContent = "";
+    themeSubmitStatus.className = "vip-badge-status";
+    themeSubmitVerifyBtn.disabled = true;
+
+    try {
+        const {
+            data: { session },
+        } = await supabaseClient.auth.getSession();
+
+        const response = await fetch(`${window.nodraSupabaseUrl}/functions/v1/verify-theme-submission-payment`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+                themeId: submittingThemeId,
+                txHash: themeSubmitTxHashInput.value.trim(),
+                network: getSelectedThemeSubmitNetworkToken().network,
+                token: getSelectedThemeSubmitNetworkToken().token,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+            themeSubmitStatus.textContent = result.error;
+            themeSubmitStatus.className = "vip-badge-status is-error";
+            themeSubmitVerifyBtn.disabled = false;
+            return;
+        }
+
+        themeSubmitStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.themeSubmitSuccess"] || "Payment verified! Sent for admin review.";
+        themeSubmitStatus.className = "vip-badge-status is-success";
+
+        setTimeout(async () => {
+            closeThemeSubmitModal();
+            themeSubmitVerifyBtn.disabled = false;
+            await loadMyThemesList();
+        }, 1500);
+    } catch (err) {
+        console.error("Erro ao verificar pagamento de submissão de tema:", err);
+        themeSubmitStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.themeCreateFailed"] || "Something went wrong. Check the console.";
+        themeSubmitStatus.className = "vip-badge-status is-error";
+        themeSubmitVerifyBtn.disabled = false;
+    }
+});
+
+// --------------------------------------------------------
+// --------------------------------------------------------
+// VIP mensal - PRECISA trocar os dois endereços acima pelos reais da
+// tesouraria antes de ir pro ar, mesmas constantes usadas na Edge
+// Function verify-vip-payment (o back e o front têm que bater).
+// --------------------------------------------------------
+
+const vipNetworkSelect = document.getElementById("vip-network-token-select");
+const getSelectedVipNetworkToken = setupNetworkTokenSelect(vipNetworkSelect);
+
+function renderVipPaymentDetails() {
+    const selected = getSelectedVipNetworkToken();
+    const addressEl = document.getElementById("vip-treasury-address");
+    const instructionsEl = document.getElementById("vip-payment-instructions");
+    if (addressEl) addressEl.textContent = selected.address;
+    if (instructionsEl) {
+        const template =
+            window.nodraTranslator?.translations?.["vip.paymentInstructionsTemplate"] ||
+            "Pay $5 in {token} ({network}) to the address above, using any wallet you like. Then paste the transaction hash below to verify.";
+        instructionsEl.textContent = template
+            .replace("{token}", selected.token)
+            .replace("{network}", selected.label.split(" - ")[1] || selected.network);
+    }
+}
+
+vipNetworkSelect?.addEventListener("change", renderVipPaymentDetails);
+renderVipPaymentDetails();
 
 // Alterna entre a tela de compra (quem ainda não é VIP) e a área VIP
 // de verdade (badges, pacotes) - reportado ao vivo: a compra devia
@@ -2495,7 +3373,11 @@ vipPaymentForm?.addEventListener("submit", async (event) => {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${session.access_token}`,
             },
-            body: JSON.stringify({ txHash: vipTxHashInput.value.trim() }),
+            body: JSON.stringify({
+                txHash: vipTxHashInput.value.trim(),
+                network: getSelectedVipNetworkToken().network,
+                token: getSelectedVipNetworkToken().token,
+            }),
         });
 
         const result = await response.json();
