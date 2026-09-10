@@ -30,3 +30,13 @@ window.nodraSupabase = supabase.createClient(
 // ("undefined/functions/v1/..."), e sem tratamento de erro isso
 // nunca reabilitava o botão.
 window.nodraSupabaseUrl = NDQUEST_SUPABASE_URL;
+
+// Mesma ideia da URL acima, mas pra chave - Edge Functions do
+// Supabase exigem essa chave (ou um token de usuário) em toda
+// chamada, mesmo pra function pensada pra ser pública/sem login.
+// O client oficial (window.nodraSupabase) manda isso sozinho por
+// baixo dos panos; um fetch cru direto na function não manda nada
+// a menos que a gente inclua na mão - bug real reportado ao vivo:
+// get-badge-claim-info (chamada assim, sem sessão, de propósito)
+// voltava 401 por causa exatamente disso.
+window.nodraSupabaseAnonKey = NDQUEST_SUPABASE_PUBLISHABLE_KEY;

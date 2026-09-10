@@ -20,9 +20,8 @@
 
     <div class="nav-links">
 
-        <a href="../index.html#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a>
-        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
-        <a href="https://x.com/NodraHQ" target="_blank" data-i18n="nav.x">X</a>
+        <a href="../academy/index.html" data-i18n="nav.academy">Academy</a>
+        <a href="../ndquest/index.html" data-i18n="nav.ndquest">NDQuest</a>
 
         <div id="nav-auth"></div>
 
@@ -37,211 +36,369 @@
 
 <main>
 
-    <!-- ===================================================== -->
-    <!-- HERO -->
-    <!-- ===================================================== -->
-
-    <section class="hero" id="top">
+    <div class="docs-header">
         <div class="container">
-            <div class="hero-content reveal" style="max-width:760px">
-                <span class="tag" data-i18n="hero.tag">ABOUT</span>
-                <h1 class="hero-title" data-i18n="hero.title">Why Nodra Exists</h1>
-                <p class="hero-description" data-i18n="hero.description">
-                    Nodra is built on one belief: people should understand Web3
-                    before they put money into it. Everything else follows from
-                    that.
-                </p>
-                <div class="hero-actions">
-                    <a href="../index.html" class="btn btn-secondary" data-i18n="hero.back">← Nodra</a>
-                </div>
-            </div>
+            <h1 data-i18n="docs.title">How Nodra Works</h1>
+            <p data-i18n="docs.subtitle">Every mechanic, limit, timer and rule on the platform today - documented, not summarized.</p>
         </div>
-    </section>
+    </div>
 
-    <!-- ===================================================== -->
-    <!-- MISSION -->
-    <!-- ===================================================== -->
+    <div class="container">
+        <div class="docs-layout">
 
-    <section class="about-section">
-        <div class="container">
-            <div class="mission-box reveal glow">
-                <span class="tag" data-i18n="mission.eyebrow">01. Mission</span>
-                <h2 data-i18n="mission.title">Understanding Before Speculation</h2>
-                <p data-i18n="mission.p1">
-                    Most people's first contact with crypto is a price chart, not
-                    an explanation. Nodra exists to flip that order: give people,
-                    communities, creators and companies real understanding of
-                    Web3 first, and let confidence follow from that, not from
-                    hype.
-                </p>
-                <p data-i18n="mission.p2">
-                    Education is one part of that, not the whole of it. Alongside
-                    teaching, Nodra builds practical tools and experiences that
-                    make Web3 usable day to day, not just explainable.
-                </p>
-            </div>
-        </div>
-    </section>
+            <aside class="docs-sidebar">
+                <button type="button" class="docs-nav-item is-active" data-section="academy">Academy</button>
 
-    <!-- ===================================================== -->
-    <!-- PRINCIPLES -->
-    <!-- ===================================================== -->
-
-    <section class="about-section">
-        <div class="container">
-            <div class="about-section__header reveal">
-                <span class="tag" data-i18n="principles.eyebrow">02. Principles</span>
-                <h2 class="section-title" data-i18n="principles.title">How We Build</h2>
-            </div>
-
-            <div class="principles-grid">
-                <div class="card principle-card glow">
-                    <h3 data-i18n="principles.card1.title">Independent Products</h3>
-                    <p data-i18n="principles.card1.text">Academy, NDQuest, and everything that comes after are built as separate products under one brand, each free to evolve at its own pace.</p>
+                <button type="button" class="docs-nav-item docs-nav-item--parent" id="ndquest-toggle">NDQuest<span class="docs-nav-item__caret">›</span></button>
+                <div class="docs-nav-children" id="ndquest-children" hidden>
+                    <button type="button" class="docs-nav-child" data-section="show-down">Show Down</button>
+                    <button type="button" class="docs-nav-child" data-section="time-attack">Time Attack</button>
+                    <button type="button" class="docs-nav-child" data-section="tap-rush">Tap Rush</button>
+                    <button type="button" class="docs-nav-child" data-section="roulette">Roulette</button>
+                    <button type="button" class="docs-nav-child" data-section="quest-drop">Quest Drop</button>
                 </div>
-                <div class="card principle-card glow">
-                    <h3 data-i18n="principles.card2.title">Free, Open Content</h3>
-                    <p data-i18n="principles.card2.text">The core educational content stays free and open. Nodra earns trust by being useful first.</p>
-                </div>
-                <div class="card principle-card glow">
-                    <h3 data-i18n="principles.card3.title">Understand, Then Act</h3>
-                    <p data-i18n="principles.card3.text">Every product Nodra ships is built around the same idea: know what you're doing before you do it.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- ===================================================== -->
-    <!-- ROADMAP -->
-    <!-- ===================================================== -->
+                <button type="button" class="docs-nav-item" data-section="badges">Badges</button>
+                <button type="button" class="docs-nav-item" data-section="vip">VIP</button>
+                <button type="button" class="docs-nav-item" data-section="themes">Custom Themes</button>
+                <button type="button" class="docs-nav-item" data-section="packs">Question Packs</button>
+                <button type="button" class="docs-nav-item" data-section="support">Support</button>
+            </aside>
 
-    <section class="about-section">
-        <div class="container">
-            <div class="about-section__header reveal">
-                <span class="tag" data-i18n="roadmap.eyebrow">03. Roadmap</span>
-                <h2 class="section-title" data-i18n="roadmap.title">Where Things Stand</h2>
-                <p class="section-description" data-i18n="roadmap.description">Nodra grows one vertical at a time. Here's what's live, and what's next.</p>
-            </div>
+            <div class="docs-content">
 
-            <div class="roadmap-list">
+                <!-- ===================================================== -->
+                <!-- ACADEMY -->
+                <!-- ===================================================== -->
 
-                <div class="card roadmap-item reveal">
-                    <button type="button" class="roadmap-item__header" data-roadmap-toggle aria-expanded="false">
-                        <div class="roadmap-item__body">
-                            <h3 data-i18n="roadmap.academy.title">Nodra Academy</h3>
-                            <p data-i18n="roadmap.academy.description">10 free modules covering blockchain fundamentals, DeFi and security, each with a quiz to check understanding.</p>
-                        </div>
-                        <span class="roadmap-item__chevron" aria-hidden="true">⌄</span>
-                    </button>
-                    <div class="roadmap-item__details">
-                        <div class="roadmap-item__details-inner">
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m1.title">01. Blockchain</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m1.text">The foundation: distributed ledgers, blocks and hashes, consensus, and where wallets fit in.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m2.title">02. Wallets</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m2.text">Undoes the most common misunderstanding in the space: a wallet manages keys, it doesn't hold currency.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m3.title">03. Networks</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m3.text">Different blockchains are separate networks, each with its own rules, validators and gas fees.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m4.title">04. Assets</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m4.text">Currency, token, stablecoin, NFT: each one built for a different purpose.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m5.title">05. DeFi</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m5.text">Exchanges, liquidity pools and automated market makers: the other participants in the system.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m6.title">06. Lending</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m6.text">Borrowing against collateral, and the real risk behind it: liquidation.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m7.title">07. Yield</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m7.text">Where returns in DeFi actually come from, and how to spot what's unsustainable.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m8.title">08. Stablecoins</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m8.text">What actually keeps the price stable, collateral, algorithm or reserve, and why "stable" is a design goal, not a guarantee.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m9.title">09. Security</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m9.text">Most losses come from phishing and avoidable mistakes, not sophisticated attacks.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.academy.m10.title">10. Final Project</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.academy.m10.text">A guided review that ties every module before it back together.</p>
-                            </div>
-                        </div>
+                <section class="docs-panel" id="section-academy">
+                    <h2 data-i18n="docs.academy.h">Academy</h2>
+                    <p class="docs-lead" data-i18n="docs.academy.lead">Free, self-paced courses on blockchain and Web3. Ten modules, one quiz each, one badge per module completed.</p>
+
+                    <h3 data-i18n="docs.academy.structure.h">Structure</h3>
+                    <p data-i18n="docs.academy.structure.p">Academy has <strong>10 modules</strong>, in a fixed order: Blockchain, Wallets, Networks, Assets, DeFi, Lending, Yield, Stablecoins, Security, and Final Project. Each module is a self-contained reading page ending in a quiz. There's no enrollment step and no prerequisite check - any module can be opened directly, though the content is written assuming you've read the ones before it.</p>
+
+                    <h3 data-i18n="docs.academy.quizzes.h">Quizzes</h3>
+                    <p data-i18n="docs.academy.quizzes.p">Every module ends with a quiz covering that module's content. The quiz is complete once every question has been answered at least once - it doesn't require a perfect score, and there's no time limit or attempt limit. Retaking a quiz is always allowed and never removes a badge already earned.</p>
+
+                    <h3 data-i18n="docs.academy.badges.h">Badges</h3>
+                    <p data-i18n="docs.academy.badges.p">Finishing a module's quiz grants that module's badge automatically, the moment the last question is answered. This only works if you're logged in - the page checks your session at that exact moment. If you're not logged in, the quiz still completes normally, but a message tells you to log in to claim the badge; nothing is queued or retroactively granted after logging in later.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.academy.facts.modules.k">Modules</dt><dd data-i18n="docs.academy.facts.modules.v">10</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.academy.facts.badge.k">Badge per module</dt><dd data-i18n="docs.academy.facts.badge.v">Yes, on quiz completion</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.academy.facts.login.k">Login required to earn badge</dt><dd data-i18n="docs.academy.facts.login.v">Yes</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.academy.facts.passing.k">Passing score required</dt><dd data-i18n="docs.academy.facts.passing.v">No - answering all questions is enough</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.academy.facts.retake.k">Retake limit</dt><dd data-i18n="docs.academy.facts.retake.v">None</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.academy.facts.cost.k">Cost</dt><dd data-i18n="docs.academy.facts.cost.v">Free</dd></div>
                     </div>
-                </div>
 
-                <div class="card roadmap-item reveal">
-                    <button type="button" class="roadmap-item__header" data-roadmap-toggle aria-expanded="false">
-                        <div class="roadmap-item__body">
-                            <h3 data-i18n="roadmap.ndquest.title">NDQuest</h3>
-                            <p data-i18n="roadmap.ndquest.description">Five games live today, across three formats: quiz, action and raffle. Built for events, creators and communities, with more games joining as the platform grows.</p>
-                        </div>
-                        <span class="roadmap-item__chevron" aria-hidden="true">⌄</span>
-                    </button>
-                    <div class="roadmap-item__details">
-                        <div class="roadmap-item__details-inner">
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g1.title">Quest Drop</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g1.text">Pick a difficulty, open a challenge, answer correctly and claim the prize. Built for live events, fully brandable per sponsor.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g2.title">Time Attack</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g2.text">Race the clock, right answers add time, wrong ones take it away. Multiple players join the same room from their own phones.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g3.title">Show Down</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g3.text">Live, host-paced trivia: everyone answers the same question at once, points reward speed, host controls the pace.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g4.title">Tap Rush</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g4.text">Tap as fast as you can, three ways: race to a target, no-target endless tapping, or team up in a tug of war against another team.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.ndquest.g5.title">Roulette</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.ndquest.g5.text">Gather names, spin the wheel, draw a winner. Pull from a previous game's room, open a QR room, or paste a ready list.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <div class="docs-callout" data-i18n="docs.academy.callout"><strong>Note:</strong> module badges are the same badge system used everywhere else on the platform (see the Badges section) - they show up on your profile and inside NDQuest games exactly like any other badge.</div>
+                </section>
 
-                <div class="card roadmap-item reveal">
-                    <button type="button" class="roadmap-item__header" data-roadmap-toggle aria-expanded="false">
-                        <div class="roadmap-item__body">
-                            <h3 data-i18n="roadmap.next.title">What's Next</h3>
-                            <p data-i18n="roadmap.next.description">A real account system, achievements worth earning, and taking that record onchain.</p>
-                        </div>
-                        <span class="roadmap-item__chevron" aria-hidden="true">⌄</span>
-                    </button>
-                    <div class="roadmap-item__details">
-                        <div class="roadmap-item__details-inner">
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.next.g1.title">Accounts</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.next.g1.text">Not just a login. A real account system across Academy and NDQuest, so progress is tied to a person, not a browser tab. Module completions, quiz scores, games hosted or played: all of it persists and travels with you instead of resetting every session.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.next.g2.title">Badges</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.next.g2.text">Once accounts exist, achievements become something real to earn. Finishing a module, acing a quiz, winning a round, hosting an event: badges turn scattered activity into a visible record of what someone has actually done.</p>
-                            </div>
-                            <div class="roadmap-detail">
-                                <div class="roadmap-detail__title" data-i18n="roadmap.next.g3.title">Onchain</div>
-                                <p class="roadmap-detail__text" data-i18n="roadmap.next.g3.text">The natural next step once badges exist: put them onchain. Proof of what someone learned and did, not just a row in a database, something they actually own.</p>
-                            </div>
-                        </div>
+                <!-- ===================================================== -->
+                <!-- BADGES -->
+                <!-- ===================================================== -->
+
+                <!-- ===================================================== -->
+                <!-- NDQUEST GAMES -->
+                <!-- ===================================================== -->
+
+                <section class="docs-panel" id="section-show-down" hidden>
+                    <h2 data-i18n="docs.showdown.h">Show Down</h2>
+                    <p class="docs-lead" data-i18n="docs.showdown.lead">Live, host-paced trivia. Everyone sees and answers the same question at the same time - speed decides the score, not just correctness.</p>
+
+                    <h3 data-i18n="docs.showdown.round.h">How a round works</h3>
+                    <p data-i18n="docs.showdown.round.p">The host controls the pace: pick a question pack, launch a question, wait for answers (or the timer), reveal the correct one, move to the next. Every player answers on their own phone, scanning the room's QR code or entering the room code to join.</p>
+
+                    <h3 data-i18n="docs.showdown.scoring.h">Scoring</h3>
+                    <p data-i18n="docs.showdown.scoring.p">Points depend on how fast you answer, not just whether you're right. Answering within the first <strong>3 seconds</strong> of a question earns the full <strong>1,000 points</strong>. After that, points decay in a straight line down to <strong>300 points</strong> right at the time limit. A wrong answer earns <strong>0</strong>, no matter how fast it was.</p>
+
+                    <h3 data-i18n="docs.showdown.rounds.h">Rounds</h3>
+                    <p data-i18n="docs.showdown.rounds.p">When a question set ends, the host can start a new round from the results screen. Starting a new round archives the current scoreboard under "Previous Rounds" and resets scores to zero for the next one - past rounds stay visible for reference, but don't carry points forward into the new round.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.showdown.facts.window.k">Full points window</dt><dd data-i18n="docs.showdown.facts.window.v">First 3 seconds</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.showdown.facts.max.k">Max points</dt><dd data-i18n="docs.showdown.facts.max.v">1,000</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.showdown.facts.min.k">Min points (correct, at time limit)</dt><dd data-i18n="docs.showdown.facts.min.v">300</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.showdown.facts.wrong.k">Wrong answer</dt><dd data-i18n="docs.showdown.facts.wrong.v">0 points</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.showdown.facts.rounds.k">Rounds per room</dt><dd data-i18n="docs.showdown.facts.rounds.v">Unlimited, host-controlled</dd></div>
                     </div>
-                </div>
+                </section>
+
+                <section class="docs-panel" id="section-time-attack" hidden>
+                    <h2 data-i18n="docs.timeattack.h">Time Attack</h2>
+                    <p class="docs-lead" data-i18n="docs.timeattack.lead">A shared countdown timer. Correct answers add time, wrong ones take it away - the room keeps playing until the clock runs out.</p>
+
+                    <h3 data-i18n="docs.timeattack.how.h">How it works</h3>
+                    <p data-i18n="docs.timeattack.how.p">Everyone in the room shares the same timer. Players answer questions at their own pace on their phones; each correct answer adds time to the room's clock, each wrong answer subtracts from it. The game ends when the shared timer hits zero, whenever that happens.</p>
+
+                    <h3 data-i18n="docs.timeattack.config.h">Host configuration</h3>
+                    <p data-i18n="docs.timeattack.config.p">The host sets four numbers when creating the room, each with a sensible default that can be changed:</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.timeattack.facts.start.k">Starting time</dt><dd data-i18n="docs.timeattack.facts.start.v">30 seconds (default)</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.timeattack.facts.cap.k">Time cap</dt><dd data-i18n="docs.timeattack.facts.cap.v">120 seconds (default) - the clock never exceeds this, even with bonuses</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.timeattack.facts.bonus.k">Bonus for a correct answer</dt><dd data-i18n="docs.timeattack.facts.bonus.v">+5 seconds (default)</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.timeattack.facts.penalty.k">Penalty for a wrong answer</dt><dd data-i18n="docs.timeattack.facts.penalty.v">-5 seconds (default)</dd></div>
+                    </div>
+
+                    <div class="docs-callout" data-i18n="docs.timeattack.callout"><strong>Note:</strong> all four numbers above are set by the host at room creation and can be changed from these defaults for any given room.</div>
+                </section>
+
+                <section class="docs-panel" id="section-tap-rush" hidden>
+                    <h2 data-i18n="docs.taprush.h">Tap Rush</h2>
+                    <p class="docs-lead" data-i18n="docs.taprush.lead">Pure speed. No questions - just tapping as fast as possible, in one of three modes the host picks.</p>
+
+                    <h3 data-i18n="docs.taprush.race.h">Race mode</h3>
+                    <p data-i18n="docs.taprush.race.p">Everyone races to a tap target. First to reach it wins. Default target: <strong>60 taps</strong>, with a <strong>30-second</strong> cap - whoever has the most taps when time runs out wins if nobody reaches the target first.</p>
+
+                    <h3 data-i18n="docs.taprush.infinite.h">Infinite mode</h3>
+                    <p data-i18n="docs.taprush.infinite.p">No target - just tap as many times as possible before time runs out. Ranked by total tap count when the timer ends.</p>
+
+                    <h3 data-i18n="docs.taprush.tug.h">Tug of war mode</h3>
+                    <p data-i18n="docs.taprush.tug.p">Players split into two teams by join order (first half Team A, second half Team B). Each tap pulls the rope toward your team; the team that pulls it all the way, or has it further their way when time runs out, wins. Default duration: <strong>20 seconds</strong>.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.taprush.facts.modes.k">Modes</dt><dd data-i18n="docs.taprush.facts.modes.v">Race, Infinite, Tug of War</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.taprush.facts.target.k">Race default target</dt><dd data-i18n="docs.taprush.facts.target.v">60 taps</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.taprush.facts.cap.k">Race default time cap</dt><dd data-i18n="docs.taprush.facts.cap.v">30 seconds</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.taprush.facts.tugdur.k">Tug of war default duration</dt><dd data-i18n="docs.taprush.facts.tugdur.v">20 seconds</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.taprush.facts.teams.k">Team assignment (tug of war)</dt><dd data-i18n="docs.taprush.facts.teams.v">By join order, split in half</dd></div>
+                    </div>
+                </section>
+
+                <section class="docs-panel" id="section-roulette" hidden>
+                    <h2 data-i18n="docs.roulette.h">Roulette</h2>
+                    <p class="docs-lead" data-i18n="docs.roulette.lead">Gather names, spin a wheel, draw a winner. Built for picking someone out of a group, not for answering questions.</p>
+
+                    <h3 data-i18n="docs.roulette.names.h">Where names come from</h3>
+                    <p data-i18n="docs.roulette.names.p">Three sources, host's choice:</p>
+                    <ul data-i18n="docs.roulette.names.list">
+                        <li><strong>Import from a previous room</strong> - pulls the participant list from an earlier Show Down, Time Attack, Tap Rush or Quest Drop room by its code</li>
+                        <li><strong>QR room</strong> - opens a live room people join with their phones, same as the other games</li>
+                        <li><strong>Paste a list</strong> - type or paste names directly, no room needed</li>
+                    </ul>
+
+                    <h3 data-i18n="docs.roulette.spin.h">Spinning</h3>
+                    <p data-i18n="docs.roulette.spin.p">The host spins the wheel to draw one winner at a time. There's a toggle, <strong>on by default</strong>, to remove each winner from the wheel after they're drawn - with it on, nobody can win twice in the same session; turning it off lets the same name be drawn again on a later spin.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.roulette.facts.sources.k">Participant sources</dt><dd data-i18n="docs.roulette.facts.sources.v">Import room, QR room, pasted list</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.roulette.facts.remove.k">Remove winner after spin</dt><dd data-i18n="docs.roulette.facts.remove.v">On by default, can be turned off</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.roulette.facts.winners.k">Winners per spin</dt><dd data-i18n="docs.roulette.facts.winners.v">One</dd></div>
+                    </div>
+                </section>
+
+                <section class="docs-panel" id="section-quest-drop" hidden>
+                    <h2 data-i18n="docs.questdrop.h">Quest Drop</h2>
+                    <p class="docs-lead" data-i18n="docs.questdrop.lead">Envelope-based challenges for live events. Pick a difficulty, open an envelope, answer correctly, claim what's inside.</p>
+
+                    <h3 data-i18n="docs.questdrop.diff.h">Difficulties</h3>
+                    <p data-i18n="docs.questdrop.diff.p">Every envelope is tagged <strong>Easy</strong>, <strong>Medium</strong>, or <strong>Hard</strong> before the event starts - the difficulty is visible on the envelope, the prize inside isn't, until it's opened and answered correctly.</p>
+
+                    <h3 data-i18n="docs.questdrop.prizes.h">Two ways to set up prizes</h3>
+                    <ul data-i18n="docs.questdrop.prizes.list">
+                        <li><strong>List mode</strong> - the host defines a fixed stock of prizes per difficulty ahead of time; each correct answer draws from that stock until it runs out</li>
+                        <li><strong>Budget mode</strong> - the host sets a total budget and a percentage split across the three difficulties (plus how many envelopes total), and envelopes are generated automatically from that split</li>
+                    </ul>
+
+                    <h3 data-i18n="docs.questdrop.branding.h">Branding</h3>
+                    <p data-i18n="docs.questdrop.branding.p">Quest Drop supports both the built-in default look and any custom theme the host has access to (see Custom Themes) - sponsor branding on the envelopes and screen is part of what the game was built for.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.questdrop.facts.diff.k">Difficulty levels</dt><dd data-i18n="docs.questdrop.facts.diff.v">Easy, Medium, Hard</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.questdrop.facts.modes.k">Prize setup modes</dt><dd data-i18n="docs.questdrop.facts.modes.v">Fixed list, or budget + percentage split</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.questdrop.facts.branding.k">Sponsor branding</dt><dd data-i18n="docs.questdrop.facts.branding.v">Supported via custom themes</dd></div>
+                    </div>
+                </section>
+
+                <section class="docs-panel" id="section-badges" hidden>
+                    <h2 data-i18n="docs.badges.h">Badges</h2>
+                    <p class="docs-lead" data-i18n="docs.badges.lead">A single badge system shared across the whole platform - Academy, NDQuest, and VIP all grant and display the same kind of badge.</p>
+
+                    <h3 data-i18n="docs.badges.what.h">What a badge is</h3>
+                    <p data-i18n="docs.badges.what.p">A badge has a name and description in both languages, a shape, and either an uploaded image or an icon-and-color combination - never both at once. It also has a color behind the icon (or no background at all, if it's image-based) and an icon size, as a percentage of the badge's frame.</p>
+
+                    <h3 data-i18n="docs.badges.shapes.h">Shapes</h3>
+                    <ul data-i18n="docs.badges.shapes.list">
+                        <li><strong>Classic</strong> - the default shield outline</li>
+                        <li><strong>Rounded</strong> - a softer version of the shield</li>
+                        <li><strong>Hex</strong> - six-sided, pointed top and bottom</li>
+                        <li><strong>Coin</strong> - octagon, coin-like</li>
+                        <li><strong>Square</strong> - rounded square</li>
+                        <li><strong>Circle</strong> - plain circle</li>
+                    </ul>
+                    <p data-i18n="docs.badges.shapes.p">An uploaded image is never cropped to fit these shapes - the shape and background only apply to icon-based badges. An image-based badge shows exactly what was uploaded, with a transparent background.</p>
+
+                    <h3 data-i18n="docs.badges.icons.h">Icons</h3>
+                    <p data-i18n="docs.badges.icons.p">Fourteen built-in icons are available for badges without an uploaded image: trophy, award, medal, crown, shield, star, gem, flag, zap, target, rocket, sparkles, heart, and book-open. If a badge has neither an icon nor an image, it falls back to showing the first letter of its name.</p>
+
+                    <h3 data-i18n="docs.badges.who.h">Who can create a badge</h3>
+                    <p data-i18n="docs.badges.who.p">Any active VIP can create badges from their account page, up to a tier-based limit per cycle: <strong>Bronze 10, Prata 20, Gold 30</strong>. Renewing VIP resets the count back to the tier's full limit - it doesn't carry over unused slots from the previous cycle. A created badge isn't automatically given to anyone; the VIP who made it grants it to specific people afterward, with an optional note attached to explain why.</p>
+
+                    <h3 data-i18n="docs.badges.featured.h">Featured badges</h3>
+                    <p data-i18n="docs.badges.featured.p">Everyone chooses up to <strong>3 badges</strong> to feature on their public profile and in-game name tag, from their own profile page. Picking none means none show - there's no automatic fallback to showing everything you own.</p>
+
+                    <h3 data-i18n="docs.badges.claim.h">Claiming a badge by QR code or link</h3>
+                    <p data-i18n="docs.badges.claim.p">A VIP can generate a claim code for any badge they created, shown as both a QR code and a plain link. Anyone logged in who scans it or opens the link gets that badge instantly - if they aren't logged in yet, logging in completes the claim automatically right after. Each code can optionally have a maximum number of uses, an expiry date, both, or neither (no limit at all until the VIP pauses or deletes it by hand). A badge can have several active codes at once - useful for running one per event.</p>
+
+                    <h3 data-i18n="docs.badges.academy.h">Academy badges</h3>
+                    <p data-i18n="docs.badges.academy.p">The 10 Academy module badges are granted automatically by the system itself when you finish the matching module's quiz - they have no VIP owner, unlike every other badge on the platform (see the Academy section).</p>
+
+                    <h3 data-i18n="docs.badges.where.h">Where badges show up</h3>
+                    <p data-i18n="docs.badges.where.p">Every badge you hold appears on your public profile. Inside NDQuest games, badges show as small icons next to your name during play - at that size, the badge is always shown at its real shape (not forced into a circle), just scaled down.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.badges.facts.shapes.k">Shapes available</dt><dd data-i18n="docs.badges.facts.shapes.v">6</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.badges.facts.icons.k">Built-in icons</dt><dd data-i18n="docs.badges.facts.icons.v">14</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.badges.facts.limit.k">Badges a VIP can create</dt><dd data-i18n="docs.badges.facts.limit.v">Bronze 10 - Prata 20 - Gold 30, per cycle</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.badges.facts.cost.k">Cost to create/grant</dt><dd data-i18n="docs.badges.facts.cost.v">Free (included in VIP)</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.badges.facts.featured.k">Featured badges per profile</dt><dd data-i18n="docs.badges.facts.featured.v">Up to 3, none by default</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.badges.facts.claimlimits.k">Claim code limits</dt><dd data-i18n="docs.badges.facts.claimlimits.v">Max uses and/or expiry, both optional</dd></div>
+                    </div>
+                </section>
+
+                <!-- ===================================================== -->
+                <!-- VIP -->
+                <!-- ===================================================== -->
+
+                <section class="docs-panel" id="section-vip" hidden>
+                    <h2 data-i18n="docs.vip.h">VIP</h2>
+                    <p class="docs-lead" data-i18n="docs.vip.lead">A monthly membership paid in stablecoin, directly from your own wallet - no card, no middleman holding funds. There are three tiers: Bronze, Prata, and Gold, each unlocking a bigger live room and more of everything else.</p>
+
+                    <h3 data-i18n="docs.vip.tiers.h">Tiers and pricing</h3>
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.tiers.bronze.k">Bronze</dt><dd data-i18n="docs.vip.tiers.bronze.v">$5/month - live rooms up to 100 players</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.tiers.prata.k">Prata</dt><dd data-i18n="docs.vip.tiers.prata.v">$20/month - live rooms up to 250 players</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.tiers.gold.k">Gold</dt><dd data-i18n="docs.vip.tiers.gold.v">$50/month - live rooms up to 1,000 players, priority support</dd></div>
+                    </div>
+                    <p data-i18n="docs.vip.tiers.p">One payment covers <strong>30 days</strong>. Paying again before the current period ends extends it - the new 30 days are added on top of the existing expiry date, not from the moment of payment, so paying early never wastes time. Paying for a different tier while already VIP switches you to that tier's price and limits going forward.</p>
+
+                    <h3 data-i18n="docs.vip.how.h">How payment works</h3>
+                    <p data-i18n="docs.vip.how.p">There's no checkout page or card form. Pick a tier, then send the exact amount from your own wallet to Nodra's treasury address, and paste the transaction hash back into the site. The instant a valid, unused hash is submitted, the blockchain is checked and VIP is activated right away - there's no waiting period or review step. The only limit is on how old that transaction can be: it has to have happened within the last <strong>48 hours</strong>, or it's rejected as too old, even if it was genuinely paid.</p>
+
+                    <h3 data-i18n="docs.vip.networks.h">Accepted networks and tokens</h3>
+                    <ul data-i18n="docs.vip.networks.list">
+                        <li><strong>Avalanche C-Chain</strong> - USDT</li>
+                        <li><strong>Base</strong> - USDC</li>
+                        <li><strong>Solana</strong> - USDC or USDT</li>
+                    </ul>
+                    <p data-i18n="docs.vip.networks.p">Each transaction hash can only be used once, ever - reusing one, even on a different account, is rejected.</p>
+
+                    <h3 data-i18n="docs.vip.roomlimits.h">Live room limits</h3>
+                    <p data-i18n="docs.vip.roomlimits.p">Every live room (Show Down, Time Attack, Tap Rush, and Roulette's live QR mode) is capped by however many players can join at once, based on whoever's hosting. Free accounts cap at <strong>30 players</strong> and <strong>10 hosted rooms every 30 days</strong> - VIP of any tier removes the monthly room cap entirely, and raises the per-room player cap to whatever the tier allows. Pasting a name list into Roulette, or Quest Drop's single-screen mode, never count toward any of this - nobody's device needs to connect for those.</p>
+                    <p data-i18n="docs.vip.oneroom.p">Only <strong>one active room at a time</strong> is allowed per account, across all four live games - starting a new one while another is still open is blocked until the first closes. This keeps a single VIP account from hosting several big rooms simultaneously.</p>
+
+                    <h3 data-i18n="docs.vip.unlocks.h">What VIP unlocks, by tier</h3>
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.unlocks.badges.k">Badges creatable per cycle</dt><dd data-i18n="docs.vip.unlocks.badges.v">Bronze 10 - Prata 20 - Gold 30</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.unlocks.themes.k">Included themes per cycle</dt><dd data-i18n="docs.vip.unlocks.themes.v">Bronze 3 - Prata 10 - Gold unlimited</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.unlocks.packs.k">Saved question packs</dt><dd data-i18n="docs.vip.unlocks.packs.v">Bronze 5 - Prata 20 - Gold unlimited</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.unlocks.support.k">Support</dt><dd data-i18n="docs.vip.unlocks.support.v">Gold tickets are answered first</dd></div>
+                    </div>
+                    <p data-i18n="docs.vip.unlocks.p">Granting a badge you already created to a player never counts against the creation limit - only making a new one does. Reviewing community-submitted question packs (see Question Packs) is included at every tier equally.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.facts.window.k">Maximum transaction age accepted</dt><dd data-i18n="docs.vip.facts.window.v">48 hours</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.facts.accepted.k">Accepted</dt><dd data-i18n="docs.vip.facts.accepted.v">USDT (Avalanche, Solana), USDC (Base, Solana)</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.facts.renewing.k">Renewing early</dt><dd data-i18n="docs.vip.facts.renewing.v">Adds to current expiry, never wastes time</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.vip.facts.freeroom.k">Free tier room limit</dt><dd data-i18n="docs.vip.facts.freeroom.v">30 players, 10 rooms per 30 days</dd></div>
+                    </div>
+
+                    <div class="docs-callout" data-i18n="docs.vip.callout"><strong>Note:</strong> Nodra doesn't verify who owns the wallet that pays - anyone who sends the correct amount and submits a valid, unused transaction hash gets the VIP applied to their logged-in account, regardless of whose wallet sent it.</div>
+                </section>
+
+                <!-- ===================================================== -->
+                <!-- CUSTOM THEMES -->
+                <!-- ===================================================== -->
+
+                <section class="docs-panel" id="section-themes" hidden>
+                    <h2 data-i18n="docs.themes.h">Custom Themes</h2>
+                    <p class="docs-lead" data-i18n="docs.themes.lead">Rebrand any NDQuest game with your own colors and logo. Three stages: create it private, optionally submit it for everyone to use, get it reviewed.</p>
+
+                    <h3 data-i18n="docs.themes.create.h">Creating a theme (private, included in VIP)</h3>
+                    <p data-i18n="docs.themes.create.p">Any active VIP can create private themes at no extra cost, up to a tier-based limit per renewal cycle: <strong>Bronze 3, Prata 10, Gold unlimited</strong>. Each one starts out <strong>private</strong> - visible only to the VIP who made it, usable in their own game rooms. If your VIP has no expiration date on file (an admin-granted VIP, not a paid one), the limit applies forever instead of resetting per cycle.</p>
+
+                    <h3 data-i18n="docs.themes.built.h">How a theme is built</h3>
+                    <p data-i18n="docs.themes.built.p">You pick two base colors - a primary and a background - and the system derives a full palette of <strong>13 colors</strong> from those two (lighter/darker variants, text colors, borders, and so on), so the whole game re-themes consistently from just two picks. Six of those derived colors can be manually overridden by hand if the automatic result isn't quite right. A logo is optional (PNG, SVG or WebP); without one, the game falls back to showing the theme's name as text.</p>
+
+                    <h3 data-i18n="docs.themes.games.h">Which games it applies to</h3>
+                    <p data-i18n="docs.themes.games.p">Each theme is scoped to specific games - when creating it, you choose which of the five NDQuest games it should apply to. It only shows up as an option in those games, not automatically in all of them.</p>
+
+                    <h3 data-i18n="docs.themes.submit.h">Submitting for public review ($10)</h3>
+                    <p data-i18n="docs.themes.submit.p1">A private theme can be submitted so <strong>any host</strong> can use it, not just its creator. This costs <strong>$10</strong>, paid the same way as VIP - your own wallet, any of the accepted networks, transaction hash pasted back for verification (see VIP for the full payment mechanics, including the 48-hour verification window).</p>
+                    <p data-i18n="docs.themes.submit.p2">Paying moves the theme to <strong>pending review</strong>. An admin then approves or rejects it:</p>
+                    <ul data-i18n="docs.themes.submit.list">
+                        <li><strong>Approved</strong> - status becomes <strong>public</strong>, visible to any host in the games it's scoped to</li>
+                        <li><strong>Rejected</strong> - status becomes <strong>rejected</strong>, with a written reason. The $10 already paid isn't lost or charged again: the theme can be edited and resubmitted for review <strong>for free</strong>, as many times as needed</li>
+                    </ul>
+
+                    <h3 data-i18n="docs.themes.lapse.h">What happens if VIP lapses</h3>
+                    <p data-i18n="docs.themes.lapse.p">A public theme only stays visible to other hosts while its creator's VIP is <strong>currently active</strong>. If the creator's VIP expires, the theme stops showing up for everyone else immediately - it isn't deleted, and comes back automatically the moment VIP is renewed.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.free.k">Included themes per VIP cycle</dt><dd data-i18n="docs.themes.facts.free.v">Bronze 3 - Prata 10 - Gold unlimited</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.picked.k">Colors picked by hand</dt><dd data-i18n="docs.themes.facts.picked.v">2 (primary, background)</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.total.k">Total colors generated</dt><dd data-i18n="docs.themes.facts.total.v">13</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.override.k">Manually overridable colors</dt><dd data-i18n="docs.themes.facts.override.v">6</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.logo.k">Logo formats</dt><dd data-i18n="docs.themes.facts.logo.v">PNG, SVG, WebP (optional)</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.price.k">Public submission price</dt><dd data-i18n="docs.themes.facts.price.v">$10, one time</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.resubmit.k">Resubmitting after rejection</dt><dd data-i18n="docs.themes.facts.resubmit.v">Free, unlimited</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.themes.facts.visibility.k">Public visibility requires</dt><dd data-i18n="docs.themes.facts.visibility.v">Creator's VIP currently active</dd></div>
+                    </div>
+                </section>
+
+                <!-- ===================================================== -->
+                <!-- QUESTION PACKS -->
+                <!-- ===================================================== -->
+
+                <section class="docs-panel" id="section-packs" hidden>
+                    <h2 data-i18n="docs.packs.h">Question Packs</h2>
+                    <p class="docs-lead" data-i18n="docs.packs.lead">A saved set of custom questions a VIP can reuse across rooms, and optionally submit for the team to review and add to the official catalog every game can use.</p>
+
+                    <h3 data-i18n="docs.packs.who.h">Who can create one</h3>
+                    <p data-i18n="docs.packs.who.p">Saving a pack is a VIP-only benefit, tier-limited: <strong>Bronze 5, Prata 20, Gold unlimited</strong> saved packs at a time (not per cycle - deleting an old one frees up a slot). Accounts without VIP can still type custom questions when hosting a room, same as always - they just aren't saved or reusable afterward. A pack can be created two ways: checking "save this pack" while hosting Show Down, Time Attack, or Quest Drop with custom questions typed in, or creating one directly from the profile page without hosting anything.</p>
+
+                    <h3 data-i18n="docs.packs.private.h">Private by default</h3>
+                    <p data-i18n="docs.packs.private.p">Every pack is private the moment it's created - visible only to the VIP who made it, listed as an option the next time they host a room in one of the games it applies to. A single pack can apply to more than one game at once. Nobody else, VIP or not, can see or use someone else's saved pack unless it gets approved into the public catalog.</p>
+
+                    <h3 data-i18n="docs.packs.submit.h">Submitting for public review</h3>
+                    <p data-i18n="docs.packs.submit.p">From the "My Packs" screen, any not-yet-submitted (or previously rejected) pack has a "Submit for review" button. Once submitted, only the VIP who owns it and the admin team can see it while it's pending - no other VIP browses or reviews other people's submissions. The admin approves or rejects it; approving adds it to the official catalog every game can pull from, rejecting sends it back to being a normal private pack with a reason attached, free to edit and resubmit as many times as needed.</p>
+
+                    <h3 data-i18n="docs.packs.upload.h">Creating one</h3>
+                    <p data-i18n="docs.packs.upload.p">Questions can be typed one block at a time, pasted, or uploaded as a .txt file, using the same PERGUNTA/RESPOSTAS/CORRETA format across every game. Quest Drop packs can optionally tag each question with a difficulty (easy/medium/hard); if none are tagged, the pack still works in Quest Drop, it just draws questions at random instead of balancing by difficulty.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.packs.facts.bronze.k">Saved packs, Bronze</dt><dd data-i18n="docs.packs.facts.bronze.v">Up to 5</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.packs.facts.prata.k">Saved packs, Prata</dt><dd data-i18n="docs.packs.facts.prata.v">Up to 20</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.packs.facts.gold.k">Saved packs, Gold</dt><dd data-i18n="docs.packs.facts.gold.v">Unlimited</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.packs.facts.games.k">Games with saved packs</dt><dd data-i18n="docs.packs.facts.games.v">Show Down, Time Attack, Quest Drop</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.packs.facts.cost.k">Cost to save or submit a pack</dt><dd data-i18n="docs.packs.facts.cost.v">Free (included in VIP)</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.packs.facts.resubmit.k">Resubmitting after rejection</dt><dd data-i18n="docs.packs.facts.resubmit.v">Free, unlimited</dd></div>
+                    </div>
+                </section>
+
+                <section class="docs-panel" id="section-support" hidden>
+                    <h2 data-i18n="docs.support.h">Support</h2>
+                    <p class="docs-lead" data-i18n="docs.support.lead">A direct chat with the team for anyone with an account - open a ticket, get a reply, keep the conversation going in the same thread.</p>
+
+                    <h3 data-i18n="docs.support.who.h">Who can use it</h3>
+                    <p data-i18n="docs.support.who.p">Any logged-in account, VIP or not. There's no support option for people without an account - the tab simply isn't shown until you're logged in.</p>
+
+                    <h3 data-i18n="docs.support.how.h">How it works</h3>
+                    <p data-i18n="docs.support.how.p">Each ticket is its own conversation with a subject line, so a new question about something different gets its own thread instead of mixing into an old one. Messages arrive live - no need to refresh the page to see a reply come in. Once the team closes a ticket, that thread stops accepting new messages; open a new one if you need more help.</p>
+
+                    <div class="docs-facts">
+                        <div class="docs-facts__row"><dt data-i18n="docs.support.facts.access.k">Who can open a ticket</dt><dd data-i18n="docs.support.facts.access.v">Any logged-in account</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.support.facts.priority.k">Priority response</dt><dd data-i18n="docs.support.facts.priority.v">Gold VIP tickets answered first</dd></div>
+                        <div class="docs-facts__row"><dt data-i18n="docs.support.facts.cost.k">Cost</dt><dd data-i18n="docs.support.facts.cost.v">Free</dd></div>
+                    </div>
+                </section>
 
             </div>
         </div>
-    </section>
+    </div>
 
 </main>
 
@@ -254,7 +411,7 @@
             </div>
             <div class="footer-links">
                 <a href="../academy/index.html" data-i18n="nav.academy">Academy</a>
-                <a href="../index.html#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a>
+                <a href="../ndquest/index.html" data-i18n="nav.ndquest">NDQuest</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
                 <a href="https://x.com/NodraHQ" target="_blank" data-i18n="nav.x">X</a>
             </div>

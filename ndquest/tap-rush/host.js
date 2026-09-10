@@ -22,6 +22,18 @@
 import translations from './i18n/translations.js';
 import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 
+const FREE_MONTHLY_ROOM_LIMIT = 10;
+
+// Mesma checagem de inatividade usada em play.js - precisa existir
+// aqui também porque host.js é um arquivo separado, sem escopo
+// compartilhado (self-contained, mesmo padrão dos 4 jogos).
+const ROOM_INACTIVITY_TIMEOUT_MINUTES = 30;
+function isRoomStale(updatedAt) {
+    if (!updatedAt) return false;
+    const cutoff = Date.now() - ROOM_INACTIVITY_TIMEOUT_MINUTES * 60 * 1000;
+    return new Date(updatedAt).getTime() < cutoff;
+}
+
 // Começa só com o tema padrão (mesma aparência de sempre, na hora),
 // depois é substituído pela lista completa (padrão + Supabase) assim
 // que a busca terminar - ver a chamada de loadRemoteThemes logo
@@ -64,6 +76,12 @@ const BADGE_ICONS = {
     star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
     gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
     flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+    zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+    target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/>',
+    "book-open": '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
 };
 
 function buildMiniIconSvg(iconKey) {
@@ -136,7 +154,7 @@ async function loadPlayerBadgeMap(userIds) {
 
         (userBadgeRows || []).forEach((row) => {
             const featuredSet = featuredById.get(row.user_id);
-            const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+            const isFeatured = featuredSet && featuredSet.has(row.badge_id);
             if (!isFeatured) return;
 
             const entry = playerBadgeCache.get(row.user_id) || { badges: [], cachedAt: now };
@@ -214,7 +232,24 @@ function buildMiniBadgeRow(badges) {
 // desse cache - checa fresco toda vez.
 async function getCurrentUserId() {
     const { data: { session } } = await window.ndquestSupabase.auth.getSession();
-    return session?.user?.id ?? null;
+    if (session?.user?.id) return session.user.id;
+
+    // Sem sessão nenhuma - entra anônimo em vez de ficar sem
+    // identidade. Fecha um furo real: RLS precisava de "user_id IS
+    // NULL OR user_id = auth.uid()" pra deixar convidado jogar sem
+    // login, e isso na prática deixava QUALQUER visitante mexer na
+    // linha de QUALQUER convidado, não só a própria (user_id nulo
+    // "casa" com todo mundo, não só com quem entrou de verdade).
+    // Com sessão anônima, até quem não logou ganha um auth.uid()
+    // de verdade, único daquele navegador - a mesma trava "só o
+    // dono mexe" que já protege conta normal passa a proteger
+    // convidado também, sem pedir email nem senha de ninguém.
+    const { data, error } = await window.ndquestSupabase.auth.signInAnonymously();
+    if (error) {
+        console.error('Erro ao entrar anonimamente:', error);
+        return null;
+    }
+    return data?.user?.id ?? null;
 }
 
 function applyTranslations() {
@@ -261,6 +296,21 @@ const hostNameInput = document.getElementById('host-name-input');
 const themeSelect = document.getElementById('theme-select');
 const logoImg = document.getElementById('logo-img');
 const configError = document.getElementById('config-error');
+const closeOldRoomsBtn = document.getElementById('close-old-rooms-btn');
+let pendingBlockingRooms = [];
+
+closeOldRoomsBtn.addEventListener('click', async () => {
+    closeOldRoomsBtn.disabled = true;
+    await Promise.all(
+        pendingBlockingRooms.map(({ table, id }) =>
+            window.ndquestSupabase.from(table).update({ status: 'closed' }).eq('id', id),
+        ),
+    );
+    pendingBlockingRooms = [];
+    closeOldRoomsBtn.hidden = true;
+    closeOldRoomsBtn.disabled = false;
+    configError.textContent = t('errors.oldRoomsClosedRetry');
+});
 const createRoomBtn = document.getElementById('create-room-btn');
 
 const modeCardRace = document.getElementById('mode-card-race');
@@ -522,9 +572,79 @@ createRoomBtn.addEventListener('click', async () => {
         roomPayload.duration_seconds = durationSeconds;
     }
 
+    const hostUserId = await getCurrentUserId();
+
+    // 1 partida ativa por conta ao mesmo tempo, em QUALQUER um dos 4
+    // jogos - reportado ao vivo: "impediria o compartilhamento de
+    // contas vips".
+    if (hostUserId) {
+        const roomTables = ['showdown_rooms', 'time_attack_rooms', 'roulette_rooms', 'tap_rush_rooms'];
+        const checks = await Promise.all(
+            roomTables.map((table) =>
+                window.ndquestSupabase
+                    .from(table)
+                    .select('id, updated_at')
+                    .eq('host_id', hostUserId)
+                    .not('status', 'eq', 'closed')
+                    .then(({ data }) => ({ table, rows: data || [] })),
+            ),
+        );
+
+        // Sala "ativa" só de status, sem checar se ainda está viva
+        // de verdade, é o bug real reportado ao vivo: aviso de
+        // partida ativa numa sala de ontem que ninguém nunca tentou
+        // entrar de novo (o mecanismo de inatividade só rodava na
+        // hora de ENTRAR numa sala específica). Agora fecha de
+        // verdade no banco qualquer sala parada há mais de 30
+        // minutos encontrada aqui, em vez de só ignorar.
+        const stillActive = [];
+        for (const { table, rows } of checks) {
+            for (const row of rows) {
+                if (isRoomStale(row.updated_at)) {
+                    await window.ndquestSupabase.from(table).update({ status: 'closed' }).eq('id', row.id);
+                } else {
+                    stillActive.push({ table, id: row.id });
+                }
+            }
+        }
+
+        if (stillActive.length > 0) {
+            // Reportado ao vivo: "preciso que ao sair da sala, todos
+            // os botões encerrem a sala, ou ali no erro tenha um
+            // atalho de encerrar" - rede de segurança que não
+            // depende de detectar saída nenhuma.
+            configError.textContent = t('errors.activeRoomExists');
+            pendingBlockingRooms = stillActive;
+            closeOldRoomsBtn.hidden = false;
+            return;
+        }
+    }
+
+    if (hostUserId) {
+        const { data: hostProfile } = await window.ndquestSupabase
+            .from('profiles')
+            .select('is_vip')
+            .eq('id', hostUserId)
+            .maybeSingle();
+
+        if (!hostProfile?.is_vip) {
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+            const { count: roomsThisMonth } = await window.ndquestSupabase
+                .from('match_history')
+                .select('id', { count: 'exact', head: true })
+                .eq('user_id', hostUserId)
+                .eq('role', 'host')
+                .gte('created_at', thirtyDaysAgo);
+
+            if ((roomsThisMonth || 0) >= FREE_MONTHLY_ROOM_LIMIT) {
+                configError.textContent = t('errors.monthlyRoomLimitReached');
+                return;
+            }
+        }
+    }
+
     createRoomBtn.disabled = true;
 
-    const hostUserId = await getCurrentUserId();
     roomPayload.host_id = hostUserId;
 
     const { data, error } = await window.ndquestSupabase
@@ -1140,3 +1260,28 @@ async function closeRoom() {
 
 closeRoomBtn.addEventListener('click', closeRoom);
 closeRoomBtnFinal.addEventListener('click', closeRoom);
+
+// Fecha a sala sozinho se o host sair de qualquer jeito - ver
+// explicação completa no Show Down (mesmo mecanismo, reportado ao
+// vivo).
+let cachedAccessToken = null;
+window.ndquestSupabase.auth.getSession().then(({ data }) => {
+    cachedAccessToken = data?.session?.access_token || null;
+});
+window.ndquestSupabase.auth.onAuthStateChange((_event, session) => {
+    cachedAccessToken = session?.access_token || null;
+});
+
+window.addEventListener('pagehide', () => {
+    if (!activeRoomId || !cachedAccessToken) return;
+    fetch(`${window.ndquestSupabaseUrl}/rest/v1/tap_rush_rooms?id=eq.${activeRoomId}`, {
+        method: 'PATCH',
+        keepalive: true,
+        headers: {
+            'Content-Type': 'application/json',
+            'apikey': window.ndquestSupabaseAnonKey,
+            'Authorization': `Bearer ${cachedAccessToken}`,
+        },
+        body: JSON.stringify({ status: 'closed' }),
+    });
+});

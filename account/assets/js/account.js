@@ -102,6 +102,14 @@ let currentProfile = null;
 let vipNavLabelListenersInitialized = false;
 let currentUserId = null;
 
+// Captura ?claim=CODIGO ANTES de qualquer outra coisa rodar - bug
+// real que quase aconteceu: ensureProfileAndRoute (mais abaixo)
+// limpa QUALQUER window.location.search assim que confirma o login,
+// pra tirar sobra de redirect OAuth. Sem capturar isso aqui em cima
+// primeiro, o parâmetro do QR já teria sumido da URL antes de
+// handleClaimFromUrl ter a chance de ler ele.
+const capturedClaimCode = new URLSearchParams(window.location.search).get("claim");
+
 // ==================================================================
 // FORMULÁRIO DE ENTRAR / CRIAR CONTA
 // ==================================================================
@@ -166,7 +174,15 @@ authForm?.addEventListener("submit", async (event) => {
 
 googleBtn?.addEventListener("click", async () => {
     setMessage(authErrorEl, null);
-    const cleanRedirectUrl = window.location.origin + window.location.pathname;
+    // Continua limpando qualquer OUTRA sobra de query string de
+    // propósito (era o motivo original disso existir), mas preserva
+    // ?claim=CODIGO especificamente - sem isso, quem precisasse
+    // logar via Google no meio do fluxo de escanear um QR perderia
+    // o código inteiro na volta do redirect OAuth (o navegador troca
+    // de página de verdade nesse fluxo, não é só JS - o valor em
+    // memória não sobrevive sozinho, só o que estiver na URL).
+    const cleanRedirectUrl = window.location.origin + window.location.pathname +
+        (capturedClaimCode ? `?claim=${encodeURIComponent(capturedClaimCode)}` : "");
     const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: "google",
         options: { redirectTo: cleanRedirectUrl },
@@ -252,6 +268,10 @@ async function ensureProfileAndRoute(user) {
     }
 
     currentUserId = user.id;
+
+    // Dispara sozinho se veio de um QR (?claim=CODIGO capturado bem
+    // no topo do arquivo, antes da limpeza de URL acima ter rodado).
+    handleClaimFromUrl();
 
     let { data: profile, error } = await supabaseClient
         .from("profiles")
@@ -860,6 +880,11 @@ function initProfileTopTabs() {
             loadBadgesIntoGrantSelect();
             initVipSubTabs();
         }
+
+        if (target === "support" && !supportTicketsLoaded) {
+            supportTicketsLoaded = true;
+            loadSupportTickets();
+        }
     }
 
     tabs.forEach((tab) => {
@@ -891,11 +916,13 @@ function toggleNavbarProfileTabs(show) {
     const githubLink = document.getElementById("nav-link-github");
     const profileTab = document.getElementById("navbar-tab-profile");
     const historyTab = document.getElementById("navbar-tab-history");
+    const supportTab = document.getElementById("navbar-tab-support");
 
     if (ecosystemLink) ecosystemLink.hidden = show;
     if (githubLink) githubLink.hidden = show;
     if (profileTab) profileTab.hidden = !show;
     if (historyTab) historyTab.hidden = !show;
+    if (supportTab) supportTab.hidden = !show;
 }
 
 // ==================================================================
@@ -1476,6 +1503,15 @@ const BADGE_ICONS = {
     star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
     gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
     flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+    // Seis novos, mesmo estilo Lucide dos 8 originais - reportado ao
+    // vivo: "se achar coloca mais opções de ícone". Cada um conferido
+    // com print de verdade antes de entrar aqui, não só de memória.
+    zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+    target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/>',
+    "book-open": '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
 };
 
 function buildIconSvg(iconKey) {
@@ -1541,15 +1577,49 @@ function renderHeaderBadgeStrip(rows, featuredIds) {
 
     stripEl.innerHTML = "";
 
+    // Sem nenhuma marcada, mostra vazio até a pessoa escolher - antes
+    // caía num "modo de segurança" que mostrava todas, reportado ao
+    // vivo como o motivo da seleção "não funcionar": marcar nada
+    // sempre resultava em tudo aparecendo, então parecia que
+    // escolher não fazia diferença nenhuma.
     const featuredSet = new Set(featuredIds);
-    const rowsToShow =
-        featuredSet.size > 0 ? rows.filter((row) => featuredSet.has(row.badge_id)) : rows;
+    const rowsToShow = rows.filter((row) => featuredSet.has(row.badge_id));
 
     rowsToShow.forEach((row) => {
         const badge = row.badges;
         if (!badge) return;
         stripEl.appendChild(buildSmallBadgeElement(badge));
     });
+}
+
+// Seleção de badge em destaque agora é em lote, com botão "Salvar"
+// explícito - reportado ao vivo: "adiciona uma mecânica de salvar,
+// igual tem nos quadros de cima". Antes cada clique na caixinha já
+// gravava no banco na hora; agora só atualiza esse Set localmente,
+// e um clique só no botão grava tudo de uma vez.
+let pendingFeaturedBadgeIds = new Set();
+
+// Limite de seleção - o jogo só mostra até 3 badges por jogador em
+// tela (ver buildMiniBadgeRow/map.length nos hosts), então deixar
+// marcar mais do que isso aqui só criaria uma expectativa que o
+// jogo não cumpre. Reportado ao vivo: "deveria poder selecionar só
+// 3, pra não virar bagunça".
+const MAX_FEATURED_BADGES = 3;
+
+function updateBadgeCheckboxLimits() {
+    const atLimit = pendingFeaturedBadgeIds.size >= MAX_FEATURED_BADGES;
+    document.querySelectorAll("#profile-own-badges-list input[type=checkbox]").forEach((cb) => {
+        cb.disabled = atLimit && !cb.checked;
+    });
+
+    const counterEl = document.getElementById("profile-own-badges-counter");
+    if (counterEl) {
+        const template =
+            window.nodraTranslator?.translations?.["profile.badgesCounter"] || "{n}/{max} selected";
+        counterEl.textContent = template
+            .replace("{n}", pendingFeaturedBadgeIds.size)
+            .replace("{max}", MAX_FEATURED_BADGES);
+    }
 }
 
 async function loadOwnBadges(userId, featuredIds) {
@@ -1582,7 +1652,7 @@ async function loadOwnBadges(userId, featuredIds) {
     renderHeaderBadgeStrip(data, featuredIds);
 
     const lang = document.documentElement.lang === "en" ? "en" : "pt";
-    const featuredSet = new Set(featuredIds);
+    pendingFeaturedBadgeIds = new Set(featuredIds);
 
     data.forEach((row) => {
         const badge = row.badges;
@@ -1593,10 +1663,22 @@ async function loadOwnBadges(userId, featuredIds) {
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = featuredSet.has(row.badge_id);
-        checkbox.addEventListener("change", () =>
-            toggleFeaturedBadge(row.badge_id, checkbox.checked),
-        );
+        checkbox.checked = pendingFeaturedBadgeIds.has(row.badge_id);
+        checkbox.addEventListener("change", () => {
+            if (checkbox.checked) {
+                if (pendingFeaturedBadgeIds.size >= MAX_FEATURED_BADGES) {
+                    // Segunda trava, além do disabled - cobre o raro
+                    // caso de dois cliques quase simultâneos antes do
+                    // disabled render a tempo.
+                    checkbox.checked = false;
+                    return;
+                }
+                pendingFeaturedBadgeIds.add(row.badge_id);
+            } else {
+                pendingFeaturedBadgeIds.delete(row.badge_id);
+            }
+            updateBadgeCheckboxLimits();
+        });
 
         const card = document.createElement("div");
         card.className = "badge-card badge-card--small";
@@ -1618,19 +1700,17 @@ async function loadOwnBadges(userId, featuredIds) {
     // Guarda pra re-renderizar a tira do topo sem precisar buscar de
     // novo no banco, toda vez que uma caixa de marcar mudar.
     lastLoadedBadgeRows = data;
+    updateBadgeCheckboxLimits();
 }
 
 let lastLoadedBadgeRows = [];
 
-async function toggleFeaturedBadge(badgeId, isChecked) {
-    const current = new Set(currentProfile?.featured_badge_ids || []);
-    if (isChecked) {
-        current.add(badgeId);
-    } else {
-        current.delete(badgeId);
-    }
+const badgesErrorEl = document.getElementById("badges-error");
 
-    const newList = [...current];
+document.getElementById("badges-save-btn")?.addEventListener("click", async (event) => {
+    setMessage(badgesErrorEl, null);
+
+    const newList = [...pendingFeaturedBadgeIds];
 
     const { error } = await supabaseClient
         .from("profiles")
@@ -1638,21 +1718,23 @@ async function toggleFeaturedBadge(badgeId, isChecked) {
         .eq("id", currentUserId);
 
     if (error) {
-        console.error("Erro ao salvar badges em destaque:", error);
+        setMessage(badgesErrorEl, null, error.message);
         return;
     }
 
     if (currentProfile) currentProfile.featured_badge_ids = newList;
 
     renderHeaderBadgeStrip(lastLoadedBadgeRows, newList);
-}
+    flashSaved(event.currentTarget);
+    showSavedCheckmark(document.getElementById("profile-own-badges-list").closest("section"));
+});
 
 const badgeNameInput = document.getElementById("badge-name");
 const badgeDescriptionInput = document.getElementById("badge-description");
 const badgeShapeSelect = document.getElementById("badge-shape");
-const badgeColorPalette = document.getElementById("badge-color-palette");
+const badgeColorTrigger = document.getElementById("badge-color-trigger");
+const badgeIconColorTrigger = document.getElementById("badge-icon-color-trigger");
 const badgeIconPalette = document.getElementById("badge-icon-palette");
-const badgeIconColorPalette = document.getElementById("badge-icon-color-palette");
 const badgeImageInput = document.getElementById("badge-image");
 const badgePreview = document.getElementById("badge-preview");
 const badgePreviewImg = document.getElementById("badge-preview-img");
@@ -1680,13 +1762,12 @@ badgeIconSizeInput?.addEventListener("input", () => {
     updateBadgePreview();
 });
 
-// Paleta de cores fixa em vez do seletor nativo do sistema - evitou
-// dois problemas reportados ao vivo: o botão minúsculo/cortado do
-// <input type="color">, e o conta-gotas nativo do navegador saindo
-// pra capturar cor de fora da própria janela (comportamento do
-// sistema operacional, sentido como invasivo). Genérica agora - a
-// mesma função desenha tanto a paleta de fundo quanto a de ícone,
-// já que os dois viraram independentes.
+// Genérica ainda, mas agora só pra o ícone em si (troféu, escudo...),
+// não mais pra cor - reportado ao vivo: "troca o sistema de cores
+// pelo mesmo usado na criação dos temas". Cor de fundo e cor do
+// ícone agora abrem o mesmo seletor rico (quadrado de saturação +
+// roda de matiz + hex) que o tema já usa, em vez da grade de 10
+// cores fixas - ver openColorPicker, reaproveitado tal e qual.
 function renderGenericColorPalette(container, currentValue, onPick, colors = BADGE_COLORS) {
     if (!container) return;
     container.innerHTML = "";
@@ -1703,20 +1784,36 @@ function renderGenericColorPalette(container, currentValue, onPick, colors = BAD
 }
 
 function renderColorPalette() {
-    renderGenericColorPalette(badgeColorPalette, selectedBadgeColor, (color) => {
-        selectedBadgeColor = color;
-        renderColorPalette();
-        updateBadgePreview();
-    });
+    const swatch = document.getElementById("badge-color-swatch");
+    const value = document.getElementById("badge-color-value");
+    if (swatch) swatch.style.background = selectedBadgeColor;
+    if (value) value.textContent = selectedBadgeColor;
 }
 
 function renderIconColorPalette() {
-    renderGenericColorPalette(badgeIconColorPalette, selectedIconColor, (color) => {
-        selectedIconColor = color;
+    const swatch = document.getElementById("badge-icon-color-swatch");
+    const value = document.getElementById("badge-icon-color-value");
+    if (swatch) swatch.style.background = selectedIconColor;
+    if (value) value.textContent = selectedIconColor;
+}
+
+badgeColorTrigger?.addEventListener("click", () => {
+    openColorPicker(selectedBadgeColor, (hex) => {
+        selectedBadgeColor = hex;
+        renderColorPalette();
+        updateBadgePreview();
+    });
+});
+
+badgeIconColorTrigger?.addEventListener("click", () => {
+    openColorPicker(selectedIconColor, (hex) => {
+        selectedIconColor = hex;
         renderIconColorPalette();
         updateBadgePreview();
     });
-}
+});
+
+
 
 // Modelo "conquista de RPG" - a imagem enviada aparece inteira, sem
 // nada escrito por cima dela (era assim antes: o nome ficava
@@ -1880,27 +1977,42 @@ createBadgeForm?.addEventListener("submit", async (event) => {
     // vai pros dois campos internos, que continuam existindo pra
     // quando os badges "oficiais"/protocolo (com pt/en de verdade)
     // forem criados depois, por outro caminho.
-    const { error: insertError } = await supabaseClient.from("badges").insert({
-        slug,
-        name_pt: badgeNameInput.value,
-        name_en: badgeNameInput.value,
-        description_pt: badgeDescriptionInput.value || null,
-        description_en: badgeDescriptionInput.value || null,
-        badge_shape: badgeShapeSelect.value,
-        background_color: selectedBadgeColor,
-        image_url: imageUrl,
-        icon: imageUrl ? null : selectedBadgeIcon,
-        icon_color: imageUrl ? null : selectedBadgeIcon ? selectedIconColor : null,
-        icon_size: imageUrl ? undefined : selectedBadgeIcon ? selectedIconSize : undefined,
-        created_by: currentUserId,
-        source: "community",
+    //
+    // Passou a chamar a Edge Function em vez de inserir direto -
+    // reportado ao vivo: "30 por VIP, sem ser acumulativo". Um
+    // limite só checado aqui no navegador seria decorativo, dava pra
+    // pular chamando a API do Supabase direto - a contagem de
+    // verdade agora mora no servidor (ver vip-create-badge).
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const createResponse = await fetch(`${window.nodraSupabaseUrl}/functions/v1/vip-create-badge`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+            slug,
+            namePt: badgeNameInput.value,
+            nameEn: badgeNameInput.value,
+            descriptionPt: badgeDescriptionInput.value || null,
+            descriptionEn: badgeDescriptionInput.value || null,
+            badgeShape: badgeShapeSelect.value,
+            backgroundColor: selectedBadgeColor,
+            imageUrl,
+            icon: imageUrl ? null : selectedBadgeIcon,
+            iconColor: imageUrl ? null : selectedBadgeIcon ? selectedIconColor : null,
+            iconSize: imageUrl ? null : selectedBadgeIcon ? selectedIconSize : null,
+        }),
     });
+
+    const createResult = await createResponse.json().catch(() => ({}));
+    const insertError = createResponse.ok ? null : new Error(createResult.error || "create failed");
 
     createBadgeBtn.disabled = false;
 
     if (insertError) {
         console.error("Erro ao criar badge:", insertError);
-        createBadgeStatus.textContent =
+        createBadgeStatus.textContent = createResult.error ||
             window.nodraTranslator?.translations?.["vip.createFailed"] || "Failed to create badge.";
         createBadgeStatus.className = "vip-badge-status is-error";
         return;
@@ -2153,8 +2265,9 @@ grantBadgeForm?.addEventListener("submit", async (event) => {
 
 let vipSubTabsInitialized = false;
 let myBadgesLoaded = false;
-let submittedPacksLoaded = false;
+let myPacksLoaded = false;
 let myThemesLoaded = false;
+let supportTicketsLoaded = false;
 
 function initVipSubTabs() {
     if (vipSubTabsInitialized) return;
@@ -2176,9 +2289,9 @@ function initVipSubTabs() {
                 myBadgesLoaded = true;
                 loadMyCreatedBadges();
             }
-            if (target === "submitted-packs" && !submittedPacksLoaded) {
-                submittedPacksLoaded = true;
-                loadSubmittedPacksForReview();
+            if (target === "my-packs" && !myPacksLoaded) {
+                myPacksLoaded = true;
+                loadMySavedPacks();
             }
             if (target === "themes" && !myThemesLoaded) {
                 myThemesLoaded = true;
@@ -2263,8 +2376,8 @@ async function loadMyCreatedBadges() {
 
         const holdersToggle = document.createElement("button");
         holdersToggle.type = "button";
-        holdersToggle.className = "vip-my-badge-holders-toggle";
-        holdersToggle.textContent = window.nodraTranslator?.translations?.["vip.seeHolders"] || "See who has this";
+        holdersToggle.className = "btn btn-secondary vip-my-badge-holders-toggle";
+        holdersToggle.textContent = window.nodraTranslator?.translations?.["vip.seeHolders"] || "Holders";
 
         const holdersList = document.createElement("div");
         holdersList.className = "vip-my-badge-holders-list";
@@ -2280,11 +2393,346 @@ async function loadMyCreatedBadges() {
             }
         });
 
+        const claimQrToggle = document.createElement("button");
+        claimQrToggle.type = "button";
+        claimQrToggle.className = "btn btn-secondary vip-my-badge-holders-toggle";
+        claimQrToggle.textContent = window.nodraTranslator?.translations?.["vip.manageClaimCodes"] || "Claim QR";
+        claimQrToggle.addEventListener("click", () => openBadgeClaimModal(badge.id));
+
         wrapper.appendChild(card);
         wrapper.appendChild(holdersToggle);
         wrapper.appendChild(holdersList);
+        wrapper.appendChild(claimQrToggle);
         listEl.appendChild(wrapper);
     });
+}
+
+// Meus pacotes de pergunta salvos (ver vip_saved_packs) - reportado
+// ao vivo: "as perguntas não aparecem no perfil". Não existia
+// nenhuma tela pra isso antes - só dava pra REUSAR um pacote salvo
+// na hora de criar sala, nunca dava pra ver o que tinha dentro dele
+// fora daquele momento. Cada pacote expande ao clicar pra mostrar
+// as perguntas de verdade, não só o nome/contagem.
+async function loadMySavedPacks() {
+    const listEl = document.getElementById("vip-my-packs-list");
+    const emptyEl = document.getElementById("vip-my-packs-empty");
+    if (!listEl || !emptyEl) return;
+
+    const { data, error } = await supabaseClient
+        .from("vip_saved_packs")
+        .select("id, games, name, questions, created_at, submission_status, rejection_reason")
+        .eq("owner_id", currentUserId)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Erro ao carregar meus pacotes salvos:", error);
+    }
+
+    if (error || !data || data.length === 0) {
+        emptyEl.hidden = false;
+        listEl.innerHTML = "";
+        return;
+    }
+
+    emptyEl.hidden = true;
+    listEl.innerHTML = "";
+
+    const gameLabels = { "show-down": "Show Down", "time-attack": "Time Attack" };
+    const statusLabels = {
+        pending: window.nodraTranslator?.translations?.["vip.packStatusPending"] || "Awaiting review",
+        approved: window.nodraTranslator?.translations?.["vip.packStatusApproved"] || "Approved - now public",
+        rejected: window.nodraTranslator?.translations?.["vip.packStatusRejected"] || "Rejected",
+    };
+
+    data.forEach((pack) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "vip-saved-pack-item";
+
+        const header = document.createElement("button");
+        header.type = "button";
+        header.className = "vip-saved-pack-header";
+        const questionCount = Array.isArray(pack.questions) ? pack.questions.length : 0;
+        const statusChip = pack.submission_status
+            ? ` <span class="vip-pack-status-chip vip-pack-status-chip--${pack.submission_status}">${statusLabels[pack.submission_status]}</span>`
+            : "";
+        const gamesLabel = (pack.games || []).map((g) => gameLabels[g] || g).join(" + ");
+        header.innerHTML = `<strong>${escapeHtmlLocal(pack.name)}</strong><span class="vip-saved-pack-meta">${gamesLabel} - ${questionCount} ${window.nodraTranslator?.translations?.["packs.questionsLabel"] || "questions"}${statusChip}</span>`;
+
+        const detail = document.createElement("div");
+        detail.className = "vip-saved-pack-detail";
+        detail.hidden = true;
+
+        if (pack.submission_status === "rejected" && pack.rejection_reason) {
+            const reasonEl = document.createElement("p");
+            reasonEl.className = "vip-badge-status is-error";
+            const reasonLabel = window.nodraTranslator?.translations?.["vip.rejectionReasonLabel"] || "Rejection reason:";
+            reasonEl.textContent = `${reasonLabel} ${pack.rejection_reason}`;
+            detail.appendChild(reasonEl);
+        }
+
+        (pack.questions || []).forEach((q, i) => {
+            const qEl = document.createElement("p");
+            qEl.className = "vip-saved-pack-question";
+            qEl.textContent = `${i + 1}. ${q.question?.pt || q.question?.en || ""}`;
+            detail.appendChild(qEl);
+        });
+
+        const actionsRow = document.createElement("div");
+        actionsRow.className = "vip-saved-pack-actions-row";
+
+        // Enviar pra revisão só faz sentido se ainda não tá pendente
+        // nem já aprovado - reportado ao vivo: o pacote nasce sempre
+        // privado, e essa é a única forma de virar público (aprovado
+        // só pelo admin, nunca por outro VIP navegando numa fila).
+        const canSubmit = !pack.submission_status || pack.submission_status === "rejected";
+        if (canSubmit) {
+            const submitWrap = document.createElement("div");
+            submitWrap.className = "vip-submit-pack-block";
+
+            const submitHint = document.createElement("p");
+            submitHint.className = "vip-submit-pack-hint";
+            submitHint.textContent = window.nodraTranslator?.translations?.["vip.submitPackHint"] || "You can submit this pack for review to make it public, usable by anyone.";
+            submitWrap.appendChild(submitHint);
+
+            const submitBtn = document.createElement("button");
+            submitBtn.type = "button";
+            submitBtn.className = "btn btn-secondary";
+            submitBtn.textContent = window.nodraTranslator?.translations?.["vip.submitForReviewBtn"] || "Submit for review";
+            submitBtn.addEventListener("click", async () => {
+                submitBtn.disabled = true;
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                const response = await fetch(`${window.nodraSupabaseUrl}/functions/v1/vip-submit-saved-pack-for-review`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${session?.access_token}`,
+                    },
+                    body: JSON.stringify({ packId: pack.id }),
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    console.error("Erro ao enviar pacote pra revisão:", result.error);
+                    submitBtn.disabled = false;
+                    return;
+                }
+                await loadMySavedPacks();
+            });
+            submitWrap.appendChild(submitBtn);
+            actionsRow.appendChild(submitWrap);
+        }
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn btn-secondary";
+        deleteBtn.textContent = window.nodraTranslator?.translations?.["packs.deleteBtn"] || "Delete";
+        deleteBtn.addEventListener("click", async () => {
+            const confirmMsg = window.nodraTranslator?.translations?.["packs.deleteConfirm"] || "Delete this pack? This can't be undone.";
+            if (!confirm(confirmMsg)) return;
+            const { error: deleteError } = await supabaseClient
+                .from("vip_saved_packs")
+                .delete()
+                .eq("id", pack.id);
+            if (deleteError) {
+                console.error("Erro ao apagar meu pacote salvo:", deleteError);
+                return;
+            }
+            wrapper.remove();
+            if (!listEl.children.length) emptyEl.hidden = false;
+        });
+        actionsRow.appendChild(deleteBtn);
+        detail.appendChild(actionsRow);
+
+        header.addEventListener("click", () => {
+            detail.hidden = !detail.hidden;
+        });
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(detail);
+        listEl.appendChild(wrapper);
+    });
+}
+
+// Criar pacote direto pelo perfil, sem precisar passar pela tela de
+// criar sala de um jogo - reportado ao vivo: "além de submeter só
+// pelo menu do jogo ele poderia submeter ali também". Mesmo formato
+// plano (sem dificuldade) que o menu do jogo já usa, mesmo parser de
+// texto em lote (PERGUNTA/RESPOSTAS/CORRETA) que as perguntas
+// personalizadas dos jogos já usam - só reescrito aqui porque essa
+// tela é self-contained, sem importar de outro lugar.
+function parseFlatBulkQuestions(text) {
+    const blocks = text.split(/\n\s*---\s*\n/).map((b) => b.trim()).filter(Boolean);
+    const parsed = [];
+    const errors = [];
+
+    // DIFICULDADE aceita com ou sem acento - reportado ao vivo:
+    // "quero misturar" (pacote valendo pro Quest Drop e pro Show
+    // Down/Time Attack ao mesmo tempo). Show Down/Time Attack
+    // ignoram esse campo completamente, só o Quest Drop usa - e só
+    // se PELO MENOS uma pergunta do pacote tiver isso preenchido
+    // (ver quest-drop/script.js pra como o "sem dificuldade nenhuma"
+    // vira aviso + sorteio sem balanceamento em vez de travar).
+    const difficultyAliases = {
+        facil: "easy", "fácil": "easy", easy: "easy",
+        medio: "medium", "médio": "medium", medium: "medium",
+        dificil: "hard", "difícil": "hard", hard: "hard",
+    };
+
+    blocks.forEach((block, i) => {
+        const label = `Pergunta ${i + 1}`;
+        const data = {};
+        block.split("\n").forEach((line) => {
+            const match = line.match(/^([^:]+):\s*(.+)$/);
+            if (match) data[match[1].trim().toUpperCase()] = match[2].trim();
+        });
+
+        const questionText = data["PERGUNTA"];
+        if (!questionText) {
+            errors.push(`${label}: faltou PERGUNTA.`);
+            return;
+        }
+        const answersRaw = data["RESPOSTAS"];
+        if (!answersRaw) {
+            errors.push(`${label}: faltou RESPOSTAS.`);
+            return;
+        }
+        const answers = answersRaw.split(";").map((a) => a.trim()).filter(Boolean);
+        if (answers.length !== 4) {
+            errors.push(`${label}: precisa ter exatamente 4 respostas separadas por ";" (encontrei ${answers.length}).`);
+            return;
+        }
+        const correctRaw = Number(data["CORRETA"]);
+        if (!correctRaw || correctRaw < 1 || correctRaw > 4) {
+            errors.push(`${label}: CORRETA precisa ser um número de 1 a 4.`);
+            return;
+        }
+
+        const difficultyRaw = (data["DIFICULDADE"] || "").toLowerCase();
+        const difficulty = difficultyAliases[difficultyRaw] || null;
+
+        parsed.push({
+            question: { pt: questionText, en: questionText },
+            answers: { pt: answers, en: answers },
+            correct: correctRaw - 1,
+            ...(difficulty ? { difficulty } : {}),
+        });
+    });
+
+    return { parsed, errors };
+}
+
+document.getElementById("new-pack-game-questdrop")?.addEventListener("change", (event) => {
+    document.getElementById("new-pack-questdrop-note").hidden = !event.target.checked;
+});
+
+// Reportado ao vivo: "tem que ter como submeter o arquivo não só
+// colar as perguntas" - mesmo padrão de upload/modelo já usado nos
+// jogos e na página de envio antiga, reescrito aqui porque essa tela
+// é self-contained.
+const NEW_PACK_TEMPLATE_TEXT = `PERGUNTA: Qual é a capital do Brasil?
+RESPOSTAS: Brasília; São Paulo; Rio de Janeiro; Salvador
+CORRETA: 1
+---
+DIFICULDADE: dificil
+PERGUNTA: O que é uma stablecoin?
+RESPOSTAS: Uma moeda que nunca muda de dono; Um token que tenta manter valor estável; Uma carteira offline; Um tipo de NFT
+CORRETA: 2
+`;
+
+document.getElementById("new-pack-download-template-btn")?.addEventListener("click", () => {
+    const blob = new Blob([NEW_PACK_TEMPLATE_TEXT], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "modelo-perguntas-nodra.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+document.getElementById("new-pack-file-upload")?.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        document.getElementById("new-pack-bulk-textarea").value = reader.result;
+    };
+    reader.readAsText(file, "utf-8");
+});
+
+document.getElementById("create-saved-pack-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const nameInput = document.getElementById("new-pack-name");
+    const bulkTextarea = document.getElementById("new-pack-bulk-textarea");
+    const statusEl = document.getElementById("create-saved-pack-status");
+    const submitBtn = event.target.querySelector("button[type=submit]");
+
+    // Reportado ao vivo: "o pack deve valer para todos os jogos se
+    // quiser" - trocou de escolha única pra checkbox, um pacote pode
+    // valer pro Show Down, Time Attack, ou os dois ao mesmo tempo.
+    const games = [];
+    if (document.getElementById("new-pack-game-showdown").checked) games.push("show-down");
+    if (document.getElementById("new-pack-game-timeattack").checked) games.push("time-attack");
+    if (document.getElementById("new-pack-game-questdrop").checked) games.push("quest-drop");
+
+    if (games.length === 0) {
+        statusEl.textContent = window.nodraTranslator?.translations?.["vip.newPackGameRequired"] || "Pick at least one game.";
+        statusEl.className = "vip-badge-status is-error";
+        return;
+    }
+
+    const name = nameInput.value.trim();
+    if (!name) {
+        statusEl.textContent = window.nodraTranslator?.translations?.["vip.newPackNameRequired"] || "Give the pack a name.";
+        statusEl.className = "vip-badge-status is-error";
+        return;
+    }
+
+    const { parsed, errors } = parseFlatBulkQuestions(bulkTextarea.value);
+
+    if (errors.length > 0) {
+        statusEl.textContent = errors.join(" ");
+        statusEl.className = "vip-badge-status is-error";
+        return;
+    }
+    if (parsed.length === 0) {
+        statusEl.textContent = window.nodraTranslator?.translations?.["vip.newPackNoQuestions"] || "Add at least one question.";
+        statusEl.className = "vip-badge-status is-error";
+        return;
+    }
+
+    submitBtn.disabled = true;
+    statusEl.textContent = "";
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const response = await fetch(`${window.nodraSupabaseUrl}/functions/v1/vip-create-saved-pack`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({ games, name, questions: parsed }),
+    });
+    const result = await response.json().catch(() => ({}));
+
+    submitBtn.disabled = false;
+
+    if (!response.ok) {
+        console.error("Erro ao criar pacote salvo direto pelo perfil:", result.error);
+        statusEl.textContent = result.error || window.nodraTranslator?.translations?.["vip.createPackFailed"] || "Failed to save pack.";
+        statusEl.className = "vip-badge-status is-error";
+        return;
+    }
+
+    nameInput.value = "";
+    bulkTextarea.value = "";
+    statusEl.textContent = "";
+    await loadMySavedPacks();
+});
+
+function escapeHtmlLocal(value) {
+    const div = document.createElement("div");
+    div.textContent = value ?? "";
+    return div.innerHTML;
 }
 
 // Quem tem um badge específico - sem join direto pro profiles_public
@@ -2319,153 +2767,393 @@ async function loadBadgeHolders(badgeId, containerEl) {
     const usernameById = new Map((profiles || []).map((p) => [p.id, p.username]));
 
     containerEl.innerHTML = "";
+
+    // Botão de copiar - reportado ao vivo: "o vip pode copiar a
+    // lista de quem tem as badges dele". Copia um nome por linha,
+    // na mesma ordem exibida (mais recente primeiro); quem não tem
+    // username público vira o próprio user_id como texto, igual já
+    // aparece na tela - copiar reflete exatamente o que a pessoa vê.
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "btn btn-secondary vip-my-badge-holders-copy";
+    const copyLabel = window.nodraTranslator?.translations?.["vip.copyHoldersList"] || "Copy list";
+    const copiedLabel = window.nodraTranslator?.translations?.["vip.copiedConfirm"] || "Copied!";
+    copyBtn.textContent = copyLabel;
+    copyBtn.addEventListener("click", async () => {
+        const text = holders.map((h) => usernameById.get(h.user_id) || h.user_id).join("\n");
+        try {
+            await navigator.clipboard.writeText(text);
+            copyBtn.textContent = copiedLabel;
+            setTimeout(() => { copyBtn.textContent = copyLabel; }, 1500);
+        } catch (err) {
+            console.error("Erro ao copiar lista de quem tem o badge:", err);
+        }
+    });
+    containerEl.appendChild(copyBtn);
+
+    const list = document.createElement("div");
+    list.className = "vip-my-badge-holders-rows";
+
     holders.forEach((holder) => {
         const row = document.createElement("div");
         row.className = "vip-my-badge-holder-row";
-        row.textContent = usernameById.get(holder.user_id) || holder.user_id;
-        containerEl.appendChild(row);
+
+        const username = usernameById.get(holder.user_id);
+
+        // Mesmo padrão já usado no histórico de partidas - link pro
+        // perfil público em nova aba quando existe username de
+        // verdade; sem isso, mostra o id cru como texto simples,
+        // sem virar link pra lugar nenhum.
+        if (username) {
+            const link = document.createElement("a");
+            link.href = `perfil.html?u=${encodeURIComponent(username)}`;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = username;
+            row.appendChild(link);
+        } else {
+            row.textContent = holder.user_id;
+        }
+
+        list.appendChild(row);
     });
+
+    containerEl.appendChild(list);
 }
 
-// Fila de revisão - pacotes de pergunta que a comunidade enviou
-// (ndquest/submit), pra qualquer VIP conferir. Diferente de
-// question_packs (o catálogo já aprovado que os jogos usam de
-// verdade), submitted_packs não tem vínculo de usuário nenhum (só
-// nome/email digitados à mão no formulário), então não dá pra
-// filtrar "só o que EU enviei" - mostra tudo, como fila de revisão
-// compartilhada entre os VIPs.
-async function loadSubmittedPacksForReview() {
-    const listEl = document.getElementById("vip-submitted-packs-list");
-    const emptyEl = document.getElementById("vip-submitted-packs-empty");
-    if (!listEl || !emptyEl) return;
-
-    // Só a fila de pendentes aqui - aprovado/rejeitado sai da lista
-    // (fica registrado na própria linha de submitted_packs, não
-    // apagado, só não aparece mais nessa fila de revisão).
-    const { data, error } = await supabaseClient
-        .from("submitted_packs")
-        .select("id, slug, name_pt, name_en, submitter_name, submitter_email, questions, created_at")
-        .eq("status", "pending")
-        .order("created_at", { ascending: false });
-
-    if (error) {
-        console.error("Erro ao carregar pacotes enviados:", error);
-    }
-
-    if (error || !data || data.length === 0) {
-        emptyEl.hidden = false;
-        listEl.innerHTML = "";
-        return;
-    }
-
-    emptyEl.hidden = true;
-    listEl.innerHTML = "";
-
-    const lang = document.documentElement.lang === "en" ? "en" : "pt";
-
-    data.forEach((pack) => {
-        const item = document.createElement("div");
-        item.className = "vip-submitted-pack-item";
-
-        const name = document.createElement("div");
-        name.className = "vip-submitted-pack-name";
-        name.textContent = lang === "en" ? pack.name_en : pack.name_pt;
-
-        const questionCount = Object.values(pack.questions || {}).reduce(
-            (total, arr) => total + (Array.isArray(arr) ? arr.length : 0),
-            0,
-        );
-
-        const meta = document.createElement("div");
-        meta.className = "vip-submitted-pack-meta";
-        const dateStr = pack.created_at ? new Date(pack.created_at).toLocaleDateString() : "";
-        meta.textContent = `${pack.submitter_name || "?"} (${pack.submitter_email || "?"}) . ${questionCount} perguntas ${dateStr ? `. ${dateStr}` : ""}`;
-
-        const actions = document.createElement("div");
-        actions.className = "vip-submitted-pack-actions";
-
-        const approveBtn = document.createElement("button");
-        approveBtn.type = "button";
-        approveBtn.className = "btn btn-primary";
-        approveBtn.textContent = window.nodraTranslator?.translations?.["vip.approveBtn"] || "Approve";
-        approveBtn.addEventListener("click", () =>
-            reviewSubmittedPack(pack.id, "approve", item),
-        );
-
-        const rejectBtn = document.createElement("button");
-        rejectBtn.type = "button";
-        rejectBtn.className = "btn btn-secondary";
-        rejectBtn.textContent = window.nodraTranslator?.translations?.["vip.rejectBtn"] || "Reject";
-        rejectBtn.addEventListener("click", () =>
-            reviewSubmittedPack(pack.id, "reject", item),
-        );
-
-        actions.appendChild(approveBtn);
-        actions.appendChild(rejectBtn);
-
-        const status = document.createElement("p");
-        status.className = "vip-badge-status";
-
-        item.appendChild(name);
-        item.appendChild(meta);
-        item.appendChild(actions);
-        item.appendChild(status);
-        listEl.appendChild(item);
-    });
+// Painel de códigos de resgate por QR de um badge - lista os já
+// criados (dá pra pausar/apagar direto, ver policies de RLS em
+// badge_claim_codes) e tem um formulário compacto pra criar um novo,
+// com limite de uso e validade opcionais (o VIP escolhe se quer
+// algum dos dois, os dois, ou nenhum - sem limite, o código só para
+// quando pausado/apagado à mão).
+function closeBadgeClaimModal() {
+    document.getElementById("badge-claim-modal").hidden = true;
 }
 
-// Aprova (vira question_packs de verdade, usável pelos jogos) ou
-// rejeita (só marca, não cria nada) um pacote enviado. Mesmo padrão
-// de try/catch dos outros fluxos VIP - botões desabilitam durante a
-// chamada, erro real sempre visível, nunca trava silenciosamente.
-async function reviewSubmittedPack(packId, action, itemEl) {
-    const buttons = itemEl.querySelectorAll("button");
-    const statusEl = itemEl.querySelector(".vip-badge-status");
+document.getElementById("badge-claim-modal-backdrop")?.addEventListener("click", closeBadgeClaimModal);
+document.getElementById("badge-claim-modal-close-btn")?.addEventListener("click", closeBadgeClaimModal);
 
-    buttons.forEach((b) => (b.disabled = true));
-    statusEl.textContent = "";
-    statusEl.className = "vip-badge-status";
+async function openBadgeClaimModal(badgeId) {
+    const modal = document.getElementById("badge-claim-modal");
+    const containerEl = document.getElementById("badge-claim-modal-body");
+    modal.hidden = false;
+    await renderBadgeClaimPanel(badgeId, containerEl);
+}
 
-    try {
-        const {
-            data: { session },
-        } = await supabaseClient.auth.getSession();
+async function renderBadgeClaimPanel(badgeId, containerEl) {
+    containerEl.innerHTML = "";
 
-        const response = await fetch(`${window.nodraSupabaseUrl}/functions/v1/vip-review-submitted-pack`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({ packId, action }),
-        });
+    const list = document.createElement("div");
+    list.className = "vip-claim-codes-list";
+    containerEl.appendChild(list);
 
-        const result = await response.json();
+    async function refreshList() {
+        const { data: codes, error } = await supabaseClient
+            .from("badge_claim_codes")
+            .select("id, code, max_uses, uses_count, expires_at, paused, created_at")
+            .eq("badge_id", badgeId)
+            .order("created_at", { ascending: false });
 
-        if (result.error) {
-            statusEl.textContent = result.error;
-            statusEl.className = "vip-badge-status is-error";
-            buttons.forEach((b) => (b.disabled = false));
+        list.innerHTML = "";
+
+        if (error) {
+            console.error("Erro ao carregar códigos de resgate:", error);
             return;
         }
 
-        const successKey = action === "approve" ? "vip.approveSuccess" : "vip.rejectSuccess";
-        const fallback = action === "approve" ? "Approved! Pack is now live." : "Rejected.";
-        statusEl.textContent = window.nodraTranslator?.translations?.[successKey] || fallback;
-        statusEl.className = "vip-badge-status is-success";
+        if (!codes || codes.length === 0) {
+            const empty = document.createElement("p");
+            empty.className = "vip-claim-codes-empty";
+            empty.textContent = window.nodraTranslator?.translations?.["vip.noClaimCodesYet"] || "No claim codes yet.";
+            list.appendChild(empty);
+            return;
+        }
 
-        // Some da fila depois de um instante, já que não é mais
-        // "pendente" - dá tempo da pessoa ler a confirmação primeiro.
-        setTimeout(() => itemEl.remove(), 1200);
-    } catch (err) {
-        console.error("Erro ao revisar pacote enviado:", err);
-        statusEl.textContent =
-            window.nodraTranslator?.translations?.["vip.reviewFailed"] ||
-            "Something went wrong. Check the console for details.";
-        statusEl.className = "vip-badge-status is-error";
-        buttons.forEach((b) => (b.disabled = false));
+        codes.forEach((claimCode) => {
+            list.appendChild(buildClaimCodeRow(claimCode, refreshList));
+        });
+    }
+
+    function buildClaimCodeRow(claimCode, onChange) {
+        const row = document.createElement("div");
+        row.className = "vip-claim-code-row";
+        if (claimCode.paused) row.classList.add("is-paused");
+
+        // Aponta pra tela dedicada agora (claim.html), não mais direto
+        // pro perfil cheio - reportado ao vivo: "o usuário deveria ter
+        // uma tela clara... não ficar vendo dentro do perfil do vip".
+        const claimUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, "")}claim.html?code=${claimCode.code}`;
+
+        const qrImg = document.createElement("img");
+        qrImg.className = "vip-claim-code-qr";
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(claimUrl)}`;
+        qrImg.alt = claimCode.code;
+
+        const info = document.createElement("div");
+        info.className = "vip-claim-code-info";
+
+        const codeText = document.createElement("div");
+        codeText.className = "vip-claim-code-text";
+        codeText.textContent = claimCode.code;
+
+        const meta = document.createElement("div");
+        meta.className = "vip-claim-code-meta";
+        const usesLabel = claimCode.max_uses
+            ? `${claimCode.uses_count}/${claimCode.max_uses}`
+            : `${claimCode.uses_count}`;
+        const expiresLabel = claimCode.expires_at
+            ? new Date(claimCode.expires_at).toLocaleDateString()
+            : (window.nodraTranslator?.translations?.["vip.claimCodeNoExpiry"] || "No expiry");
+        meta.textContent = `${usesLabel} . ${expiresLabel}${claimCode.paused ? " . " + (window.nodraTranslator?.translations?.["vip.claimCodePaused"] || "Paused") : ""}`;
+
+        const actions = document.createElement("div");
+        actions.className = "vip-claim-code-actions";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.type = "button";
+        copyBtn.className = "btn btn-secondary vip-my-badge-holders-copy";
+        const copyLinkLabel = window.nodraTranslator?.translations?.["vip.copyClaimLink"] || "Copy link";
+        copyBtn.textContent = copyLinkLabel;
+        copyBtn.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(claimUrl);
+                copyBtn.textContent = window.nodraTranslator?.translations?.["vip.copiedConfirm"] || "Copied!";
+                setTimeout(() => { copyBtn.textContent = copyLinkLabel; }, 1500);
+            } catch (err) {
+                console.error("Erro ao copiar link de resgate:", err);
+            }
+        });
+
+        const pauseBtn = document.createElement("button");
+        pauseBtn.type = "button";
+        pauseBtn.className = "btn btn-secondary vip-my-badge-holders-copy";
+        pauseBtn.textContent = claimCode.paused
+            ? (window.nodraTranslator?.translations?.["vip.claimCodeResume"] || "Resume")
+            : (window.nodraTranslator?.translations?.["vip.claimCodePause"] || "Pause");
+        pauseBtn.addEventListener("click", async () => {
+            const { error } = await supabaseClient
+                .from("badge_claim_codes")
+                .update({ paused: !claimCode.paused })
+                .eq("id", claimCode.id);
+            if (error) {
+                console.error("Erro ao pausar/retomar código de resgate:", error);
+                return;
+            }
+            onChange();
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn btn-secondary vip-my-badge-holders-copy";
+        deleteBtn.textContent = window.nodraTranslator?.translations?.["packs.deleteBtn"] || "Delete";
+        deleteBtn.addEventListener("click", async () => {
+            const confirmMsg = window.nodraTranslator?.translations?.["vip.deleteClaimCodeConfirm"] || "Delete this code? Anyone with the link will no longer be able to claim.";
+            if (!confirm(confirmMsg)) return;
+            const { error } = await supabaseClient
+                .from("badge_claim_codes")
+                .delete()
+                .eq("id", claimCode.id);
+            if (error) {
+                console.error("Erro ao apagar código de resgate:", error);
+                return;
+            }
+            onChange();
+        });
+
+        const displayLink = document.createElement("a");
+        displayLink.className = "btn btn-secondary vip-my-badge-holders-copy";
+        displayLink.textContent = window.nodraTranslator?.translations?.["vip.openDisplayScreen"] || "Open display screen";
+        displayLink.href = `claim-display.html?code=${claimCode.code}`;
+        displayLink.target = "_blank";
+        displayLink.rel = "noopener noreferrer";
+
+        const downloadBtn = document.createElement("button");
+        downloadBtn.type = "button";
+        downloadBtn.className = "btn btn-secondary vip-my-badge-holders-copy";
+        const downloadLabel = window.nodraTranslator?.translations?.["vip.downloadQrBtn"] || "Download PNG";
+        downloadBtn.textContent = downloadLabel;
+        downloadBtn.addEventListener("click", async () => {
+            downloadBtn.disabled = true;
+            try {
+                // Baixa numa resolução maior (600px) que a prévia na
+                // tela (140px) - reportado ao vivo: "salvar como png",
+                // implica em usar impresso/compartilhado, então vale
+                // mais nítido do que o tamanho pequeno só de
+                // visualização. Busca como blob em vez de usar
+                // download direto num <a href> - qrserver.com é
+                // origem diferente, e o atributo download sozinho não
+                // é confiável em imagem cross-origin na maioria dos
+                // navegadores (só abre em aba nova em vez de baixar).
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(claimUrl)}`;
+                const response = await fetch(qrUrl);
+                const blob = await response.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = objectUrl;
+                a.download = `badge-qr-${claimCode.code}.png`;
+                a.click();
+                URL.revokeObjectURL(objectUrl);
+            } catch (err) {
+                console.error("Erro ao baixar QR:", err);
+            }
+            downloadBtn.disabled = false;
+        });
+
+        actions.appendChild(copyBtn);
+        actions.appendChild(downloadBtn);
+        actions.appendChild(displayLink);
+        actions.appendChild(pauseBtn);
+        actions.appendChild(deleteBtn);
+
+        info.appendChild(codeText);
+        info.appendChild(meta);
+        info.appendChild(actions);
+
+        row.appendChild(qrImg);
+        row.appendChild(info);
+        return row;
+    }
+
+    // Formulário compacto de criação - limite de uso e validade são
+    // os dois opcionais, deixados em branco.
+    const form = document.createElement("form");
+    form.className = "vip-claim-code-create-form";
+
+    const maxUsesInput = document.createElement("input");
+    maxUsesInput.type = "number";
+    maxUsesInput.min = "1";
+    maxUsesInput.placeholder = window.nodraTranslator?.translations?.["vip.claimCodeMaxUsesPlaceholder"] || "Max uses (optional)";
+
+    const expiresInput = document.createElement("input");
+    expiresInput.type = "date";
+
+    const createBtn = document.createElement("button");
+    createBtn.type = "submit";
+    createBtn.className = "btn btn-secondary";
+    createBtn.textContent = window.nodraTranslator?.translations?.["vip.createClaimCodeBtn"] || "+ New QR code";
+
+    const formStatus = document.createElement("p");
+    formStatus.className = "vip-badge-status";
+
+    form.appendChild(maxUsesInput);
+    form.appendChild(expiresInput);
+    form.appendChild(createBtn);
+    form.appendChild(formStatus);
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        createBtn.disabled = true;
+        formStatus.textContent = "";
+
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        const response = await fetch(`${window.nodraSupabaseUrl}/functions/v1/vip-create-badge-claim-code`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${session?.access_token}`,
+            },
+            body: JSON.stringify({
+                badgeId,
+                maxUses: maxUsesInput.value ? Number(maxUsesInput.value) : null,
+                expiresAt: expiresInput.value ? new Date(expiresInput.value).toISOString() : null,
+            }),
+        });
+
+        const result = await response.json().catch(() => ({}));
+        createBtn.disabled = false;
+
+        if (!response.ok) {
+            formStatus.textContent = result.error || (window.nodraTranslator?.translations?.["vip.createFailed"] || "Failed to create.");
+            formStatus.className = "vip-badge-status is-error";
+            return;
+        }
+
+        maxUsesInput.value = "";
+        expiresInput.value = "";
+        formStatus.textContent = "";
+        await refreshList();
+    });
+
+    containerEl.appendChild(form);
+
+    await refreshList();
+}
+
+// Se a URL tiver ?claim=CODIGO (veio de um QR escaneado), tenta
+// resgatar sozinho assim que a pessoa está confirmada logada -
+// reportado ao vivo: fluxo completo de escanear e já receber o
+// badge, sem precisar digitar nada na mão. Se não estiver logada
+// ainda, o próprio fluxo de login da página cuida disso - o código
+// fica no parâmetro da URL até o login completar, e essa função roda
+// de novo (chamada a partir de ensureProfileAndRoute).
+let claimFromUrlHandled = false;
+async function handleClaimFromUrl() {
+    if (claimFromUrlHandled) return;
+    if (!capturedClaimCode) return;
+
+    claimFromUrlHandled = true;
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+        claimFromUrlHandled = false; // ainda não logado - tenta de novo depois do login
+        return;
+    }
+
+    const response = await fetch(`${window.nodraSupabaseUrl}/functions/v1/claim-badge-code`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ code: capturedClaimCode }),
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    const claimStatus = document.getElementById("claim-badge-code-status");
+    if (claimStatus) {
+        claimStatus.textContent = response.ok
+            ? (window.nodraTranslator?.translations?.["badges.claimSuccess"] || "Badge claimed!")
+            : (result.error || window.nodraTranslator?.translations?.["badges.claimFailed"] || "Failed to claim.");
+        claimStatus.className = response.ok ? "vip-badge-status is-success" : "vip-badge-status is-error";
     }
 }
+
+document.getElementById("claim-badge-code-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const input = document.getElementById("claim-badge-code-input");
+    const btn = document.getElementById("claim-badge-code-btn");
+    const status = document.getElementById("claim-badge-code-status");
+
+    const code = input.value.trim();
+    if (!code) return;
+
+    btn.disabled = true;
+    status.textContent = "";
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const response = await fetch(`${window.nodraSupabaseUrl}/functions/v1/claim-badge-code`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({ code }),
+    });
+
+    const result = await response.json().catch(() => ({}));
+    btn.disabled = false;
+
+    status.textContent = response.ok
+        ? (window.nodraTranslator?.translations?.["badges.claimSuccess"] || "Badge claimed!")
+        : (result.error || window.nodraTranslator?.translations?.["badges.claimFailed"] || "Failed to claim.");
+    status.className = response.ok ? "vip-badge-status is-success" : "vip-badge-status is-error";
+
+    if (response.ok) input.value = "";
+});
+
 
 // --------------------------------------------------------
 // Tema personalizado do VIP - 1 incluso (grátis) por ciclo de
@@ -3136,8 +3824,8 @@ function loadThemeIntoEditForm(theme) {
 // inteira (erro "Cannot access before initialization").
 // --------------------------------------------------------
 
-const EVM_TREASURY_ADDRESS = "0x0000000000000000000000000000000000000000"; // TROCAR - mesmo endereço serve Avalanche e Base
-const SOLANA_TREASURY_ADDRESS_FOR_PAYMENTS = "REPLACE_WITH_SOLANA_TREASURY_ADDRESS"; // TROCAR - formato diferente do EVM
+const EVM_TREASURY_ADDRESS = "0x84d6e0B342f1E7037DA65A7a482f787631FC7F47"; // mesmo endereço serve Avalanche e Base
+const SOLANA_TREASURY_ADDRESS_FOR_PAYMENTS = "mFKY6He8H94wdJoFtDktdGQ76LXuMGEpa7zx5ioQZQG";
 
 const NETWORK_TOKEN_OPTIONS = [
     { network: "avalanche", token: "USDT", label: "USDT - Avalanche C-Chain", address: EVM_TREASURY_ADDRESS },
@@ -3298,6 +3986,15 @@ themeSubmitVerifyBtn?.addEventListener("click", async () => {
 // Function verify-vip-payment (o back e o front têm que bater).
 // --------------------------------------------------------
 
+// Preço por tier - tem que bater com VIP_TIER_PRICES em
+// verify-vip-payment/index.ts (o back confere de verdade, isso aqui
+// é só pra mostrar o texto certo antes de pagar). Declarado ANTES de
+// renderVipPaymentDetails ser chamada logo abaixo - mesmo bug já
+// visto nesse arquivo: const usado antes de existir quebra a página
+// inteira com "Cannot access before initialization".
+const VIP_TIER_PRICES = { bronze: 5, prata: 20, gold: 50 };
+let selectedVipTier = null;
+
 const vipNetworkSelect = document.getElementById("vip-network-token-select");
 const getSelectedVipNetworkToken = setupNetworkTokenSelect(vipNetworkSelect);
 
@@ -3306,11 +4003,13 @@ function renderVipPaymentDetails() {
     const addressEl = document.getElementById("vip-treasury-address");
     const instructionsEl = document.getElementById("vip-payment-instructions");
     if (addressEl) addressEl.textContent = selected.address;
-    if (instructionsEl) {
+    if (instructionsEl && selectedVipTier) {
+        const price = VIP_TIER_PRICES[selectedVipTier];
         const template =
             window.nodraTranslator?.translations?.["vip.paymentInstructionsTemplate"] ||
-            "Pay $5 in {token} ({network}) to the address above, using any wallet you like. Then paste the transaction hash below to verify.";
+            "Pay ${price} in {token} ({network}) to the address above, using any wallet you like. Then paste the transaction hash below to verify.";
         instructionsEl.textContent = template
+            .replace("{price}", String(price))
             .replace("{token}", selected.token)
             .replace("{network}", selected.label.split(" - ")[1] || selected.network);
     }
@@ -3351,8 +4050,90 @@ const vipTxHashInput = document.getElementById("vip-tx-hash-input");
 const vipVerifyPaymentBtn = document.getElementById("vip-verify-payment-btn");
 const vipPaymentStatus = document.getElementById("vip-payment-status");
 
+// Vitrine em leque - reportado ao vivo com imagem de referência.
+// Gira sozinha devagar até alguém clicar num cartão de trás, aí para
+// pra sempre (a pessoa está interessada, não faz sentido continuar
+// trocando embaixo dela). Ordem fixa bronze/prata/gold - "frente" é
+// sempre uma dessas três, "esquerda"/"direita" são as outras duas
+// nessa ordem circular.
+const VIP_TIER_ORDER = ["bronze", "prata", "gold"];
+let vipShowcaseFrontIndex = 0;
+let vipShowcaseInterval = null;
+
+function renderVipShowcase() {
+    const cards = document.querySelectorAll(".vip-tier-card");
+    cards.forEach((card) => {
+        const tierIndex = VIP_TIER_ORDER.indexOf(card.dataset.tier);
+        const relative = (tierIndex - vipShowcaseFrontIndex + VIP_TIER_ORDER.length) % VIP_TIER_ORDER.length;
+        card.classList.remove("is-front", "is-left", "is-right");
+        if (relative === 0) card.classList.add("is-front");
+        else if (relative === 1) card.classList.add("is-right");
+        else card.classList.add("is-left");
+    });
+}
+
+function stopVipShowcaseRotation() {
+    if (vipShowcaseInterval) {
+        clearInterval(vipShowcaseInterval);
+        vipShowcaseInterval = null;
+    }
+}
+
+function startVipShowcaseRotation() {
+    stopVipShowcaseRotation();
+    vipShowcaseInterval = setInterval(() => {
+        vipShowcaseFrontIndex = (vipShowcaseFrontIndex + 1) % VIP_TIER_ORDER.length;
+        renderVipShowcase();
+    }, 4000);
+}
+
+document.querySelectorAll(".vip-tier-card").forEach((card) => {
+    card.addEventListener("click", () => {
+        // Clique num cartão que já tá na frente não faz nada aqui -
+        // o botão Select dele é que cuida da seleção de verdade.
+        if (card.classList.contains("is-front")) return;
+        vipShowcaseFrontIndex = VIP_TIER_ORDER.indexOf(card.dataset.tier);
+        renderVipShowcase();
+        stopVipShowcaseRotation();
+    });
+});
+
+renderVipShowcase();
+startVipShowcaseRotation();
+
+function closeVipPaymentModal() {
+    document.getElementById("vip-payment-modal").hidden = true;
+}
+document.getElementById("vip-payment-modal-backdrop")?.addEventListener("click", closeVipPaymentModal);
+document.getElementById("vip-payment-modal-close-btn")?.addEventListener("click", closeVipPaymentModal);
+
+document.querySelectorAll(".vip-tier-select-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        selectedVipTier = btn.dataset.tier;
+        stopVipShowcaseRotation();
+
+        document.querySelectorAll(".vip-tier-card").forEach((card) => {
+            card.classList.toggle("is-selected", card.dataset.tier === selectedVipTier);
+        });
+
+        const paymentModal = document.getElementById("vip-payment-modal");
+        paymentModal.hidden = false;
+
+        const tierLabelEl = document.getElementById("vip-selected-tier-label");
+        const tierNames = { bronze: "Bronze", prata: "Prata", gold: "Gold" };
+        const template = window.nodraTranslator?.translations?.["vip.selectedTierLabel"] || "Paying for {tier} - ${price}/month";
+        tierLabelEl.textContent = template
+            .replace("{tier}", tierNames[selectedVipTier])
+            .replace("{price}", String(VIP_TIER_PRICES[selectedVipTier]));
+
+        renderVipPaymentDetails();
+    });
+});
+
 vipPaymentForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    if (!selectedVipTier) return;
 
     vipPaymentStatus.textContent = "";
     vipPaymentStatus.className = "vip-badge-status";
@@ -3377,6 +4158,7 @@ vipPaymentForm?.addEventListener("submit", async (event) => {
                 txHash: vipTxHashInput.value.trim(),
                 network: getSelectedVipNetworkToken().network,
                 token: getSelectedVipNetworkToken().token,
+                tier: selectedVipTier,
             }),
         });
 
@@ -3395,7 +4177,10 @@ vipPaymentForm?.addEventListener("submit", async (event) => {
         vipPaymentForm.reset();
         renderVipMembershipStatus(true, result.vipExpiresAt);
 
-        if (currentProfile) currentProfile.is_vip = true;
+        if (currentProfile) {
+            currentProfile.is_vip = true;
+            currentProfile.vip_tier = selectedVipTier;
+        }
         const vipTab = document.getElementById("navbar-tab-vip");
         if (vipTab) {
             vipTab.textContent =
@@ -3490,6 +4275,220 @@ supabaseClient.auth.onAuthStateChange((_event, session) => {
         toggleNavbarProfileTabs(false);
         showSection("auth");
     }
+});
+
+// ==================================================================
+// SUPORTE - vários tickets por pessoa, cada um uma conversa tipo
+// chat. Usuário lê/escreve na própria conta via RLS direto (mesma
+// segurança de sempre: só vê e insere na própria linha); admin
+// entra por Edge Function separada (ver admin.js), porque ele
+// precisa ver as conversas de TODO MUNDO, não só a própria.
+// ==================================================================
+
+let currentSupportTicketId = null;
+let supportRealtimeChannel = null;
+
+async function loadSupportTickets() {
+    const listEl = document.getElementById("support-tickets-list");
+    const emptyEl = document.getElementById("support-tickets-empty");
+    if (!listEl || !emptyEl) return;
+
+    const { data: tickets, error } = await supabaseClient
+        .from("support_tickets")
+        .select("id, subject, status, updated_at")
+        .eq("user_id", currentUserId)
+        .order("updated_at", { ascending: false });
+
+    if (error) {
+        console.error("Erro ao carregar meus tickets de suporte:", error);
+        return;
+    }
+
+    listEl.innerHTML = "";
+
+    if (!tickets || tickets.length === 0) {
+        emptyEl.hidden = false;
+        return;
+    }
+    emptyEl.hidden = true;
+
+    tickets.forEach((ticket) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "vip-saved-pack-item";
+
+        const row = document.createElement("button");
+        row.type = "button";
+        row.className = "vip-saved-pack-header";
+        row.style.flexDirection = "row";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.innerHTML = `
+            <span style="color:var(--primary); font-weight:700;">${escapeHtmlLocal(ticket.subject)}</span>
+            <span style="font-size:11px; color:var(--text-secondary); text-transform:uppercase;">${ticket.status}</span>
+        `;
+        row.addEventListener("click", () => openSupportTicket(ticket.id, ticket.subject));
+
+        wrapper.appendChild(row);
+        listEl.appendChild(wrapper);
+    });
+}
+
+document.getElementById("support-new-ticket-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const subjectInput = document.getElementById("support-new-subject");
+    const messageInput = document.getElementById("support-new-message");
+    const statusEl = document.getElementById("support-new-ticket-status");
+
+    const subject = subjectInput.value.trim();
+    const message = messageInput.value.trim();
+
+    if (!subject || !message) {
+        statusEl.textContent = window.nodraTranslator?.translations?.["support.fillBoth"] || "Fill in both the subject and the message.";
+        statusEl.className = "vip-badge-status is-error";
+        return;
+    }
+
+    const { data: ticket, error: ticketError } = await supabaseClient
+        .from("support_tickets")
+        .insert({ user_id: currentUserId, subject })
+        .select("id")
+        .single();
+
+    if (ticketError) {
+        console.error("Erro ao abrir ticket de suporte:", ticketError);
+        statusEl.textContent = window.nodraTranslator?.translations?.["support.openFailed"] || "Failed to open ticket.";
+        statusEl.className = "vip-badge-status is-error";
+        return;
+    }
+
+    await supabaseClient.from("support_messages").insert({
+        ticket_id: ticket.id,
+        sender_type: "user",
+        sender_id: currentUserId,
+        message,
+    });
+
+    subjectInput.value = "";
+    messageInput.value = "";
+    statusEl.textContent = "";
+    await loadSupportTickets();
+});
+
+function renderSupportMessage(container, msg) {
+    const bubble = document.createElement("div");
+    bubble.className = `support-bubble support-bubble--${msg.sender_type}`;
+    bubble.textContent = msg.message;
+    container.appendChild(bubble);
+}
+
+async function openSupportTicket(ticketId, subject) {
+    currentSupportTicketId = ticketId;
+
+    document.getElementById("support-list-view").hidden = true;
+    document.getElementById("support-chat-view").hidden = false;
+    document.getElementById("support-chat-subject").textContent = subject;
+
+    const messagesEl = document.getElementById("support-chat-messages");
+    messagesEl.innerHTML = "";
+
+    const { data: ticket } = await supabaseClient
+        .from("support_tickets")
+        .select("status")
+        .eq("id", ticketId)
+        .maybeSingle();
+
+    // Ticket fechado pelo admin não deveria aceitar mensagem nova -
+    // reportado ao vivo: "quando ele fecha o ticket, ainda dá pro
+    // usuário mandar mensagem". Some o formulário inteiro em vez de
+    // só desabilitar, deixa mais claro que a conversa acabou.
+    const replyForm = document.getElementById("support-reply-form");
+    const closedNotice = document.getElementById("support-closed-notice");
+    const isClosed = ticket?.status === "closed";
+    if (replyForm) replyForm.hidden = isClosed;
+    if (closedNotice) closedNotice.hidden = !isClosed;
+
+    const { data: messages, error } = await supabaseClient
+        .from("support_messages")
+        .select("id, sender_type, message, created_at")
+        .eq("ticket_id", ticketId)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+        console.error("Erro ao carregar mensagens do ticket:", error);
+        return;
+    }
+
+    (messages || []).forEach((msg) => renderSupportMessage(messagesEl, msg));
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    // Tempo real - reportado ao vivo: quer um chat tipo WhatsApp,
+    // então a resposta do admin precisa aparecer sozinha, sem
+    // precisar recarregar a página. Mesmo mecanismo (postgres_changes)
+    // que as salas de jogo já usam pra placar ao vivo.
+    if (supportRealtimeChannel) {
+        supabaseClient.removeChannel(supportRealtimeChannel);
+    }
+    supportRealtimeChannel = supabaseClient
+        .channel(`support-ticket-${ticketId}`)
+        .on(
+            "postgres_changes",
+            { event: "INSERT", schema: "public", table: "support_messages", filter: `ticket_id=eq.${ticketId}` },
+            (payload) => {
+                // A própria mensagem que EU acabei de mandar já foi
+                // desenhada na hora (ver support-reply-form abaixo) -
+                // só desenha de novo aqui se for uma mensagem que não
+                // veio de mim (evita a msg aparecer duas vezes).
+                if (payload.new.sender_type === "admin") {
+                    renderSupportMessage(messagesEl, payload.new);
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                }
+            },
+        )
+        .subscribe();
+}
+
+document.getElementById("support-back-btn")?.addEventListener("click", () => {
+    document.getElementById("support-chat-view").hidden = true;
+    document.getElementById("support-list-view").hidden = false;
+    if (supportRealtimeChannel) {
+        supabaseClient.removeChannel(supportRealtimeChannel);
+        supportRealtimeChannel = null;
+    }
+    currentSupportTicketId = null;
+    loadSupportTickets();
+});
+
+document.getElementById("support-reply-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!currentSupportTicketId) return;
+
+    const input = document.getElementById("support-reply-input");
+    const message = input.value.trim();
+    if (!message) return;
+
+    input.value = "";
+
+    const messagesEl = document.getElementById("support-chat-messages");
+    renderSupportMessage(messagesEl, { sender_type: "user", message });
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    const { error } = await supabaseClient.from("support_messages").insert({
+        ticket_id: currentSupportTicketId,
+        sender_type: "user",
+        sender_id: currentUserId,
+        message,
+    });
+
+    if (error) {
+        console.error("Erro ao enviar mensagem de suporte:", error);
+        return;
+    }
+
+    await supabaseClient
+        .from("support_tickets")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", currentSupportTicketId);
 });
 
 (async function boot() {

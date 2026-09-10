@@ -11,6 +11,52 @@
 import translations from '../i18n/translations.js';
 import themes from '../branding/branding-manifest.js';
 
+// Sala sem nenhuma atualização por mais de 30 minutos é considerada
+// abandonada - reportado ao vivo, mesma ideia repetida nos 4 jogos
+// (self-contained, sem importar de arquivo comum entre eles).
+const ROOM_INACTIVITY_TIMEOUT_MINUTES = 30;
+function isRoomStale(updatedAt) {
+    if (!updatedAt) return false;
+    const cutoff = Date.now() - ROOM_INACTIVITY_TIMEOUT_MINUTES * 60 * 1000;
+    return new Date(updatedAt).getTime() < cutoff;
+}
+
+// Limite de jogador ao vivo por sala, de acordo com o tier do host -
+// reportado ao vivo: "vamos implementar sim, isso é super
+// importante", números já fechados numa conversa anterior. Sem
+// host logado (não deveria acontecer, todo jogo exige criar sala
+// logado, mas por segurança) trata como Free.
+const ROOM_PLAYER_CAPS = { bronze: 100, prata: 250, gold: 1000 };
+const FREE_ROOM_PLAYER_CAP = 30;
+
+async function getRoomPlayerCap(hostId) {
+    if (!hostId) return FREE_ROOM_PLAYER_CAP;
+    const { data: hostProfile } = await window.ndquestSupabase
+        .from('profiles')
+        .select('is_vip, vip_tier')
+        .eq('id', hostId)
+        .maybeSingle();
+    if (!hostProfile?.is_vip) return FREE_ROOM_PLAYER_CAP;
+    return ROOM_PLAYER_CAPS[hostProfile.vip_tier] || FREE_ROOM_PLAYER_CAP;
+}
+
+// Agregado da plataforma inteira - soma de jogador em sala ativa,
+// somando os 4 jogos - reportado ao vivo: "temos que pensar que não
+// é por cada vip, se tivermos 20vips e 5 abrirem sala ao mesmo tempo
+// estoura tudo". Uma função no banco (count_active_platform_players)
+// faz essa soma numa chamada só, em vez de 8 consultas separadas
+// toda vez que alguém tenta entrar numa sala.
+const PLATFORM_AGGREGATE_BLOCK_THRESHOLD = 420;
+
+async function isPlatformNearCapacity() {
+    const { data, error } = await window.ndquestSupabase.rpc('count_active_platform_players');
+    if (error) {
+        console.error('Erro ao conferir agregado da plataforma:', error);
+        return false; // não bloqueia por causa de erro de leitura - só bloqueia com dado real
+    }
+    return (data || 0) >= PLATFORM_AGGREGATE_BLOCK_THRESHOLD;
+}
+
 // --------------------------------------------------------
 // Idioma
 // --------------------------------------------------------
@@ -44,6 +90,12 @@ const BADGE_ICONS = {
     star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
     gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
     flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+    zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+    target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/>',
+    "book-open": '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
 };
 
 function buildMiniIconSvg(iconKey) {
@@ -69,7 +121,7 @@ async function loadPlayerBadgeMap(userIds) {
 
     (userBadgeRows || []).forEach((row) => {
         const featuredSet = featuredById.get(row.user_id);
-        const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+        const isFeatured = featuredSet && featuredSet.has(row.badge_id);
         if (!isFeatured) return;
 
         const list = map.get(row.user_id) || [];
@@ -146,7 +198,40 @@ let historyRecordedForRoom = null; // guarda o id da sala já registrada, evita 
 
 async function getCurrentUserId() {
     const { data: { session } } = await window.ndquestSupabase.auth.getSession();
-    return session?.user?.id ?? null;
+    if (session?.user?.id) return session.user.id;
+
+    // Sem sessão nenhuma - entra anônimo em vez de ficar sem
+    // identidade. Fecha um furo real: RLS precisava de "user_id IS
+    // NULL OR user_id = auth.uid()" pra deixar convidado jogar sem
+    // login, e isso na prática deixava QUALQUER visitante mexer na
+    // linha de QUALQUER convidado, não só a própria (user_id nulo
+    // "casa" com todo mundo, não só com quem entrou de verdade).
+    // Com sessão anônima, até quem não logou ganha um auth.uid()
+    // de verdade, único daquele navegador - a mesma trava "só o
+    // dono mexe" que já protege conta normal passa a proteger
+    // convidado também, sem pedir email nem senha de ninguém.
+    const { data, error } = await window.ndquestSupabase.auth.signInAnonymously();
+    if (error) {
+        console.error('Erro ao entrar anonimamente:', error);
+        return null;
+    }
+    return data?.user?.id ?? null;
+}
+
+// Diferente de getCurrentUserId (que agora SEMPRE retorna um id,
+// mesmo pra convidado, de propósito - ver comentário acima) - essa
+// função aqui existe só pra decisão de "esse resultado vai pro
+// histórico público ou fica privado com o host". Bug real reportado
+// ao vivo: "no histórico, o usuário guest aparece só uma '?'" -
+// depois da sessão anônima, getCurrentUserId nunca mais retorna
+// null pra convidado, então o código que decidia "tem id = vai pro
+// match_history" passou a mandar convidado pro lugar errado (sem
+// username de verdade pra mostrar, vira "?"). is_anonymous é um
+// campo que o próprio Supabase expõe especificamente pra separar
+// "tem sessão" de "é uma conta de verdade, com nome".
+async function isAnonymousSession() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.is_anonymous ?? true;
 }
 
 function applyTranslations() {
@@ -303,6 +388,20 @@ joinRoomBtn.addEventListener('click', async () => {
             return;
         }
 
+        // Sala abandonada (host sumiu, nunca fechou) fica encerrada
+        // sozinha depois de tempo sem nenhuma atualização - reportado
+        // ao vivo: "sei lá, terminou a partida, bota um timer, e se
+        // não iniciar outra a sala encerra". Verificado só na hora de
+        // ENTRAR (não fica rodando sozinho em segundo plano em lugar
+        // nenhum) - suficiente pra impedir gente nova entrando numa
+        // sala morta, que é o que realmente importa pro agregado de
+        // conexão.
+        if (isRoomStale(data.updated_at)) {
+            await window.ndquestSupabase.from('showdown_rooms').update({ status: 'closed' }).eq('id', data.id);
+            joinError.textContent = t('errors.roomClosed');
+            return;
+        }
+
         currentRoom = data;
 
         const joinUserId = await getCurrentUserId();
@@ -326,6 +425,30 @@ joinRoomBtn.addEventListener('click', async () => {
         }
 
         if (!playerRow) {
+
+            // Limite de jogador por sala, de acordo com o tier do
+            // host - só entra aqui pra quem é REALMENTE novo na sala
+            // (reconectando já tem playerRow preenchido acima, nunca
+            // deveria ser barrado por um limite que ela já passou
+            // antes).
+            const roomCap = await getRoomPlayerCap(currentRoom.host_id);
+            const { count: currentPlayerCount } = await window.ndquestSupabase
+                .from('showdown_players')
+                .select('id', { count: 'exact', head: true })
+                .eq('room_id', currentRoom.id);
+            if ((currentPlayerCount || 0) >= roomCap) {
+                joinError.textContent = t('errors.roomFull');
+                return;
+            }
+
+            // Agregado da plataforma - protege contra vários hosts
+            // simultâneos estourando o teto geral do Supabase, mesmo
+            // que cada sala individual esteja dentro do próprio
+            // limite de tier.
+            if (await isPlatformNearCapacity()) {
+                joinError.textContent = t('errors.platformAtCapacity');
+                return;
+            }
 
             // Impede nome repetido dentro da mesma sala - vale pra
             // logado e pra quem entra sem login. Não bloqueia a própria
@@ -582,6 +705,15 @@ function reactToRoomState(room) {
     if (room.status === 'finished') {
         if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
         renderFinal(room);
+        // NÃO fecha a conexão aqui - bug real reportado ao vivo:
+        // "quando iniciei uma nova rodada no showdown a tela do
+        // player não atualizou automaticamente". Show Down tem
+        // "jogar de novo" (playAgainBtn no host) que reseta o status
+        // de volta pra 'waiting' depois de 'finished' - exatamente o
+        // mesmo padrão do Tap Rush, que eu já tinha tratado certo lá
+        // mas deixei passar aqui. Fechando cedo demais, o jogador
+        // fica surdo pro convite da rodada nova. Só fecha de verdade
+        // no 'closed', que é quando a sala encerra sem volta.
         return;
     }
 
@@ -589,6 +721,10 @@ function reactToRoomState(room) {
         if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
         joinError.textContent = t('errors.roomClosed');
         showScreen(screenJoin);
+        if (roomRealtimeChannel) {
+            window.ndquestSupabase.removeChannel(roomRealtimeChannel);
+            roomRealtimeChannel = null;
+        }
     }
 }
 
@@ -897,9 +1033,10 @@ async function renderFinal(room) {
     // já foi feita no topo da função (isNewFinal).
     if (isNewFinal) {
         const historyUserId = await getCurrentUserId();
+        const isAnon = await isAnonymousSession();
         const myRow = sorted.find((p) => p.id === currentPlayerId);
 
-        if (historyUserId) {
+        if (historyUserId && !isAnon) {
             const { error: historyError } = await window.ndquestSupabase
                 .from('match_history')
                 .insert({

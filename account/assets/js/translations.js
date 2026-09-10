@@ -50,6 +50,22 @@ class Translator {
 
         });
 
+        // Placeholder nunca teve suporte de tradução - reportado ao
+        // vivo: "what's this about e describe your issue não
+        // traduzem". innerHTML não afeta placeholder de input/
+        // textarea, precisa de um atributo à parte.
+        document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+
+            const key = element.dataset.i18nPlaceholder;
+
+            if (this.translations[key]) {
+
+                element.setAttribute("placeholder", this.translations[key]);
+
+            }
+
+        });
+
     }
 
     bindButtons() {

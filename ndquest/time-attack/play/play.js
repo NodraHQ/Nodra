@@ -5,6 +5,41 @@
 import translations from '../i18n/translations.js';
 import themes from '../branding/branding-manifest.js';
 
+// Sala sem nenhuma atualização por mais de 30 minutos é considerada
+// abandonada - reportado ao vivo, mesma ideia repetida nos 4 jogos
+// (self-contained, sem importar de arquivo comum entre eles).
+const ROOM_INACTIVITY_TIMEOUT_MINUTES = 30;
+function isRoomStale(updatedAt) {
+    if (!updatedAt) return false;
+    const cutoff = Date.now() - ROOM_INACTIVITY_TIMEOUT_MINUTES * 60 * 1000;
+    return new Date(updatedAt).getTime() < cutoff;
+}
+
+const ROOM_PLAYER_CAPS = { bronze: 100, prata: 250, gold: 1000 };
+const FREE_ROOM_PLAYER_CAP = 30;
+
+async function getRoomPlayerCap(hostId) {
+    if (!hostId) return FREE_ROOM_PLAYER_CAP;
+    const { data: hostProfile } = await window.ndquestSupabase
+        .from('profiles')
+        .select('is_vip, vip_tier')
+        .eq('id', hostId)
+        .maybeSingle();
+    if (!hostProfile?.is_vip) return FREE_ROOM_PLAYER_CAP;
+    return ROOM_PLAYER_CAPS[hostProfile.vip_tier] || FREE_ROOM_PLAYER_CAP;
+}
+
+const PLATFORM_AGGREGATE_BLOCK_THRESHOLD = 420;
+
+async function isPlatformNearCapacity() {
+    const { data, error } = await window.ndquestSupabase.rpc('count_active_platform_players');
+    if (error) {
+        console.error('Erro ao conferir agregado da plataforma:', error);
+        return false;
+    }
+    return (data || 0) >= PLATFORM_AGGREGATE_BLOCK_THRESHOLD;
+}
+
 // --------------------------------------------------------
 // Idioma
 // --------------------------------------------------------
@@ -32,6 +67,12 @@ const BADGE_ICONS = {
     star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
     gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
     flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+    zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+    target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/>',
+    "book-open": '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
 };
 
 function buildMiniIconSvg(iconKey) {
@@ -74,7 +115,7 @@ async function loadPlayerBadgeMap(userIds) {
 
         (userBadgeRows || []).forEach((row) => {
             const featuredSet = featuredById.get(row.user_id);
-            const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+            const isFeatured = featuredSet && featuredSet.has(row.badge_id);
             if (!isFeatured) return;
 
             const entry = playerBadgeCache.get(row.user_id) || { badges: [], cachedAt: now };
@@ -154,7 +195,40 @@ let historyRecordedThisGame = false; // trava contra endGame disparar mais de um
 
 async function getCurrentUserId() {
     const { data: { session } } = await window.ndquestSupabase.auth.getSession();
-    return session?.user?.id ?? null;
+    if (session?.user?.id) return session.user.id;
+
+    // Sem sessão nenhuma - entra anônimo em vez de ficar sem
+    // identidade. Fecha um furo real: RLS precisava de "user_id IS
+    // NULL OR user_id = auth.uid()" pra deixar convidado jogar sem
+    // login, e isso na prática deixava QUALQUER visitante mexer na
+    // linha de QUALQUER convidado, não só a própria (user_id nulo
+    // "casa" com todo mundo, não só com quem entrou de verdade).
+    // Com sessão anônima, até quem não logou ganha um auth.uid()
+    // de verdade, único daquele navegador - a mesma trava "só o
+    // dono mexe" que já protege conta normal passa a proteger
+    // convidado também, sem pedir email nem senha de ninguém.
+    const { data, error } = await window.ndquestSupabase.auth.signInAnonymously();
+    if (error) {
+        console.error('Erro ao entrar anonimamente:', error);
+        return null;
+    }
+    return data?.user?.id ?? null;
+}
+
+// Diferente de getCurrentUserId (que agora SEMPRE retorna um id,
+// mesmo pra convidado, de propósito - ver comentário acima) - essa
+// função aqui existe só pra decisão de "esse resultado vai pro
+// histórico público ou fica privado com o host". Bug real reportado
+// ao vivo: "no histórico, o usuário guest aparece só uma '?'" -
+// depois da sessão anônima, getCurrentUserId nunca mais retorna
+// null pra convidado, então o código que decidia "tem id = vai pro
+// match_history" passou a mandar convidado pro lugar errado (sem
+// username de verdade pra mostrar, vira "?"). is_anonymous é um
+// campo que o próprio Supabase expõe especificamente pra separar
+// "tem sessão" de "é uma conta de verdade, com nome".
+async function isAnonymousSession() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.is_anonymous ?? true;
 }
 
 function applyTranslations() {
@@ -311,6 +385,12 @@ async function attemptJoinRoom() {
         return;
     }
 
+    if (isRoomStale(data.updated_at)) {
+        await window.ndquestSupabase.from('time_attack_rooms').update({ status: 'closed' }).eq('id', data.id);
+        joinError.textContent = t('errors.roomClosed');
+        return;
+    }
+
     currentRoom = data;
     currentNickname = nickname;
 
@@ -319,6 +399,36 @@ async function attemptJoinRoom() {
     // própria pessoa reconectando com o nome dela mesma (checa pelo
     // user_id, quando existe).
     const joinCheckUserId = await getCurrentUserId();
+
+    // Limite de jogador por sala, de acordo com o tier do host -
+    // pula pra quem já tem uma linha nessa sala (reconectando), só
+    // aplica pra gente genuinamente nova.
+    let isReconnecting = false;
+    if (joinCheckUserId) {
+        const { data: existingRow } = await window.ndquestSupabase
+            .from('time_attack_players')
+            .select('id')
+            .eq('room_id', data.id)
+            .eq('user_id', joinCheckUserId)
+            .maybeSingle();
+        isReconnecting = !!existingRow;
+    }
+    if (!isReconnecting) {
+        const roomCap = await getRoomPlayerCap(data.host_id);
+        const { count: currentPlayerCount } = await window.ndquestSupabase
+            .from('time_attack_players')
+            .select('id', { count: 'exact', head: true })
+            .eq('room_id', data.id);
+        if ((currentPlayerCount || 0) >= roomCap) {
+            joinError.textContent = t('errors.roomFull');
+            return;
+        }
+        if (await isPlatformNearCapacity()) {
+            joinError.textContent = t('errors.platformAtCapacity');
+            return;
+        }
+    }
+
     const nameTaken = await isNicknameTaken(nickname, data.id, joinCheckUserId);
 
     if (nameTaken) {
@@ -357,6 +467,18 @@ function subscribeToRoomUpdates(roomId) {
                 // precisa.
                 currentRoom = { ...currentRoom, ...payload.new };
                 updatePlayAgainButtonState();
+
+                // Fecha a conexão quando a sala inteira é encerrada
+                // pelo host - antes disso nunca era checado aqui (só
+                // na hora de entrar), então quem já tava dentro nunca
+                // sabia que a sala tinha fechado, e a conexão ficava
+                // aberta sem necessidade. Reportado ao vivo: fechar
+                // isso não desconecta a pessoa de nada, só para de
+                // escutar atualização que não vai mais vir.
+                if (payload.new.status === 'closed' && roomUpdatesChannel) {
+                    window.ndquestSupabase.removeChannel(roomUpdatesChannel);
+                    roomUpdatesChannel = null;
+                }
             }
         )
         .subscribe();
@@ -722,7 +844,18 @@ let playedRoundNumber = null; // qual round_number da sala eu já joguei - contr
 
 playBtn.addEventListener('click', async () => {
 
-    if (currentRoom.pack_slug === 'custom') {
+    // "custom" (digitado na hora) e "saved:<id>" (pacote de VIP
+    // reusado, ver vip_saved_packs) funcionam exatamente igual daqui
+    // pra frente - as perguntas já vêm prontas dentro da própria
+    // sala (currentRoom.custom_questions) nos dois casos, só a
+    // ORIGEM de como chegaram lá é diferente (digitado vs banco).
+    // Bug real: esse checava só '=== custom' antes, então pacote
+    // salvo reusado caía no ramo de pacote oficial, tentava buscar
+    // pergunta de um slug que não existe, e esgotava o tempo sem
+    // nunca abrir pergunta nenhuma.
+    const isSavedOrCustom = currentRoom.pack_slug === 'custom' || currentRoom.pack_slug.startsWith('saved:');
+
+    if (isSavedOrCustom) {
 
         isCustomMode = true;
         customQuestionsPool = currentRoom.custom_questions || [];
@@ -839,6 +972,19 @@ playBtn.addEventListener('click', async () => {
 
     scoreValue.textContent = '0';
     renderTimeBank();
+
+    // Limpa a pergunta ANTES de mostrar a tela - bug real reportado
+    // ao vivo: "quando começa uma nova rodada, aparece uma pergunta
+    // antiga, ela rápido some e aparece a real". O texto antigo
+    // ficava na tela porque showScreen(screenGame) tornava a tela
+    // visível ANTES de showNextQuestion() terminar de buscar/montar
+    // a pergunta nova - por um instante, o que estava visível era
+    // simplesmente o que sobrou da rodada anterior, sem nada ter
+    // limpado ainda. Isso induzia erro de verdade (alguém podia
+    // clicar numa resposta pensando que já era a pergunta nova).
+    questionText.textContent = '';
+    renderAnswerButtons([]);
+
     showScreen(screenGame);
     showNextQuestion();
 
@@ -1058,7 +1204,7 @@ async function endGame(reason) {
     // realmente jogou, não a atual da sala - podem ser diferentes se
     // ela ainda não clicou em jogar de novo) é o que diferencia cada
     // linha da mesma sala.
-    if (userId) {
+    if (userId && !(await isAnonymousSession())) {
 
         const { error: historyError } = await window.ndquestSupabase
             .from('match_history')
@@ -1073,7 +1219,20 @@ async function endGame(reason) {
             });
 
         if (historyError) {
-            console.error('Time Attack match history error:', historyError);
+            // Bug real reportado ao vivo com print de produção: a
+            // mesma pessoa aparecendo duas vezes na mesma rodada,
+            // com o mesmo placement. A trava historyRecordedThisGame
+            // só protege dentro da MESMA aba/sessão - recarregar a
+            // página ou abrir 2 abas no meio da mesma rodada cria
+            // duas sessões de JS separadas, cada uma com sua própria
+            // trava, sem se enxergarem. A trava de verdade agora é
+            // no banco (constraint única) - código 23505 aqui
+            // significa "outra sessão minha já gravou essa rodada
+            // exata", que é esperado e inofensivo, não um erro de
+            // verdade.
+            if (historyError.code !== "23505") {
+                console.error('Time Attack match history error:', historyError);
+            }
         }
 
     } else if (currentRoom.host_id) {

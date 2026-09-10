@@ -55,7 +55,7 @@
             </div>
 
             <div class="custom-questions-panel" id="custom-questions-panel" hidden>
-                <p class="hint-text" data-i18n="customQuestions.hint">Cole suas perguntas, clique em "Processar", e crie a sala. Nada disso fica salvo pra outros usos, só vale pra essa sala.</p>
+                <p class="hint-text" data-i18n="customQuestions.hint">Cole suas perguntas, clique em "Processar", e crie a sala.</p>
 
                 <div class="panel-toolbar">
                     <button type="button" class="btn btn-secondary" id="download-template-btn" data-i18n="customQuestions.downloadTemplate">⭳ Baixar modelo (.txt)</button>
@@ -71,6 +71,11 @@
 
                 <p class="hint-text" id="preview-status"></p>
                 <div class="preview-list" id="preview-list"></div>
+
+                <label class="checkbox-row" id="save-pack-row" hidden>
+                    <input type="checkbox" id="save-pack-checkbox" checked>
+                    <span data-i18n="customQuestions.savePack">Save this pack to reuse in future rooms</span>
+                </label>
             </div>
 
             <div class="field-row">
@@ -96,6 +101,7 @@
             </div>
 
             <p class="field-error" id="config-error"></p>
+            <button type="button" class="btn btn-secondary" id="close-old-rooms-btn" data-i18n="buttons.closeOldRoomsAndContinue" hidden>Close old room and continue</button>
 
             <button type="button" class="btn btn-primary" id="create-room-btn" data-i18n="buttons.createRoom">Criar Sala</button>
         </div>

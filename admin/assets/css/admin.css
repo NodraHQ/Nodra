@@ -64,11 +64,73 @@
     display:block;
 }
 
+.admin-subtabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:18px;
+}
+
+.admin-subtab{
+    background:var(--surface-2, #16213a);
+    border:1px solid var(--border, #2a3550);
+    color:var(--text-secondary);
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.admin-subtab.is-active{
+    color:var(--text);
+    border-color:var(--primary);
+    background:rgba(77,166,255,.1);
+}
+
+.admin-pack-actions .btn-danger{
+    background:none;
+    border:1px solid var(--danger, #ff5e7a);
+    color:var(--danger, #ff5e7a);
+}
+
+.admin-pack-actions .btn-danger:hover{
+    background:var(--danger, #ff5e7a);
+    color:#fff;
+}
+
+.admin-pack-questions{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--border, #2a3550);
+}
+
+.admin-pack-questions p{
+    font-size:13px;
+    color:var(--text-secondary);
+    line-height:1.6;
+    margin:8px 0 0;
+}
+
 .admin-toolbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:16px;
+}
+
+/* Nunca teve cor de verdade em lugar nenhum antes - só um max-width
+   escopado pra dentro da toolbar. Reportado ao vivo: "esse quadro
+   branco pra escrever distoa demais" - ficava no branco padrão do
+   navegador o tempo todo, não só no chat de suporte que acabou de
+   expor isso. */
+.auth-input{
+    padding:8px 12px;
+    border-radius:8px;
+    border:1px solid var(--border, #2a3550);
+    background:var(--surface-1, #0f1526);
+    color:var(--text, #eaf2fa);
+    font-family:inherit;
+    font-size:14px;
 }
 
 .admin-toolbar .auth-input{
@@ -249,10 +311,43 @@
     color:var(--text-secondary, #8a94ad);
 }
 
-.admin-badge-holders{
+.admin-badge-holders-label{
     font-size:12px;
     color:var(--text-secondary, #8a94ad);
-    line-height:1.4;
+    margin-bottom:6px;
+}
+
+.admin-badge-holders-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:10px;
+}
+
+.admin-badge-holder-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 8px;
+    border-radius:999px;
+    background:var(--surface-1, #0f1526);
+    border:1px solid var(--border, #2a3550);
+    font-size:12px;
+    color:var(--text, #eaf2fa);
+}
+
+.admin-badge-holder-remove{
+    border:none;
+    background:none;
+    color:var(--danger, #ff5e7a);
+    cursor:pointer;
+    font-size:11px;
+    padding:0;
+    line-height:1;
+}
+
+.admin-badge-holder-remove:hover{
+    text-decoration:underline;
 }
 
 .admin-badge-delete-btn{
@@ -318,4 +413,111 @@
 
 .admin-pack-status.is-success{
     color:var(--success, #5fa77c);
+}
+
+/* Chat de suporte - mesma bolha do lado do usuário (ver
+   account.css), duplicado aqui porque são arquivos CSS separados
+   por convenção do projeto. */
+.support-chat-messages{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-height:450px;
+    overflow-y:auto;
+    padding:12px;
+    border:1px solid var(--border, #2a3550);
+    border-radius:10px;
+    background:var(--surface-1, #0f1526);
+}
+
+.support-bubble{
+    max-width:75%;
+    padding:10px 14px;
+    border-radius:14px;
+    font-size:14px;
+    line-height:1.5;
+    word-wrap:break-word;
+}
+
+.support-bubble--admin{
+    align-self:flex-end;
+    background:var(--primary, #4da6ff);
+    color:#06080D;
+    border-bottom-right-radius:4px;
+}
+
+.support-bubble--user{
+    align-self:flex-start;
+    background:var(--surface-3, #1e2a44);
+    color:var(--text, #eaf2fa);
+    border-bottom-left-radius:4px;
+}
+
+/* Cabeçalho do relatório (data de geração), mostrado só quando
+   exportado/impresso. */
+.admin-report-header{
+    display:none;
+    font-size:13px;
+    color:var(--text-secondary, #8a94ad);
+    margin-bottom:24px;
+}
+
+/* Exportar relatório - reportado ao vivo: "uma forma simples de
+   salvar como pdf... como provas pra apresentar os números da
+   plataforma". Usa o "Imprimir" nativo do navegador em vez de gerar
+   PDF por biblioteca - todo navegador já sabe salvar isso como PDF
+   sozinho (Ctrl+P → Salvar como PDF), sem dependência nova nenhuma.
+   Essa regra só entra em vigor DENTRO do diálogo de impressão -
+   escondida (display:none) enquanto navegando normal na página. */
+@media print{
+    .navbar,
+    .admin-tabs,
+    .admin-toolbar,
+    #tab-rooms, #tab-users, #tab-vip-activity, #tab-badges,
+    #tab-packs, #tab-themes, #tab-support{
+        display:none !important;
+    }
+    #tab-analytics{
+        display:block !important;
+    }
+    .admin-report-header{
+        display:block;
+    }
+    body{
+        background:#fff;
+        color:#000;
+    }
+    .admin-stat-card{
+        background:#fff;
+        border:1px solid #ccc;
+        break-inside:avoid;
+    }
+    .admin-stat-value{
+        color:#000;
+    }
+    .admin-stat-label{
+        color:#555;
+    }
+    .admin-bar-chart{
+        filter:grayscale(1);
+    }
+}
+
+/* Botão de copiar hash completo - reportado ao vivo: "não mostra
+   inteira, então não dá pra traquear" (hover com título não deixa
+   colar em lugar nenhum, precisa de um clique de verdade). */
+.admin-hash-copy-btn{
+    background:none;
+    border:1px solid var(--border, #2a3550);
+    border-radius:6px;
+    padding:4px 8px;
+    color:var(--text, #eaf2fa);
+    font-family:monospace;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.admin-hash-copy-btn:hover{
+    border-color:var(--primary, #4da6ff);
+    color:var(--primary, #4da6ff);
 }

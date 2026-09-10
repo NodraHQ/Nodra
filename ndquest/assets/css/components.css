@@ -202,6 +202,26 @@ a {
   .hero-title {
     font-size: 38px;
   }
+
+  /* Navbar ficava toda espremida no celular - logo, link "Nodra",
+     chip de login e EN/PT tudo colado, sem respiro nenhum (reportado
+     ao vivo: "fica feio"). Reduz o respiro da borda e o espaço entre
+     os itens, e deixa quebrar linha como rede de segurança se ainda
+     não couber numa tela bem estreita. */
+  .navbar {
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .navbar .logo img {
+    height: 26px;
+  }
+
+  .nav-links {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 }
 
 /* ===============================

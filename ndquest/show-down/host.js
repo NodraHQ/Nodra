@@ -16,6 +16,20 @@
 import translations from './i18n/translations.js';
 import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 
+// Limite de sala hospedada por mês pro Free - reportado ao vivo, self
+// contained nos 4 jogos como o resto.
+const FREE_MONTHLY_ROOM_LIMIT = 10;
+
+// Mesma checagem de inatividade usada em play.js - precisa existir
+// aqui também porque host.js é um arquivo separado, sem escopo
+// compartilhado (self-contained, mesmo padrão dos 4 jogos).
+const ROOM_INACTIVITY_TIMEOUT_MINUTES = 30;
+function isRoomStale(updatedAt) {
+    if (!updatedAt) return false;
+    const cutoff = Date.now() - ROOM_INACTIVITY_TIMEOUT_MINUTES * 60 * 1000;
+    return new Date(updatedAt).getTime() < cutoff;
+}
+
 // Começa só com o tema padrão (mesma aparência de sempre, na hora),
 // depois é substituído pela lista completa (padrão + Supabase) assim
 // que a busca terminar - ver a chamada de loadRemoteThemes logo
@@ -55,6 +69,12 @@ const BADGE_ICONS = {
     star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
     gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
     flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+    zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+    target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/>',
+    "book-open": '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
 };
 
 function buildMiniIconSvg(iconKey) {
@@ -80,7 +100,7 @@ async function loadPlayerBadgeMap(userIds) {
 
     (userBadgeRows || []).forEach((row) => {
         const featuredSet = featuredById.get(row.user_id);
-        const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+        const isFeatured = featuredSet && featuredSet.has(row.badge_id);
         if (!isFeatured) return;
 
         const list = map.get(row.user_id) || [];
@@ -155,7 +175,41 @@ function buildMiniBadgeRow(badges) {
 // desse cache - checa fresco toda vez.
 async function getCurrentUserId() {
     const { data: { session } } = await window.ndquestSupabase.auth.getSession();
-    return session?.user?.id ?? null;
+    if (session?.user?.id) return session.user.id;
+
+    // Sem sessão nenhuma - entra anônimo em vez de ficar sem
+    // identidade. Fecha um furo real: RLS precisava de "user_id IS
+    // NULL OR user_id = auth.uid()" pra deixar convidado jogar sem
+    // login, e isso na prática deixava QUALQUER visitante mexer na
+    // linha de QUALQUER convidado, não só a própria (user_id nulo
+    // "casa" com todo mundo, não só com quem entrou de verdade).
+    // Com sessão anônima, até quem não logou ganha um auth.uid()
+    // de verdade, único daquele navegador - a mesma trava "só o
+    // dono mexe" que já protege conta normal passa a proteger
+    // convidado também, sem pedir email nem senha de ninguém.
+    const { data, error } = await window.ndquestSupabase.auth.signInAnonymously();
+    if (error) {
+        console.error('Erro ao entrar anonimamente:', error);
+        return null;
+    }
+    return data?.user?.id ?? null;
+}
+
+// Mesma lógica de "sempre checa fresco" do getCurrentUserId acima -
+// usado só pra decidir se mostra a caixinha de "salvar esse pacote"
+// (benefício de VIP, ver vip_saved_packs).
+async function getCurrentUserIsVip() {
+    const userId = await getCurrentUserId();
+    if (!userId) return false;
+
+    const { data, error } = await window.ndquestSupabase
+        .from('profiles')
+        .select('is_vip')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (error || !data) return false;
+    return !!data.is_vip;
 }
 
 function applyTranslations() {
@@ -205,6 +259,21 @@ const logoImg = document.getElementById('logo-img');
 const questionSecondsInput = document.getElementById('question-seconds-input');
 const numQuestionsInput = document.getElementById('num-questions-input');
 const configError = document.getElementById('config-error');
+const closeOldRoomsBtn = document.getElementById('close-old-rooms-btn');
+let pendingBlockingRooms = [];
+
+closeOldRoomsBtn.addEventListener('click', async () => {
+    closeOldRoomsBtn.disabled = true;
+    await Promise.all(
+        pendingBlockingRooms.map(({ table, id }) =>
+            window.ndquestSupabase.from(table).update({ status: 'closed' }).eq('id', id),
+        ),
+    );
+    pendingBlockingRooms = [];
+    closeOldRoomsBtn.hidden = true;
+    closeOldRoomsBtn.disabled = false;
+    configError.textContent = t('errors.oldRoomsClosedRetry');
+});
 const createRoomBtn = document.getElementById('create-room-btn');
 
 const roomCodeText = document.getElementById('room-code-text');
@@ -288,6 +357,25 @@ async function populatePackSelect() {
     customOption.textContent = t('pack.customOption');
     packSelect.appendChild(customOption);
 
+    // Pacotes salvos do próprio VIP (ver vip_saved_packs) - só
+    // aparecem pra quem tem algum salvo, ninguém mais vê essa opção.
+    const savedUserId = await getCurrentUserId();
+    if (savedUserId) {
+        const { data: savedPacks } = await window.ndquestSupabase
+            .from('vip_saved_packs')
+            .select('id, name')
+            .eq('owner_id', savedUserId)
+            .contains('games', ['show-down'])
+            .order('created_at', { ascending: false });
+
+        (savedPacks || []).forEach((pack) => {
+            const option = document.createElement('option');
+            option.value = `saved:${pack.id}`;
+            option.textContent = `★ ${pack.name}`;
+            packSelect.appendChild(option);
+        });
+    }
+
     if (previousValue) {
         packSelect.value = previousValue;
     }
@@ -295,10 +383,22 @@ async function populatePackSelect() {
 
 populatePackSelect();
 
+const savePackRow = document.getElementById('save-pack-row');
+const savePackCheckbox = document.getElementById('save-pack-checkbox');
+
 packSelect.addEventListener('change', () => {
     const isCustom = packSelect.value === 'custom';
+    const isSaved = packSelect.value.startsWith('saved:');
     customQuestionsPanel.hidden = !isCustom;
-    numQuestionsInput.disabled = isCustom;
+    numQuestionsInput.disabled = isCustom || isSaved;
+
+    if (isCustom) {
+        getCurrentUserIsVip().then((isVip) => {
+            savePackRow.hidden = !isVip;
+        });
+    } else {
+        savePackRow.hidden = true;
+    }
 });
 
 // --------------------------------------------------------
@@ -617,6 +717,36 @@ async function buildQuestionsForPack(packSlug, numQuestionsWanted) {
         return { questionIds: null, customQuestions: questions, errorKey: null };
     }
 
+    // Pacote salvo de um VIP (ver vip_saved_packs) - mesma lógica de
+    // embaralhar do modo custom acima, só que a fonte das perguntas
+    // é o banco em vez do textarea que a pessoa acabou de digitar.
+    if (packSlug.startsWith('saved:')) {
+        const savedId = packSlug.slice('saved:'.length);
+        const { data: savedPack, error: savedError } = await window.ndquestSupabase
+            .from('vip_saved_packs')
+            .select('questions')
+            .eq('id', savedId)
+            .maybeSingle();
+
+        if (savedError || !savedPack || !Array.isArray(savedPack.questions) || savedPack.questions.length === 0) {
+            return { questionIds: null, customQuestions: null, errorKey: 'errors.customQuestionsRequired' };
+        }
+
+        const source = savedPack.questions;
+        let questions = source.map((q) => ({
+            question: q.question,
+            answers: { pt: shuffleArray(q.answers.pt), en: q.answers.en },
+            correct: q.correct
+        }));
+        questions = questions.map((q, i) => {
+            const originalPt = source[i].answers.pt;
+            const correctTextPt = originalPt[source[i].correct];
+            const newCorrectIndex = q.answers.pt.indexOf(correctTextPt);
+            return { ...q, correct: newCorrectIndex, answers: { pt: q.answers.pt, en: q.answers.pt } };
+        });
+        return { questionIds: null, customQuestions: questions, errorKey: null };
+    }
+
     // Pacote oficial - as perguntas em si (com a resposta certa)
     // nunca chegam neste arquivo. Só pede à Edge Function pra
     // sortear N IDs do pacote; o conteúdo é buscado depois, pergunta
@@ -691,10 +821,94 @@ createRoomBtn.addEventListener('click', async () => {
 
     const selectedTheme = themes[Number(themeSelect.value)];
 
+    const hostUserId = await getCurrentUserId();
+
+    // 1 partida ativa por conta ao mesmo tempo, em QUALQUER um dos 4
+    // jogos - reportado ao vivo: "impediria o compartilhamento de
+    // contas vips". Sem isso, uma única conta VIP poderia hospedar
+    // várias salas simultâneas (cada uma no limite do próprio tier),
+    // multiplicando o custo de infraestrutura que o preço por tier
+    // foi desenhado pra cobrir.
+    if (hostUserId) {
+        const roomTables = ['showdown_rooms', 'time_attack_rooms', 'roulette_rooms', 'tap_rush_rooms'];
+        const checks = await Promise.all(
+            roomTables.map((table) =>
+                window.ndquestSupabase
+                    .from(table)
+                    .select('id, updated_at')
+                    .eq('host_id', hostUserId)
+                    .not('status', 'eq', 'closed')
+                    .then(({ data }) => ({ table, rows: data || [] })),
+            ),
+        );
+
+        // Sala "ativa" só de status, sem checar se ela ainda está
+        // realmente viva, é o bug real reportado ao vivo: "aparece
+        // aviso de partida ativa, mas não abri nada hoje - deve ser
+        // uma de ontem que não foi encerrada". O mecanismo de
+        // inatividade (isRoomStale) já existia, mas só rodava
+        // quando ALGUÉM tentava ENTRAR naquela sala específica -
+        // uma sala abandonada que ninguém mais tenta acessar nunca
+        // passava por essa checagem. Agora, junto com a trava de "1
+        // partida por conta", qualquer sala encontrada aqui que já
+        // esteja parada há mais de 30 minutos é fechada de verdade
+        // no banco (não só ignorada), então não fica se acumulando.
+        const stillActive = [];
+        for (const { table, rows } of checks) {
+            for (const row of rows) {
+                if (isRoomStale(row.updated_at)) {
+                    await window.ndquestSupabase.from(table).update({ status: 'closed' }).eq('id', row.id);
+                } else {
+                    stillActive.push({ table, id: row.id });
+                }
+            }
+        }
+
+        if (stillActive.length > 0) {
+            // Reportado ao vivo: "preciso que ao sair da sala, todos
+            // os botões encerrem a sala, ou ali no erro tenha um
+            // atalho de encerrar" - a pessoa pode ter saído de um
+            // jeito que o pagehide não pegou (ex: fetch entre
+            // domínios diferentes não é garantido durante o
+            // descarregamento da página), então o botão aqui é a
+            // rede de segurança que não depende de detectar saída
+            // nenhuma - sempre disponível, sempre resolve na hora.
+            configError.textContent = t('errors.activeRoomExists');
+            pendingBlockingRooms = stillActive;
+            closeOldRoomsBtn.hidden = false;
+            return;
+        }
+    }
+
+    // Limite mensal de sala pro Free (10/mês) - reportado ao vivo:
+    // "vamos implementar sim, isso é super importante". VIP de
+    // qualquer tier não tem limite nenhum aqui, só quem não é VIP.
+    if (hostUserId) {
+        const { data: hostProfile } = await window.ndquestSupabase
+            .from('profiles')
+            .select('is_vip')
+            .eq('id', hostUserId)
+            .maybeSingle();
+
+        if (!hostProfile?.is_vip) {
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+            const { count: roomsThisMonth } = await window.ndquestSupabase
+                .from('match_history')
+                .select('id', { count: 'exact', head: true })
+                .eq('user_id', hostUserId)
+                .eq('role', 'host')
+                .gte('created_at', thirtyDaysAgo);
+
+            if ((roomsThisMonth || 0) >= FREE_MONTHLY_ROOM_LIMIT) {
+                configError.textContent = t('errors.monthlyRoomLimitReached');
+                return;
+            }
+        }
+    }
+
     createRoomBtn.disabled = true;
 
     const roomCode = generateRoomCode();
-    const hostUserId = await getCurrentUserId();
 
     // Modo custom continua guardando o conteúdo na própria sala
     // (escopo menor de propósito - só afeta a sala do próprio host,
@@ -745,6 +959,34 @@ createRoomBtn.addEventListener('click', async () => {
             });
     }
 
+    // Benefício de VIP: guarda o pacote personalizado pra reusar
+    // depois - reportado ao vivo: "somente contas logadas com VIP
+    // mantém ele salvo pra usar depois que a partida acaba". Só
+    // dispara se a caixinha estava visível (já implica VIP, ver
+    // getCurrentUserIsVip acima) e marcada.
+    if (builtCustomQuestions && hostUserId && !savePackRow.hidden && savePackCheckbox.checked) {
+        (async () => {
+            const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+            const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/vip-create-saved-pack`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session?.access_token}`,
+                },
+                body: JSON.stringify({
+                    games: ['show-down'],
+                    name: builtCustomQuestions[0]?.question?.pt?.slice(0, 60) || roomCode,
+                    questions: builtCustomQuestions,
+                }),
+            });
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                console.error('Show Down save pack error:', result.error);
+                alert(result.error || t('customQuestions.saveFailed'));
+            }
+        })();
+    }
+
     currentPackSlug = packSlug;
     activeRoomId = data.id;
     selectedQuestions = data.questions;
@@ -780,7 +1022,14 @@ function showWaitingScreen(roomCode) {
     subscribeToAnswers(activeRoomId);
 }
 
-function renderWaitingPlayers(players) {
+// Busca as badges ANTES de desenhar, não depois - bug real
+// reportado ao vivo: "o nome do player fica piscando, as badges
+// aparecem e somem". A versão anterior desenhava os nomes sem
+// badge primeiro, depois buscava e desenhava tudo de novo por cima
+// - com heartbeat de vários jogadores disparando essa função com
+// frequência, cada disparo piscava. Um passo só agora: busca,
+// depois desenha uma vez.
+async function renderWaitingPlayers(players) {
     const activePlayers = players.filter((p) => !isPlayerStale(p));
 
     if (activePlayers.length === 0) {
@@ -790,15 +1039,11 @@ function renderWaitingPlayers(players) {
     }
 
     waitingEmpty.hidden = true;
-    waitingPlayersList.innerHTML = activePlayers
-        .map((p) => `<span class="player-chip">${p.nickname}</span>`)
-        .join('');
 
-    loadPlayerBadgeMap(activePlayers.map((p) => p.user_id)).then((badgeMap) => {
-        waitingPlayersList.innerHTML = activePlayers
-            .map((p) => `<span class="player-chip">${p.nickname}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`)
-            .join('');
-    });
+    const badgeMap = await loadPlayerBadgeMap(activePlayers.map((p) => p.user_id));
+    waitingPlayersList.innerHTML = activePlayers
+        .map((p) => `<span class="player-chip">${p.nickname}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`)
+        .join('');
 }
 
 async function loadPlayers(roomId) {
@@ -1299,3 +1544,37 @@ async function closeRoom() {
 
 closeRoomBtn.addEventListener('click', closeRoom);
 closeRoomBtnFinal.addEventListener('click', closeRoom);
+
+// Fecha a sala sozinho se o host sair de qualquer jeito - botão de
+// voltar, fechar a aba, F5, clicar em qualquer link. Reportado ao
+// vivo: "encerrar sala não é algo que eu vejo a galera fazendo,
+// imagino que acabaria e só fecham a página ou saem". O evento
+// 'pagehide' dispara em TODAS essas situações de uma vez, sem
+// precisar caçar botão por botão. Usa fetch com keepalive:true em
+// vez do cliente normal do Supabase - uma chamada async comum é
+// CANCELADA pelo navegador assim que a página começa a fechar,
+// keepalive é feito especificamente pra sobreviver a esse momento.
+// O token de acesso fica guardado em cache (cachedAccessToken) em
+// vez de buscado na hora, porque buscar sessão é assíncrono e pode
+// não terminar a tempo do 'pagehide' já ter disparado.
+let cachedAccessToken = null;
+window.ndquestSupabase.auth.getSession().then(({ data }) => {
+    cachedAccessToken = data?.session?.access_token || null;
+});
+window.ndquestSupabase.auth.onAuthStateChange((_event, session) => {
+    cachedAccessToken = session?.access_token || null;
+});
+
+window.addEventListener('pagehide', () => {
+    if (!activeRoomId || !cachedAccessToken) return;
+    fetch(`${window.ndquestSupabaseUrl}/rest/v1/showdown_rooms?id=eq.${activeRoomId}`, {
+        method: 'PATCH',
+        keepalive: true,
+        headers: {
+            'Content-Type': 'application/json',
+            'apikey': window.ndquestSupabaseAnonKey,
+            'Authorization': `Bearer ${cachedAccessToken}`,
+        },
+        body: JSON.stringify({ status: 'closed' }),
+    });
+});

@@ -14,19 +14,18 @@
 // (preTokenBalances/postTokenBalances). Por isso os dois caminhos
 // são funções separadas aqui, não uma tentando servir os dois.
 //
-// TROCAR antes de produção: os dois endereços de tesouraria abaixo
-// (EVM_TREASURY_ADDRESS, SOLANA_TREASURY_ADDRESS) são placeholders.
-// Uma carteira EVM comum (não multisig) recebe em qualquer rede EVM
-// com o MESMO endereço - por isso só existe UM endereço EVM aqui,
-// reaproveitado pra Avalanche e Base. Solana usa outro formato de
-// endereço inteiramente, precisa do seu próprio.
+// Endereços de tesouraria reais preenchidos abaixo (EVM_TREASURY_ADDRESS,
+// SOLANA_TREASURY_ADDRESS). Uma carteira EVM comum (não multisig) recebe
+// em qualquer rede EVM com o MESMO endereço - por isso só existe UM
+// endereço EVM aqui, reaproveitado pra Avalanche e Base. Solana usa
+// outro formato de endereço inteiramente, precisa do seu próprio.
 // ==================================================================
 
 export type NetworkId = "avalanche" | "base" | "solana";
 export type TokenSymbol = "USDT" | "USDC";
 
-const EVM_TREASURY_ADDRESS = "0x0000000000000000000000000000000000000000"; // TROCAR - mesmo endereço vale pra Avalanche e Base
-const SOLANA_TREASURY_ADDRESS = "REPLACE_WITH_SOLANA_TREASURY_ADDRESS"; // TROCAR - formato de endereço diferente, não é o mesmo da EVM
+const EVM_TREASURY_ADDRESS = "0x84d6e0B342f1E7037DA65A7a482f787631FC7F47"; // mesmo endereço vale pra Avalanche e Base
+const SOLANA_TREASURY_ADDRESS = "mFKY6He8H94wdJoFtDktdGQ76LXuMGEpa7zx5ioQZQG";
 
 interface EvmTokenConfig {
     kind: "evm";
@@ -136,22 +135,42 @@ async function verifyEvmPayment(config: EvmTokenConfig, txHash: string, minAmoun
     if (!receipt) return { ok: false, error: "Transação não encontrada na blockchain" };
     if (receipt.status !== "0x1") return { ok: false, error: "Transação existe mas falhou (revertida)" };
 
-    const transferLog = (receipt.logs || []).find(
+    // Bug real, testado ao vivo com pagamento de verdade: quando o
+    // pagamento vem de um swap (SideShift, agregador tipo Velora/
+    // Augustus, etc, não uma transferência direta), o MESMO token
+    // gera VÁRIOS eventos de Transfer na mesma transação - um por
+    // "salto" entre contratos intermediários (pool de liquidez,
+    // roteador do swap...) até finalmente chegar no destino real.
+    // Pegar só o PRIMEIRO evento (.find sem filtrar destino) pega um
+    // salto no meio do caminho, não a entrega final - por isso dava
+    // "não foi pro endereço de tesouraria" mesmo com o dinheiro já
+    // tendo chegado de verdade. Agora procura, entre TODOS os
+    // eventos desse token nessa transação, o que especificamente vai
+    // pro endereço de tesouraria - not o primeiro que aparecer.
+    const matchingLogs = (receipt.logs || []).filter(
         (log: { address: string; topics: string[] }) =>
             log.address?.toLowerCase() === config.contractAddress.toLowerCase() &&
             log.topics?.[0]?.toLowerCase() === TRANSFER_EVENT_TOPIC0,
     );
 
-    if (!transferLog) return { ok: false, error: "Transação não contém uma transferência do token esperado" };
+    if (matchingLogs.length === 0) {
+        return { ok: false, error: "Transação não contém uma transferência do token esperado" };
+    }
+
+    const transferLog = matchingLogs.find(
+        (log: { topics: string[] }) =>
+            ("0x" + log.topics[2].slice(-40)).toLowerCase() === config.treasuryAddress.toLowerCase(),
+    );
+
+    if (!transferLog) {
+        return { ok: false, error: "Transação não foi pro endereço de tesouraria certo" };
+    }
 
     const toAddress = ("0x" + transferLog.topics[2].slice(-40)).toLowerCase();
     const fromAddress = ("0x" + transferLog.topics[1].slice(-40)).toLowerCase();
     const amountUnits = BigInt(transferLog.data);
     const requiredUnits = BigInt(Math.round(minAmount * 10 ** config.decimals));
 
-    if (toAddress !== config.treasuryAddress.toLowerCase()) {
-        return { ok: false, error: "Transação não foi pro endereço de tesouraria certo" };
-    }
     if (amountUnits < requiredUnits) {
         return {
             ok: false,

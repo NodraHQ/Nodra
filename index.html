@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="home.meta.title">Nodra: Knowledge before Capital</title>
 <meta name="description" content="Nodra is an open ecosystem for learning and playing in Web3: Academy and NDQuest, both live now.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/variables.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/home.css">
@@ -20,15 +23,14 @@
 
     <div class="nav-links">
 
-        <a href="#ecosystem" data-i18n="nav.roadmap">Ecosystem</a>
-        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
-        <a href="https://x.com/NodraHQ" target="_blank" data-i18n="nav.x">X</a>
+        <a href="academy/index.html" data-i18n="nav.academy">Academy</a>
+        <a href="ndquest/index.html" data-i18n="nav.ndquest">NDQuest</a>
 
         <div id="nav-auth"></div>
 
-        <div class="language-switch">
-            <button id="lang-en">EN</button>
-            <button id="lang-pt">PT</button>
+        <div class="toggle-group">
+            <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme">☀</button>
+            <button type="button" id="lang-toggle" class="theme-toggle" aria-label="Toggle language">EN</button>
         </div>
 
     </div>
@@ -36,122 +38,84 @@
 </nav>
 
 <!-- ===================================================== -->
-<!-- HERO — the Nodra brand, not the Academy -->
+<!-- HERO — centered editorial stack: numbered step badge, -->
+<!-- 64px display headline, short centered subtext. No -->
+<!-- split composition, no image beside the text - the -->
+<!-- reference keeps every hero section a centered stack. -->
 <!-- ===================================================== -->
 
 <section class="hero" id="top">
     <div class="container">
-        <div class="hero-grid">
+        <div class="hero-content">
+            <h1 class="hero-title" data-i18n="hero.title">Knowledge before Capital.</h1>
+            <p class="hero-description" data-i18n="hero.description">Nodra builds products that make crypto easier to understand, use, and experience.</p>
+        </div>
+    </div>
+</section>
 
-            <div class="hero-content reveal">
-                <span class="tag" data-i18n="hero.tag">KNOWLEDGE BEFORE CAPITAL</span>
-                <h1 class="hero-title" data-i18n="hero.title">Knowledge<br><span>before</span><br>Capital.</h1>
-                <p class="hero-description" data-i18n="hero.description">The open academy for blockchain, DeFi and digital finance. Learn first. Build confidence. Invest later.</p>
+<!-- ===================================================== -->
+<!-- PRODUCTS — two-up feature cards, cream surface, 1px -->
+<!-- ink border, 24px radius, no shadow. NDQuest's card -->
+<!-- keeps a small gold tag instead of a full color-swapped -->
+<!-- panel - the reference rations color hard, so the -->
+<!-- "two products, two identities" idea now rides on a -->
+<!-- small tag instead of a full background swap. -->
+<!-- ===================================================== -->
 
-                <div class="hero-actions">
-                    <a href="academy/index.html" class="btn btn-primary" data-i18n="hero.start">Start Learning →</a>
-                    <a href="https://github.com/NodraHQ/Nodra" target="_blank" class="btn btn-secondary" data-i18n="hero.github">GitHub</a>
-                </div>
+<section class="products" id="products">
+    <div class="container">
 
-                <div class="hero-stats">
-                    <div class="stat-card">
-                        <strong data-i18n="stats.free.title">100%</strong>
-                        <span data-i18n="stats.free.subtitle">Free</span>
-                    </div>
-                    <div class="stat-card">
-                        <strong data-i18n="stats.opensource.title">Open</strong>
-                        <span data-i18n="stats.opensource.subtitle">Source</span>
-                    </div>
-                    <div class="stat-card">
-                        <strong data-i18n="stats.language.title">PT | EN</strong>
-                        <span data-i18n="stats.language.subtitle">Languages</span>
-                    </div>
-                    <div class="stat-card">
-                        <strong data-i18n="stats.verticals.title">3</strong>
-                        <span data-i18n="stats.verticals.subtitle">Verticals</span>
-                    </div>
-                </div>
-            </div>
+        <span class="section-tag" data-i18n="products.step">OUR PRODUCTS</span>
 
-            <div class="hero-visual reveal">
-                <div class="hero-dashboard glow">
-                    <div class="dashboard-header">
-                        <span class="dashboard-dot"></span>
-                        <span class="dashboard-dot"></span>
-                        <span class="dashboard-dot"></span>
-                    </div>
-                    <div class="dashboard-content">
-                        <div class="dashboard-title" data-i18n="dashboard.title">NODRA</div>
+        <div class="products-grid">
 
-                        <div class="dashboard-item active" data-i18n="homeDashboard.academy">✓ Academy</div>
-                        <div class="dashboard-item active" data-i18n="homeDashboard.ndquest">✓ NDQuest</div>
-                        <div class="dashboard-item active" data-i18n="homeDashboard.about">✓ About</div>
+            <article class="feature-card">
+                <span class="feature-card__stat" data-i18n="ecosystem.academy.stat">10 modules</span>
+                <h3 data-i18n="ecosystem.academy.title">Academy</h3>
+                <p data-i18n="ecosystem.academy.description">Free courses on blockchain, wallets, DeFi and security. Finish a module, earn a badge for it.</p>
+                <a href="academy/index.html" class="ghost-btn" data-i18n="ecosystem.academy.cta">Explore Academy</a>
+            </article>
 
-                        <div class="dashboard-divider"></div>
-
-                        <div class="dashboard-progress">
-                            <span class="progress-dot active"></span>
-                            <span class="progress-dot"></span>
-                            <span class="progress-dot"></span>
-                        </div>
-
-                        <div class="dashboard-footer" data-i18n="homeDashboard.footer">Academy and NDQuest are live. More is being built.</div>
-                    </div>
-                </div>
-            </div>
+            <article class="feature-card">
+                <span class="feature-card__stat" data-i18n="ecosystem.ndquest.stat">5 games · 3 formats</span>
+                <h3 data-i18n="ecosystem.ndquest.title">NDQuest</h3>
+                <p data-i18n="ecosystem.ndquest.description">Quiz, action and raffle games for events, communities and creators. Bring your own colors and logo for the room.</p>
+                <a href="ndquest/index.html" class="ghost-btn" data-i18n="ecosystem.ndquest.cta">Explore NDQuest</a>
+            </article>
 
         </div>
     </div>
 </section>
 
 <!-- ===================================================== -->
-<!-- ECOSYSTEM — Academy, NDQuest and About -->
+<!-- WHY — same centered-stack rhythm as the hero, step -->
+<!-- badge included, keeps the editorial feel consistent. -->
 <!-- ===================================================== -->
 
-<section class="verticals" id="ecosystem">
+<section class="why">
     <div class="container">
-
-        <div class="verticals-header reveal">
-            <span class="tag" data-i18n="ecosystem.tag">THE ECOSYSTEM</span>
-            <h2 data-i18n="ecosystem.title">One Brand, Several Products</h2>
-            <p data-i18n="ecosystem.description">Nodra is not a single app, it's a growing set of independent products that share one mission: put understanding before speculation.</p>
+        <div class="why-content">
+            <span class="section-tag" data-i18n="why.step">WHY IT MATTERS</span>
+            <h2 class="why-title" data-i18n="why.title">Crypto doesn't need to be harder. It needs better experiences.</h2>
+            <p data-i18n="why.p1">Understanding how crypto works shouldn't be a barrier to participating in it. Nodra builds products that make the ecosystem easier to understand, interact with, and experience.</p>
+            <p data-i18n="why.p2">Academy makes learning crypto more approachable. NDQuest makes interacting with it more engaging, bringing quizzes and games to events, communities, and live experiences.</p>
         </div>
+    </div>
+</section>
 
-        <div class="verticals-grid">
+<!-- ===================================================== -->
+<!-- CTA BLOCK — resolves the page: avatar tile, display -->
+<!-- question, subtext, single sunshine button. Yellow is -->
+<!-- rationed to exactly this one button on the whole page. -->
+<!-- ===================================================== -->
 
-            <article class="card glow vertical-card">
-                <div>
-                    <div class="vertical-card__icon" aria-hidden="true">A</div>
-                    <h3 data-i18n="ecosystem.academy.title">Academy</h3>
-                    <p data-i18n="ecosystem.academy.description">Free, hands-on courses covering blockchain, wallets, DeFi and security, from first principles to advanced practice.</p>
-                </div>
-                <div class="vertical-card__footer">
-                    <a href="academy/index.html" class="vertical-card__link" data-i18n="ecosystem.academy.cta">Explore →</a>
-                </div>
-            </article>
-
-            <article class="card glow vertical-card">
-                <div>
-                    <div class="vertical-card__icon" aria-hidden="true">N</div>
-                    <h3 data-i18n="ecosystem.ndquest.title">NDQuest</h3>
-                    <p data-i18n="ecosystem.ndquest.description">Five games live now, across three formats: quiz, action and raffle. Built for events, creators and communities.</p>
-                </div>
-                <div class="vertical-card__footer">
-                    <a href="ndquest/index.html" class="vertical-card__link" data-i18n="ecosystem.ndquest.cta">Explore →</a>
-                </div>
-            </article>
-
-            <article class="card glow vertical-card">
-                <div>
-                    <div class="vertical-card__icon" aria-hidden="true">?</div>
-                    <h3 data-i18n="ecosystem.about.title">About</h3>
-                    <p data-i18n="ecosystem.about.description">The people, principles and roadmap behind Nodra.</p>
-                </div>
-                <div class="vertical-card__footer">
-                    <a href="about/index.html" class="vertical-card__link" data-i18n="ecosystem.about.cta">Explore →</a>
-                </div>
-            </article>
-
+<section class="cta-block">
+    <div class="container">
+        <div class="cta-content">
+            <div class="avatar-tile" aria-hidden="true">N</div>
+            <h2 data-i18n="cta.title">Better experiences. Better adoption.</h2>
+            <p data-i18n="cta.subtitle">Nodra builds products that make crypto simpler, more intuitive and more accessible.</p>
+            <a href="about/index.html" class="sunshine-btn" data-i18n="cta.button">About Nodra</a>
         </div>
     </div>
 </section>
@@ -165,7 +129,8 @@
             </div>
             <div class="footer-links">
                 <a href="academy/index.html" data-i18n="nav.academy">Academy</a>
-                <a href="#ecosystem" data-i18n="nav.roadmap">Ecosystem</a>
+                <a href="ndquest/index.html" data-i18n="nav.ndquest">NDQuest</a>
+                <a href="about/index.html" data-i18n="nav.about">About</a>
                 <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="nav.github">GitHub</a>
                 <a href="https://x.com/NodraHQ" target="_blank" data-i18n="nav.x">X</a>
             </div>

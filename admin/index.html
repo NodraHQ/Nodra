@@ -42,9 +42,11 @@
         <div class="admin-tabs">
             <button class="admin-tab is-active" data-tab="rooms" data-i18n="tabs.rooms">Live Rooms</button>
             <button class="admin-tab" data-tab="users" data-i18n="tabs.users">Users</button>
+            <button class="admin-tab" data-tab="vip-activity" data-i18n="tabs.vipActivity">VIP Codes</button>
             <button class="admin-tab" data-tab="badges" data-i18n="tabs.badges">Badges</button>
             <button class="admin-tab" data-tab="packs" data-i18n="tabs.packs">Submitted Packs</button>
             <button class="admin-tab" data-tab="themes" data-i18n="tabs.themes">Submitted Themes</button>
+            <button class="admin-tab" data-tab="support" data-i18n="tabs.support">Support</button>
             <button class="admin-tab" data-tab="analytics" data-i18n="tabs.analytics">Analytics</button>
         </div>
 
@@ -54,6 +56,19 @@
 
         <section id="tab-rooms" class="admin-tab-panel is-active">
             <div class="admin-toolbar">
+                <select id="rooms-game-filter" class="auth-input">
+                    <option value="" data-i18n="rooms.filterAllGames">All games</option>
+                    <option value="show_down">Show Down</option>
+                    <option value="time_attack">Time Attack</option>
+                    <option value="tap_rush">Tap Rush</option>
+                    <option value="roulette">Roulette</option>
+                </select>
+                <select id="rooms-status-filter" class="auth-input">
+                    <option value="" data-i18n="rooms.filterAllStatus">All status</option>
+                    <option value="open" data-i18n="rooms.filterOpen">Open</option>
+                    <option value="closed" data-i18n="rooms.filterClosed">Closed</option>
+                </select>
+                <input type="text" id="rooms-player-search" class="auth-input" data-i18n-placeholder="rooms.searchPlayerPlaceholder" placeholder="Search by player name...">
                 <button id="rooms-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
             </div>
             <table class="admin-table">
@@ -77,15 +92,43 @@
 
         <section id="tab-users" class="admin-tab-panel">
 
-            <!-- Código de convite pra VIP - reportado ao vivo:
-                 "continua pelo painel de admin, mas gera um código
-                 legal pra organizar" - em vez de só ligar/desligar
-                 VIP direto num usuário específico (isso já existe,
-                 botão na tabela abaixo), gera um código
-                 compartilhável por fora, que qualquer um resgata
-                 sozinho depois. -->
+            <div class="admin-toolbar">
+                <input type="text" id="users-search" class="auth-input" data-i18n-placeholder="users.searchPlaceholder" placeholder="Search by username...">
+                <button id="users-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            </div>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="users.username">Username</th>
+                        <th data-i18n="users.wallet">Wallet</th>
+                        <th data-i18n="users.vip">VIP</th>
+                        <th data-i18n="users.joined">Joined</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+            </table>
+            <p id="users-empty" class="admin-empty" data-i18n="users.empty" hidden>No users found.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- VIP CODES / ACTIVATIONS - extraído de dentro de Usuários,
+             reportado ao vivo: "conforme ela for crescendo o
+             restante da página vai ficar inacessível". -->
+        <!-- ===================================================== -->
+
+        <section id="tab-vip-activity" class="admin-tab-panel">
+
             <div class="admin-toolbar" style="flex-direction:column; align-items:flex-start; gap:12px; margin-bottom:24px;">
                 <form id="generate-vip-code-form" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+                    <div>
+                        <label style="display:block; font-size:12px; margin-bottom:4px;" data-i18n="vipCode.tier">Tier</label>
+                        <select id="vip-code-tier" class="auth-input" style="width:110px;">
+                            <option value="bronze">Bronze</option>
+                            <option value="prata">Prata</option>
+                            <option value="gold">Gold</option>
+                        </select>
+                    </div>
                     <div>
                         <label style="display:block; font-size:12px; margin-bottom:4px;" data-i18n="vipCode.days">Days</label>
                         <input type="number" id="vip-code-days" class="auth-input" value="30" min="1" style="width:90px;">
@@ -107,29 +150,12 @@
                 <p id="vip-code-result" style="font-family:monospace; font-size:16px;"></p>
             </div>
 
-            <!-- Histórico de ativações - pagamento e código
-                 misturados numa lista só, mais recente primeiro. -->
-            <h3 data-i18n="vipHistory.activationsTitle" style="margin-top:32px;">VIP Activations</h3>
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th data-i18n="users.username">Username</th>
-                        <th data-i18n="vipHistory.method">Method</th>
-                        <th data-i18n="vipHistory.detail">Detail</th>
-                        <th data-i18n="users.joined">Date</th>
-                    </tr>
-                </thead>
-                <tbody id="vip-activations-tbody"></tbody>
-            </table>
-            <p id="vip-activations-empty" class="admin-empty" data-i18n="vipHistory.activationsEmpty" hidden>No activations yet.</p>
-
-            <!-- Histórico de códigos - todo código já gerado, quem
-                 resgatou, e quais ainda estão livres. -->
             <h3 data-i18n="vipHistory.codesTitle" style="margin-top:32px;">Invite Codes</h3>
             <table class="admin-table">
                 <thead>
                     <tr>
                         <th data-i18n="vipHistory.code">Code</th>
+                        <th data-i18n="vipCode.tier">Tier</th>
                         <th data-i18n="vipHistory.uses">Uses</th>
                         <th data-i18n="vipHistory.redeemedBy">Redeemed by</th>
                         <th data-i18n="vipHistory.expires">Expires</th>
@@ -140,25 +166,25 @@
                 <tbody id="vip-codes-tbody"></tbody>
             </table>
             <p id="vip-codes-empty" class="admin-empty" data-i18n="vipHistory.codesEmpty" hidden>No codes generated yet.</p>
-            <button id="vip-activity-refresh-btn" class="btn btn-secondary" style="margin-top:8px;" data-i18n="rooms.refresh">Refresh</button>
 
-            <div class="admin-toolbar" style="margin-top:32px;">
-                <input type="text" id="users-search" class="auth-input" data-i18n-placeholder="users.searchPlaceholder" placeholder="Search by username...">
-                <button id="users-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
-            </div>
+            <h3 data-i18n="vipHistory.activationsTitle" style="margin-top:32px;">VIP Activations</h3>
             <table class="admin-table">
                 <thead>
                     <tr>
                         <th data-i18n="users.username">Username</th>
-                        <th data-i18n="users.wallet">Wallet</th>
-                        <th data-i18n="users.vip">VIP</th>
-                        <th data-i18n="users.joined">Joined</th>
-                        <th></th>
+                        <th data-i18n="vipHistory.method">Method</th>
+                        <th data-i18n="vipHistory.tier">Tier</th>
+                        <th data-i18n="vipHistory.detail">Detail</th>
+                        <th data-i18n="vipHistory.hash">Hash</th>
+                        <th data-i18n="vipHistory.network">Network</th>
+                        <th data-i18n="users.joined">Date</th>
                     </tr>
                 </thead>
-                <tbody id="users-tbody"></tbody>
+                <tbody id="vip-activations-tbody"></tbody>
             </table>
-            <p id="users-empty" class="admin-empty" data-i18n="users.empty" hidden>No users found.</p>
+            <p id="vip-activations-empty" class="admin-empty" data-i18n="vipHistory.activationsEmpty" hidden>No activations yet.</p>
+
+            <button id="vip-activity-refresh-btn" class="btn btn-secondary" style="margin-top:8px;" data-i18n="rooms.refresh">Refresh</button>
         </section>
 
         <!-- ===================================================== -->
@@ -180,39 +206,236 @@
         </section>
 
         <section id="tab-packs" class="admin-tab-panel">
-            <div class="admin-toolbar">
-                <button id="packs-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            <div class="admin-subtabs">
+                <button type="button" class="admin-subtab is-active" data-packs-subtab="submitted" data-i18n="packs.subtabSubmitted">Submission Queue</button>
+                <button type="button" class="admin-subtab" data-packs-subtab="vip" data-i18n="packs.subtabVip">VIP Saved Packs</button>
+                <button type="button" class="admin-subtab" data-packs-subtab="catalog" data-i18n="packs.subtabCatalog">Official Catalog</button>
             </div>
-            <div id="admin-packs-list" class="admin-packs-list"></div>
-            <p id="admin-packs-empty" class="admin-empty" data-i18n="packs.empty" hidden>No pending packs right now.</p>
+
+            <div data-packs-subtab-panel="submitted">
+                <div class="admin-toolbar">
+                    <button id="packs-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+                </div>
+                <div id="admin-packs-list" class="admin-packs-list"></div>
+                <p id="admin-packs-empty" class="admin-empty" data-i18n="packs.empty" hidden>No pending packs right now.</p>
+            </div>
+
+            <div data-packs-subtab-panel="vip" hidden>
+                <div class="admin-toolbar">
+                    <button id="vip-packs-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+                </div>
+                <div id="admin-vip-packs-list" class="admin-packs-list"></div>
+                <p id="admin-vip-packs-empty" class="admin-empty" data-i18n="packs.vipEmpty" hidden>No VIP saved packs right now.</p>
+            </div>
+
+            <div data-packs-subtab-panel="catalog" hidden>
+                <div class="admin-toolbar">
+                    <button id="catalog-packs-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+                </div>
+                <div id="admin-catalog-packs-list" class="admin-packs-list"></div>
+                <p id="admin-catalog-packs-empty" class="admin-empty" data-i18n="packs.catalogEmpty" hidden>No official packs right now.</p>
+            </div>
         </section>
 
         <section id="tab-themes" class="admin-tab-panel">
-            <div class="admin-toolbar">
-                <button id="themes-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+            <div class="admin-subtabs">
+                <button type="button" class="admin-subtab is-active" data-themes-subtab="submitted" data-i18n="themes.subtabSubmitted">Submission Queue</button>
+                <button type="button" class="admin-subtab" data-themes-subtab="all" data-i18n="themes.subtabAll">All Themes</button>
             </div>
-            <div id="admin-themes-list" class="admin-packs-list"></div>
-            <p id="admin-themes-empty" class="admin-empty" data-i18n="themes.empty" hidden>No pending themes right now.</p>
+
+            <div data-themes-subtab-panel="submitted">
+                <div class="admin-toolbar">
+                    <button id="themes-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+                </div>
+                <div id="admin-themes-list" class="admin-packs-list"></div>
+                <p id="admin-themes-empty" class="admin-empty" data-i18n="themes.empty" hidden>No pending themes right now.</p>
+            </div>
+
+            <div data-themes-subtab-panel="all" hidden>
+                <div class="admin-toolbar">
+                    <button id="all-themes-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+                </div>
+                <div id="admin-all-themes-list" class="admin-packs-list"></div>
+                <p id="admin-all-themes-empty" class="admin-empty" data-i18n="themes.allEmpty" hidden>No themes at all right now.</p>
+            </div>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- SUPPORT - lista de todo ticket aberto por qualquer
+             usuário, clica pra abrir a conversa e responder. -->
+        <!-- ===================================================== -->
+
+        <section id="tab-support" class="admin-tab-panel">
+
+            <div id="support-admin-list-view">
+                <div class="admin-toolbar">
+                    <button id="support-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+                </div>
+                <div id="admin-support-tickets-list" class="admin-packs-list"></div>
+                <p id="admin-support-tickets-empty" class="admin-empty" data-i18n="support.adminNoTickets" hidden>No support tickets yet.</p>
+            </div>
+
+            <div id="support-admin-chat-view" hidden>
+                <button type="button" id="support-admin-back-btn" class="btn btn-secondary" style="margin-bottom:16px;" data-i18n="support.backBtn">← Back to tickets</button>
+                <div class="admin-toolbar">
+                    <strong id="support-admin-chat-subject"></strong>
+                    <select id="support-admin-status-select" class="vip-network-select">
+                        <option value="open" data-i18n="support.statusOpen">Open</option>
+                        <option value="closed" data-i18n="support.statusClosed">Closed</option>
+                    </select>
+                </div>
+                <div id="support-admin-chat-messages" class="support-chat-messages"></div>
+                <form id="support-admin-reply-form" style="display:flex; gap:8px; margin-top:12px;">
+                    <input type="text" id="support-admin-reply-input" class="auth-input" style="flex:1;" placeholder="Type a reply...">
+                    <button type="submit" class="btn btn-primary" data-i18n="support.sendBtn">Send</button>
+                </form>
+            </div>
+
         </section>
 
         <section id="tab-analytics" class="admin-tab-panel">
-            <div class="admin-stat-grid">
-                <div class="admin-stat-card">
-                    <div class="admin-stat-value" id="stat-total-users">-</div>
-                    <div class="admin-stat-label" data-i18n="analytics.totalUsers">Total users</div>
-                </div>
-                <div class="admin-stat-card">
-                    <div class="admin-stat-value" id="stat-total-rooms">-</div>
-                    <div class="admin-stat-label" data-i18n="analytics.totalRooms">Rooms created</div>
-                </div>
-                <div class="admin-stat-card">
-                    <div class="admin-stat-value" id="stat-badges-minted">-</div>
-                    <div class="admin-stat-label" data-i18n="analytics.badgesMinted">Badges minted</div>
-                </div>
+
+            <div class="admin-toolbar">
+                <button id="analytics-refresh-btn" class="btn btn-secondary" data-i18n="rooms.refresh">Refresh</button>
+                <button id="analytics-export-btn" class="btn btn-primary" data-i18n="analytics.exportBtn">⭳ Export Report</button>
             </div>
 
-            <h2 class="admin-section-title" data-i18n="analytics.signupsTitle">Signups, last 30 days</h2>
-            <div id="signups-chart" class="admin-bar-chart"></div>
+            <div id="analytics-report">
+
+                <p class="admin-report-header" id="analytics-generated-at" data-i18n="analytics.generatedAt">Report generated: -</p>
+
+                <h2 class="admin-section-title" data-i18n="analytics.groupPlatform">Platform</h2>
+                <div class="admin-stat-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-total-users">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.totalUsers">Total users</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-total-rooms">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.totalRooms">Rooms created</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-match-history">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.matchHistory">Match records</div>
+                    </div>
+                    <div class="admin-stat-card" id="stat-active-players-card">
+                        <div class="admin-stat-value" id="stat-active-players">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.activePlayers">Players in active rooms now (of 420)</div>
+                    </div>
+                </div>
+
+                <h2 class="admin-section-title" data-i18n="analytics.groupVip">VIP</h2>
+                <div class="admin-stat-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-active-vips">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.activeVips">Active VIPs right now</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-vips-purchased">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.vipsPurchased">VIP purchases (all-time)</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-vip-codes-redeemed">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.vipCodesRedeemed">VIP invite codes redeemed</div>
+                    </div>
+                </div>
+
+                <h3 class="admin-section-title" data-i18n="analytics.groupVipByTier" style="font-size:14px; margin-top:-16px;">By tier</h3>
+                <div class="admin-stat-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-active-vips-bronze">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.activeBronze">Active Bronze</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-active-vips-prata">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.activePrata">Active Prata</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-active-vips-gold">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.activeGold">Active Gold</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-vips-purchased-bronze">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.purchasedBronze">Bronze purchases</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-vips-purchased-prata">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.purchasedPrata">Prata purchases</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-vips-purchased-gold">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.purchasedGold">Gold purchases</div>
+                    </div>
+                </div>
+
+                <h2 class="admin-section-title" data-i18n="analytics.groupBadges">Badges</h2>
+                <div class="admin-stat-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-badges-created">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.badgesCreated">Badges created (types)</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-badges-granted">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.badgesGranted">Badges granted (total)</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-academy-graduates">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.academyGraduates">Users with all Academy badges</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-badges-minted">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.badgesMinted">Badges minted onchain</div>
+                    </div>
+                </div>
+
+                <h2 class="admin-section-title" data-i18n="analytics.groupThemes">Custom Themes</h2>
+                <div class="admin-stat-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-public-themes">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.publicThemes">Public themes</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-private-themes">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.privateThemes">Private themes</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-pending-themes">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.pendingThemes">Awaiting review</div>
+                    </div>
+                </div>
+
+                <h2 class="admin-section-title" data-i18n="analytics.groupPacks">Question Packs</h2>
+                <div class="admin-stat-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-private-packs">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.privatePacks">VIP saved packs (all)</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-approved-packs">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.approvedPacks">Approved to official catalog</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-pending-packs">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.pendingPacks">Awaiting review</div>
+                    </div>
+                </div>
+
+                <h2 class="admin-section-title" data-i18n="analytics.groupSupport">Support</h2>
+                <div class="admin-stat-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-tickets-open">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.ticketsOpen">Open tickets</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-value" id="stat-tickets-closed">-</div>
+                        <div class="admin-stat-label" data-i18n="analytics.ticketsClosed">Closed tickets</div>
+                    </div>
+                </div>
+
+                <h2 class="admin-section-title" data-i18n="analytics.signupsTitle">Signups, last 30 days</h2>
+                <div id="signups-chart" class="admin-bar-chart"></div>
+
+            </div>
         </section>
 
     </div>

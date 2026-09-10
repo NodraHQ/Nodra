@@ -29,9 +29,20 @@ Deno.serve(withAdminAuth(async (req, { adminClient, adminId }) => {
         });
     }
 
+    // Revogar limpa a data de expiração e o tier também, não só
+    // is_vip - reportado ao vivo com conta de teste: revogar só
+    // desligava is_vip, a expiração antiga ficava escondida e
+    // reaparecia inteira (somando em cima) na próxima vez que a
+    // conta virasse VIP de novo, seja por código ou pagamento.
+    const updatePayload: Record<string, unknown> = { is_vip: grant };
+    if (!grant) {
+        updatePayload.vip_expires_at = null;
+        updatePayload.vip_tier = null;
+    }
+
     const { error } = await adminClient
         .from("profiles")
-        .update({ is_vip: grant })
+        .update(updatePayload)
         .eq("id", targetUserId);
 
     if (error) {

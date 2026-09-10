@@ -57,7 +57,7 @@ Deno.serve(withAdminAuth(async (_req, { adminClient }) => {
         createdAt: badge.created_at,
         holders: holders
             .filter((h) => h.badge_id === badge.id)
-            .map((h) => usernameById.get(h.user_id) || h.user_id),
+            .map((h) => ({ userId: h.user_id, username: usernameById.get(h.user_id) || h.user_id })),
     }));
 
     return new Response(JSON.stringify({ badges: result }), {

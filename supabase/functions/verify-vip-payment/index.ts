@@ -29,7 +29,15 @@ import { corsHeaders } from "../_shared/vipAuth.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { isSupportedNetworkToken, verifyStablecoinPayment } from "../_shared/paymentVerification.ts";
 
-const VIP_PRICE_USDT = 5; // preço mensal - fácil de trocar aqui (mesmo valor em qualquer rede/token aceito)
+// Reportado ao vivo: 3 níveis de VIP agora, cada um com preço e
+// limite de sala diferente - Bronze é o "padrão" de sempre, Prata e
+// Gold são novos, pensados pra evento maior sem estourar o custo de
+// infraestrutura (ver conversa sobre conexão de tempo real).
+const VIP_TIER_PRICES: Record<string, number> = {
+    bronze: 5,
+    prata: 20,
+    gold: 50,
+};
 const VIP_PERIOD_DAYS = 30;
 
 Deno.serve(async (req) => {
@@ -69,12 +77,16 @@ Deno.serve(async (req) => {
         const txHash = body?.txHash;
         const network = body?.network;
         const token = body?.token;
+        const tier = body?.tier;
 
         if (typeof txHash !== "string") {
-            return jsonError("Body precisa de { txHash, network, token }", 400);
+            return jsonError("Body precisa de { txHash, network, token, tier }", 400);
         }
         if (typeof network !== "string" || typeof token !== "string" || !isSupportedNetworkToken(network, token)) {
             return jsonError("Rede/token não aceito", 400);
+        }
+        if (typeof tier !== "string" || !VIP_TIER_PRICES[tier]) {
+            return jsonError('tier precisa ser "bronze", "prata" ou "gold"', 400);
         }
 
         const serviceClient = createClient(
@@ -97,7 +109,7 @@ Deno.serve(async (req) => {
         // Consulta a blockchain de verdade, não confia em nada que o
         // cliente mandou sobre o valor/destinatário - ver
         // _shared/paymentVerification.ts pros detalhes de cada rede.
-        const result = await verifyStablecoinPayment(network, token, txHash, VIP_PRICE_USDT);
+        const result = await verifyStablecoinPayment(network, token, txHash, VIP_TIER_PRICES[tier]);
 
         if (!result.ok) {
             return jsonError(result.error || "Pagamento não pôde ser confirmado", 400);
@@ -123,7 +135,17 @@ Deno.serve(async (req) => {
             amount_usdt: result.amount,
             from_address: result.fromAddress,
             vip_extended_until: newExpiry.toISOString(),
+            tier,
         });
+
+        // 23505 = a trava UNIQUE em tx_hash pegou uma corrida - duas
+        // chamadas simultâneas com o mesmo hash passaram as duas pela
+        // checagem lá em cima antes de qualquer uma gravar. Sem essa
+        // trava no banco, a segunda passaria batido e creditaria VIP
+        // duas vezes pela mesma transação.
+        if (insertError?.code === "23505") {
+            return jsonError("Essa transação já foi usada antes", 409);
+        }
 
         if (insertError) {
             console.error("Erro ao gravar pagamento de VIP:", insertError);
@@ -132,7 +154,7 @@ Deno.serve(async (req) => {
 
         const { error: updateError } = await serviceClient
             .from("profiles")
-            .update({ is_vip: true, vip_expires_at: newExpiry.toISOString() })
+            .update({ is_vip: true, vip_expires_at: newExpiry.toISOString(), vip_tier: tier })
             .eq("id", user.id);
 
         if (updateError) {

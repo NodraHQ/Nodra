@@ -174,17 +174,23 @@ Deno.serve(withVipAuth(async (req, { vipClient, vipId }) => {
         });
     }
 
-    // Confere o ciclo de renovação atual e se o slot grátis já foi
-    // usado nele. Bug real reportado ao vivo: VIP concedido direto
-    // pelo admin, sem vip_expires_at registrado, era barrado aqui
-    // com erro 500 - sem uma data de renovação pra comparar, não dá
-    // pra calcular "ciclo", então trata como "1 tema incluso pra
+    // Confere o ciclo de renovação atual e quantos temas inclusos já
+    // foram criados nele. Bug real reportado ao vivo: VIP concedido
+    // direto pelo admin, sem vip_expires_at registrado, era barrado
+    // aqui com erro 500 - sem uma data de renovação pra comparar,
+    // não dá pra calcular "ciclo", então trata como "incluso pra
     // sempre" (created_for_vip_expiry fica null) em vez de travar a
     // pessoa por completo. Mesma lógica espelhada em
     // account.js/loadThemeSlotStatus.
+    //
+    // Limite virou por TIER, não mais fixo em 1 pra todo mundo -
+    // reportado ao vivo: "vamos implementar sim, isso é super
+    // importante", números já fechados numa conversa anterior.
+    const THEME_LIMITS_BY_TIER: Record<string, number> = { bronze: 3, prata: 10, gold: 999 };
+
     const { data: profile, error: profileError } = await vipClient
         .from("profiles")
-        .select("vip_expires_at")
+        .select("vip_expires_at, vip_tier")
         .eq("id", vipId)
         .maybeSingle();
 
@@ -196,23 +202,24 @@ Deno.serve(withVipAuth(async (req, { vipClient, vipId }) => {
     }
 
     const vipExpiry = profile?.vip_expires_at || null;
+    const maxThemesThisCycle = THEME_LIMITS_BY_TIER[profile?.vip_tier ?? ""] ?? THEME_LIMITS_BY_TIER.bronze;
 
     const existingQuery = vipClient
         .from("custom_themes")
-        .select("id")
+        .select("id", { count: "exact", head: true })
         .eq("owner_id", vipId)
         .eq("is_included_slot", true);
 
-    const { data: existingForCycle } = vipExpiry
-        ? await existingQuery.eq("created_for_vip_expiry", vipExpiry).maybeSingle()
-        : await existingQuery.is("created_for_vip_expiry", null).maybeSingle();
+    const { count: existingCountForCycle } = vipExpiry
+        ? await existingQuery.eq("created_for_vip_expiry", vipExpiry)
+        : await existingQuery.is("created_for_vip_expiry", null);
 
-    if (existingForCycle) {
+    if ((existingCountForCycle ?? 0) >= maxThemesThisCycle) {
         return new Response(
             JSON.stringify({
                 error: vipExpiry
-                    ? "Você já usou o tema incluso desse ciclo - o próximo libera na sua renovação"
-                    : "Você já usou seu tema incluso - sua conta não tem data de renovação registrada",
+                    ? `Você já usou os ${maxThemesThisCycle} temas inclusos desse ciclo - os próximos liberam na sua renovação, ou faça upgrade de tier`
+                    : "Você já usou seus temas inclusos - sua conta não tem data de renovação registrada",
             }),
             { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );

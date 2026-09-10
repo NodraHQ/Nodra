@@ -109,6 +109,12 @@ Deno.serve(async (req) => {
         });
 
         if (paymentInsertError) {
+            // Mesmo caso do verify-vip-payment - a trava UNIQUE em
+            // tx_hash pegou uma corrida entre duas chamadas simultâneas
+            // com o mesmo hash.
+            if (paymentInsertError.code === "23505") {
+                return jsonError("Essa transação já foi usada antes", 409);
+            }
             console.error("Erro ao gravar pagamento de submissão de tema:", paymentInsertError);
             return jsonError("Erro ao gravar o pagamento", 500);
         }

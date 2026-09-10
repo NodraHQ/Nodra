@@ -70,28 +70,39 @@ Deno.serve(async (req) => {
             const placement = i + 1;
             const player = sorted[i];
 
-            if (player.user_id) {
-                const { error: historyError } = await client
-                    .from("match_history")
-                    .update({ placement })
-                    .eq("user_id", player.user_id)
-                    .eq("game", "time_attack")
-                    .eq("room_code", room_code)
-                    .eq("role", "player")
-                    .eq("round_number", round_number);
+            // Bug real reportado ao vivo com print de produção:
+            // convidado sempre aparecia com a pontuação bruta em vez
+            // de posição. Causa: esse código decidia "grava em
+            // match_history ou guest_participants" checando se
+            // player.user_id existia - mas depois da sessão anônima,
+            // TODO jogador tem um user_id (até convidado), então o
+            // convidado sempre caía no ramo de match_history, que não
+            // tem nenhuma linha dele (ele foi inserido em
+            // guest_participants). A atualização "funcionava" sem
+            // erro, só que em zero linhas, sempre. Corrigido tentando
+            // os dois updates pra todo jogador - o WHERE de cada um
+            // só bate na tabela certa, o outro não acerta nenhuma
+            // linha, sem problema nenhum nisso.
+            const { error: historyError } = await client
+                .from("match_history")
+                .update({ placement })
+                .eq("user_id", player.user_id)
+                .eq("game", "time_attack")
+                .eq("room_code", room_code)
+                .eq("role", "player")
+                .eq("round_number", round_number);
 
-                if (historyError) console.error("time-attack-update-ranking: erro ao gravar posição (logado)", historyError);
-            } else {
-                const { error: guestError } = await client
-                    .from("guest_participants")
-                    .update({ placement })
-                    .eq("nickname", player.nickname)
-                    .eq("game", "time_attack")
-                    .eq("room_code", room_code)
-                    .eq("round_number", round_number);
+            if (historyError) console.error("time-attack-update-ranking: erro ao gravar posição (logado)", historyError);
 
-                if (guestError) console.error("time-attack-update-ranking: erro ao gravar posição (guest)", guestError);
-            }
+            const { error: guestError } = await client
+                .from("guest_participants")
+                .update({ placement })
+                .eq("nickname", player.nickname)
+                .eq("game", "time_attack")
+                .eq("room_code", room_code)
+                .eq("round_number", round_number);
+
+            if (guestError) console.error("time-attack-update-ranking: erro ao gravar posição (guest)", guestError);
 
         }
 

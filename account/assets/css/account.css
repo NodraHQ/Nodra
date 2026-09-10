@@ -630,14 +630,15 @@ appkit-button {
 
 .vip-purchase-layout {
     display: flex;
+    flex-wrap: wrap;
     gap: 48px;
     align-items: flex-start;
     margin-top: 24px;
 }
 
 .vip-purchase-left {
-    flex: 1;
-    min-width: 0;
+    flex: 1 1 280px;
+    min-width: 260px;
     padding-top: 8px;
 }
 
@@ -675,6 +676,89 @@ appkit-button {
     background: var(--surface, #101d33);
     border: 1px solid var(--border);
     border-radius: 16px;
+}
+
+/* 3 cartões de tier - reportado ao vivo: Bronze/Prata/Gold, cada um
+   com preço e limite de sala diferente. */
+/* Vitrine dos 3 tiers em leque, tipo baralho - reportado ao vivo com
+   imagem de referência (telas de login empilhadas em perspectiva,
+   uma na frente, girando devagar sozinha até alguém clicar). Cada
+   cartão fica absoluto dentro do container, a POSIÇÃO (frente/
+   esquerda/direita) é decidida em JS trocando a classe
+   is-front/is-left/is-right - só o CSS abaixo desenha a diferença
+   visual de cada posição. */
+.vip-tiers-showcase {
+    position: relative;
+    flex: 2 1 640px;
+    min-height: 560px;
+    perspective: 1400px;
+}
+
+.vip-tier-card {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 320px;
+    padding: 24px;
+    background: var(--surface, #101d33);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform .6s ease, opacity .6s ease, filter .6s ease;
+    cursor: pointer;
+}
+
+.vip-tier-card.is-front {
+    transform: translateX(-50%) translateZ(0) rotateY(0deg) scale(1);
+    z-index: 3;
+    opacity: 1;
+    filter: none;
+    cursor: default;
+}
+
+.vip-tier-card.is-left {
+    transform: translateX(-115%) translateZ(-120px) rotateY(18deg) scale(.88);
+    z-index: 1;
+    opacity: .55;
+    filter: blur(1px) brightness(.7);
+}
+
+.vip-tier-card.is-right {
+    transform: translateX(15%) translateZ(-120px) rotateY(-18deg) scale(.88);
+    z-index: 1;
+    opacity: .55;
+    filter: blur(1px) brightness(.7);
+}
+
+.vip-tier-card.is-left:hover,
+.vip-tier-card.is-right:hover {
+    opacity: .8;
+    filter: blur(0) brightness(.9);
+}
+
+/* Só o cartão da frente mostra o botão de Select por completo - os
+   de trás são só clicáveis pra virar a frente, o clique neles não
+   deveria acionar pagamento sem a pessoa ver as vantagens primeiro. */
+.vip-tier-card.is-left .vip-tier-select-btn,
+.vip-tier-card.is-right .vip-tier-select-btn {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.vip-tier-card.is-selected {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.vip-tier-card h2 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.vip-tier-select-btn {
+    margin-top: auto;
 }
 
 .vip-purchase-card-header h2 {
@@ -803,9 +887,46 @@ appkit-button {
 /* Bug real, reportado ao vivo: sem min-width:0, um <input> dentro de
  uma coluna de grid não encolhe abaixo da largura "de fábrica" do
  navegador (~170-200px) - com 3 colunas isso ultrapassava a largura
- do card e vazava pra fora, cortando o campo de Instagram. */
+ do card e vazava pra fora, cortando o campo de Instagram.
+ Correção original tinha o alvo errado - min-width:0 direto no
+ .auth-input não resolvia sozinho, porque quem é FILHO DIRETO da
+ grade (e sofre da trava de largura mínima automática do CSS Grid) é
+ o .auth-field que envolve o input, não o input em si - netos da
+ grade não herdam essa trava sozinhos. */
+.profile-field-grid .auth-field {
+    min-width: 0;
+}
+
 .profile-field-grid .auth-input {
     min-width: 0;
+}
+
+/* Botão nativo "Choose File" do navegador - sem estilo nenhum, cai
+   no branco/cinza padrão do sistema operacional, destoando do resto
+   do tema escuro. Reportado ao vivo: "esse botão distoa do resto da
+   parada". ::file-selector-button é o jeito padrão moderno de
+   estilizar só o botão em si, sem mexer no input inteiro. */
+input[type="file"] {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+input[type="file"]::file-selector-button {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+input[type="file"]::file-selector-button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .profile-logout-btn {
@@ -1005,7 +1126,7 @@ appkit-button {
 }
 
 .badge--hex {
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    clip-path: polygon(50% 0%, 87.5% 25%, 87.5% 75%, 50% 100%, 12.5% 75%, 12.5% 25%);
     height: 173px;
 }
 
@@ -1219,13 +1340,32 @@ appkit-button {
 }
 
 .vip-my-badge-holders-toggle {
-    background: none;
-    border: none;
+    height:auto;
+    padding:6px 14px;
+    font-size:12px;
+    border-radius:999px;
+    margin-top:4px;
+}
+
+.vip-my-badge-holders-copy {
+    height:auto;
+    padding:5px 12px;
+    font-size:11px;
+    border-radius:999px;
+    margin-bottom:10px;
+}
+
+.vip-my-badge-holders-rows {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.vip-my-badge-holder-row a {
     color: var(--primary);
-    font-size: 11px;
-    font-family: inherit;
-    cursor: pointer;
-    padding: 0;
+}
+
+.vip-my-badge-holder-row a:hover {
     text-decoration: underline;
 }
 
@@ -2088,6 +2228,10 @@ appkit-button {
     width: 320px;
 }
 
+.vip-payment-modal-panel {
+    width: 360px;
+}
+
 .vip-theme-submit-title {
     font-weight: 700;
     font-size: 14px;
@@ -2152,4 +2296,249 @@ appkit-button {
     background: var(--surface-2);
     color: var(--text);
     font-size: 13px;
+}
+
+/* Meus pacotes salvos - lista expansível (clica no cabeçalho, mostra
+   as perguntas de dentro). Linha cheia, não card centralizado - o
+   conteúdo tem texto longo (pergunta), não cabe no formato pequeno
+   de card de badge. */
+.vip-saved-pack-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.vip-saved-pack-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+    padding: 14px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+}
+
+.vip-saved-pack-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.vip-saved-pack-detail {
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+}
+
+.vip-saved-pack-question {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 12px 0 0;
+}
+
+/* Modal de códigos de resgate por QR - bug real reportado ao vivo
+   com foto: a versão anterior tentava caber dentro da coluna
+   estreita do card do badge (~130px) e tudo quebrava torto. Modal
+   de verdade agora, largura própria (ver .vip-theme-submit-panel
+   pro mesmo padrão usado no envio de tema). */
+.vip-badge-claim-modal-panel {
+    width: 420px;
+    max-width: calc(100vw - 32px);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.vip-claim-codes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.vip-claim-codes-empty {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0 0 12px;
+}
+
+.vip-claim-code-row {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-1);
+    align-items: flex-start;
+}
+
+.vip-claim-code-row.is-paused {
+    opacity: .55;
+}
+
+.vip-claim-code-qr {
+    width: 90px;
+    height: 90px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.vip-claim-code-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+}
+
+.vip-claim-code-text {
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.vip-claim-code-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.vip-claim-code-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.vip-claim-code-create-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.vip-claim-code-create-form input {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-size: 13px;
+}
+
+/* Chat de suporte - bolha de mensagem tipo WhatsApp, usuário à
+   direita, admin à esquerda. */
+.support-chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-1);
+}
+
+.support-bubble {
+    max-width: 75%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.support-bubble--user {
+    align-self: flex-end;
+    background: var(--primary);
+    color: #06080D;
+    border-bottom-right-radius: 4px;
+}
+
+.support-bubble--admin {
+    align-self: flex-start;
+    background: var(--surface-3, #1e2a44);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+}
+
+/* Status de envio do pacote salvo (aguardando/aprovado/rejeitado) +
+   linha de ações (enviar pra revisão / apagar), reconstrução do
+   sistema de pacotes - agora tudo dentro de "Meus Pacotes", uma
+   coisa só. */
+.vip-pack-status-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-left: 6px;
+}
+
+.vip-pack-status-chip--pending {
+    background: rgba(255, 200, 87, .15);
+    color: #ffc857;
+}
+
+.vip-pack-status-chip--approved {
+    background: rgba(40, 199, 111, .15);
+    color: #28c76f;
+}
+
+.vip-pack-status-chip--rejected {
+    background: rgba(255, 94, 122, .15);
+    color: #ff5e7a;
+}
+
+.vip-saved-pack-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.vip-submit-pack-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 320px;
+}
+
+.vip-submit-pack-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Checkboxes de jogo no formulário de criar pacote - reportado ao
+   vivo: "o pack deve valer para todos os jogos se quiser", trocou
+   de escolha única pra múltipla. */
+.vip-new-pack-games {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary);
 }

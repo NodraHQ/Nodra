@@ -40,13 +40,25 @@ Deno.serve(withVipAuth(async (req, { vipClient, vipId }) => {
 
     const { data: submittedPack, error: fetchError } = await vipClient
         .from("submitted_packs")
-        .select("id, slug, name_pt, name_en, questions, status")
+        .select("id, slug, name_pt, name_en, questions, status, submitted_by_user_id")
         .eq("id", packId)
         .maybeSingle();
 
     if (fetchError || !submittedPack) {
         return new Response(JSON.stringify({ error: "Pacote enviado não encontrado" }), {
             status: 404,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+    }
+
+    // Trava contra auto-aprovação - reportado ao vivo: "o próprio
+    // usuário aprova o próprio pacote". Só é possível travar isso
+    // pra quem estava logado no momento do envio (submitted_by_user_id
+    // preenchido em submit-question-pack) - envio anônimo não tem
+    // como saber se é "a mesma pessoa" revisando depois.
+    if (submittedPack.submitted_by_user_id && submittedPack.submitted_by_user_id === vipId) {
+        return new Response(JSON.stringify({ error: "Você não pode revisar um pacote que você mesmo enviou" }), {
+            status: 403,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
     }

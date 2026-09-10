@@ -100,6 +100,8 @@
             <select id="pack-select"></select>
           </div>
 
+          <p class="pack-custom-hint" id="pack-no-difficulty-warning" hidden data-i18n="pack.noDifficultyWarning">Esse pacote não tem dificuldade marcada por pergunta - o balanceamento fácil/médio/difícil fica desligado, as perguntas são sorteadas de qualquer nível pra qualquer envelope.</p>
+
           <div class="field pack-custom-summary" id="pack-custom-summary" hidden>
             <p class="pack-custom-status" id="pack-custom-status" data-i18n="pack.noneYet">Nenhuma pergunta ainda.</p>
             <button type="button" class="btn btn-secondary" id="open-pack-modal-btn" data-i18n="pack.openEditor">✎ Abrir editor de perguntas</button>
@@ -148,7 +150,7 @@
       <button type="button" class="modal-close-btn" id="pack-modal-close-x" aria-label="Fechar" data-i18n-aria-label="modal.closeAriaLabel">✕</button>
 
       <p class="eyebrow" data-i18n="pack.modalEyebrow">Minhas Próprias Perguntas</p>
-      <p class="pack-custom-hint" data-i18n="pack.customHint">Cole ou envie suas perguntas, clique em "Processar", e comece o evento. Nada disso fica salvo — some quando a sessão terminar.</p>
+      <p class="pack-custom-hint" data-i18n="pack.customHint">Cole ou envie suas perguntas, clique em "Processar", e comece o evento.</p>
 
       <div class="pack-toolbar">
         <button type="button" class="btn btn-secondary" id="download-template-btn" data-i18n="pack.downloadTemplate">⭳ Baixar modelo (.txt)</button>
@@ -163,6 +165,11 @@
       <div class="pack-parse-errors" id="parse-errors" hidden></div>
 
       <div class="preview-list" id="preview-list"></div>
+
+      <label class="checkbox-row" id="save-pack-row" hidden>
+          <input type="checkbox" id="save-pack-checkbox" checked>
+          <span data-i18n="customQuestions.savePack">Save this pack to reuse in future events</span>
+      </label>
 
       <button type="button" class="btn btn-primary" id="pack-modal-done-btn" data-i18n="pack.doneBtn">Concluído</button>
     </div>

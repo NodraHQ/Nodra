@@ -128,10 +128,31 @@ const finishedCloseX = document.getElementById('finished-close-x');
 
 const languageButtons = document.querySelectorAll('.language-btn');
 
+// Sessão sempre lida fresca, nunca cacheada - mesmo motivo já
+// documentado em show-down/host.js e time-attack/host.js: aba
+// ficando aberta por horas, ou troca de conta sem recarregar,
+// deixaria um valor guardado errado.
+async function getCurrentUserId() {
+    const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+    return session?.user?.id ?? null;
+}
+
+async function getCurrentUserIsVip() {
+    const userId = await getCurrentUserId();
+    if (!userId) return false;
+    const { data, error } = await window.ndquestSupabase
+        .from('profiles')
+        .select('is_vip')
+        .eq('id', userId)
+        .maybeSingle();
+    if (error || !data) return false;
+    return !!data.is_vip;
+}
+
 /* =========================================================
    PACOTES DE PERGUNTAS — seletor
    ========================================================= */
-function populatePackSelect() {
+async function populatePackSelect() {
   packSelect.innerHTML = '';
   questionPacks.forEach((pack, index) => {
     const option = document.createElement('option');
@@ -143,21 +164,71 @@ function populatePackSelect() {
   customOption.value = 'custom';
   customOption.textContent = t('pack.customOption');
   packSelect.appendChild(customOption);
+
+  // Pacotes salvos do próprio VIP (ver vip_saved_packs) que incluem
+  // 'quest-drop' entre os jogos escolhidos - reportado ao vivo: "o
+  // quest drop também tem pacotes".
+  const savedUserId = await getCurrentUserId();
+  if (savedUserId) {
+    const { data: savedPacks } = await window.ndquestSupabase
+      .from('vip_saved_packs')
+      .select('id, name')
+      .eq('owner_id', savedUserId)
+      .contains('games', ['quest-drop'])
+      .order('created_at', { ascending: false });
+
+    (savedPacks || []).forEach((pack) => {
+      const option = document.createElement('option');
+      option.value = `saved:${pack.id}`;
+      option.textContent = `★ ${pack.name}`;
+      packSelect.appendChild(option);
+    });
+  }
+
   packCustomSummary.hidden = true;
 }
 populatePackSelect();
 
+let loadedSavedPackQuestions = null;
+
 packSelect.addEventListener('change', () => {
   const isCustom = packSelect.value === 'custom';
+  const isSaved = packSelect.value.startsWith('saved:');
   packCustomSummary.hidden = !isCustom;
+  document.getElementById('pack-no-difficulty-warning').hidden = true;
+  loadedSavedPackQuestions = null;
+
   if (isCustom) {
     updatePackCustomSummary();
     if (customParsedQuestions.length === 0) {
       openOverlay(packOverlay);
     }
+    getCurrentUserIsVip().then((isVip) => {
+      document.getElementById('save-pack-row').hidden = !isVip;
+    });
+  } else if (isSaved) {
+    closeOverlay(packOverlay);
+    restoreDifficultyDefaults();
+    const savedId = packSelect.value.slice('saved:'.length);
+    window.ndquestSupabase
+      .from('vip_saved_packs')
+      .select('questions')
+      .eq('id', savedId)
+      .maybeSingle()
+      .then(({ data }) => {
+        loadedSavedPackQuestions = data?.questions || [];
+        // Reportado ao vivo: "poderia colocar um aviso que esse
+        // pack não tem dificuldade e travar o balanceamento, ele só
+        // randomiza normal". Um pacote salvo do Show Down/Time
+        // Attack não tem campo difficulty nenhum - mostra o aviso
+        // sempre que NENHUMA pergunta do pacote tem isso marcado.
+        const anyHasDifficulty = loadedSavedPackQuestions.some((q) => q.difficulty);
+        document.getElementById('pack-no-difficulty-warning').hidden = anyHasDifficulty;
+      });
   } else {
     closeOverlay(packOverlay);
     restoreDifficultyDefaults();
+    document.getElementById('save-pack-row').hidden = true;
   }
 });
 
@@ -1194,12 +1265,46 @@ startBtn.addEventListener('click', () => {
       configError.textContent = t('errors.customPackNotProcessed');
       return;
     }
-    const questions = { easy: [], medium: [], hard: [] };
-    customParsedQuestions.forEach((q) => {
-      questions[q.difficulty].push({ question: q.question, answers: q.answers, correct: q.correct });
-    });
+    const questions = buildQuestionsByDifficulty(customParsedQuestions);
     selectedPack = {
       name: { pt: 'Minhas Perguntas', en: 'My Questions' },
+      questions
+    };
+
+    // Benefício de VIP: guarda o pacote personalizado pra reusar
+    // depois - mesmo mecanismo já usado em Show Down/Time Attack.
+    const savePackRow = document.getElementById('save-pack-row');
+    const savePackCheckbox = document.getElementById('save-pack-checkbox');
+    if (!savePackRow.hidden && savePackCheckbox.checked) {
+      getCurrentUserId().then(async (hostUserId) => {
+        if (!hostUserId) return;
+        const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+        const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/vip-create-saved-pack`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            games: ['quest-drop'],
+            name: customParsedQuestions[0]?.question?.pt?.slice(0, 60) || 'Quest Drop pack',
+            questions: customParsedQuestions,
+          }),
+        });
+        if (!response.ok) {
+          const result = await response.json().catch(() => ({}));
+          console.error('Quest Drop save pack error:', result.error);
+        }
+      });
+    }
+  } else if (packSelect.value.startsWith('saved:')) {
+    if (!loadedSavedPackQuestions || loadedSavedPackQuestions.length === 0) {
+      configError.textContent = t('errors.customPackNotProcessed');
+      return;
+    }
+    const questions = buildQuestionsByDifficulty(loadedSavedPackQuestions);
+    selectedPack = {
+      name: { pt: 'Pacote Salvo', en: 'Saved Pack' },
       questions
     };
   } else {
@@ -1355,6 +1460,32 @@ function handleEnvelopeClick(index, envelopeEl) {
 /* =========================================================
    PERGUNTAS
    ========================================================= */
+
+// Monta o objeto {easy, medium, hard} que o resto do jogo espera, a
+// partir de uma lista plana - reportado ao vivo: pacote sem
+// dificuldade marcada (salvo do Show Down/Time Attack, por exemplo)
+// "poderia colocar um aviso... ele só randomiza normal". Sem NENHUMA
+// pergunta com difficulty, o mesmo conjunto completo vira as três
+// listas - cada envelope ainda tem o nível dele pro prêmio, mas a
+// pergunta mostrada vem do pacote inteiro, sem separar por nível.
+function buildQuestionsByDifficulty(list) {
+  const anyHasDifficulty = list.some((q) => q.difficulty);
+
+  if (!anyHasDifficulty) {
+    const flat = list.map((q) => ({ question: q.question, answers: q.answers, correct: q.correct }));
+    return { easy: flat, medium: flat, hard: flat };
+  }
+
+  const questions = { easy: [], medium: [], hard: [] };
+  list.forEach((q) => {
+    // Pergunta sem dificuldade dentro de um pacote onde ALGUMAS
+    // outras têm - cai em medium por padrão, em vez de travar.
+    const level = q.difficulty || 'medium';
+    questions[level].push({ question: q.question, answers: q.answers, correct: q.correct });
+  });
+  return questions;
+}
+
 function pickRandomQuestion(level) {
   const pool = state.questionPack.questions[level];
 

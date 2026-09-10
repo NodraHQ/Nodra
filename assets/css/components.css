@@ -175,7 +175,7 @@ body::after{
 .nav-links{
     display:flex;
     align-items:center;
-    gap:34px;
+    gap:17px;
 }
 
 .nav-links a{
@@ -753,11 +753,20 @@ a:focus{
 @media (max-width:768px){
 
     .navbar{
-        padding:0 24px;
+        height:auto;
+        min-height:80px;
+        padding:14px 20px;
+        flex-wrap:wrap;
+        row-gap:10px;
     }
 
     .nav-links{
-        display:none;
+        gap:8px;
+    }
+
+    .nav-auth-signin{
+        padding:7px 14px;
+        font-size:12px;
     }
 
     .hero{
@@ -801,8 +810,19 @@ a:focus{
    ========================================================================== */
 
 .nav-auth-signin{
-    font-size:14px;
+    display:inline-flex;
+    align-items:center;
+    font-size:13px;
     font-weight:600;
+    padding:8px 16px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    color:var(--text);
+}
+
+.nav-auth-signin:hover{
+    border-color:var(--primary);
+    color:var(--primary);
 }
 
 .nav-auth-widget{

@@ -47,6 +47,16 @@
                 <button
                     type="button"
                     class="navbar-tab profile-tab"
+                    data-toptab="support"
+                    id="navbar-tab-support"
+                    hidden
+                    data-i18n="profile.topTabSupport"
+                >
+                    Support
+                </button>
+                <button
+                    type="button"
+                    class="navbar-tab profile-tab"
                     data-toptab="vip"
                     id="navbar-tab-vip"
                     hidden
@@ -375,8 +385,9 @@
                                 </div>
 
                                 <p class="profile-badges-hint" data-i18n="profile.badgesCurationHint">
-                                    Choose which badges show on your public profile card.
+                                    Choose up to 3 badges to show on your public profile card and in games.
                                 </p>
+                                <p class="profile-badges-hint" id="profile-own-badges-counter"></p>
 
                                 <div id="profile-own-badges-list" class="perfil-badges-list"></div>
                                 <p
@@ -387,6 +398,38 @@
                                 >
                                     You haven't earned any badges yet.
                                 </p>
+
+                                <div id="badges-error" class="auth-message" hidden></div>
+                                <button
+                                    type="button"
+                                    id="badges-save-btn"
+                                    class="btn btn-secondary"
+                                    data-i18n="profile.saveBtn"
+                                >
+                                    Save
+                                </button>
+
+                                <!-- Resgate de badge por código/QR - qualquer
+                                     pessoa logada, VIP ou não (é diferente do
+                                     código de convite de VIP lá em cima).
+                                     Reportado ao vivo: "o vip cria um qr e
+                                     todos que claimarem recebem a badge
+                                     correspondente". O parâmetro ?claim=CODIGO
+                                     na URL preenche e envia isso sozinho -
+                                     ver handleClaimFromUrl em account.js. -->
+                                <form id="claim-badge-code-form" class="vip-badge-form vip-redeem-code-block">
+                                    <label data-i18n="badges.haveClaimCodeLabel">Have a badge code?</label>
+                                    <input type="text" id="claim-badge-code-input" placeholder="XXXX-XXXX" />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-secondary"
+                                        id="claim-badge-code-btn"
+                                        data-i18n="badges.claimCodeBtn"
+                                    >
+                                        Claim Badge
+                                    </button>
+                                    <p id="claim-badge-code-status" class="vip-badge-status"></p>
+                                </form>
                             </section>
 
                             <button
@@ -461,6 +504,45 @@
                     </section>
                 </div>
 
+                <!-- ===== ABA "SUPORTE" - qualquer pessoa logada, não só
+                     VIP. Vários tickets por pessoa (um por assunto),
+                     cada um vira uma conversa tipo chat. Usuário
+                     insere direto via RLS (só a própria linha); admin
+                     passa por Edge Function (ver admin.js). ===== -->
+                <div class="profile-toptab-panel" data-toptab-panel="support" hidden>
+
+                    <section class="card profile-section" id="support-list-view">
+                        <div class="profile-section-header">
+                            <span class="tag" data-i18n="support.title">Support</span>
+                        </div>
+                        <p class="profile-badges-hint" data-i18n="support.hint">Have a question or ran into a problem? Open a ticket and we'll reply here.</p>
+
+                        <form id="support-new-ticket-form" class="vip-badge-form">
+                            <input type="text" id="support-new-subject" data-i18n-placeholder="support.subjectPlaceholder" placeholder="What's this about?" maxlength="200">
+                            <textarea id="support-new-message" data-i18n-placeholder="support.messagePlaceholder" placeholder="Describe your issue..." rows="3" style="width:100%; resize:vertical; margin-top:8px; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-1); color:var(--text); font-family:inherit;"></textarea>
+                            <button type="submit" class="btn btn-primary" style="margin-top:8px;" data-i18n="support.newTicketBtn">Open Ticket</button>
+                            <p id="support-new-ticket-status" class="vip-badge-status"></p>
+                        </form>
+
+                        <div id="support-tickets-list" class="perfil-badges-list" style="margin-top:24px;"></div>
+                        <p id="support-tickets-empty" class="profile-history-detail-empty" data-i18n="support.noTickets" hidden>You haven't opened any tickets yet.</p>
+                    </section>
+
+                    <section class="card profile-section" id="support-chat-view" hidden>
+                        <button type="button" id="support-back-btn" class="btn btn-secondary" style="margin-bottom:16px;" data-i18n="support.backBtn">← Back to tickets</button>
+                        <div class="profile-section-header">
+                            <span class="tag" id="support-chat-subject"></span>
+                        </div>
+                        <div id="support-chat-messages" class="support-chat-messages"></div>
+                        <p id="support-closed-notice" class="profile-history-detail-empty" data-i18n="support.ticketClosed" hidden>This ticket is closed. Open a new one if you need more help.</p>
+                        <form id="support-reply-form" style="display:flex; gap:8px; margin-top:12px;">
+                            <input type="text" id="support-reply-input" data-i18n-placeholder="support.typeMessagePlaceholder" placeholder="Type a message..." style="flex:1; padding:10px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface-1); color:var(--text); font-family:inherit;">
+                            <button type="submit" class="btn btn-primary" data-i18n="support.sendBtn">Send</button>
+                        </form>
+                    </section>
+
+                </div>
+
                 <!-- ===== ABA "VIP" - só aparece se profile.is_vip. Criar
  badge de comunidade (nome único + imagem + formato de
  escudo + cor de fundo) e conceder um badge já existente
@@ -509,26 +591,73 @@
 
                             </div>
 
-                            <div class="vip-purchase-card">
+                            <div class="vip-tiers-showcase" id="vip-tiers-showcase">
 
-                                <div class="vip-purchase-card-header">
-                                    <h2 data-i18n="vip.purchasePlanName">Vip</h2>
-                                    <p data-i18n="vip.purchasePlanDescription">
-                                        Everything you need to shape the community.
-                                    </p>
+                                <div class="vip-tier-card" data-tier="bronze">
+                                    <h2 data-i18n="vip.tierBronzeName">Bronze</h2>
+                                    <div class="vip-purchase-price">
+                                        <span class="vip-purchase-price-amount">$5</span>
+                                        <span class="vip-purchase-price-period" data-i18n="vip.perMonth">/ month</span>
+                                    </div>
+                                    <ul class="vip-purchase-benefits">
+                                        <li><span data-i18n="vip.tierBronzeRoom">Live rooms up to 100 players</span></li>
+                                        <li><span data-i18n="vip.benefitCreateBadges">Create your own community badges</span></li>
+                                        <li><span data-i18n="vip.benefitGrantBadges">Grant badges to any player</span></li>
+                                        <li><span data-i18n="vip.benefitReview">Review community-submitted question packs</span></li>
+                                        <li><span data-i18n="vip.benefitVipTag">VIP tag on your profile</span></li>
+                                    </ul>
+                                    <button type="button" class="btn btn-secondary vip-tier-select-btn" data-tier="bronze" data-i18n="vip.selectTierBtn">Select</button>
                                 </div>
 
-                                <ul class="vip-purchase-benefits">
-                                    <li><span data-i18n="vip.benefitCreateBadges">Create your own community badges</span></li>
-                                    <li><span data-i18n="vip.benefitGrantBadges">Grant badges to any player</span></li>
-                                    <li><span data-i18n="vip.benefitReview">Review community-submitted question packs</span></li>
-                                    <li><span data-i18n="vip.benefitVipTag">VIP tag on your profile</span></li>
-                                </ul>
-
-                                <div class="vip-purchase-price">
-                                    <span class="vip-purchase-price-amount">$5</span>
-                                    <span class="vip-purchase-price-period" data-i18n="vip.perMonth">/ month</span>
+                                <div class="vip-tier-card" data-tier="prata">
+                                    <h2 data-i18n="vip.tierPrataName">Prata</h2>
+                                    <div class="vip-purchase-price">
+                                        <span class="vip-purchase-price-amount">$20</span>
+                                        <span class="vip-purchase-price-period" data-i18n="vip.perMonth">/ month</span>
+                                    </div>
+                                    <ul class="vip-purchase-benefits">
+                                        <li><span data-i18n="vip.tierPrataRoom">Live rooms up to 250 players</span></li>
+                                        <li><span data-i18n="vip.benefitCreateBadges">Create your own community badges</span></li>
+                                        <li><span data-i18n="vip.benefitGrantBadges">Grant badges to any player</span></li>
+                                        <li><span data-i18n="vip.benefitReview">Review community-submitted question packs</span></li>
+                                        <li><span data-i18n="vip.benefitVipTag">VIP tag on your profile</span></li>
+                                    </ul>
+                                    <button type="button" class="btn btn-secondary vip-tier-select-btn" data-tier="prata" data-i18n="vip.selectTierBtn">Select</button>
                                 </div>
+
+                                <div class="vip-tier-card" data-tier="gold">
+                                    <h2 data-i18n="vip.tierGoldName">Gold</h2>
+                                    <div class="vip-purchase-price">
+                                        <span class="vip-purchase-price-amount">$50</span>
+                                        <span class="vip-purchase-price-period" data-i18n="vip.perMonth">/ month</span>
+                                    </div>
+                                    <ul class="vip-purchase-benefits">
+                                        <li><span data-i18n="vip.tierGoldRoom">Live rooms up to 1,000 players</span></li>
+                                        <li><span data-i18n="vip.tierGoldSupport">Priority support</span></li>
+                                        <li><span data-i18n="vip.benefitCreateBadges">Create your own community badges</span></li>
+                                        <li><span data-i18n="vip.benefitGrantBadges">Grant badges to any player</span></li>
+                                        <li><span data-i18n="vip.benefitReview">Review community-submitted question packs</span></li>
+                                        <li><span data-i18n="vip.benefitVipTag">VIP tag on your profile</span></li>
+                                    </ul>
+                                    <button type="button" class="btn btn-secondary vip-tier-select-btn" data-tier="gold" data-i18n="vip.selectTierBtn">Select</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Vira modal por cima dos cartões, não empurra a
+                             página - reportado ao vivo: "melhor quando
+                             clicar no select abrir o popup em cima dos
+                             quadros, não embaixo". Mesmo padrão já usado
+                             no seletor de cor e no envio de tema
+                             (backdrop + painel). -->
+                        <div id="vip-payment-modal" class="vip-color-picker" hidden>
+                            <div class="vip-color-picker-backdrop" id="vip-payment-modal-backdrop"></div>
+                            <div class="vip-color-picker-panel vip-payment-modal-panel">
+                                <button type="button" class="vip-modal-close-btn" id="vip-payment-modal-close-btn" aria-label="Close">&times;</button>
+
+                                <p class="vip-purchase-instructions" id="vip-selected-tier-label"></p>
 
                                 <div class="vip-payment-details">
                                     <div class="vip-payment-row">
@@ -558,7 +687,6 @@
                                 </form>
 
                             </div>
-
                         </div>
 
                     </div>
@@ -581,7 +709,7 @@
                     <nav class="vip-subtabs" role="tablist">
                         <button type="button" class="vip-subtab is-active" data-vip-subtab="badges" data-i18n="vip.subtabBadges">Create & Grant Badges</button>
                         <button type="button" class="vip-subtab" data-vip-subtab="my-badges" data-i18n="vip.subtabMyBadges">My Created Badges</button>
-                        <button type="button" class="vip-subtab" data-vip-subtab="submitted-packs" data-i18n="vip.subtabSubmittedPacks">Submitted Packs</button>
+                        <button type="button" class="vip-subtab" data-vip-subtab="my-packs" data-i18n="vip.subtabMyPacks">My Packs</button>
                         <button type="button" class="vip-subtab" data-vip-subtab="themes" data-i18n="vip.subtabThemes">My Theme</button>
                     </nav>
 
@@ -616,13 +744,19 @@
                                     </select>
 
                                     <label data-i18n="vip.badgeColor">Background color</label>
-                                    <div id="badge-color-palette" class="vip-color-palette" role="group"></div>
+                                    <button type="button" class="vip-theme-hex-row vip-color-trigger" id="badge-color-trigger">
+                                        <span class="vip-theme-hex-swatch" id="badge-color-swatch"></span>
+                                        <span id="badge-color-value">#1a2942</span>
+                                    </button>
 
                                     <label data-i18n="vip.badgeIcon">Icon (optional)</label>
                                     <div id="badge-icon-palette" class="vip-icon-palette" role="group"></div>
 
                                     <label data-i18n="vip.iconColor">Icon color</label>
-                                    <div id="badge-icon-color-palette" class="vip-color-palette" role="group"></div>
+                                    <button type="button" class="vip-theme-hex-row vip-color-trigger" id="badge-icon-color-trigger">
+                                        <span class="vip-theme-hex-swatch" id="badge-icon-color-swatch"></span>
+                                        <span id="badge-icon-color-value">#7c3aed</span>
+                                    </button>
 
                                     <label data-i18n="vip.iconSize">Icon size</label>
                                     <input type="range" id="badge-icon-size" min="15" max="70" value="35" />
@@ -789,14 +923,48 @@
                         </section>
                     </div>
 
-                    <div class="vip-subtab-panel" data-vip-subtab-panel="submitted-packs" hidden>
+                    <!-- ===== ABA "MEUS PACOTES" - reconstruída do zero.
+                         Reportado ao vivo: o desenho anterior misturava
+                         "pacote privado" (só a própria pessoa usa) com
+                         "pacote público" (fila que qualquer VIP via e
+                         podia aprovar - errado, só admin deveria).
+                         Agora é uma coisa só: todo pacote nasce
+                         privado (vip_saved_packs), aparece só pra quem
+                         criou, com botão de enviar pra revisão do
+                         admin ao lado do de apagar. ===== -->
+                    <div class="vip-subtab-panel" data-vip-subtab-panel="my-packs" hidden>
                         <section class="card profile-section">
                             <div class="profile-section-header">
-                                <span class="tag" data-i18n="vip.subtabSubmittedPacks">Submitted Packs</span>
+                                <span class="tag" data-i18n="vip.subtabMyPacks">My Packs</span>
                             </div>
-                            <p class="profile-badges-hint" data-i18n="vip.submittedPacksHint">Question packs submitted by the community, waiting for review.</p>
-                            <div id="vip-submitted-packs-list" class="vip-submitted-packs-list"></div>
-                            <p id="vip-submitted-packs-empty" class="profile-history-detail-empty" data-i18n="vip.submittedPacksEmpty" hidden>No submitted packs right now.</p>
+                            <p class="profile-badges-hint" data-i18n="vip.myPacksHint">Custom question packs you saved - from a game room or created here directly. Only you can see these. Submit one for review if you want it to become public.</p>
+
+                            <form id="create-saved-pack-form" class="vip-badge-form">
+                                <label data-i18n="vip.newPackGame">Games (pick one or more)</label>
+                                <div class="vip-new-pack-games">
+                                    <label class="checkbox-row"><input type="checkbox" id="new-pack-game-showdown" value="show-down" checked><span>Show Down</span></label>
+                                    <label class="checkbox-row"><input type="checkbox" id="new-pack-game-timeattack" value="time-attack"><span>Time Attack</span></label>
+                                    <label class="checkbox-row"><input type="checkbox" id="new-pack-game-questdrop" value="quest-drop"><span>Quest Drop</span></label>
+                                </div>
+                                <p class="vip-submit-pack-hint" id="new-pack-questdrop-note" hidden data-i18n="vip.newPackQuestDropNote">Quest Drop uses a difficulty per question (easy/medium/hard). You can tag each question with DIFICULDADE in the box below - if you leave it out, the pack works in Quest Drop too, but without difficulty balancing: it just draws questions at random.</p>
+
+                                <label data-i18n="vip.newPackName">Pack name</label>
+                                <input type="text" id="new-pack-name" maxlength="200">
+
+                                <label data-i18n="vip.newPackQuestions">Questions</label>
+                                <div class="panel-toolbar" style="margin-bottom:8px;">
+                                    <button type="button" class="btn btn-secondary" id="new-pack-download-template-btn" data-i18n="submit.downloadTemplate">⭳ Download template (.txt)</button>
+                                    <label class="file-label" data-i18n="submit.uploadLabel">Or upload a .txt file</label>
+                                    <input type="file" id="new-pack-file-upload" accept=".txt">
+                                </div>
+                                <textarea id="new-pack-bulk-textarea" rows="6" placeholder="PERGUNTA: ...&#10;RESPOSTAS: A; B; C; D&#10;CORRETA: 1&#10;---" style="width:100%; resize:vertical; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-1); color:var(--text); font-family:monospace; font-size:13px;"></textarea>
+
+                                <button type="submit" class="btn btn-secondary" style="margin-top:8px;" data-i18n="vip.createPackBtn">+ Save Pack</button>
+                                <p id="create-saved-pack-status" class="vip-badge-status"></p>
+                            </form>
+
+                            <div id="vip-my-packs-list" class="perfil-badges-list" style="margin-top:24px;"></div>
+                            <p id="vip-my-packs-empty" class="profile-history-detail-empty" data-i18n="vip.myPacksEmpty" hidden>You haven't saved any packs yet.</p>
                         </section>
                     </div>
 
@@ -1018,11 +1186,27 @@
                 <button type="button" class="vip-modal-close-btn" id="theme-submit-close-btn" aria-label="Close">&times;</button>
                 <p class="vip-theme-submit-title">Submit "<span id="theme-submit-name"></span>" for public review</p>
                 <p class="vip-theme-submit-hint" id="theme-submit-hint-text">Send exactly <strong id="theme-submit-price">10 USDT</strong> (Avalanche C-Chain) to the address below, then paste the transaction hash to confirm.</p>
+                <p class="vip-theme-submit-hint" id="theme-submit-disclaimer" data-i18n="vip.themeSubmitDisclaimer">Heads up: the team may reject or permanently remove a submitted theme even after payment - for example if it violates guidelines. This $10 isn't refunded if that happens.</p>
                 <select id="theme-submit-network-token-select" class="vip-network-select"></select>
                 <div class="vip-theme-submit-address" id="theme-submit-treasury-address"></div>
                 <input type="text" id="theme-submit-tx-hash" placeholder="0x...">
                 <button type="button" class="btn btn-primary" id="theme-submit-verify-btn" data-i18n="vip.themeSubmitVerifyBtn">Verify Payment</button>
                 <p id="theme-submit-status" class="vip-badge-status"></p>
+            </div>
+        </div>
+
+        <!-- Modal de gerenciar códigos de resgate de badge - bug real
+             reportado ao vivo com foto: o painel antigo ficava
+             espremido dentro da coluna estreita do card do badge
+             (~130px), causando o QR e o texto quebrarem tudo torto.
+             Vira modal de verdade agora, com largura própria, mesmo
+             padrão dos outros dois modais acima. -->
+        <div id="badge-claim-modal" class="vip-color-picker" hidden>
+            <div class="vip-color-picker-backdrop" id="badge-claim-modal-backdrop"></div>
+            <div class="vip-color-picker-panel vip-badge-claim-modal-panel">
+                <button type="button" class="vip-modal-close-btn" id="badge-claim-modal-close-btn" aria-label="Close">&times;</button>
+                <p class="vip-theme-submit-title" data-i18n="vip.manageClaimCodesTitle">Claim QR codes</p>
+                <div id="badge-claim-modal-body"></div>
             </div>
         </div>
     </body>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claim your badge - Nodra</title>
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/account.css">
+<style>
+    /* Só o necessário pra essa tela específica - o resto do visual
+       (badge, cores, fonte) já vem de account.css, reaproveitado de
+       propósito (mesma pasta /account/, não é cross-import entre
+       apps diferentes). Reportado ao vivo: "uma tela de início de
+       partida, mas só com o qr e a imagem da badge e a descrição" -
+       tela cheia, centralizada, sem o resto do perfil por perto. */
+    body{
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:24px;
+    }
+    .claim-card{
+        max-width:420px;
+        width:100%;
+        text-align:center;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:16px;
+    }
+    .claim-logo{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        margin-bottom:16px;
+    }
+    .claim-badge-preview{
+        margin:8px 0;
+    }
+    .claim-badge-preview .badge{
+        width:140px;
+        height:151px;
+    }
+    .claim-badge-preview .badge--small{
+        width:140px;
+        height:151px;
+    }
+    .claim-title{
+        font-family:var(--font-heading);
+        font-size:26px;
+        text-transform:uppercase;
+        margin:0;
+    }
+    .claim-description{
+        color:var(--text-secondary);
+        font-size:15px;
+        line-height:1.6;
+        margin:0;
+    }
+    .claim-status{
+        margin-top:8px;
+        font-size:14px;
+        color:var(--text-secondary);
+    }
+    .claim-status.is-success{
+        color:var(--success, #28C76F);
+        font-weight:700;
+    }
+    .claim-status.is-error{
+        color:var(--danger, #FF5E7A);
+    }
+    .claim-skeleton{
+        width:140px;
+        height:151px;
+        border-radius:20px;
+        background:var(--surface-2);
+        animation:claim-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes claim-pulse{
+        0%, 100%{ opacity:.4; }
+        50%{ opacity:.8; }
+    }
+</style>
+</head>
+<body>
+
+<div class="claim-card">
+
+    <a href="../index.html" class="claim-logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div id="claim-badge-preview" class="claim-badge-preview">
+        <div class="claim-skeleton"></div>
+    </div>
+
+    <h1 class="claim-title" id="claim-badge-name">Loading...</h1>
+    <p class="claim-description" id="claim-badge-description"></p>
+
+    <p class="claim-status" id="claim-status"></p>
+
+    <a href="index.html" class="btn btn-primary" id="claim-login-btn" hidden>Log in to claim</a>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/claim.js"></script>
+
+</body>
+</html>

@@ -2,134 +2,456 @@
    HOME.CSS
    Styles specific to the Nodra ecosystem Home (/).
 
-   Reuse-first check performed before writing this file:
-   - .navbar, .hero*, .hero-dashboard/.dashboard-*, .footer*, .tag,
-     .section-title, .section-description, .glow, .reveal, .card,
-     .btn*, .mission/.mission-box all already exist in components.css
-     and are reused as-is (this file only adds a spacing wrapper,
-     .home-mission, around the reused .mission-box).
-   - Nothing here duplicates the Academy's .modules/.module or
-     .next-grid/.next-card: the 6 ecosystem verticals are a distinct
-     concept (products, not lessons or comparisons) and get their own
-     .vertical-card, built on top of the shared .card so the box
-     styling (surface, border, radius, hover) is not duplicated.
+   Two themes now, toggled by a button in the navbar (persisted via
+   localStorage, see home.js): dark (Nodra's standard colors,
+   default) and light (the warm cream-paper look, opt-in via
+   [data-theme="light"] on <html>). Everything below is written
+   dark-first; the light overrides sit in one block at the end so
+   the two never interleave and drift out of sync.
+
+   The logo's blue square is brand, not theme - it never changes
+   color in either mode (reported live: "não pode ficar amarelo").
    ========================================================================== */
 
-/* ==========================================================================
-   ECOSYSTEM VERTICALS GRID
-   ========================================================================== */
-
-.verticals{
-    padding:140px 0;
+:root{
+    --home-bg:var(--background,#06080D);
+    --home-surface:#0d1420;
+    --home-border:var(--border,#223246);
+    --home-ink:var(--text,#EDF4FB);
+    --home-graphite:var(--text-secondary,#A3B3C6);
+    --home-accent:var(--primary,#4DA6FF);
+    --home-font:var(--font-body,'Inter',sans-serif);
+    --home-heading-font:var(--font-heading,'Barlow Condensed',sans-serif);
 }
 
-.verticals-header{
-    max-width:760px;
-    margin:0 auto 72px;
+/* ==========================================================================
+   SECTION TAG — plain small-caps label, no number, no pill border
+   (reported live: the numbered badge was dropped in favor of just
+   the title text).
+   ========================================================================== */
+
+.section-tag{
+    display:inline-block;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--home-accent);
+    margin-bottom:32px;
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.hero{
+    min-height:auto;
+    padding:96px 0 64px;
     text-align:center;
 }
 
-.verticals-header h2{
-    font-family:var(--font-heading);
-    font-size:64px;
-    text-transform:uppercase;
-    margin:18px 0;
+.hero .container{
+    max-width:800px;
 }
 
-.verticals-header p{
-    color:var(--text-secondary);
-    line-height:1.9;
-    font-size:18px;
-}
-
-.verticals-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:24px;
-}
-
-.vertical-card{
+.hero-content{
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
-    min-height:220px;
+    align-items:center;
+    max-width:none;
+    margin:0 auto;
 }
 
-.vertical-card__icon{
-    width:44px;
-    height:44px;
+.hero-title{
+    font-family:var(--home-heading-font);
+    font-weight:700;
+    font-size:clamp(2.75rem,6vw,4.25rem);
+    letter-spacing:-.01em;
+    line-height:1.1;
+    text-transform:uppercase;
+    color:var(--home-ink);
+    margin:0 0 16px;
+}
+
+.hero-description{
+    font-size:18px;
+    line-height:1.6;
+    color:var(--home-graphite);
+    max-width:520px;
+    margin:0;
+}
+
+/* ==========================================================================
+   PRODUCTS
+   ========================================================================== */
+
+.products{
+    padding:64px 0;
+    text-align:center;
+}
+
+.products .section-tag{
+    margin-bottom:40px;
+}
+
+.products-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+    text-align:left;
+}
+
+.feature-card{
+    position:relative;
+    background:var(--home-surface);
+    border:1px solid var(--home-border);
+    border-radius:20px;
+    padding:32px;
+}
+
+.feature-card__stat{
+    display:inline-block;
+    font-family:var(--home-heading-font);
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--home-accent);
+    margin-bottom:16px;
+}
+
+.feature-card h3{
+    font-family:var(--home-heading-font);
+    font-weight:700;
+    font-size:26px;
+    text-transform:uppercase;
+    color:var(--home-ink);
+    margin:0 0 12px;
+}
+
+.feature-card h4{
+    font-family:var(--home-heading-font);
+    font-weight:700;
+    font-size:18px;
+    text-transform:uppercase;
+    color:var(--home-ink);
+    margin:0 0 8px;
+}
+
+.feature-card p{
+    font-size:16px;
+    line-height:1.6;
+    color:var(--home-graphite);
+    margin:0 0 24px;
+}
+
+.ghost-btn{
+    display:inline-block;
+    padding:12px 24px;
+    border:1px solid var(--home-border);
+    border-radius:999px;
+    color:var(--home-ink);
+    font-size:14px;
+    font-weight:700;
+}
+
+.ghost-btn:hover{
+    border-color:var(--home-accent);
+    color:var(--home-accent);
+}
+
+/* ==========================================================================
+   WHY
+   ========================================================================== */
+
+.why{
+    padding:64px 0;
+    text-align:center;
+}
+
+.why .section-tag{
+    margin-bottom:32px;
+}
+
+.why-content{
+    max-width:640px;
+    margin:0 auto;
+}
+
+.why-title{
+    font-family:var(--home-heading-font);
+    font-weight:700;
+    font-size:clamp(1.75rem,3.5vw,2.25rem);
+    letter-spacing:-.01em;
+    line-height:1.3;
+    text-transform:uppercase;
+    color:var(--home-ink);
+    margin:0 0 24px;
+}
+
+.why-content p{
+    color:var(--home-graphite);
+    font-size:18px;
+    line-height:1.6;
+    margin:0 0 20px;
+}
+
+/* ==========================================================================
+   CTA BLOCK
+   ========================================================================== */
+
+.cta-block{
+    padding:64px 0 96px;
+    text-align:center;
+}
+
+.cta-content{
+    max-width:520px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.avatar-tile{
+    width:48px;
+    height:48px;
     border-radius:12px;
-    background:rgba(77,166,255,.12);
-    color:var(--primary);
+    background:var(--home-surface);
+    border:1px solid var(--home-border);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-family:var(--font-heading);
-    font-weight:900;
-    font-size:18px;
-    margin-bottom:20px;
+    font-family:var(--home-heading-font);
+    font-weight:700;
+    font-size:20px;
+    color:var(--home-ink);
+    margin-bottom:24px;
 }
 
-.vertical-card h3{
-    font-family:var(--font-heading);
-    font-size:30px;
+.cta-content h2{
+    font-family:var(--home-heading-font);
+    font-weight:700;
+    font-size:clamp(2rem,4vw,2.75rem);
+    letter-spacing:-.01em;
     text-transform:uppercase;
-    margin-bottom:12px;
+    color:var(--home-ink);
+    margin:0 0 16px;
 }
 
-.vertical-card p{
-    color:var(--text-secondary);
-    line-height:1.75;
-    font-size:15px;
+.cta-content p{
+    color:var(--home-graphite);
+    font-size:18px;
+    line-height:1.6;
+    margin:0 0 32px;
 }
 
-.vertical-card__footer{
+.sunshine-btn{
+    display:inline-block;
+    background:linear-gradient(160deg,#78BEFF,var(--home-accent));
+    color:#06080D;
+    font-family:var(--home-font);
+    font-weight:700;
+    font-size:16px;
+    padding:16px 32px;
+    border-radius:999px;
+    border:none;
+}
+
+.sunshine-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* ==========================================================================
+   THEME TOGGLE BUTTON — sun/moon switch in the navbar
+   ========================================================================== */
+
+.toggle-group{
     display:flex;
     align-items:center;
-    margin-top:28px;
+    gap:6px;
 }
 
-.vertical-card__status{
-    border:1px solid var(--border);
-    padding:6px 12px;
-    border-radius:999px;
+.theme-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    border:1px solid var(--home-border);
+    background:none;
+    color:var(--home-ink);
+    cursor:pointer;
+    font-size:16px;
+}
+
+#lang-toggle{
     font-size:12px;
-    color:var(--text-muted);
-}
-
-.vertical-card__status--live{
-    color:var(--primary);
-    border-color:var(--border-light);
-}
-
-.vertical-card__link{
-    color:var(--primary);
     font-weight:700;
-    transition:.25s;
 }
 
-.vertical-card__link:hover{
-    transform:translateX(4px);
+.theme-toggle:hover{
+    border-color:var(--home-accent);
 }
 
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
 
-@media (max-width:1024px){
-
-    .verticals-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
 @media (max-width:768px){
 
-    .verticals-grid{
+    .hero{
+        padding-top:120px;
+    }
+
+    .products-grid{
         grid-template-columns:1fr;
     }
 
-    .verticals-header h2{
-        font-size:44px;
+    .theme-toggle{
+        width:32px;
+        height:32px;
+        font-size:14px;
     }
+}
+
+/* ==========================================================================
+   LIGHT THEME — opt-in via [data-theme="light"] on <html>, toggled
+   by the button above. Warm cream-paper canvas, ink black text,
+   hairline borders, single yellow accent rationed to the one CTA
+   button. The logo's blue square is excluded on purpose - it is
+   brand, not theme, and never turns yellow.
+   ========================================================================== */
+
+html[data-theme="light"] body{
+    background:#f8f5ed;
+    color:#000000;
+}
+
+html[data-theme="light"] .navbar{
+    background:#f8f5ed;
+    border-bottom:1px solid #000000;
+}
+
+html[data-theme="light"] .navbar .logo-text,
+html[data-theme="light"] .nav-links a{
+    color:#000000;
+}
+
+/* Username/login chip - o bug real que fazia o nome sumir: usava
+   var(--text) (quase branco, pensado pro fundo escuro), invisível
+   em cima do creme. Corrigido só aqui dentro do tema claro. */
+html[data-theme="light"] .nav-auth-trigger{
+    color:#000000;
+    background:transparent;
+    border:1px solid #000000;
+}
+
+html[data-theme="light"] .nav-auth-name{
+    color:#000000;
+}
+
+html[data-theme="light"] .theme-toggle{
+    border-color:#000000;
+    color:#000000;
+}
+
+html[data-theme="light"] .section-tag{
+    color:#7a5c00;
+}
+
+html[data-theme="light"] .hero-title{
+    font-family:'DM Sans','Inter',sans-serif;
+    font-weight:500;
+    text-transform:none;
+    letter-spacing:-.016em;
+    color:#000000;
+}
+
+html[data-theme="light"] .hero-description{
+    color:#707070;
+}
+
+html[data-theme="light"] .feature-card{
+    background:#f8f5ed;
+    border-color:#000000;
+}
+
+html[data-theme="light"] .feature-card__stat{
+    color:#7a5c00;
+}
+
+html[data-theme="light"] .feature-card h3,
+html[data-theme="light"] .feature-card h4{
+    font-family:'DM Sans','Inter',sans-serif;
+    font-weight:500;
+    text-transform:none;
+    color:#000000;
+}
+
+html[data-theme="light"] .feature-card p{
+    color:#707070;
+}
+
+html[data-theme="light"] .ghost-btn{
+    border-color:#000000;
+    color:#000000;
+    font-weight:500;
+}
+
+html[data-theme="light"] .ghost-btn:hover{
+    background:#000000;
+    color:#f8f5ed;
+}
+
+html[data-theme="light"] .why-title{
+    font-family:'DM Sans','Inter',sans-serif;
+    font-weight:500;
+    text-transform:none;
+    letter-spacing:-.016em;
+    color:#000000;
+}
+
+html[data-theme="light"] .why-content p{
+    color:#707070;
+}
+
+html[data-theme="light"] .avatar-tile{
+    background:#f8f5ed;
+    border-color:#000000;
+    color:#000000;
+    font-family:'DM Sans','Inter',sans-serif;
+}
+
+html[data-theme="light"] .cta-content h2{
+    font-family:'DM Sans','Inter',sans-serif;
+    font-weight:500;
+    text-transform:none;
+    letter-spacing:-.016em;
+    color:#000000;
+}
+
+html[data-theme="light"] .cta-content p{
+    color:#707070;
+}
+
+html[data-theme="light"] .sunshine-btn{
+    background:#ffda6e;
+    color:#000000;
+    font-family:'DM Sans','Inter',sans-serif;
+    border:1px solid #000000;
+}
+
+html[data-theme="light"] .footer{
+    background:#f8f5ed;
+    border-top:1px solid #000000;
+}
+
+html[data-theme="light"] .footer *{
+    color:#000000 !important;
+}
+
+html[data-theme="light"] .footer-links a{
+    color:#707070 !important;
 }

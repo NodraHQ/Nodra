@@ -1,117 +1,263 @@
 /* ==========================================================================
    ABOUT.CSS
-   Styles specific to the Nodra ecosystem About page (/about/).
 
-   Reuse-first check performed before writing this file:
-   - .navbar, .hero*, .footer*, .tag, .card, .glow, .reveal, .btn*,
-     .mission/.mission-box, .section-title, .section-description all
-     already exist in components.css and are reused as-is.
-   - .vertical-card__status (badge pill) already exists in home.css and
-     is reused as-is for the roadmap's status badges.
-   - Nothing here duplicates the Academy's .next-grid/.next-card: this
-     file defines its own .principle-card and .roadmap-item because
-     their content shape (a title + one short paragraph, no button, no
-     eyebrow) doesn't match .next-card closely enough to force a reuse.
+   Reconstrução completa - a página deixou de ser "missão/princípios"
+   genérica e virou documentação técnica de tudo que existe na
+   plataforma hoje (jogos, Academy, badges, VIP, temas). Estrutura
+   emprestada da landing do NDQuest (barra lateral + conteúdo), cores
+   continuam as padrão da Nodra (azul), não as do NDQuest - só a
+   ESTRUTURA foi reaproveitada, como pedido.
    ========================================================================== */
 
-/* ==========================================================================
-   1. SECTION SHELL (mission / principles / roadmap share one rhythm)
-   ========================================================================== */
-
-.about-section{
-    padding:96px 0;
+.docs-header{
+    padding:128px 0 32px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
 }
 
-.about-section__header{
-    max-width:640px;
-    margin:0 0 48px;
-}
-
-/* ==========================================================================
-   2. PRINCIPLES GRID
-   ========================================================================== */
-
-.principles-grid{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:24px;
-}
-
-.principle-card{
-    padding:32px;
-}
-
-.principle-card h3{
+.docs-header h1{
     font-family:var(--font-heading);
+    font-size:40px;
     text-transform:uppercase;
-    font-size:20px;
-    margin-bottom:12px;
+    margin:0 0 12px;
 }
 
-.principle-card p{
+.docs-header p{
     color:var(--text-secondary);
-    line-height:1.7;
-    font-size:15px;
+    font-size:16px;
+    max-width:560px;
+    margin:0 auto;
 }
 
-/* ==========================================================================
-   3. ROADMAP LIST
-   ========================================================================== */
+.docs-layout{
+    display:flex;
+    align-items:flex-start;
+    gap:40px;
+    padding:48px 0 96px;
+}
 
-.roadmap-list{
+/* --------------------------------------------------------
+   SIDEBAR — mesma estrutura da barra lateral do NDQuest
+   (item reto, borda colorida do lado quando ativo), com um
+   nível a mais: NDQuest expande pra mostrar os 5 jogos como
+   subitens recuados.
+   -------------------------------------------------------- */
+
+.docs-sidebar{
     display:flex;
     flex-direction:column;
-    gap:16px;
-}
-
-.roadmap-item{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:24px;
-    padding:28px 32px;
-}
-
-.roadmap-item__body h3{
-    font-family:var(--font-heading);
-    text-transform:uppercase;
-    font-size:18px;
-    margin-bottom:8px;
-}
-
-.roadmap-item__body p{
-    color:var(--text-secondary);
-    line-height:1.7;
-    font-size:15px;
-    max-width:56ch;
-}
-
-.roadmap-item__status{
+    gap:2px;
+    width:220px;
     flex-shrink:0;
-    border:1px solid var(--border);
-    padding:6px 12px;
-    border-radius:999px;
-    font-size:12px;
-    color:var(--text-muted);
+    position:sticky;
+    top:24px;
 }
 
-.roadmap-item__status--live{
+.docs-nav-item{
+    display:block;
+    width:100%;
+    text-align:left;
+    padding:10px 14px;
+    border-radius:8px;
+    border:none;
+    border-left:3px solid transparent;
+    background:none;
+    color:var(--text-secondary);
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.docs-nav-item.is-active{
+    background:var(--surface-1);
+    border-left-color:var(--primary);
     color:var(--primary);
-    border-color:var(--border-light);
 }
 
-/* ==========================================================================
-   4. RESPONSIVE
-   ========================================================================== */
+.docs-nav-item:not(.is-active):hover{
+    background:var(--background-secondary);
+    color:var(--text);
+}
 
-@media (max-width: 900px){
-    .principles-grid{
-        grid-template-columns:1fr;
-    }
+.docs-nav-item__caret{
+    float:right;
+    font-size:11px;
+    transition:transform .2s ease;
+}
 
-    .roadmap-item{
+.docs-nav-item.is-open .docs-nav-item__caret{
+    transform:rotate(90deg);
+}
+
+.docs-nav-children{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+    padding-left:14px;
+    margin-bottom:4px;
+}
+
+.docs-nav-child{
+    display:block;
+    width:100%;
+    text-align:left;
+    padding:8px 14px;
+    border-radius:6px;
+    border:none;
+    border-left:2px solid var(--border);
+    background:none;
+    color:var(--text-muted);
+    font-family:var(--font-body);
+    font-weight:500;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.docs-nav-child.is-active{
+    border-left-color:var(--primary);
+    color:var(--primary);
+}
+
+.docs-nav-child:not(.is-active):hover{
+    color:var(--text);
+}
+
+@media (max-width:900px){
+    .docs-layout{
         flex-direction:column;
-        align-items:flex-start;
-        gap:12px;
     }
+    .docs-sidebar{
+        flex-direction:row;
+        flex-wrap:wrap;
+        width:100%;
+        position:static;
+    }
+    .docs-nav-children{
+        width:100%;
+        padding-left:0;
+        flex-direction:row;
+        flex-wrap:wrap;
+    }
+}
+
+/* --------------------------------------------------------
+   CONTENT
+   -------------------------------------------------------- */
+
+.docs-content{
+    flex:1;
+    min-width:0;
+}
+
+.docs-panel h2{
+    font-family:var(--font-heading);
+    font-size:32px;
+    text-transform:uppercase;
+    margin:0 0 8px;
+}
+
+.docs-panel > p.docs-lead{
+    color:var(--text-secondary);
+    font-size:16px;
+    line-height:1.7;
+    max-width:70ch;
+    margin:0 0 40px;
+}
+
+.docs-panel h3{
+    font-family:var(--font-heading);
+    font-size:22px;
+    text-transform:uppercase;
+    color:var(--text);
+    margin:40px 0 12px;
+}
+
+.docs-panel h3:first-of-type{
+    margin-top:0;
+}
+
+.docs-panel p{
+    color:var(--text-secondary);
+    line-height:1.75;
+    font-size:15px;
+    max-width:70ch;
+    margin:0 0 16px;
+}
+
+.docs-panel ul,
+.docs-panel ol{
+    color:var(--text-secondary);
+    line-height:1.75;
+    font-size:15px;
+    max-width:70ch;
+    margin:0 0 16px;
+    padding-left:22px;
+}
+
+.docs-panel li{
+    margin-bottom:6px;
+}
+
+.docs-panel li strong,
+.docs-panel p strong{
+    color:var(--text);
+}
+
+.docs-panel code{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:1px 6px;
+    font-size:13px;
+    color:var(--primary-light);
+}
+
+/* Tabela de números (preço, prazo, limite) - o jeito mais direto de
+   mostrar valor exato sem esconder dentro de um parágrafo. */
+.docs-facts{
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    max-width:70ch;
+    margin:0 0 32px;
+}
+
+.docs-facts__row{
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    padding:12px 18px;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+}
+
+.docs-facts__row:last-child{
+    border-bottom:none;
+}
+
+.docs-facts__row dt{
+    color:var(--text-secondary);
+}
+
+.docs-facts__row dd{
+    margin:0;
+    color:var(--text);
+    font-weight:600;
+    text-align:right;
+}
+
+.docs-callout{
+    border-left:3px solid var(--warning);
+    background:var(--surface-1);
+    border-radius:0 8px 8px 0;
+    padding:14px 18px;
+    font-size:14px;
+    color:var(--text-secondary);
+    max-width:70ch;
+    margin:0 0 24px;
+}
+
+.docs-callout strong{
+    color:var(--text);
 }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="submit.meta.title">Submit Your Questions — NDQuest</title>
+<title data-i18n="submit.meta.title">Submit Your Questions - NDQuest</title>
 <meta name="description" content="Submit your own question pack to use in NDQuest games.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,25 +55,44 @@
             <div class="submit-grid">
                 <div class="field">
                     <label for="pack-name-pt" data-i18n="submit.labels.namePt">Pack name (Portuguese)</label>
-                    <input type="text" id="pack-name-pt" required maxlength="200" placeholder="Ex: Minha Empresa 2026">
+                    <input type="text" id="pack-name-pt" maxlength="200" placeholder="Ex: Minha Empresa 2026">
                 </div>
                 <div class="field">
                     <label for="pack-name-en" data-i18n="submit.labels.nameEn">Pack name (English)</label>
-                    <input type="text" id="pack-name-en" required maxlength="200" placeholder="Ex: My Company 2026">
+                    <input type="text" id="pack-name-en" maxlength="200" placeholder="Ex: My Company 2026">
                 </div>
-                <div class="field">
+                <div class="field" id="submitter-fields-anonymous">
                     <label for="submitter-name" data-i18n="submit.labels.yourName">Your name</label>
                     <input type="text" id="submitter-name" required maxlength="200">
                 </div>
-                <div class="field">
+                <div class="field" id="submitter-email-anonymous">
                     <label for="submitter-email" data-i18n="submit.labels.yourEmail">Your email</label>
                     <input type="email" id="submitter-email" required maxlength="320">
                 </div>
             </div>
+            <p class="submit-hint" id="submitter-logged-in-note" hidden></p>
+            <p class="submit-hint" data-i18n="submit.languageOptionalHint">You only need to fill in one language - Portuguese or English. Leave the other blank and we'll use the same text for both.</p>
 
             <hr class="submit-divider">
 
-            <h2 data-i18n="submit.addQuestion">Add a Question</h2>
+            <h2 data-i18n="submit.bulkTitle">Add Questions in Bulk</h2>
+            <p class="submit-hint" data-i18n="submit.bulkHint">Paste multiple questions at once, or upload a .txt file in the same format. Difficulty and language are both optional - defaults to medium difficulty, and one language is enough.</p>
+
+            <div class="panel-toolbar">
+                <button type="button" class="btn btn-secondary" id="download-template-btn" data-i18n="submit.downloadTemplate">⭳ Download template (.txt)</button>
+                <label class="file-label" data-i18n="submit.uploadLabel">Or upload a .txt file</label>
+                <input type="file" id="file-upload" accept=".txt">
+            </div>
+
+            <textarea id="bulk-textarea" placeholder="DIFICULDADE: facil&#10;PERGUNTA: ...&#10;RESPOSTAS: A; B; C; D&#10;CORRETA: 1&#10;---"></textarea>
+
+            <button type="button" class="btn btn-secondary" id="parse-btn" data-i18n="submit.parseBtn">Process Questions</button>
+
+            <div class="parse-errors" id="parse-errors" hidden></div>
+
+            <hr class="submit-divider">
+
+            <h2 data-i18n="submit.addQuestion">Add a Question One at a Time</h2>
 
             <div class="field">
                 <label for="q-difficulty" data-i18n="submit.labels.difficulty">Difficulty</label>
@@ -95,7 +114,7 @@
                 </div>
             </div>
 
-            <p class="submit-hint" data-i18n="submit.answerHint">Fill in all 4 answers for both languages, then mark which one is correct.</p>
+            <p class="submit-hint" data-i18n="submit.answerHint">Fill in the 4 answers in at least one language, then mark which one is correct.</p>
 
             <div class="submit-answers" id="answers-pt">
                 <input type="text" class="answer-input" data-lang="pt" data-index="0" placeholder="Resposta 1 (PT)">

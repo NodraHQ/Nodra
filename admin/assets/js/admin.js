@@ -115,9 +115,11 @@ function initTabs() {
             if (!loaded[target]) {
                 loaded[target] = true;
                 if (target === "users") loadUsers();
+                if (target === "vip-activity") loadVipActivity();
                 if (target === "badges") loadAllBadges();
                 if (target === "packs") loadSubmittedPacks();
                 if (target === "themes") loadSubmittedThemes();
+                if (target === "support") loadSupportAdminTickets();
                 if (target === "analytics") loadAnalytics();
             }
 
@@ -132,6 +134,8 @@ function initTabs() {
 
 document.getElementById("rooms-refresh-btn")?.addEventListener("click", loadRooms);
 
+let allRoomsCache = [];
+
 async function loadRooms() {
 
     const tbody = document.getElementById("rooms-tbody");
@@ -140,27 +144,66 @@ async function loadRooms() {
     try {
 
         const { rooms } = await callAdminFunction("admin-list-rooms");
-
-        tbody.innerHTML = "";
-        emptyEl.hidden = rooms.length > 0;
-
-        for (const room of rooms) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${escapeHtml(room.game)}</td>
-                <td>${escapeHtml(room.room_code)}</td>
-                <td>${escapeHtml(room.host_name)}</td>
-                <td>${escapeHtml(room.status)}</td>
-                <td>${formatDate(room.created_at)}</td>
-            `;
-            tbody.appendChild(tr);
-        }
+        allRoomsCache = rooms;
+        renderFilteredRooms();
 
     } catch (err) {
         console.error("Falha ao carregar salas:", err);
     }
 
 }
+
+// Filtro de jogo/status/jogador - reportado ao vivo: "poder filtrar
+// as partidas no live rooms por jogo, aberta ou fechada, e poder
+// pesquisar o nome de player". Busca tudo uma vez só (até 100 salas
+// por jogo, já vem com os jogadores) e filtra aqui no navegador -
+// não justifica ida e volta no servidor pra um volume desse tamanho.
+function renderFilteredRooms() {
+
+    const tbody = document.getElementById("rooms-tbody");
+    const emptyEl = document.getElementById("rooms-empty");
+
+    const gameFilter = document.getElementById("rooms-game-filter").value;
+    const statusFilter = document.getElementById("rooms-status-filter").value;
+    const playerSearch = document.getElementById("rooms-player-search").value.trim().toLowerCase();
+
+    const filtered = allRoomsCache.filter((room) => {
+        if (gameFilter && room.game !== gameFilter) return false;
+        if (statusFilter === "closed" && room.status !== "closed") return false;
+        if (statusFilter === "open" && room.status === "closed") return false;
+        if (playerSearch) {
+            const hostMatches = (room.host_name || "").toLowerCase().includes(playerSearch);
+            const playerMatches = (room.players || []).some((p) => (p || "").toLowerCase().includes(playerSearch));
+            if (!hostMatches && !playerMatches) return false;
+        }
+        return true;
+    });
+
+    tbody.innerHTML = "";
+    emptyEl.hidden = filtered.length > 0;
+
+    for (const room of filtered) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${escapeHtml(room.game)}</td>
+            <td>${escapeHtml(room.room_code)}</td>
+            <td>${escapeHtml(room.host_name)}</td>
+            <td>${escapeHtml(room.status)}</td>
+            <td>${formatDate(room.created_at)}</td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+}
+
+document.getElementById("rooms-game-filter")?.addEventListener("change", renderFilteredRooms);
+document.getElementById("rooms-status-filter")?.addEventListener("change", renderFilteredRooms);
+
+let roomsSearchTimeout = null;
+document.getElementById("rooms-player-search")?.addEventListener("input", () => {
+    clearTimeout(roomsSearchTimeout);
+    roomsSearchTimeout = setTimeout(renderFilteredRooms, 250);
+});
 
 // ==================================================================
 // USUÁRIOS
@@ -237,7 +280,49 @@ async function loadAnalytics() {
 
         document.getElementById("stat-total-users").textContent = stats.totalUsers;
         document.getElementById("stat-total-rooms").textContent = stats.totalRooms;
-        document.getElementById("stat-badges-minted").textContent = stats.badgesMinted;
+        document.getElementById("stat-match-history").textContent = stats.matchHistoryCount;
+
+        const activePlayersEl = document.getElementById("stat-active-players");
+        const activePlayersCard = document.getElementById("stat-active-players-card");
+        activePlayersEl.textContent = stats.activePlayersCount;
+        // Aviso aos 350 (70% do teto), vermelho aos 420 (bloqueio de
+        // verdade nos jogos) - reportado ao vivo: "vamos implementar
+        // sim, isso é super importante".
+        activePlayersCard.style.borderColor = stats.activePlayersCount >= 420
+            ? "#ff5e7a"
+            : stats.activePlayersCount >= 350
+                ? "#ffc857"
+                : "";
+
+        document.getElementById("stat-active-vips").textContent = stats.activeVips;
+        document.getElementById("stat-active-vips-bronze").textContent = stats.activeVipsBronze;
+        document.getElementById("stat-active-vips-prata").textContent = stats.activeVipsPrata;
+        document.getElementById("stat-active-vips-gold").textContent = stats.activeVipsGold;
+        document.getElementById("stat-vips-purchased").textContent = stats.vipsPurchasedCount;
+        document.getElementById("stat-vips-purchased-bronze").textContent = stats.vipsPurchasedBronze;
+        document.getElementById("stat-vips-purchased-prata").textContent = stats.vipsPurchasedPrata;
+        document.getElementById("stat-vips-purchased-gold").textContent = stats.vipsPurchasedGold;
+        document.getElementById("stat-vip-codes-redeemed").textContent = stats.vipCodesRedeemedCount;
+
+        document.getElementById("stat-badges-created").textContent = stats.badgesCreatedCount;
+        document.getElementById("stat-badges-granted").textContent = stats.badgesGrantedCount;
+        document.getElementById("stat-academy-graduates").textContent = stats.academyGraduatesCount;
+        document.getElementById("stat-badges-minted").textContent = stats.badgesMintedOnchain;
+
+        document.getElementById("stat-public-themes").textContent = stats.publicThemesCount;
+        document.getElementById("stat-private-themes").textContent = stats.privateThemesCount;
+        document.getElementById("stat-pending-themes").textContent = stats.pendingThemesCount;
+
+        document.getElementById("stat-private-packs").textContent = stats.privatePacksCount;
+        document.getElementById("stat-approved-packs").textContent = stats.approvedPacksCount;
+        document.getElementById("stat-pending-packs").textContent = stats.pendingPacksCount;
+
+        document.getElementById("stat-tickets-open").textContent = stats.supportTicketsOpenCount;
+        document.getElementById("stat-tickets-closed").textContent = stats.supportTicketsClosedCount;
+
+        const generatedLabel = window.nodraTranslator?.translations?.["analytics.generatedAt"] || "Report generated:";
+        document.getElementById("analytics-generated-at").textContent =
+            `${generatedLabel} ${formatDate(stats.generatedAt)}`;
 
         renderSignupsChart(stats.signupsByDay);
 
@@ -246,6 +331,19 @@ async function loadAnalytics() {
     }
 
 }
+
+document.getElementById("analytics-refresh-btn")?.addEventListener("click", loadAnalytics);
+
+// Exportar relatório - reportado ao vivo: "uma forma simples de
+// salvar como pdf ou algo fácil de usar como provas". Em vez de
+// gerar PDF por biblioteca (mais uma dependência, mais peso, mais
+// chance de formatar estranho), usa o "Imprimir" nativo do
+// navegador - todo navegador já sabe salvar isso como PDF sozinho, e
+// o CSS de impressão (ver admin.css, @media print) esconde a navbar
+// e as abas, deixando só o relatório limpo.
+document.getElementById("analytics-export-btn")?.addEventListener("click", () => {
+    window.print();
+});
 
 function renderSignupsChart(signupsByDay) {
 
@@ -300,6 +398,7 @@ document.getElementById("generate-vip-code-form")?.addEventListener("submit", as
     const resultEl = document.getElementById("vip-code-result");
     resultEl.textContent = "...";
 
+    const tier = document.getElementById("vip-code-tier").value;
     const vipDays = Number(document.getElementById("vip-code-days").value) || 30;
     const maxUses = Number(document.getElementById("vip-code-max-uses").value) || 1;
     const expiresInDaysRaw = document.getElementById("vip-code-expires-in").value;
@@ -309,7 +408,7 @@ document.getElementById("generate-vip-code-form")?.addEventListener("submit", as
     try {
         const result = await callAdminFunction("admin-generate-vip-code", {
             method: "POST",
-            body: JSON.stringify({ vipDays, maxUses, expiresInDays, note }),
+            body: JSON.stringify({ tier, vipDays, maxUses, expiresInDays, note }),
         });
 
         resultEl.textContent = `${result.code} (${result.vipDays} dias, ${result.maxUses} uso${result.maxUses > 1 ? "s" : ""})`;
@@ -326,7 +425,7 @@ document.getElementById("generate-vip-code-form")?.addEventListener("submit", as
 // gerado com quem resgatou, quantos usos restam.
 // --------------------------------------------------------
 
-const METHOD_LABELS = { payment: "Pagamento", code: "Código" };
+const METHOD_LABELS = { payment: "Pagamento VIP", code: "Código", theme_payment: "Pagamento de Tema" };
 
 async function loadVipActivity() {
 
@@ -344,14 +443,46 @@ async function loadVipActivity() {
             activationsEmpty.hidden = false;
         } else {
             activationsEmpty.hidden = true;
+            const tierLabels = { bronze: "Bronze", prata: "Prata", gold: "Gold" };
             activations.forEach((a) => {
                 const tr = document.createElement("tr");
+                const shortHash = a.txHash ? `${a.txHash.slice(0, 10)}...${a.txHash.slice(-6)}` : "-";
                 tr.innerHTML = `
                     <td>${escapeHtml(a.username)}</td>
                     <td>${METHOD_LABELS[a.method] || a.method}</td>
+                    <td>${a.tier ? (tierLabels[a.tier] || escapeHtml(a.tier)) : "-"}</td>
                     <td>${escapeHtml(a.detail)}</td>
+                    <td></td>
+                    <td>${escapeHtml(a.network || "-")}</td>
                     <td>${formatDate(a.date)}</td>
                 `;
+
+                // Hash completo pra copiar, não só truncado no hover -
+                // reportado ao vivo: "não mostra inteira, então não
+                // dá pra traquear" (não dá pra colar o hash inteiro
+                // num explorador de blocos só com o hover).
+                const hashCell = tr.children[4];
+                if (a.txHash) {
+                    const hashBtn = document.createElement("button");
+                    hashBtn.type = "button";
+                    hashBtn.className = "admin-hash-copy-btn";
+                    hashBtn.textContent = shortHash;
+                    hashBtn.title = a.txHash;
+                    hashBtn.addEventListener("click", async () => {
+                        try {
+                            await navigator.clipboard.writeText(a.txHash);
+                            const original = hashBtn.textContent;
+                            hashBtn.textContent = "Copiado!";
+                            setTimeout(() => { hashBtn.textContent = original; }, 1200);
+                        } catch (err) {
+                            console.error("Erro ao copiar hash:", err);
+                        }
+                    });
+                    hashCell.appendChild(hashBtn);
+                } else {
+                    hashCell.textContent = "-";
+                }
+
                 activationsBody.appendChild(tr);
             });
         }
@@ -366,11 +497,13 @@ async function loadVipActivity() {
                 const usesLabel = `${c.usesCount}/${c.maxUses}${usesLeft > 0 ? "" : " (esgotado)"}${c.paused ? " (pausado)" : ""}`;
                 const redeemedByLabel = c.redeemedBy.length > 0 ? c.redeemedBy.map(escapeHtml).join(", ") : "-";
 
+                const tierLabels = { bronze: "Bronze", prata: "Prata", gold: "Gold" };
                 const tr = document.createElement("tr");
                 if (c.paused) tr.style.opacity = "0.5";
 
                 tr.innerHTML = `
                     <td style="font-family:monospace;">${escapeHtml(c.code)}</td>
+                    <td>${tierLabels[c.tier] || "Bronze"}</td>
                     <td>${usesLabel}</td>
                     <td>${redeemedByLabel}</td>
                     <td>${c.expiresAt ? formatDate(c.expiresAt) : "-"}</td>
@@ -439,8 +572,6 @@ async function manageVipCode(codeId, action, codeLabel) {
 document.getElementById("vip-activity-refresh-btn")?.addEventListener("click", loadVipActivity);
 document.getElementById("users-refresh-btn")?.addEventListener("click", () => loadUsers());
 
-loadVipActivity();
-
 // --------------------------------------------------------
 // Badges - todo badge já criado (de qualquer VIP), quem tem cada um,
 // e apagar daqui se precisar. Representação visual simples (não
@@ -490,12 +621,40 @@ async function loadAllBadges() {
             meta.className = "admin-badge-meta";
             meta.textContent = `${escapeHtml(badge.createdBy)} . ${badge.source} . ${formatDate(badge.createdAt)}`;
 
-            const holders = document.createElement("div");
-            holders.className = "admin-badge-holders";
-            holders.textContent =
-                badge.holders.length > 0
-                    ? `${badge.holders.length} pessoa(s): ${badge.holders.join(", ")}`
-                    : "Ninguém tem esse badge ainda.";
+            const holdersLabel = document.createElement("div");
+            holdersLabel.className = "admin-badge-holders-label";
+            holdersLabel.textContent = badge.holders.length > 0
+                ? `${badge.holders.length} pessoa(s):`
+                : "Ninguém tem esse badge ainda.";
+
+            const holdersList = document.createElement("div");
+            holdersList.className = "admin-badge-holders-list";
+            badge.holders.forEach((holder) => {
+                const chip = document.createElement("span");
+                chip.className = "admin-badge-holder-chip";
+                chip.textContent = holder.username;
+
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.className = "admin-badge-holder-remove";
+                removeBtn.textContent = "✕";
+                removeBtn.title = "Remove this badge from this person";
+                removeBtn.addEventListener("click", async () => {
+                    if (!confirm(`Remove this badge from ${holder.username}? They can be granted it again later.`)) return;
+                    try {
+                        await callAdminFunction("admin-revoke-badge", {
+                            method: "POST",
+                            body: JSON.stringify({ badgeId: badge.id, userId: holder.userId }),
+                        });
+                        chip.remove();
+                    } catch (err) {
+                        console.error("Erro ao remover badge de usuário:", err);
+                    }
+                });
+
+                chip.appendChild(removeBtn);
+                holdersList.appendChild(chip);
+            });
 
             const deleteBtn = document.createElement("button");
             deleteBtn.type = "button";
@@ -506,7 +665,8 @@ async function loadAllBadges() {
             card.appendChild(swatch);
             card.appendChild(name);
             card.appendChild(meta);
-            card.appendChild(holders);
+            card.appendChild(holdersLabel);
+            card.appendChild(holdersList);
             card.appendChild(deleteBtn);
             gridEl.appendChild(card);
         });
@@ -544,10 +704,12 @@ async function confirmDeleteBadge(badge, cardEl) {
 }
 
 // --------------------------------------------------------
-// Pacotes enviados - fila de submitted_packs (ndquest/submit) já
-// existente pro VIP em account (vip-review-submitted-pack), agora
-// acessível pelo admin também - reportado ao vivo: "hoje não
-// consigo acessar isso, quero acessar pelo painel de admin".
+// Pacotes enviados - reconstruído do zero. Reportado ao vivo: o
+// desenho anterior (submitted_packs, sem vínculo de usuário) deixava
+// QUALQUER VIP ver e aprovar o envio de qualquer pessoa, inclusive o
+// próprio. Agora lê de vip_saved_packs com submission_status =
+// 'pending' - só o admin acessa essa fila, nenhum VIP vê o envio de
+// outra pessoa em lugar nenhum.
 // --------------------------------------------------------
 
 document.getElementById("packs-refresh-btn")?.addEventListener("click", loadSubmittedPacks);
@@ -559,7 +721,7 @@ async function loadSubmittedPacks() {
     if (!listEl || !emptyEl) return;
 
     try {
-        const { packs } = await callAdminFunction("admin-list-submitted-packs", { method: "GET" });
+        const { packs } = await callAdminFunction("admin-list-pack-submissions", { method: "GET" });
 
         listEl.innerHTML = "";
         if (!packs || packs.length === 0) {
@@ -568,20 +730,33 @@ async function loadSubmittedPacks() {
         }
         emptyEl.hidden = true;
 
-        const lang = document.documentElement.dataset.lang === "en" ? "en" : "pt";
-
         packs.forEach((pack) => {
             const item = document.createElement("div");
             item.className = "admin-pack-item";
 
             const name = document.createElement("div");
             name.className = "admin-pack-name";
-            name.textContent = lang === "en" ? pack.nameEn : pack.namePt;
+            name.textContent = pack.name;
 
             const meta = document.createElement("div");
             meta.className = "admin-pack-meta";
             const questionsLabel = window.nodraTranslator?.translations?.["packs.questionsLabel"] || "questions";
-            meta.textContent = `${escapeHtml(pack.submitterName)} (${escapeHtml(pack.submitterEmail)}) . ${pack.questionCount} ${questionsLabel} . ${formatDate(pack.createdAt)}`;
+            meta.textContent = `${escapeHtml(pack.ownerUsername)} . ${escapeHtml((pack.games || []).join(", "))} . ${pack.questionCount} ${questionsLabel} . ${formatDate(pack.createdAt)}`;
+
+            const detail = document.createElement("div");
+            detail.className = "admin-pack-questions";
+            detail.hidden = true;
+            (pack.questions || []).forEach((q, i) => {
+                const qEl = document.createElement("p");
+                qEl.textContent = `${i + 1}. ${q.question?.pt || q.question?.en || ""}`;
+                detail.appendChild(qEl);
+            });
+
+            const toggleBtn = document.createElement("button");
+            toggleBtn.type = "button";
+            toggleBtn.className = "btn btn-secondary";
+            toggleBtn.textContent = window.nodraTranslator?.translations?.["packs.viewQuestionsBtn"] || "View questions";
+            toggleBtn.addEventListener("click", () => { detail.hidden = !detail.hidden; });
 
             const actions = document.createElement("div");
             actions.className = "admin-pack-actions";
@@ -598,6 +773,7 @@ async function loadSubmittedPacks() {
             rejectBtn.textContent = window.nodraTranslator?.translations?.["packs.rejectBtn"] || "Reject";
             rejectBtn.addEventListener("click", () => reviewSubmittedPack(pack.id, "reject", item));
 
+            actions.appendChild(toggleBtn);
             actions.appendChild(approveBtn);
             actions.appendChild(rejectBtn);
 
@@ -608,6 +784,7 @@ async function loadSubmittedPacks() {
             item.appendChild(meta);
             item.appendChild(actions);
             item.appendChild(status);
+            item.appendChild(detail);
             listEl.appendChild(item);
         });
     } catch (err) {
@@ -616,25 +793,23 @@ async function loadSubmittedPacks() {
 
 }
 
-// Aprova (vira question_packs de verdade, usável pelos jogos) ou
-// rejeita (só marca, não cria nada) um pacote enviado. Mesmo padrão
-// de try/catch dos outros fluxos de admin - botões desabilitam
-// durante a chamada, erro real sempre visível, nunca trava
-// silenciosamente. A linha some da fila depois de aprovada/rejeitada
-// (já não está mais pendente), com um instante pra ler a confirmação
-// primeiro - mesmo comportamento da fila equivalente do VIP.
 async function reviewSubmittedPack(packId, action, itemEl) {
     const buttons = itemEl.querySelectorAll("button");
     const statusEl = itemEl.querySelector(".admin-pack-status");
+
+    let reason = null;
+    if (action === "reject") {
+        reason = prompt(window.nodraTranslator?.translations?.["packs.rejectReasonPrompt"] || "Reason for rejecting (shown to the person who submitted it):") || null;
+    }
 
     buttons.forEach((b) => (b.disabled = true));
     statusEl.textContent = "";
     statusEl.className = "admin-pack-status";
 
     try {
-        const result = await callAdminFunction("admin-review-submitted-pack", {
+        await callAdminFunction("admin-review-pack-submission", {
             method: "POST",
-            body: JSON.stringify({ packId, action }),
+            body: JSON.stringify({ packId, action, reason }),
         });
 
         const successKey = action === "approve" ? "packs.approveSuccess" : "packs.rejectSuccess";
@@ -748,6 +923,307 @@ async function loadSubmittedThemes() {
 
 }
 
+// ==================================================================
+// SUB-ABAS — Pacotes e Temas agora têm duas visões: a fila de
+// submissão pública (já existia) e a lista completa (privado +
+// público) com botão de apagar. Reportado ao vivo: "adiciona uma
+// função pra eu poder ver os pacotes privados dos VIPs também...
+// e também poder deletar os que estão como públicos".
+// ==================================================================
+
+let vipPacksLoaded = false;
+let catalogPacksLoaded = false;
+let allThemesLoaded = false;
+
+document.querySelectorAll("[data-packs-subtab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const target = btn.dataset.packsSubtab;
+        document.querySelectorAll("[data-packs-subtab]").forEach((b) => b.classList.toggle("is-active", b === btn));
+        document.querySelectorAll("[data-packs-subtab-panel]").forEach((p) => {
+            p.hidden = p.dataset.packsSubtabPanel !== target;
+        });
+        if (target === "vip" && !vipPacksLoaded) {
+            vipPacksLoaded = true;
+            loadVipPacks();
+        }
+        if (target === "catalog" && !catalogPacksLoaded) {
+            catalogPacksLoaded = true;
+            loadCatalogPacks();
+        }
+    });
+});
+
+document.querySelectorAll("[data-themes-subtab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const target = btn.dataset.themesSubtab;
+        document.querySelectorAll("[data-themes-subtab]").forEach((b) => b.classList.toggle("is-active", b === btn));
+        document.querySelectorAll("[data-themes-subtab-panel]").forEach((p) => {
+            p.hidden = p.dataset.themesSubtabPanel !== target;
+        });
+        if (target === "all" && !allThemesLoaded) {
+            allThemesLoaded = true;
+            loadAllThemes();
+        }
+    });
+});
+
+document.getElementById("vip-packs-refresh-btn")?.addEventListener("click", loadVipPacks);
+document.getElementById("all-themes-refresh-btn")?.addEventListener("click", loadAllThemes);
+
+// --------------------------------------------------------
+// Pacotes salvos de VIP - listar e apagar
+// --------------------------------------------------------
+
+async function loadVipPacks() {
+
+    const listEl = document.getElementById("admin-vip-packs-list");
+    const emptyEl = document.getElementById("admin-vip-packs-empty");
+    if (!listEl || !emptyEl) return;
+
+    try {
+        const { packs } = await callAdminFunction("admin-list-vip-packs", { method: "GET" });
+
+        listEl.innerHTML = "";
+        if (!packs || packs.length === 0) {
+            emptyEl.hidden = false;
+            return;
+        }
+        emptyEl.hidden = true;
+
+        const questionsLabel = window.nodraTranslator?.translations?.["packs.questionsLabel"] || "questions";
+        const deleteLabel = window.nodraTranslator?.translations?.["packs.deleteBtn"] || "Delete";
+        const deleteConfirmMsg = window.nodraTranslator?.translations?.["packs.deleteConfirm"] || "Delete this pack? This can't be undone.";
+
+        packs.forEach((pack) => {
+            const item = document.createElement("div");
+            item.className = "admin-pack-item";
+
+            const name = document.createElement("div");
+            name.className = "admin-pack-name";
+            name.textContent = pack.name;
+
+            const meta = document.createElement("div");
+            meta.className = "admin-pack-meta";
+            meta.textContent = `${escapeHtml(pack.ownerUsername)} . ${escapeHtml((pack.games || []).join(", "))} . ${pack.questionCount} ${questionsLabel} . ${formatDate(pack.createdAt)}`;
+
+            // Perguntas de verdade, escondidas até clicar - reportado
+            // ao vivo: "as perguntas não aparecem", só mostrava a
+            // contagem antes, nunca o conteúdo.
+            const detail = document.createElement("div");
+            detail.className = "admin-pack-questions";
+            detail.hidden = true;
+            (pack.questions || []).forEach((q, i) => {
+                const qEl = document.createElement("p");
+                qEl.textContent = `${i + 1}. ${q.question?.pt || q.question?.en || ""}`;
+                detail.appendChild(qEl);
+            });
+
+            const toggleBtn = document.createElement("button");
+            toggleBtn.type = "button";
+            toggleBtn.className = "btn btn-secondary";
+            const viewLabel = window.nodraTranslator?.translations?.["packs.viewQuestionsBtn"] || "View questions";
+            toggleBtn.textContent = viewLabel;
+            toggleBtn.addEventListener("click", () => {
+                detail.hidden = !detail.hidden;
+            });
+
+            const actions = document.createElement("div");
+            actions.className = "admin-pack-actions";
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.type = "button";
+            deleteBtn.className = "btn btn-danger";
+            deleteBtn.textContent = deleteLabel;
+            deleteBtn.addEventListener("click", async () => {
+                if (!confirm(deleteConfirmMsg)) return;
+                deleteBtn.disabled = true;
+                try {
+                    await callAdminFunction("admin-delete-vip-pack", {
+                        method: "POST",
+                        body: JSON.stringify({ id: pack.id }),
+                    });
+                    item.remove();
+                    if (!listEl.children.length) emptyEl.hidden = false;
+                } catch (err) {
+                    console.error("Erro ao apagar pacote salvo de VIP:", err);
+                    deleteBtn.disabled = false;
+                }
+            });
+
+            actions.appendChild(toggleBtn);
+            actions.appendChild(deleteBtn);
+
+            item.appendChild(name);
+            item.appendChild(meta);
+            item.appendChild(actions);
+            item.appendChild(detail);
+            listEl.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error("Erro ao carregar pacotes salvos de VIP:", err);
+    }
+
+}
+
+// --------------------------------------------------------
+// Catálogo oficial (question_packs) - o que os jogos usam de
+// verdade pra buscar pergunta. Reportado ao vivo: pacote aprovado
+// (mesmo o auto-aprovado, antes da trava existir) some da fila de
+// "Pacotes Enviados" assim que vira catálogo, sem lugar nenhum pra
+// limpar depois - essa aba resolve isso.
+// --------------------------------------------------------
+
+async function loadCatalogPacks() {
+
+    const listEl = document.getElementById("admin-catalog-packs-list");
+    const emptyEl = document.getElementById("admin-catalog-packs-empty");
+    if (!listEl || !emptyEl) return;
+
+    try {
+        const { packs } = await callAdminFunction("admin-list-question-packs", { method: "GET" });
+
+        listEl.innerHTML = "";
+        if (!packs || packs.length === 0) {
+            emptyEl.hidden = false;
+            return;
+        }
+        emptyEl.hidden = true;
+
+        const questionsLabel = window.nodraTranslator?.translations?.["packs.questionsLabel"] || "questions";
+        const deleteLabel = window.nodraTranslator?.translations?.["packs.deleteBtn"] || "Delete";
+        const deleteConfirmMsg = window.nodraTranslator?.translations?.["packs.deleteCatalogConfirm"] || "Delete this pack from the catalog? Games will no longer be able to use it. This can't be undone.";
+
+        packs.forEach((pack) => {
+            const item = document.createElement("div");
+            item.className = "admin-pack-item";
+
+            const name = document.createElement("div");
+            name.className = "admin-pack-name";
+            name.textContent = pack.namePt;
+
+            const meta = document.createElement("div");
+            meta.className = "admin-pack-meta";
+            meta.textContent = `${escapeHtml(pack.slug)} . ${(pack.applicableGames || []).join(", ")} . ${pack.questionCount} ${questionsLabel} . ${formatDate(pack.createdAt)}`;
+
+            const actions = document.createElement("div");
+            actions.className = "admin-pack-actions";
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.type = "button";
+            deleteBtn.className = "btn btn-danger";
+            deleteBtn.textContent = deleteLabel;
+            deleteBtn.addEventListener("click", async () => {
+                if (!confirm(deleteConfirmMsg)) return;
+                deleteBtn.disabled = true;
+                try {
+                    await callAdminFunction("admin-delete-question-pack", {
+                        method: "POST",
+                        body: JSON.stringify({ packId: pack.id }),
+                    });
+                    item.remove();
+                    if (!listEl.children.length) emptyEl.hidden = false;
+                } catch (err) {
+                    console.error("Erro ao apagar pacote do catálogo:", err);
+                    deleteBtn.disabled = false;
+                }
+            });
+
+            actions.appendChild(deleteBtn);
+
+            item.appendChild(name);
+            item.appendChild(meta);
+            item.appendChild(actions);
+            listEl.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error("Erro ao carregar catálogo de pacotes:", err);
+    }
+
+}
+
+document.getElementById("catalog-packs-refresh-btn")?.addEventListener("click", loadCatalogPacks);
+
+// --------------------------------------------------------
+// Todos os temas (privado + público + rejeitado) - listar e apagar
+// --------------------------------------------------------
+
+async function loadAllThemes() {
+
+    const listEl = document.getElementById("admin-all-themes-list");
+    const emptyEl = document.getElementById("admin-all-themes-empty");
+    if (!listEl || !emptyEl) return;
+
+    try {
+        const { themes } = await callAdminFunction("admin-list-all-themes", { method: "GET" });
+
+        listEl.innerHTML = "";
+        if (!themes || themes.length === 0) {
+            emptyEl.hidden = false;
+            return;
+        }
+        emptyEl.hidden = true;
+
+        const deleteLabel = window.nodraTranslator?.translations?.["packs.deleteBtn"] || "Delete";
+        const deleteConfirmMsg = window.nodraTranslator?.translations?.["themes.deleteConfirm"] || "Delete this theme? This can't be undone.";
+        const statusLabels = {
+            private: window.nodraTranslator?.translations?.["themes.statusPrivate"] || "Private",
+            pending_review: window.nodraTranslator?.translations?.["themes.statusPending"] || "Pending review",
+            public: window.nodraTranslator?.translations?.["themes.statusPublic"] || "Public",
+            rejected: window.nodraTranslator?.translations?.["themes.statusRejected"] || "Rejected",
+        };
+
+        themes.forEach((theme) => {
+            const item = document.createElement("div");
+            item.className = "admin-pack-item";
+
+            const name = document.createElement("div");
+            name.className = "admin-pack-name";
+            name.textContent = theme.name;
+
+            const meta = document.createElement("div");
+            meta.className = "admin-pack-meta";
+            const statusLabel = statusLabels[theme.status] || theme.status;
+            meta.textContent = `${escapeHtml(theme.ownerUsername)} . ${statusLabel} . ${(theme.applicableGames || []).join(", ")} . ${formatDate(theme.createdAt)}`;
+
+            const actions = document.createElement("div");
+            actions.className = "admin-pack-actions";
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.type = "button";
+            deleteBtn.className = "btn btn-danger";
+            deleteBtn.textContent = deleteLabel;
+            deleteBtn.addEventListener("click", async () => {
+                if (!confirm(deleteConfirmMsg)) return;
+                deleteBtn.disabled = true;
+                try {
+                    await callAdminFunction("admin-delete-theme", {
+                        method: "POST",
+                        body: JSON.stringify({ id: theme.id }),
+                    });
+                    item.remove();
+                    if (!listEl.children.length) emptyEl.hidden = false;
+                } catch (err) {
+                    console.error("Erro ao apagar tema:", err);
+                    deleteBtn.disabled = false;
+                }
+            });
+
+            actions.appendChild(deleteBtn);
+
+            item.appendChild(name);
+            item.appendChild(meta);
+            item.appendChild(actions);
+            listEl.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error("Erro ao carregar todos os temas:", err);
+    }
+
+}
+
 // Aprova (vira tema público de verdade, visível em qualquer sala
 // contanto que o dono continue VIP) ou rejeita (some da fila, o VIP
 // vê o motivo na própria área dele e pode corrigir e reenviar de
@@ -788,3 +1264,156 @@ async function reviewSubmittedTheme(themeId, action, itemEl, notesInput) {
     }
 
 }
+
+// ==================================================================
+// SUPORTE (admin) - lista todo ticket de todo usuário, abre a
+// conversa e responde. Só o admin usa Edge Function pra isso - o
+// usuário lê/escreve na própria conta direto via RLS (ver
+// account.js), mas o admin precisa ver a conversa de todo mundo, o
+// que RLS comum não permite sem uma policy especial - mais simples
+// e consistente com o resto do painel passar por Edge Function
+// (service role, ignora RLS).
+// ==================================================================
+
+let currentSupportAdminTicketId = null;
+let supportAdminRealtimeChannel = null;
+
+async function loadSupportAdminTickets() {
+    const listEl = document.getElementById("admin-support-tickets-list");
+    const emptyEl = document.getElementById("admin-support-tickets-empty");
+    if (!listEl || !emptyEl) return;
+
+    try {
+        const { tickets } = await callAdminFunction("admin-list-support-tickets", { method: "GET" });
+
+        listEl.innerHTML = "";
+
+        if (!tickets || tickets.length === 0) {
+            emptyEl.hidden = false;
+            return;
+        }
+        emptyEl.hidden = true;
+
+        tickets.forEach((ticket) => {
+            const item = document.createElement("div");
+            item.className = "admin-pack-item";
+            item.style.cursor = "pointer";
+            if (ticket.isPriority) item.style.borderLeft = "3px solid #ffc857";
+
+            const name = document.createElement("div");
+            name.className = "admin-pack-name";
+            const priorityTag = ticket.isPriority ? "⭐ " : "";
+            name.textContent = `${priorityTag}${ticket.subject} - ${ticket.username}`;
+
+            const meta = document.createElement("div");
+            meta.className = "admin-pack-meta";
+            const preview = ticket.lastMessage ? `${ticket.lastMessageFrom === "admin" ? "You" : ticket.username}: ${ticket.lastMessage.slice(0, 60)}` : "";
+            meta.textContent = `${ticket.status} . ${formatDate(ticket.updatedAt)} . ${preview}`;
+
+            item.appendChild(name);
+            item.appendChild(meta);
+            item.addEventListener("click", () => openSupportAdminTicket(ticket.id));
+            listEl.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error("Erro ao carregar tickets de suporte:", err);
+    }
+}
+
+document.getElementById("support-refresh-btn")?.addEventListener("click", loadSupportAdminTickets);
+
+function renderSupportAdminMessage(container, msg) {
+    const bubble = document.createElement("div");
+    bubble.className = `support-bubble support-bubble--${msg.sender_type}`;
+    bubble.textContent = msg.message;
+    container.appendChild(bubble);
+}
+
+async function openSupportAdminTicket(ticketId) {
+    currentSupportAdminTicketId = ticketId;
+
+    document.getElementById("support-admin-list-view").hidden = true;
+    document.getElementById("support-admin-chat-view").hidden = false;
+
+    const messagesEl = document.getElementById("support-admin-chat-messages");
+    messagesEl.innerHTML = "";
+
+    try {
+        const { ticket, messages } = await callAdminFunction(`admin-get-support-ticket?ticketId=${ticketId}`, { method: "GET" });
+
+        document.getElementById("support-admin-chat-subject").textContent = `${ticket.subject} - ${ticket.username}`;
+        document.getElementById("support-admin-status-select").value = ticket.status;
+
+        (messages || []).forEach((msg) => renderSupportAdminMessage(messagesEl, msg));
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    } catch (err) {
+        console.error("Erro ao carregar conversa de suporte:", err);
+        return;
+    }
+
+    if (supportAdminRealtimeChannel) {
+        supabaseClient.removeChannel(supportAdminRealtimeChannel);
+    }
+    supportAdminRealtimeChannel = supabaseClient
+        .channel(`support-admin-ticket-${ticketId}`)
+        .on(
+            "postgres_changes",
+            { event: "INSERT", schema: "public", table: "support_messages", filter: `ticket_id=eq.${ticketId}` },
+            (payload) => {
+                if (payload.new.sender_type === "user") {
+                    renderSupportAdminMessage(messagesEl, payload.new);
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                }
+            },
+        )
+        .subscribe();
+}
+
+document.getElementById("support-admin-back-btn")?.addEventListener("click", () => {
+    document.getElementById("support-admin-chat-view").hidden = true;
+    document.getElementById("support-admin-list-view").hidden = false;
+    if (supportAdminRealtimeChannel) {
+        supabaseClient.removeChannel(supportAdminRealtimeChannel);
+        supportAdminRealtimeChannel = null;
+    }
+    currentSupportAdminTicketId = null;
+    loadSupportAdminTickets();
+});
+
+document.getElementById("support-admin-reply-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!currentSupportAdminTicketId) return;
+
+    const input = document.getElementById("support-admin-reply-input");
+    const message = input.value.trim();
+    if (!message) return;
+
+    input.value = "";
+
+    const messagesEl = document.getElementById("support-admin-chat-messages");
+    renderSupportAdminMessage(messagesEl, { sender_type: "admin", message });
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    try {
+        await callAdminFunction("admin-send-support-message", {
+            method: "POST",
+            body: JSON.stringify({ ticketId: currentSupportAdminTicketId, message }),
+        });
+    } catch (err) {
+        console.error("Erro ao enviar resposta de suporte:", err);
+    }
+});
+
+document.getElementById("support-admin-status-select")?.addEventListener("change", async (event) => {
+    if (!currentSupportAdminTicketId) return;
+    try {
+        await callAdminFunction("admin-update-ticket-status", {
+            method: "POST",
+            body: JSON.stringify({ ticketId: currentSupportAdminTicketId, status: event.target.value }),
+        });
+    } catch (err) {
+        console.error("Erro ao atualizar status do ticket:", err);
+    }
+});

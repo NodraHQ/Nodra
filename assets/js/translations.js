@@ -95,4 +95,9 @@ class Translator {
 
 const translator = new Translator();
 
+// Exposto global - o botão único de idioma na home (ver home.js)
+// precisa chamar changeLanguage() de fora desse arquivo. Mesmo
+// padrão que outras cópias deste arquivo no projeto já usam.
+window.nodraTranslator = translator;
+
 translator.init();

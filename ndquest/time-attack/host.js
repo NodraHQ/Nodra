@@ -5,6 +5,18 @@
 import translations from './i18n/translations.js';
 import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 
+const FREE_MONTHLY_ROOM_LIMIT = 10;
+
+// Mesma checagem de inatividade usada em play.js - precisa existir
+// aqui também porque host.js é um arquivo separado, sem escopo
+// compartilhado (self-contained, mesmo padrão dos 4 jogos).
+const ROOM_INACTIVITY_TIMEOUT_MINUTES = 30;
+function isRoomStale(updatedAt) {
+    if (!updatedAt) return false;
+    const cutoff = Date.now() - ROOM_INACTIVITY_TIMEOUT_MINUTES * 60 * 1000;
+    return new Date(updatedAt).getTime() < cutoff;
+}
+
 // Começa só com o tema padrão (mesma aparência de sempre, na hora),
 // depois é substituído pela lista completa (padrão + Supabase) assim
 // que a busca terminar - ver a chamada de loadRemoteThemes logo
@@ -39,6 +51,12 @@ const BADGE_ICONS = {
     star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
     gem: '<path d="M10.5 3 8 9l4 13 4-13-2.5-6"/><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/><path d="M2 9h20"/>',
     flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+    zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+    target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/>',
+    "book-open": '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
 };
 
 function buildMiniIconSvg(iconKey) {
@@ -88,7 +106,7 @@ async function loadPlayerBadgeMap(userIds) {
 
         (userBadgeRows || []).forEach((row) => {
             const featuredSet = featuredById.get(row.user_id);
-            const isFeatured = featuredSet && featuredSet.size > 0 ? featuredSet.has(row.badge_id) : true;
+            const isFeatured = featuredSet && featuredSet.has(row.badge_id);
             if (!isFeatured) return;
 
             const entry = playerBadgeCache.get(row.user_id) || { badges: [], cachedAt: now };
@@ -166,7 +184,38 @@ function buildMiniBadgeRow(badges) {
 // desse cache - checa fresco toda vez.
 async function getCurrentUserId() {
     const { data: { session } } = await window.ndquestSupabase.auth.getSession();
-    return session?.user?.id ?? null;
+    if (session?.user?.id) return session.user.id;
+
+    // Sem sessão nenhuma - entra anônimo em vez de ficar sem
+    // identidade. Fecha um furo real: RLS precisava de "user_id IS
+    // NULL OR user_id = auth.uid()" pra deixar convidado jogar sem
+    // login, e isso na prática deixava QUALQUER visitante mexer na
+    // linha de QUALQUER convidado, não só a própria (user_id nulo
+    // "casa" com todo mundo, não só com quem entrou de verdade).
+    // Com sessão anônima, até quem não logou ganha um auth.uid()
+    // de verdade, único daquele navegador - a mesma trava "só o
+    // dono mexe" que já protege conta normal passa a proteger
+    // convidado também, sem pedir email nem senha de ninguém.
+    const { data, error } = await window.ndquestSupabase.auth.signInAnonymously();
+    if (error) {
+        console.error('Erro ao entrar anonimamente:', error);
+        return null;
+    }
+    return data?.user?.id ?? null;
+}
+
+async function getCurrentUserIsVip() {
+    const userId = await getCurrentUserId();
+    if (!userId) return false;
+
+    const { data, error } = await window.ndquestSupabase
+        .from('profiles')
+        .select('is_vip')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (error || !data) return false;
+    return !!data.is_vip;
 }
 
 function applyTranslations() {
@@ -197,6 +246,21 @@ const timeCapInput = document.getElementById('time-cap-input');
 const timeBonusInput = document.getElementById('time-bonus-input');
 const timePenaltyInput = document.getElementById('time-penalty-input');
 const configError = document.getElementById('config-error');
+const closeOldRoomsBtn = document.getElementById('close-old-rooms-btn');
+let pendingBlockingRooms = [];
+
+closeOldRoomsBtn.addEventListener('click', async () => {
+    closeOldRoomsBtn.disabled = true;
+    await Promise.all(
+        pendingBlockingRooms.map(({ table, id }) =>
+            window.ndquestSupabase.from(table).update({ status: 'closed' }).eq('id', id),
+        ),
+    );
+    pendingBlockingRooms = [];
+    closeOldRoomsBtn.hidden = true;
+    closeOldRoomsBtn.disabled = false;
+    configError.textContent = t('errors.oldRoomsClosedRetry');
+});
 const createRoomBtn = document.getElementById('create-room-btn');
 
 const roomCodeText = document.getElementById('room-code-text');
@@ -263,6 +327,23 @@ async function populatePackSelect() {
     customOption.textContent = t('pack.customOption');
     packSelect.appendChild(customOption);
 
+    const savedUserId = await getCurrentUserId();
+    if (savedUserId) {
+        const { data: savedPacks } = await window.ndquestSupabase
+            .from('vip_saved_packs')
+            .select('id, name')
+            .eq('owner_id', savedUserId)
+            .contains('games', ['time-attack'])
+            .order('created_at', { ascending: false });
+
+        (savedPacks || []).forEach((pack) => {
+            const option = document.createElement('option');
+            option.value = `saved:${pack.id}`;
+            option.textContent = `★ ${pack.name}`;
+            packSelect.appendChild(option);
+        });
+    }
+
     if (previousValue) {
         packSelect.value = previousValue;
     }
@@ -270,8 +351,20 @@ async function populatePackSelect() {
 
 populatePackSelect();
 
+const savePackRow = document.getElementById('save-pack-row');
+const savePackCheckbox = document.getElementById('save-pack-checkbox');
+
 packSelect.addEventListener('change', () => {
-    customQuestionsPanel.hidden = packSelect.value !== 'custom';
+    const isCustom = packSelect.value === 'custom';
+    customQuestionsPanel.hidden = !isCustom;
+
+    if (isCustom) {
+        getCurrentUserIsVip().then((isVip) => {
+            savePackRow.hidden = !isVip;
+        });
+    } else {
+        savePackRow.hidden = true;
+    }
 });
 
 // --------------------------------------------------------
@@ -584,6 +677,26 @@ createRoomBtn.addEventListener('click', async () => {
         return;
     }
 
+    // Pacote salvo de um VIP (ver vip_saved_packs) - carrega as
+    // perguntas do banco e trata dali pra frente exatamente como o
+    // modo custom (mesmo formato de dado, mesma variável usada no
+    // payload logo abaixo).
+    let effectiveCustomQuestions = customQuestions;
+    if (packSlug.startsWith('saved:')) {
+        const savedId = packSlug.slice('saved:'.length);
+        const { data: savedPack, error: savedError } = await window.ndquestSupabase
+            .from('vip_saved_packs')
+            .select('questions')
+            .eq('id', savedId)
+            .maybeSingle();
+
+        if (savedError || !savedPack || !Array.isArray(savedPack.questions) || savedPack.questions.length === 0) {
+            configError.textContent = t('errors.customQuestionsRequired');
+            return;
+        }
+        effectiveCustomQuestions = savedPack.questions;
+    }
+
     if (themes.length === 0) {
         configError.textContent = t('errors.noThemes');
         return;
@@ -591,10 +704,80 @@ createRoomBtn.addEventListener('click', async () => {
 
     const selectedTheme = themes[Number(themeSelect.value)];
 
+    const hostUserId = await getCurrentUserId();
+
+    // 1 partida ativa por conta ao mesmo tempo, em QUALQUER um dos 4
+    // jogos - reportado ao vivo: "impediria o compartilhamento de
+    // contas vips".
+    if (hostUserId) {
+        const roomTables = ['showdown_rooms', 'time_attack_rooms', 'roulette_rooms', 'tap_rush_rooms'];
+        const checks = await Promise.all(
+            roomTables.map((table) =>
+                window.ndquestSupabase
+                    .from(table)
+                    .select('id, updated_at')
+                    .eq('host_id', hostUserId)
+                    .not('status', 'eq', 'closed')
+                    .then(({ data }) => ({ table, rows: data || [] })),
+            ),
+        );
+
+        // Sala "ativa" só de status, sem checar se ainda está viva
+        // de verdade, é o bug real reportado ao vivo: aviso de
+        // partida ativa numa sala de ontem que ninguém nunca tentou
+        // entrar de novo (o mecanismo de inatividade só rodava na
+        // hora de ENTRAR numa sala específica). Agora fecha de
+        // verdade no banco qualquer sala parada há mais de 30
+        // minutos encontrada aqui, em vez de só ignorar.
+        const stillActive = [];
+        for (const { table, rows } of checks) {
+            for (const row of rows) {
+                if (isRoomStale(row.updated_at)) {
+                    await window.ndquestSupabase.from(table).update({ status: 'closed' }).eq('id', row.id);
+                } else {
+                    stillActive.push({ table, id: row.id });
+                }
+            }
+        }
+
+        if (stillActive.length > 0) {
+            // Reportado ao vivo: "preciso que ao sair da sala, todos
+            // os botões encerrem a sala, ou ali no erro tenha um
+            // atalho de encerrar" - rede de segurança que não
+            // depende de detectar saída nenhuma.
+            configError.textContent = t('errors.activeRoomExists');
+            pendingBlockingRooms = stillActive;
+            closeOldRoomsBtn.hidden = false;
+            return;
+        }
+    }
+
+    if (hostUserId) {
+        const { data: hostProfile } = await window.ndquestSupabase
+            .from('profiles')
+            .select('is_vip')
+            .eq('id', hostUserId)
+            .maybeSingle();
+
+        if (!hostProfile?.is_vip) {
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+            const { count: roomsThisMonth } = await window.ndquestSupabase
+                .from('match_history')
+                .select('id', { count: 'exact', head: true })
+                .eq('user_id', hostUserId)
+                .eq('role', 'host')
+                .gte('created_at', thirtyDaysAgo);
+
+            if ((roomsThisMonth || 0) >= FREE_MONTHLY_ROOM_LIMIT) {
+                configError.textContent = t('errors.monthlyRoomLimitReached');
+                return;
+            }
+        }
+    }
+
     createRoomBtn.disabled = true;
 
     const roomCode = generateRoomCode();
-    const hostUserId = await getCurrentUserId();
 
     const roomPayload = {
         room_code: roomCode,
@@ -608,8 +791,8 @@ createRoomBtn.addEventListener('click', async () => {
         host_id: hostUserId
     };
 
-    if (packSlug === 'custom') {
-        roomPayload.custom_questions = customQuestions;
+    if (packSlug === 'custom' || packSlug.startsWith('saved:')) {
+        roomPayload.custom_questions = effectiveCustomQuestions;
     }
 
     const { data, error } = await window.ndquestSupabase
@@ -644,6 +827,31 @@ createRoomBtn.addEventListener('click', async () => {
             });
     }
 
+    // Benefício de VIP: guarda o pacote personalizado pra reusar
+    // depois - mesmo mecanismo do Show Down, ver vip_saved_packs.
+    if (packSlug === 'custom' && hostUserId && !savePackRow.hidden && savePackCheckbox.checked) {
+        (async () => {
+            const { data: { session } } = await window.ndquestSupabase.auth.getSession();
+            const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/vip-create-saved-pack`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session?.access_token}`,
+                },
+                body: JSON.stringify({
+                    games: ['time-attack'],
+                    name: customQuestions[0]?.question?.pt?.slice(0, 60) || roomCode,
+                    questions: customQuestions,
+                }),
+            });
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                console.error('Time Attack save pack error:', result.error);
+                alert(result.error || t('customQuestions.saveFailed'));
+            }
+        })();
+    }
+
     activeRoomId = data.id;
     activeRoomCode = roomCode;
     applyTheme(selectedTheme);
@@ -662,7 +870,7 @@ function showRoomScreen(roomCode, roomData, hostName) {
     roomCodeText.textContent = roomCode;
 
     const pack = availablePacks.find((p) => p.slug === roomData.pack_slug);
-    const packName = roomData.pack_slug === 'custom'
+    const packName = (roomData.pack_slug === 'custom' || roomData.pack_slug.startsWith('saved:'))
         ? t('pack.customOption')
         : (pack ? (currentLanguage === 'en' ? pack.name_en : pack.name_pt) : roomData.pack_slug);
 
@@ -821,7 +1029,17 @@ closeRoomBtn.addEventListener('click', async () => {
 
     closeRoomBtn.disabled = true;
 
-    await recordFinalRanking(activeRoomId, activeRoomCode);
+    // recordFinalRanking (que rodava aqui) foi removida - reportado
+    // ao vivo com print de produção que a posição do convidado saía
+    // errada, e a causa raiz era a function time-attack-update-
+    // ranking (que já roda a cada jogador terminar, por rodada,
+    // desde bem antes). Essa function aqui só recalculava a rodada
+    // ATUAL de novo, na hora de fechar - redundante com o que já
+    // tinha sido calculado certo antes, e como só olhava a rodada
+    // corrente, nunca cobria rodadas anteriores que já tinham
+    // acabado. Corrigido o bug de verdade na function do banco
+    // (que cobre toda rodada, não só a última) e removida essa
+    // duplicação sem função real.
 
     await window.ndquestSupabase
         .from('time_attack_rooms')
@@ -840,6 +1058,35 @@ closeRoomBtn.addEventListener('click', async () => {
         clearInterval(leaderboardStalenessInterval);
         leaderboardStalenessInterval = null;
     }
+});
+
+// Fecha a sala sozinho se o host sair de qualquer jeito - ver
+// explicação completa no Show Down (mesmo mecanismo, reportado ao
+// vivo). Fica mais simples que o botão de fechar normal de
+// propósito (não tenta gravar ranking final) porque o objetivo aqui
+// é só garantir que a sala pare de contar como "ativa", não fazer a
+// limpeza completa - isso reduz risco de falhar bem na hora que a
+// página já está fechando.
+let cachedAccessToken = null;
+window.ndquestSupabase.auth.getSession().then(({ data }) => {
+    cachedAccessToken = data?.session?.access_token || null;
+});
+window.ndquestSupabase.auth.onAuthStateChange((_event, session) => {
+    cachedAccessToken = session?.access_token || null;
+});
+
+window.addEventListener('pagehide', () => {
+    if (!activeRoomId || !cachedAccessToken) return;
+    fetch(`${window.ndquestSupabaseUrl}/rest/v1/time_attack_rooms?id=eq.${activeRoomId}`, {
+        method: 'PATCH',
+        keepalive: true,
+        headers: {
+            'Content-Type': 'application/json',
+            'apikey': window.ndquestSupabaseAnonKey,
+            'Authorization': `Bearer ${cachedAccessToken}`,
+        },
+        body: JSON.stringify({ status: 'closed' }),
+    });
 });
 
 // Libera uma nova rodada pra sala inteira - reportado ao vivo: "não
@@ -947,62 +1194,3 @@ function renderPreviousRounds() {
 
 }
 
-// Calcula a posição de cada jogador comparando os acertos de todo
-// mundo na sala, e grava isso no lugar certo (match_history pra
-// logado, guest_participants pra anônimo) - reportado ao vivo: o
-// histórico do Time Attack mostrava a contagem de acertos crua em
-// vez da posição, diferente dos outros 3 jogos, porque nunca existia
-// comparação nenhuma entre os jogadores, só a pontuação individual
-// de cada um. Só dá pra calcular isso quando a sala encerra, porque
-// antes disso as pessoas ainda podem estar jogando.
-async function recordFinalRanking(roomId, roomCode) {
-
-    const { data: roomData } = await window.ndquestSupabase
-        .from('time_attack_rooms')
-        .select('round_number')
-        .eq('id', roomId)
-        .maybeSingle();
-
-    const roundNumber = roomData?.round_number || 1;
-
-    const { data: players, error } = await window.ndquestSupabase
-        .from('time_attack_players')
-        .select('user_id, nickname, correct_answers')
-        .eq('room_id', roomId);
-
-    if (error || !players || players.length === 0) {
-        if (error) console.error('Time Attack: erro ao buscar jogadores pro ranking', error);
-        return;
-    }
-
-    const sorted = [...players].sort((a, b) => (b.correct_answers || 0) - (a.correct_answers || 0));
-
-    for (let i = 0; i < sorted.length; i++) {
-        const player = sorted[i];
-        const placement = i + 1;
-
-        if (player.user_id) {
-            const { error: historyError } = await window.ndquestSupabase
-                .from('match_history')
-                .update({ placement })
-                .eq('user_id', player.user_id)
-                .eq('game', 'time_attack')
-                .eq('room_code', roomCode)
-                .eq('role', 'player')
-                .eq('round_number', roundNumber);
-
-            if (historyError) console.error('Time Attack: erro ao gravar posição (logado)', historyError);
-        } else {
-            const { error: guestError } = await window.ndquestSupabase
-                .from('guest_participants')
-                .update({ placement })
-                .eq('nickname', player.nickname)
-                .eq('game', 'time_attack')
-                .eq('room_code', roomCode)
-                .eq('round_number', roundNumber);
-
-            if (guestError) console.error('Time Attack: erro ao gravar posição (guest)', guestError);
-        }
-    }
-
-}

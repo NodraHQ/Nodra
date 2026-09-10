@@ -33,6 +33,8 @@ Deno.serve(withAdminAuth(async (req, { adminClient, adminId }) => {
     }
 
     const body = await req.json().catch(() => ({}));
+    const validTiers = ["bronze", "prata", "gold"];
+    const tier = validTiers.includes(body?.tier) ? body.tier : "bronze";
     const vipDays = Number.isFinite(body?.vipDays) && body.vipDays > 0 ? body.vipDays : 30;
     const maxUses = Number.isFinite(body?.maxUses) && body.maxUses > 0 ? body.maxUses : 1;
     const note = typeof body?.note === "string" ? body.note : null;
@@ -55,6 +57,7 @@ Deno.serve(withAdminAuth(async (req, { adminClient, adminId }) => {
             created_by: adminId,
             max_uses: maxUses,
             vip_days: vipDays,
+            tier,
             note,
             expires_at: expiresAt,
         });
@@ -75,7 +78,7 @@ Deno.serve(withAdminAuth(async (req, { adminClient, adminId }) => {
         });
     }
 
-    return new Response(JSON.stringify({ success: true, code, vipDays, maxUses, expiresAt }), {
+    return new Response(JSON.stringify({ success: true, code, tier, vipDays, maxUses, expiresAt }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 

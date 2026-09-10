@@ -83,7 +83,9 @@ const translations = {
     'confirm.cancelEvent': 'Cancelar o evento atual e voltar para a configuração?',
 
     'pack.customOption': '✎ Minhas Próprias Perguntas (não salva)',
-    'pack.customHint': 'Cole ou envie suas perguntas, clique em "Processar", e comece o evento. Nada disso fica salvo — some quando a sessão terminar.',
+    'pack.customHint': 'Cole ou envie suas perguntas, clique em "Processar", e comece o evento.',
+    'customQuestions.savePack': 'Salvar esse pacote pra reusar em eventos futuros',
+    'pack.noDifficultyWarning': 'Esse pacote não tem dificuldade marcada por pergunta - o balanceamento fácil/médio/difícil fica desligado, as perguntas são sorteadas de qualquer nível pra qualquer envelope.',
     'pack.modalEyebrow': 'Minhas Próprias Perguntas',
     'pack.noneYet': 'Nenhuma pergunta ainda.',
     'pack.someProcessed': '{n} pergunta(s) processada(s) ✓',
@@ -197,7 +199,9 @@ const translations = {
     'confirm.cancelEvent': 'Cancel the current event and go back to configuration?',
 
     'pack.customOption': '✎ My Own Questions (not saved)',
-    'pack.customHint': 'Paste or upload your questions, click "Process", and start the event. None of this is saved — it disappears when the session ends.',
+    'pack.customHint': 'Paste or upload your questions, click "Process", and start the event.',
+    'customQuestions.savePack': 'Save this pack to reuse in future events',
+    'pack.noDifficultyWarning': 'This pack has no difficulty tagged per question - easy/medium/hard balancing is off, questions are drawn from the whole pack for any envelope.',
     'pack.modalEyebrow': 'My Own Questions',
     'pack.noneYet': 'No questions yet.',
     'pack.someProcessed': '{n} question(s) processed ✓',

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan to claim - Nodra</title>
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/account.css">
+<style>
+    /* Tela feita pra ficar aberta numa TV/projetor/impressa num
+       poster no evento - só o QR grande e a badge, ninguém interage
+       com essa página em si, só escaneia com o celular. Reportado
+       ao vivo: "um qr estático, uma página real... só um qr e uma
+       badge, sem ter que receber link via algum tipo de mensagem". */
+    body{
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:40px;
+    }
+    .display-card{
+        max-width:520px;
+        width:100%;
+        text-align:center;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:20px;
+    }
+    .display-logo{
+        display:flex;
+        align-items:center;
+        gap:10px;
+    }
+    .display-qr{
+        width:320px;
+        height:320px;
+        border-radius:16px;
+        background:#fff;
+        padding:16px;
+    }
+    .display-badge-row{
+        display:flex;
+        align-items:center;
+        gap:16px;
+        margin-top:8px;
+    }
+    .display-badge-row .badge{
+        width:64px;
+        height:69px;
+        flex-shrink:0;
+    }
+    .display-badge-row .badge--small{
+        width:64px;
+        height:69px;
+    }
+    .display-title{
+        font-family:var(--font-heading);
+        font-size:32px;
+        text-transform:uppercase;
+        margin:0;
+    }
+    .display-hint{
+        color:var(--text-secondary);
+        font-size:16px;
+        margin:0;
+    }
+    .display-skeleton{
+        width:320px;
+        height:320px;
+        border-radius:16px;
+        background:var(--surface-2);
+        animation:display-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes display-pulse{
+        0%, 100%{ opacity:.4; }
+        50%{ opacity:.8; }
+    }
+</style>
+</head>
+<body>
+
+<div class="display-card">
+
+    <a href="../index.html" class="display-logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <h1 class="display-title" id="display-title">Scan to claim</h1>
+
+    <div id="display-qr-wrap">
+        <div class="display-skeleton"></div>
+    </div>
+
+    <div class="display-badge-row" id="display-badge-row" hidden>
+        <div id="display-badge-preview"></div>
+        <div style="text-align:left;">
+            <div id="display-badge-name" style="font-family:var(--font-heading); font-size:20px; text-transform:uppercase;"></div>
+            <div id="display-badge-description" style="color:var(--text-secondary); font-size:14px;"></div>
+        </div>
+    </div>
+
+    <p class="display-hint" id="display-hint">Point your phone's camera at the QR code above.</p>
+
+</div>
+
+<script src="assets/js/claim-display.js"></script>
+
+</body>
+</html>

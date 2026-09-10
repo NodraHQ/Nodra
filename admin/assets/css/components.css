@@ -753,11 +753,15 @@ a:focus{
 @media (max-width:768px){
 
     .navbar{
-        padding:0 24px;
+        height:auto;
+        min-height:80px;
+        padding:14px 20px;
+        flex-wrap:wrap;
+        row-gap:10px;
     }
 
     .nav-links{
-        display:none;
+        gap:8px;
     }
 
     .hero{

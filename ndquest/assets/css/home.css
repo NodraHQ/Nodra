@@ -1,13 +1,144 @@
 /* =========================================================
    NDQUEST — HOME.CSS
-   Styles specific to the NDQuest landing page itself (the
-   games grid). Everything else (navbar, hero, card, buttons)
-   lives in components.css and is reused as-is.
+
+   Segunda reconstrução da landing - reportado ao vivo que a
+   primeira (cards flutuando, hero grande, categoria em pílula)
+   "não era bem isso". Referência nova: portal de jogos antigo
+   (categoria numa barra lateral reta, não pílula/aba), hero
+   enxuto sem nada flutuando, card de jogo continua no formato que
+   já tinha antes dessa rodada (poucos jogos, não precisa de
+   miniatura densa tipo o portal tinha).
    ========================================================= */
 
-.games-section {
-  padding: 32px 0 80px;
+/* --------------------------------------------------------
+   HERO - enxuto, só título + descrição curta, sem imagem
+   nenhuma flutuando.
+   -------------------------------------------------------- */
+
+.hero--slim {
+  padding: 48px 0 32px;
 }
+
+.hero-description {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --------------------------------------------------------
+   LAYOUT COM BARRA LATERAL - categoria na lateral esquerda,
+   jogos da categoria escolhida ao lado, mesmo espírito do
+   portal de referência (não centralizado, não em pílula).
+   -------------------------------------------------------- */
+
+.games-section {
+  padding: 44px 0 96px;
+}
+
+/* Não usa .container aqui de propósito - bug real reportado ao
+   vivo: a navbar não tem container nenhum (fica ancorada na borda
+   da tela, 32px de respiro), mas .container tem largura máxima e
+   se AUTOCENTRALIZA em telas largas - em tela cheia, a barra
+   lateral desalinhava da logo porque um estava preso na borda e o
+   outro recentralizava sozinho. .games-edge usa o mesmo respiro de
+   borda da navbar (32px), sem nunca recentralizar - o teto de
+   largura fica só no conteúdo (.games-content), não no wrapper
+   inteiro, pra não esticar os cards demais em tela muito larga
+   mas manter a barra lateral sempre grudada na borda certa. */
+.games-edge {
+  padding: 0 32px;
+}
+
+.games-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  max-width: 1120px;
+}
+
+.category-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 180px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 24px;
+  /* .games-edge agora usa o mesmo respiro de borda da navbar (32px),
+     então só falta cancelar o padding interno do próprio botão
+     (16px) até o texto aparecer - sem isso "Quiz" ainda ficava um
+     pouco mais pra dentro que "NDQuest". */
+  margin-left: -16px;
+}
+
+.games-content {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 780px) {
+  .games-layout {
+    flex-direction: column;
+  }
+  .category-sidebar {
+    flex-direction: row;
+    width: 100%;
+    position: static;
+    overflow-x: auto;
+  }
+}
+
+/* --------------------------------------------------------
+   ABA DE CATEGORIA - reta, tipo item de menu de navegação, não
+   pílula. Barra lateral colorida marca a ativa (mesmo princípio
+   visual de um item de menu selecionado num portal).
+   -------------------------------------------------------- */
+
+.category-tab {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  border-left: 3px solid transparent;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.category-tab.is-active {
+  background: var(--color-surface);
+  border-left-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.category-tab:not(.is-active):hover {
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+}
+
+@media (max-width: 780px) {
+  .category-tab {
+    width: auto;
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+  .category-tab.is-active {
+    border-bottom-color: var(--color-gold);
+  }
+}
+
+/* --------------------------------------------------------
+   CARD DE JOGO - formato que já existia antes dessa rodada de
+   mudança, mantido de propósito (poucos jogos, não precisa
+   encolher pra caber muito na tela).
+   -------------------------------------------------------- */
 
 .games-grid {
   display: grid;
@@ -15,7 +146,17 @@
   gap: 24px;
 }
 
-@media (max-width: 720px) {
+/* Sem isso, com 3 jogos numa grade de 2 colunas, o terceiro ficava
+   sozinho preso numa linha nova, com um espaço vazio do lado -
+   reportado ao vivo: "vai ficar uma bela bosta". Em tela larga o
+   bastante pra caber 3 numa fileira só, usa 3 colunas em vez de 2. */
+@media (min-width: 980px) {
+  .games-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
   .games-grid {
     grid-template-columns: 1fr;
   }
