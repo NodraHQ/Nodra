@@ -1,8 +1,56 @@
 # Nodra Match History, Host Payout Screen & VIP Scope
 
-Version: 1.0
-Status: Approved for build, not yet implemented
-Last Updated: August 2026
+Version: 1.1
+Status: Match history + guest routing implemented. Host payout screen and badge
+voucher mechanism NOT implemented (see Open Items). VIP scope has grown far past
+what this doc originally specified — see `VIP_TIER_ARCHITECTURE.md`.
+Last Updated: September 2026
+
+---
+
+# Implementation Status (added Sept 2026 — read this before touching match history)
+
+What actually got built, and how it diverges from the original plan below:
+
+**`match_history` exists and is live**, matching the schema below, for all 4 games.
+One real deviation from the original design: a **second table,
+`guest_participants`**, was added as a companion. `match_history`'s insert policy
+requires `auth.uid() = user_id` — a logged-in-only requirement — so a genuinely
+anonymous player (no session at all) had no way to satisfy it. `guest_participants`
+is host-only-visible (not public like `match_history`), keyed by `nickname` instead
+of `user_id`, and is where non-logged-in players' results land instead. The routing
+decision (which table a given result goes to) happens per-player, per-game, in each
+game's own `play.js`.
+
+**Anonymous auth changed the ground under this feature — read carefully.** Guests
+now get a real (if anonymous) Supabase session via `signInAnonymously()`, for an
+unrelated reason (RLS needed a real identity to scope guest player-row permissions
+to, see `VIP_TIER_ARCHITECTURE.md`'s security section). The side effect: any code
+that decided "logged in vs guest" by checking `if (userId)` broke, because
+`getCurrentUserId()` now *always* returns something, even for guests. This caused
+two real, separately-discovered bugs — guest names showing as "?" in host room
+history, and guest placement never being recorded in Time Attack (a bug that lived
+in the `time-attack-update-ranking` Edge Function itself, not just client code,
+and required a real production report to notice, since it never causes an error,
+just silently updates zero rows).
+
+**The fix pattern, if you're routing to `match_history` vs `guest_participants`
+anywhere new**: do not check truthiness of a user id. Check
+`session.user.is_anonymous` explicitly (a real field Supabase exposes for exactly
+this). A small `isAnonymousSession()` helper exists in each game's `play.js` for
+this. If you're doing an UPDATE against one of these two tables based on a stored
+row (not a live session, e.g. recalculating a ranking after the fact), the more
+robust pattern is: don't branch on a check at all — attempt the update against
+*both* tables unconditionally, scoped by a natural key (nickname + room_code +
+round_number for guests, user_id + room_code + round_number for real accounts). The
+`WHERE` clause on whichever table doesn't apply simply matches zero rows; no
+if/else needed, and no future auth change can silently break the routing again.
+
+**Host payout screen, prize sending, badge-grant-from-payout-screen: still not
+built.** Everything in the "Host Payout Screen" section below is still the plan,
+not the implementation. What exists instead today: badges are created and granted
+from the VIP's own account page (not from an end-of-game screen), independent of
+match results.
 
 ---
 
@@ -177,7 +225,15 @@ later just to add a button that was always going to belong there.
 
 ---
 
-# VIP Scope, v1
+# VIP Scope, v1 — SUPERSEDED, see VIP_TIER_ARCHITECTURE.md
+
+This section is left below for history only. It was accurate as of August 2026, when
+retention was the only decided VIP perk. That is no longer true — VIP grew into a
+full 3-tier system (Bronze/Prata/Gold) with per-tier room-size limits, creation
+quotas for badges/themes/packs, a platform-wide connection cap, and more. None of
+that is documented in this file. Read `VIP_TIER_ARCHITECTURE.md` for the current,
+accurate picture. The paragraphs below are kept only so old context isn't lost, not
+as current guidance.
 
 The only VIP perk that is actually decided and specified, anywhere, is the retention
 window: 30 days default vs. 180 days (6 months) for VIP, applying to host room/payout
@@ -204,6 +260,17 @@ beyond retention that actually checks `is_vip` and changes behavior.
 - The badge voucher-signing Edge Function and the mint contract on Avalanche — the
   button on the payout screen will call into this once it exists; it doesn't exist
   yet.
-- Any VIP perk beyond retention — not decided, not scoped, do not build speculatively.
 - Rolling this same host-payout-screen pattern to Quest Drop once it gains a live room
   concept (it doesn't have one today, so it's excluded from this document entirely).
+- Roulette's "import players from another game's room" mode always records
+  imported players as guests in history, even when the original player was a real
+  account. Attempted once (Sept 2026) by carrying the source `user_id` into the
+  client-side `roulette_players` insert — this broke the entire insert, because RLS
+  rejects any insert where `user_id` doesn't match `auth.uid()` (a host can't insert
+  a row claiming to be someone else). Reverted. The correct fix needs an Edge
+  Function running with the service role to do this insert, not a direct client
+  write — not yet built.
+- See `VIP_TIER_ARCHITECTURE.md`'s own Open Items for tier-limit enforcement gaps
+  (room/pack/badge/theme caps are enforced client-side only, not at the RLS/Edge
+  Function level — a technically-savvy user could bypass them by calling the
+  Supabase REST API directly instead of going through the site).
