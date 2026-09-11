@@ -89,7 +89,12 @@
 
         const { data: { session } } = await window.nodraSupabase.auth.getSession();
 
-        if (!session) {
+        // Sessão anônima (de quem jogou algum jogo do ndquest antes de
+        // visitar a Academy) fica salva no mesmo localStorage - conta
+        // como "tem session" mas não é login de verdade. Sem essa
+        // checagem, a navbar mostrava "logado" pra convidado que nunca
+        // criou conta nenhuma.
+        if (!session || session.user.is_anonymous) {
             renderSignedOut(container);
             return;
         }

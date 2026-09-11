@@ -4269,7 +4269,12 @@ vipRedeemCodeForm?.addEventListener("submit", async (event) => {
 // ==================================================================
 
 supabaseClient.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) {
+    // Sessão anônima (convidado que entrou num jogo do ndquest antes de
+    // visitar /account/) fica salva no mesmo localStorage do projeto -
+    // conta como "tem session" mas não é login de verdade. Sem essa
+    // checagem, quem só jogou como convidado caía direto na tela de
+    // perfil logado, em vez da tela de login.
+    if (session?.user && !session.user.is_anonymous) {
         ensureProfileAndRoute(session.user);
     } else {
         toggleNavbarProfileTabs(false);
@@ -4495,7 +4500,10 @@ document.getElementById("support-reply-form")?.addEventListener("submit", async 
     const {
         data: { session },
     } = await supabaseClient.auth.getSession();
-    if (session?.user) {
+    // Mesma checagem de is_anonymous do onAuthStateChange acima - sem
+    // ela, dar F5 na página com uma sessão anônima de convidado ainda
+    // cairia na tela de perfil logado.
+    if (session?.user && !session.user.is_anonymous) {
         await ensureProfileAndRoute(session.user);
     } else {
         toggleNavbarProfileTabs(false);

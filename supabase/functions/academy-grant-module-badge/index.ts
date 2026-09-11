@@ -20,7 +20,7 @@
 // outra - só a origem é diferente.
 // ==================================================================
 
-import { corsHeaders, getServiceClient, getOptionalCallerId } from "../_shared/gameAuth.ts";
+import { corsHeaders, getServiceClient, getOptionalCallerId, isCallerAnonymous } from "../_shared/gameAuth.ts";
 
 const MODULE_SLUGS = [
     "01-blockchain", "02-wallets", "03-networks", "04-assets", "05-defi",
@@ -39,6 +39,16 @@ Deno.serve(async (req) => {
 
     const callerId = await getOptionalCallerId(req);
     if (!callerId) {
+        return jsonError("Precisa estar logado pra ganhar a badge", 401);
+    }
+
+    // Bug real: sessão anônima (de quem jogou algum jogo do ndquest
+    // antes de visitar a Academy no mesmo navegador) passava por aqui
+    // como se fosse conta de verdade - getOptionalCallerId só olha se
+    // existe id, não se é anônimo. A badge era concedida "de verdade"
+    // numa conta descartável, e a Academy mostrava "conquistada" mesmo
+    // sem a pessoa ter feito login de verdade.
+    if (await isCallerAnonymous(req)) {
         return jsonError("Precisa estar logado pra ganhar a badge", 401);
     }
 

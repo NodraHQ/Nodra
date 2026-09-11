@@ -57,7 +57,20 @@ Deno.serve(async (req) => {
             });
         }
 
-        if (winnerPlayerRow.user_id) {
+        // Bug real reportado ao vivo (visto em produção com print): esse
+        // "if" checava só se winnerPlayerRow.user_id existia - mas desde
+        // que convidado ganhou sessão anônima, TODO jogador tem um
+        // user_id (até quem nunca logou), então esse if sempre caía no
+        // ramo de match_history, e o resultado do convidado aparecia
+        // como "?" no histórico do host (guest_participants nunca
+        // recebia a linha). Precisa confirmar de verdade se é conta real
+        // (via Admin API, é o único jeito confiável de saber a partir só
+        // do user_id, sem token de sessão do próprio vencedor à mão).
+        const isRealAccount = winnerPlayerRow.user_id
+            ? await isRealAccountId(client, winnerPlayerRow.user_id)
+            : false;
+
+        if (isRealAccount) {
             const { error } = await client
                 .from("match_history")
                 .insert({
@@ -118,3 +131,16 @@ Deno.serve(async (req) => {
     }
 
 });
+
+// Confirma se um user_id é de conta real (não sessão anônima) usando a
+// Admin API - único jeito confiável de checar isso a partir só do id,
+// sem ter o token da sessão do próprio vencedor em mãos (quem chama essa
+// function é o host, não o vencedor).
+async function isRealAccountId(
+    client: ReturnType<typeof getServiceClient>,
+    userId: string,
+): Promise<boolean> {
+    const { data, error } = await client.auth.admin.getUserById(userId);
+    if (error || !data?.user) return false;
+    return !data.user.is_anonymous;
+}

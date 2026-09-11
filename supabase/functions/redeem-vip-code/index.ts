@@ -47,6 +47,16 @@ Deno.serve(async (req) => {
             return jsonError("Not signed in", 401);
         }
 
+        // Bug real: sessão anônima (convidado que jogou algum jogo do
+        // ndquest antes de visitar /account/ no mesmo navegador) tem
+        // user_id de verdade, então passava por "Not signed in" sem
+        // problema - o código resgatava de verdade, gastando um uso
+        // limitado, com o VIP preso numa conta descartável que a pessoa
+        // não consegue acessar de novo.
+        if (user.is_anonymous) {
+            return jsonError("Faça login numa conta de verdade pra resgatar um código", 401);
+        }
+
         const body = await req.json().catch(() => null);
         const rawCode = body?.code;
 

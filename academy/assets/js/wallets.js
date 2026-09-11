@@ -297,7 +297,11 @@
 
       window.nodraSupabase.auth.getSession().then(function (result) {
         var session = result.data.session;
-        if (!session) {
+        // Sessão anônima (convidado que jogou algum jogo antes) conta como
+        // "tem session", mas não é login de verdade - sem isso, a badge
+        // era concedida de verdade numa conta descartável que a pessoa
+        // nunca mais acessa, mostrando "conquistada" por engano.
+        if (!session || session.user.is_anonymous) {
           note.textContent = 'Faça login pra ganhar a badge deste módulo.';
           return;
         }
