@@ -2174,6 +2174,113 @@ grantTargetSearchInput?.addEventListener("input", () => {
     }, 300);
 });
 
+// --------------------------------------------------------
+// Colar lista de vários nomes de uma vez (reportado ao vivo: só dava
+// pra conceder badge digitando um nome de cada vez, sem jeito de
+// colar a lista que o próprio Nodra já deixa copiar no fim de
+// partida/roleta - "1. fulano\n2. ciclana..."). Aceita um nome por
+// linha ou separado por vírgula, e tira número/cerquilha/marcador do
+// início de cada linha antes de tentar casar com username - assim
+// aceita colar de qualquer lugar, não só do formato específico do
+// Nodra.
+// --------------------------------------------------------
+
+const grantTargetPasteInput = document.getElementById("grant-target-paste");
+const grantTargetPasteBtn = document.getElementById("grant-target-paste-btn");
+const grantTargetPasteStatus = document.getElementById("grant-target-paste-status");
+
+function parsePastedNameList(raw) {
+    return raw
+        .split(/[\n,]/)
+        .map((line) => line.trim().replace(/^(\d+[.)]|#\d+|[-*•])\s*/, "").trim())
+        .filter((line) => line.length > 0);
+}
+
+// username pode ter "_" (e teoricamente "%"), que em ILIKE são
+// coringa - sem escapar, "ana_maria" bateria com "anaXmaria" também.
+// Aqui a busca é sempre por igualdade exata (sem % nas pontas), só
+// ILIKE em vez de eq pra ignorar maiúscula/minúscula.
+function escapeLikePattern(value) {
+    return value.replace(/[%_\\]/g, (match) => `\\${match}`);
+}
+
+grantTargetPasteBtn?.addEventListener("click", async () => {
+    const names = parsePastedNameList(grantTargetPasteInput.value);
+
+    grantTargetPasteStatus.textContent = "";
+    grantTargetPasteStatus.className = "vip-badge-status";
+
+    if (names.length === 0) return;
+
+    grantTargetPasteBtn.disabled = true;
+
+    try {
+        // Uma query por nome (match exato, só ignorando maiúscula) -
+        // lista de conceder badge costuma ser dezenas de nomes, não
+        // precisa otimizar isso num lote só.
+        const lookups = await Promise.all(
+            names.map((name) =>
+                supabaseClient
+                    .from("profiles_public")
+                    .select("id, username")
+                    .ilike("username", escapeLikePattern(name))
+                    .limit(1)
+                    .maybeSingle()
+                    .then((res) => ({ name, profile: res.data }))
+                    .catch(() => ({ name, profile: null }))
+            )
+        );
+
+        let added = 0;
+        const missing = [];
+        const seenThisBatch = new Set();
+
+        lookups.forEach(({ name, profile }) => {
+            if (!profile) {
+                missing.push(name);
+                return;
+            }
+            if (grantSelectedTargets.has(profile.id) || seenThisBatch.has(profile.id)) {
+                return; // já estava na lista, ou duas linhas coladas apontam pra mesma conta
+            }
+            seenThisBatch.add(profile.id);
+            grantSelectedTargets.set(profile.id, profile.username);
+            added += 1;
+        });
+
+        renderGrantTargetChips();
+        updateGrantButtonState();
+
+        if (added === 0) {
+            grantTargetPasteStatus.textContent =
+                window.nodraTranslator?.translations?.["vip.pasteListNoneFound"] ||
+                "None of the names in the list matched an account username.";
+            grantTargetPasteStatus.className = "vip-badge-status is-error";
+        } else if (missing.length > 0) {
+            const template =
+                window.nodraTranslator?.translations?.["vip.pasteListPartial"] ||
+                "{added} added. Couldn't find an account for: {missing}";
+            grantTargetPasteStatus.textContent = template
+                .replace("{added}", added)
+                .replace("{missing}", missing.join(", "));
+            grantTargetPasteStatus.className = "vip-badge-status is-error";
+        } else {
+            const template =
+                window.nodraTranslator?.translations?.["vip.pasteListAllAdded"] ||
+                "{added} added from the list.";
+            grantTargetPasteStatus.textContent = template.replace("{added}", added);
+            grantTargetPasteStatus.className = "vip-badge-status is-success";
+            grantTargetPasteInput.value = "";
+        }
+    } catch (err) {
+        console.error("Erro ao processar lista colada pra conceder badge:", err);
+        grantTargetPasteStatus.textContent = "Erro ao processar a lista.";
+        grantTargetPasteStatus.className = "vip-badge-status is-error";
+    } finally {
+        grantTargetPasteBtn.disabled = false;
+    }
+});
+
 grantBadgeForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
 

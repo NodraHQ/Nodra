@@ -1496,6 +1496,24 @@ input[type="file"]::file-selector-button:hover {
     font-size: 14px;
 }
 
+/* Reportado ao vivo: "colar lista" ficou colado no campo de username
+   de cima - o gap padrão do form (10px) não bastava porque esse label
+   vem logo depois de um bloco que já tem seu próprio espaço reservado
+   pro dropdown de busca (mesmo escondido). Margem extra só nesse
+   label, sem mexer no espaçamento do resto do formulário. */
+/* Bug de raiz, não relacionado ao formulário de conceder badge em si:
+   .vip-subtab-panel (o wrapper de cada sub-aba dentro de VIP) nunca
+   tinha gap nenhum configurado, diferente de .profile-content (que
+   usa gap:20px pra separar os cards do resto da página). Com só um
+   card por sub-aba isso nunca apareceu; assim que a aba "badges"
+   ganhou um segundo card (Criar + Conceder), os dois colaram um no
+   outro. Mesmo tratamento que .profile-content já usa. */
+.vip-subtab-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .vip-badge-form-grid {
     display: flex;
     gap: 24px;

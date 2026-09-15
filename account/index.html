@@ -891,6 +891,12 @@
                                 <input type="text" id="grant-target-search" autocomplete="off" placeholder="alice" />
                                 <div id="grant-target-results" class="vip-user-search-results" hidden></div>
                             </div>
+
+                            <label class="vip-paste-list-label" data-i18n="vip.pasteListLabel">Or paste a list (one name per line, or copied from a game's results)</label>
+                            <textarea id="grant-target-paste" rows="4" data-i18n-placeholder="vip.pasteListPlaceholder" placeholder="alice&#10;2. bob&#10;#3 carol" style="width:100%; resize:vertical; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-1); color:var(--text); font-family:inherit; font-size:14px;"></textarea>
+                            <button type="button" id="grant-target-paste-btn" class="btn btn-secondary" data-i18n="vip.pasteListBtn">Add from list</button>
+                            <p id="grant-target-paste-status" class="vip-badge-status"></p>
+
                             <div id="grant-target-chips" class="vip-target-chips"></div>
 
                             <label data-i18n="vip.selectBadges">Badges</label>
