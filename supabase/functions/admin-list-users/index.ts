@@ -21,7 +21,7 @@ Deno.serve(withAdminAuth(async (req, { adminClient }) => {
 
     let query = adminClient
         .from("profiles")
-        .select("id, username, x_handle, telegram_handle, instagram_handle, wallet_evm, is_vip, created_at", { count: "exact" })
+        .select("id, username, x_handle, telegram_handle, instagram_handle, wallet_evm, is_vip, vip_tier, created_at", { count: "exact" })
         .order("created_at", { ascending: false })
         .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 

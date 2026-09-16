@@ -231,21 +231,68 @@ async function loadUsers(search = "") {
 
         for (const user of users) {
             const tr = document.createElement("tr");
+            const tierLabel = user.is_vip && user.vip_tier
+                ? ` · ${user.vip_tier.charAt(0).toUpperCase()}${user.vip_tier.slice(1)}`
+                : "";
             tr.innerHTML = `
                 <td>${escapeHtml(user.username || "-")}</td>
                 <td class="admin-wallet-cell">${escapeHtml(user.wallet_evm || "-")}</td>
-                <td>${user.is_vip ? '<span class="admin-vip-badge">VIP</span>' : "-"}</td>
+                <td>${user.is_vip ? `<span class="admin-vip-badge">VIP${escapeHtml(tierLabel)}</span>` : "-"}</td>
                 <td>${formatDate(user.created_at)}</td>
                 <td></td>
             `;
             const actionCell = tr.lastElementChild;
+
+            // Seletor de tier + botão que serve pra dois casos: dar
+            // VIP pela primeira vez, OU trocar o tier de quem já é
+            // VIP (upgrade/downgrade sem precisar revogar e conceder
+            // de novo). Bug real reportado ao vivo: essa tela nunca
+            // deixou escolher tier nenhum - toda concessão ficava com
+            // vip_tier null, e não tinha como saber qual tier cada
+            // VIP tinha só olhando a tabela.
+            const tierSelect = document.createElement("select");
+            tierSelect.className = "admin-tier-select";
+            ["bronze", "prata", "gold"].forEach((tierValue) => {
+                const option = document.createElement("option");
+                option.value = tierValue;
+                option.textContent = tierValue.charAt(0).toUpperCase() + tierValue.slice(1);
+                if (tierValue === (user.vip_tier || "bronze")) option.selected = true;
+                tierSelect.appendChild(option);
+            });
+            actionCell.appendChild(tierSelect);
+
             const vipBtn = document.createElement("button");
             vipBtn.className = "btn btn-secondary";
             vipBtn.textContent = user.is_vip
-                ? (window.nodraTranslator?.translations?.["users.revokeVip"] || "Revoke VIP")
+                ? (window.nodraTranslator?.translations?.["users.updateTier"] || "Update tier")
                 : (window.nodraTranslator?.translations?.["users.grantVip"] || "Grant VIP");
-            vipBtn.addEventListener("click", () => toggleVip(user.id, !user.is_vip));
+            vipBtn.addEventListener("click", () => toggleVip(user.id, true, tierSelect.value));
             actionCell.appendChild(vipBtn);
+
+            if (user.is_vip) {
+                const revokeBtn = document.createElement("button");
+                revokeBtn.className = "btn btn-secondary";
+                revokeBtn.textContent = window.nodraTranslator?.translations?.["users.revokeVip"] || "Revoke VIP";
+                revokeBtn.addEventListener("click", () => toggleVip(user.id, false));
+                actionCell.appendChild(revokeBtn);
+            }
+
+            // Botão separado, sempre disponível (mesmo pra quem ainda
+            // não é VIP) - a Edge Function é quem barra com uma
+            // mensagem clara se a conta não for VIP ainda, em vez do
+            // botão simplesmente não aparecer sem explicação nenhuma.
+            const themeBtn = document.createElement("button");
+            themeBtn.className = "btn btn-secondary";
+            themeBtn.textContent = window.nodraTranslator?.translations?.["users.grantThemeBtn"] || "Create theme";
+            themeBtn.addEventListener("click", () => openGrantThemePanel(user.id, user.username || user.id));
+            actionCell.appendChild(themeBtn);
+
+            const packBtn = document.createElement("button");
+            packBtn.className = "btn btn-secondary";
+            packBtn.textContent = window.nodraTranslator?.translations?.["users.grantPackBtn"] || "Create pack";
+            packBtn.addEventListener("click", () => openGrantPackPanel(user.id, user.username || user.id));
+            actionCell.appendChild(packBtn);
+
             tbody.appendChild(tr);
         }
 
@@ -255,11 +302,11 @@ async function loadUsers(search = "") {
 
 }
 
-async function toggleVip(targetUserId, grant) {
+async function toggleVip(targetUserId, grant, tier) {
     try {
         await callAdminFunction("admin-grant-vip", {
             method: "POST",
-            body: JSON.stringify({ targetUserId, grant }),
+            body: JSON.stringify({ targetUserId, grant, ...(grant ? { tier } : {}) }),
         });
         loadUsers(document.getElementById("users-search")?.value.trim() || "");
     } catch (err) {
@@ -267,6 +314,599 @@ async function toggleVip(targetUserId, grant) {
         alert(err.message);
     }
 }
+
+// ==================================================================
+// CRIAR TEMA PRA OUTRA CONTA (admin-grant-theme)
+//
+// Pedido ao vivo: "em vez do usuário criar o tema, eu como admin
+// crio um e jogo pra ele ter acesso como se fosse um tema simples
+// criado por ele". Painel único (não um por linha da tabela) que
+// aparece/some conforme o botão clicado, guardando o alvo atual em
+// grantThemeTargetUserId - mesmo padrão de "um estado só, reaproveita
+// os mesmos campos" que o resto do admin.js já usa.
+// ==================================================================
+
+const grantThemePanel = document.getElementById("admin-grant-theme-panel");
+const grantThemeForm = document.getElementById("admin-grant-theme-form");
+const grantThemeTargetNameEl = document.getElementById("admin-grant-theme-target-name");
+const grantThemeStatus = document.getElementById("admin-grant-theme-status");
+let grantThemeTargetUserId = null;
+
+function openGrantThemePanel(targetUserId, targetUsername) {
+    grantThemeTargetUserId = targetUserId;
+    grantThemeTargetNameEl.textContent = targetUsername;
+    grantThemeForm.reset();
+    pendingGrantThemeLogoFile = null;
+    adminThemePrimaryHex = "#3a7bd5";
+    adminThemeBackgroundHex = "#0f1420";
+    adminThemeColorOverrides = {};
+    updateAdminThemePreview();
+    grantThemeStatus.textContent = "";
+    grantThemeStatus.className = "vip-badge-status";
+    grantThemePanel.hidden = false;
+    grantThemePanel.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function closeGrantThemePanel() {
+    grantThemeTargetUserId = null;
+    pendingGrantThemeLogoFile = null;
+    grantThemePanel.hidden = true;
+}
+
+document.getElementById("admin-grant-theme-cancel")?.addEventListener("click", closeGrantThemePanel);
+
+// ------------------------------------------------------------------
+// Mesma matemática de derivação de cor do vip-create-theme/
+// admin-grant-theme (HSL a partir de primary+background) - roda aqui
+// no cliente só pra preview em tempo real. A fonte de verdade
+// continua sendo a Edge Function, que recalcula do zero no servidor;
+// isso aqui é só UX, pra pessoa ver o resultado antes de enviar.
+// ------------------------------------------------------------------
+
+function hexToRgbAdmin(hex) {
+    const clean = hex.replace("#", "");
+    const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+    const num = parseInt(full, 16);
+    return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+}
+
+function rgbToHslAdmin(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    const d = max - min;
+    if (d !== 0) {
+        s = d / (1 - Math.abs(2 * l - 1));
+        switch (max) {
+            case r: h = ((g - b) / d) % 6; break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h *= 60;
+        if (h < 0) h += 360;
+    }
+    return [h, s * 100, l * 100];
+}
+
+function hslToHexAdmin(h, s, l) {
+    s = Math.max(0, Math.min(100, s)) / 100;
+    l = Math.max(0, Math.min(100, l)) / 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; } else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+    const toHex = (v) => Math.round((v + m) * 255).toString(16).padStart(2, "0");
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function clampAdmin(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+}
+
+function deriveThemeColorsAdmin(primaryHex, backgroundHex) {
+    const [pr, pg, pb] = hexToRgbAdmin(primaryHex);
+    const [ph, ps] = rgbToHslAdmin(pr, pg, pb);
+    const [br, bg, bb] = hexToRgbAdmin(backgroundHex);
+    const [bh, bs, bl] = rgbToHslAdmin(br, bg, bb);
+    const isDark = bl < 50;
+
+    const primaryLight = hslToHexAdmin(ph, clampAdmin(ps + 5, 0, 100), clampAdmin(ps > 0 ? (isDark ? 62 : 55) : 70, 0, 92));
+    const surface = hslToHexAdmin(bh, bs, clampAdmin(bl + (isDark ? 8 : -6), 0, 100));
+    const text = isDark ? hslToHexAdmin(0, 0, 96) : hslToHexAdmin(0, 0, 12);
+    const paperTint = Math.min(ps * 0.15, 12);
+    const paper = hslToHexAdmin(ph, paperTint, 94);
+
+    return { primary: primaryHex, primaryLight, background: backgroundHex, surface, text, paper };
+}
+
+// Estado das duas cores-base e das sobrescritas manuais - mesmo
+// modelo do account.js (themePrimaryHex/themeBackgroundHex/
+// themeColorOverrides): só entra em color_overrides o que a pessoa
+// realmente clicou pra ajustar; o resto vem sempre do cálculo em
+// cima das duas cores-base, recalculado a cada mudança nelas.
+let adminThemePrimaryHex = "#3a7bd5";
+let adminThemeBackgroundHex = "#0f1420";
+let adminThemeColorOverrides = {};
+
+function updateAdminThemePreview() {
+    document.getElementById("admin-theme-primary-swatch").style.background = adminThemePrimaryHex;
+    document.getElementById("admin-theme-primary-value").textContent = adminThemePrimaryHex;
+    document.getElementById("admin-theme-background-swatch").style.background = adminThemeBackgroundHex;
+    document.getElementById("admin-theme-background-value").textContent = adminThemeBackgroundHex;
+
+    const derived = deriveThemeColorsAdmin(adminThemePrimaryHex, adminThemeBackgroundHex);
+    const colors = { ...derived, ...adminThemeColorOverrides };
+
+    ["primaryLight", "surface", "text", "paper"].forEach((key) => {
+        const el = document.getElementById(`admin-theme-swatch-${key}`);
+        if (el) el.style.background = colors[key];
+    });
+
+    return colors;
+}
+
+document.getElementById("admin-theme-primary-trigger")?.addEventListener("click", () => {
+    openAdminColorPicker(adminThemePrimaryHex, (hex) => {
+        adminThemePrimaryHex = hex;
+        // Trocar a cor-base depois de já ter ajustado swatch
+        // individual invalidaria essas sobrescritas de forma confusa
+        // (mesma decisão do account.js) - mais simples e previsível
+        // é limpar tudo e recalcular do zero.
+        adminThemeColorOverrides = {};
+        updateAdminThemePreview();
+    });
+});
+
+document.getElementById("admin-theme-background-trigger")?.addEventListener("click", () => {
+    openAdminColorPicker(adminThemeBackgroundHex, (hex) => {
+        adminThemeBackgroundHex = hex;
+        adminThemeColorOverrides = {};
+        updateAdminThemePreview();
+    });
+});
+
+// Clicar num swatch individual abre o mesmo seletor, só pra aquela
+// cor específica.
+document.querySelectorAll("#admin-theme-swatches .vip-theme-swatch-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const key = btn.dataset.colorKey;
+        const currentColors = updateAdminThemePreview();
+        openAdminColorPicker(currentColors[key], (hex) => {
+            adminThemeColorOverrides[key] = hex;
+            updateAdminThemePreview();
+        });
+    });
+});
+
+// ------------------------------------------------------------------
+// SELETOR DE COR PRÓPRIO - idêntico ao de account.js (quadrado de
+// saturação/luminosidade + barra de matiz + hex + paletas prontas).
+// Não é o <input type="color"> nativo do navegador de propósito: ele
+// tem uma ferramenta de "pegar cor de qualquer pixel da tela, até
+// fora do site", achado invasivo. Um único popover compartilhado,
+// reaproveitado pros três lugares que abrem seletor aqui (principal,
+// fundo, swatch individual) - guarda qual callback chamar em
+// onAdminPickerApply.
+// ------------------------------------------------------------------
+
+const ADMIN_PALETTE_COLORS = [
+    "#1a2942", "#7c3aed", "#c084fc", "#ef4444", "#f59e0b",
+    "#22c55e", "#0ea5e9", "#ec4899", "#64748b", "#0f172a",
+];
+
+function hsvToHexAdmin(h, s, v) {
+    s /= 100; v /= 100;
+    const c = v * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = v - c;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; } else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+    const toHex = (val) => Math.round((val + m) * 255).toString(16).padStart(2, "0");
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function normalizeHexInputAdmin(value) {
+    let v = (value || "").trim();
+    if (v && !v.startsWith("#")) v = `#${v}`;
+    return v;
+}
+
+function hexToHsvAdmin(hex) {
+    const clean = normalizeHexInputAdmin(hex).replace("#", "");
+    const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+    const num = parseInt(full, 16) || 0;
+    const r = ((num >> 16) & 255) / 255, g = ((num >> 8) & 255) / 255, b = (num & 255) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    let h = 0;
+    if (d !== 0) {
+        if (max === r) h = ((g - b) / d) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+    }
+    const s = max === 0 ? 0 : (d / max) * 100;
+    const v = max * 100;
+    return { h, s, v };
+}
+
+const adminThemeColorPicker = document.getElementById("admin-theme-color-picker");
+const adminThemePickerSv = document.getElementById("admin-theme-picker-sv");
+const adminThemePickerSvCursor = document.getElementById("admin-theme-picker-sv-cursor");
+const adminThemePickerHue = document.getElementById("admin-theme-picker-hue");
+const adminThemePickerHueCursor = document.getElementById("admin-theme-picker-hue-cursor");
+const adminThemePickerHex = document.getElementById("admin-theme-picker-hex");
+const adminThemePickerPalette = document.getElementById("admin-theme-picker-palette");
+const adminThemePickerDone = document.getElementById("admin-theme-picker-done");
+const adminThemeColorPickerBackdrop = document.getElementById("admin-theme-color-picker-backdrop");
+
+let adminPickerState = { h: 0, s: 0, v: 0 };
+let onAdminPickerApply = null;
+
+function adminPickerCurrentHex() {
+    return hsvToHexAdmin(adminPickerState.h, adminPickerState.s, adminPickerState.v);
+}
+
+function renderAdminPickerCursors() {
+    const svRect = adminThemePickerSv.getBoundingClientRect();
+    adminThemePickerSvCursor.style.left = `${(adminPickerState.s / 100) * (svRect.width || 248)}px`;
+    adminThemePickerSvCursor.style.top = `${(1 - adminPickerState.v / 100) * (svRect.height || 160)}px`;
+    adminThemePickerHueCursor.style.left = `${(adminPickerState.h / 360) * (adminThemePickerHue.getBoundingClientRect().width || 248)}px`;
+    adminThemePickerSv.style.background = `hsl(${adminPickerState.h}, 100%, 50%)`;
+}
+
+function renderAdminPickerHex() {
+    adminThemePickerHex.value = adminPickerCurrentHex().replace("#", "").toUpperCase();
+}
+
+function renderAdminColorPalette() {
+    adminThemePickerPalette.innerHTML = "";
+    ADMIN_PALETTE_COLORS.forEach((color) => {
+        const swatch = document.createElement("button");
+        swatch.type = "button";
+        swatch.className = "vip-color-swatch";
+        swatch.style.background = color;
+        swatch.setAttribute("aria-label", color);
+        swatch.addEventListener("click", () => {
+            adminPickerState = hexToHsvAdmin(color);
+            renderAdminPickerCursors();
+            renderAdminPickerHex();
+        });
+        adminThemePickerPalette.appendChild(swatch);
+    });
+}
+
+function openAdminColorPicker(initialHex, onApply) {
+    adminPickerState = hexToHsvAdmin(initialHex);
+    onAdminPickerApply = onApply;
+    adminThemeColorPicker.hidden = false;
+    renderAdminPickerCursors();
+    renderAdminPickerHex();
+    renderAdminColorPalette();
+}
+
+function closeAdminColorPicker() {
+    adminThemeColorPicker.hidden = true;
+    onAdminPickerApply = null;
+}
+
+function setAdminPickerFromPointer(clientX, clientY) {
+    const rect = adminThemePickerSv.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+    adminPickerState.s = (x / rect.width) * 100;
+    adminPickerState.v = (1 - y / rect.height) * 100;
+    renderAdminPickerCursors();
+    renderAdminPickerHex();
+}
+
+function setAdminPickerHueFromPointer(clientX) {
+    const rect = adminThemePickerHue.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    adminPickerState.h = (x / rect.width) * 360;
+    renderAdminPickerCursors();
+    renderAdminPickerHex();
+}
+
+function wireAdminDrag(el, onMove) {
+    let dragging = false;
+    const move = (e) => {
+        if (!dragging) return;
+        const point = e.touches ? e.touches[0] : e;
+        onMove(point.clientX, point.clientY);
+    };
+    const start = (e) => {
+        dragging = true;
+        move(e);
+    };
+    const stop = () => { dragging = false; };
+
+    el.addEventListener("mousedown", start);
+    el.addEventListener("touchstart", start, { passive: true });
+    window.addEventListener("mousemove", move);
+    window.addEventListener("touchmove", move, { passive: true });
+    window.addEventListener("mouseup", stop);
+    window.addEventListener("touchend", stop);
+}
+
+wireAdminDrag(adminThemePickerSv, (x, y) => setAdminPickerFromPointer(x, y));
+wireAdminDrag(adminThemePickerHue, (x) => setAdminPickerHueFromPointer(x));
+
+adminThemePickerHex?.addEventListener("input", () => {
+    const value = normalizeHexInputAdmin(`#${adminThemePickerHex.value}`);
+    if (/^#[0-9a-fA-F]{6}$/.test(value)) {
+        adminPickerState = hexToHsvAdmin(value);
+        renderAdminPickerCursors();
+    }
+});
+
+adminThemePickerDone?.addEventListener("click", () => {
+    const hex = adminPickerCurrentHex();
+    if (onAdminPickerApply) onAdminPickerApply(hex);
+    closeAdminColorPicker();
+});
+
+adminThemeColorPickerBackdrop?.addEventListener("click", closeAdminColorPicker);
+document.getElementById("admin-theme-picker-close-btn")?.addEventListener("click", closeAdminColorPicker);
+
+let pendingGrantThemeLogoFile = null;
+
+document.getElementById("admin-grant-theme-logo")?.addEventListener("change", (event) => {
+    pendingGrantThemeLogoFile = event.target.files?.[0] || null;
+});
+
+// Lê o arquivo escolhido como base64, pra mandar dentro do corpo JSON
+// da requisição - o upload em si acontece DENTRO da Edge Function
+// (service role, ignora RLS do bucket), não aqui no navegador. Bucket
+// theme-logos provavelmente só deixa cada pessoa subir arquivo com o
+// próprio ID no nome (mesmo padrão de outros buckets do projeto);
+// admin tentando subir em nome de outra conta direto do navegador
+// provavelmente seria barrado por essa RLS.
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result;
+            // "data:image/png;base64,AAAA..." - só a parte depois da vírgula
+            resolve(result.split(",")[1] || "");
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+    });
+}
+
+grantThemeForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!grantThemeTargetUserId) return;
+
+    const applicableGames = [...document.querySelectorAll(".admin-grant-theme-game-check:checked")].map(
+        (cb) => cb.value,
+    );
+
+    if (applicableGames.length === 0) {
+        grantThemeStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.themeGamesLabel"] || "Choose at least one game";
+        grantThemeStatus.className = "vip-badge-status is-error";
+        return;
+    }
+
+    const submitBtn = grantThemeForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    grantThemeStatus.textContent = "";
+    grantThemeStatus.className = "vip-badge-status";
+
+    try {
+        let logoBase64 = null;
+        let logoExt = null;
+        if (pendingGrantThemeLogoFile) {
+            logoBase64 = await readFileAsBase64(pendingGrantThemeLogoFile);
+            logoExt = pendingGrantThemeLogoFile.name.split(".").pop() || "png";
+        }
+
+        const result = await callAdminFunction("admin-grant-theme", {
+            method: "POST",
+            body: JSON.stringify({
+                target_user_id: grantThemeTargetUserId,
+                name: document.getElementById("admin-grant-theme-name").value.trim(),
+                primary_color: adminThemePrimaryHex,
+                background_color: adminThemeBackgroundHex,
+                color_overrides: adminThemeColorOverrides,
+                logo_base64: logoBase64,
+                logo_ext: logoExt,
+                slogan_pt: document.getElementById("admin-grant-theme-slogan-pt").value.trim() || null,
+                slogan_en: document.getElementById("admin-grant-theme-slogan-en").value.trim() || null,
+                applicable_games: applicableGames,
+            }),
+        });
+
+        if (result.error) throw new Error(result.error);
+
+        grantThemeStatus.textContent =
+            window.nodraTranslator?.translations?.["users.grantThemeSuccess"] || "Theme created and granted!";
+        grantThemeStatus.className = "vip-badge-status is-success";
+        setTimeout(closeGrantThemePanel, 1200);
+    } catch (err) {
+        console.error("Falha ao conceder tema:", err);
+        grantThemeStatus.textContent = err.message;
+        grantThemeStatus.className = "vip-badge-status is-error";
+    } finally {
+        submitBtn.disabled = false;
+    }
+});
+
+// ==================================================================
+// CRIAR PACOTE DE PERGUNTAS PRA OUTRA CONTA (admin-grant-pack)
+//
+// Mesmo padrão do painel de tema acima. O parser de texto em lote
+// (PERGUNTA/RESPOSTAS/CORRETA) é o mesmo que account.js usa - copiado
+// aqui porque essa tela é self-contained, sem importar de outro
+// arquivo.
+// ==================================================================
+
+const grantPackPanel = document.getElementById("admin-grant-pack-panel");
+const grantPackForm = document.getElementById("admin-grant-pack-form");
+const grantPackTargetNameEl = document.getElementById("admin-grant-pack-target-name");
+const grantPackStatus = document.getElementById("admin-grant-pack-status");
+let grantPackTargetUserId = null;
+
+function openGrantPackPanel(targetUserId, targetUsername) {
+    grantPackTargetUserId = targetUserId;
+    grantPackTargetNameEl.textContent = targetUsername;
+    grantPackForm.reset();
+    document.getElementById("admin-grant-pack-game-showdown").checked = true;
+    document.getElementById("admin-grant-pack-questdrop-note").hidden = true;
+    grantPackStatus.textContent = "";
+    grantPackStatus.className = "vip-badge-status";
+    grantPackPanel.hidden = false;
+    grantPackPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function closeGrantPackPanel() {
+    grantPackTargetUserId = null;
+    grantPackPanel.hidden = true;
+}
+
+document.getElementById("admin-grant-pack-cancel")?.addEventListener("click", closeGrantPackPanel);
+
+document.getElementById("admin-grant-pack-game-questdrop")?.addEventListener("change", (event) => {
+    document.getElementById("admin-grant-pack-questdrop-note").hidden = !event.target.checked;
+});
+
+// Parser idêntico ao parseFlatBulkQuestions de account.js - ver o
+// comentário lá pra entender as regras (DIFICULDADE opcional com ou
+// sem acento, RESPOSTAS separado por ";", CORRETA de 1 a 4).
+function parseFlatBulkQuestionsAdmin(text) {
+    const blocks = text.split(/\n\s*---\s*\n/).map((b) => b.trim()).filter(Boolean);
+    const parsed = [];
+    const errors = [];
+
+    const difficultyAliases = {
+        facil: "easy", "fácil": "easy", easy: "easy",
+        medio: "medium", "médio": "medium", medium: "medium",
+        dificil: "hard", "difícil": "hard", hard: "hard",
+    };
+
+    blocks.forEach((block, i) => {
+        const label = `Pergunta ${i + 1}`;
+        const data = {};
+        block.split("\n").forEach((line) => {
+            const match = line.match(/^([^:]+):\s*(.+)$/);
+            if (match) data[match[1].trim().toUpperCase()] = match[2].trim();
+        });
+
+        const questionText = data["PERGUNTA"];
+        if (!questionText) {
+            errors.push(`${label}: faltou PERGUNTA.`);
+            return;
+        }
+        const answersRaw = data["RESPOSTAS"];
+        if (!answersRaw) {
+            errors.push(`${label}: faltou RESPOSTAS.`);
+            return;
+        }
+        const answers = answersRaw.split(";").map((a) => a.trim()).filter(Boolean);
+        if (answers.length !== 4) {
+            errors.push(`${label}: precisa ter exatamente 4 respostas separadas por ";" (encontrei ${answers.length}).`);
+            return;
+        }
+        const correctRaw = Number(data["CORRETA"]);
+        if (!correctRaw || correctRaw < 1 || correctRaw > 4) {
+            errors.push(`${label}: CORRETA precisa ser um número de 1 a 4.`);
+            return;
+        }
+
+        const difficultyRaw = (data["DIFICULDADE"] || "").toLowerCase();
+        const difficulty = difficultyAliases[difficultyRaw] || null;
+
+        parsed.push({
+            question: { pt: questionText, en: questionText },
+            answers: { pt: answers, en: answers },
+            correct: correctRaw - 1,
+            ...(difficulty ? { difficulty } : {}),
+        });
+    });
+
+    return { parsed, errors };
+}
+
+grantPackForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!grantPackTargetUserId) return;
+
+    grantPackStatus.textContent = "";
+    grantPackStatus.className = "vip-badge-status";
+
+    const games = [];
+    if (document.getElementById("admin-grant-pack-game-showdown").checked) games.push("show-down");
+    if (document.getElementById("admin-grant-pack-game-timeattack").checked) games.push("time-attack");
+    if (document.getElementById("admin-grant-pack-game-questdrop").checked) games.push("quest-drop");
+
+    if (games.length === 0) {
+        grantPackStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.newPackGameRequired"] || "Pick at least one game.";
+        grantPackStatus.className = "vip-badge-status is-error";
+        return;
+    }
+
+    const name = document.getElementById("admin-grant-pack-name").value.trim();
+    if (!name) {
+        grantPackStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.newPackNameRequired"] || "Give the pack a name.";
+        grantPackStatus.className = "vip-badge-status is-error";
+        return;
+    }
+
+    const bulkText = document.getElementById("admin-grant-pack-bulk-textarea").value;
+    const { parsed, errors } = parseFlatBulkQuestionsAdmin(bulkText);
+
+    if (errors.length > 0) {
+        grantPackStatus.textContent = errors.join(" ");
+        grantPackStatus.className = "vip-badge-status is-error";
+        return;
+    }
+    if (parsed.length === 0) {
+        grantPackStatus.textContent =
+            window.nodraTranslator?.translations?.["vip.newPackNoQuestions"] || "Add at least one question.";
+        grantPackStatus.className = "vip-badge-status is-error";
+        return;
+    }
+
+    const submitBtn = grantPackForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+
+    try {
+        const result = await callAdminFunction("admin-grant-pack", {
+            method: "POST",
+            body: JSON.stringify({
+                target_user_id: grantPackTargetUserId,
+                games,
+                name,
+                questions: parsed,
+            }),
+        });
+
+        if (result.error) throw new Error(result.error);
+
+        grantPackStatus.textContent =
+            window.nodraTranslator?.translations?.["users.grantPackSuccess"] || "Pack created and granted!";
+        grantPackStatus.className = "vip-badge-status is-success";
+        setTimeout(closeGrantPackPanel, 1200);
+    } catch (err) {
+        console.error("Falha ao conceder pacote:", err);
+        grantPackStatus.textContent = err.message;
+        grantPackStatus.className = "vip-badge-status is-error";
+    } finally {
+        submitBtn.disabled = false;
+    }
+});
 
 // ==================================================================
 // ANALYTICS

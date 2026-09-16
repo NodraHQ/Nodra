@@ -109,7 +109,130 @@
                 <tbody id="users-tbody"></tbody>
             </table>
             <p id="users-empty" class="admin-empty" data-i18n="users.empty" hidden>No users found.</p>
+
+            <!-- Painel de "criar tema pra essa conta" - pedido ao vivo:
+                 admin cria um tema e concede direto pra conta de outra
+                 pessoa, como se ela mesma tivesse criado (mesmos campos
+                 e mesma regra de cota do formulário que o VIP usa em
+                 /account/, só que quem chama é admin-grant-theme em vez
+                 de vip-create-theme). Fica escondido até clicar "Criar
+                 tema" numa linha - não é modal (painel não tem nenhum
+                 ainda), é uma seção que aparece/some. -->
+            <section id="admin-grant-theme-panel" class="admin-grant-theme-panel" hidden>
+                <div class="profile-section-header">
+                    <span class="tag" data-i18n="users.grantThemeTitle">Create theme for</span>
+                    <strong id="admin-grant-theme-target-name"></strong>
+                </div>
+
+                <form id="admin-grant-theme-form">
+                    <label data-i18n="vip.themeNameLabel">Theme name</label>
+                    <input type="text" id="admin-grant-theme-name" required maxlength="60" />
+
+                    <div class="admin-grant-theme-colors">
+                        <div>
+                            <label data-i18n="vip.themePrimaryLabel">Brand color</label>
+                            <button type="button" class="vip-theme-hex-row vip-color-trigger" id="admin-theme-primary-trigger">
+                                <span class="vip-theme-hex-swatch" id="admin-theme-primary-swatch"></span>
+                                <span id="admin-theme-primary-value">#3a7bd5</span>
+                            </button>
+                        </div>
+                        <div>
+                            <label data-i18n="vip.themeBackgroundLabel">Background color</label>
+                            <button type="button" class="vip-theme-hex-row vip-color-trigger" id="admin-theme-background-trigger">
+                                <span class="vip-theme-hex-swatch" id="admin-theme-background-swatch"></span>
+                                <span id="admin-theme-background-value">#0f1420</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- As outras 4 do modo padrão (Primary Light,
+                         Surface, Text, Paper) - lá elas nascem
+                         calculadas em cima de primary+background, e só
+                         viram fixas se a pessoa clicar no swatch pra
+                         ajustar na mão. Mesmo padrão aqui: clicar abre
+                         o seletor pra aquela cor específica; enquanto
+                         não clicada, continua vindo do cálculo
+                         automático (ver updateGrantThemeOverrideDefaults
+                         no admin.js). -->
+                    <label data-i18n="vip.themeFineTuneLabel">Fine-tune individual colors (optional, auto-calculated otherwise)</label>
+                    <div class="vip-theme-preview-swatches" id="admin-theme-swatches">
+                        <button type="button" class="vip-theme-swatch-btn" data-color-key="primaryLight">
+                            <span id="admin-theme-swatch-primaryLight" class="vip-theme-swatch"></span>
+                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchPrimaryLight">Primary Light</span>
+                        </button>
+                        <button type="button" class="vip-theme-swatch-btn" data-color-key="surface">
+                            <span id="admin-theme-swatch-surface" class="vip-theme-swatch"></span>
+                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchSurface">Surface</span>
+                        </button>
+                        <button type="button" class="vip-theme-swatch-btn" data-color-key="text">
+                            <span id="admin-theme-swatch-text" class="vip-theme-swatch"></span>
+                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchText">Text</span>
+                        </button>
+                        <button type="button" class="vip-theme-swatch-btn" data-color-key="paper">
+                            <span id="admin-theme-swatch-paper" class="vip-theme-swatch"></span>
+                            <span class="vip-theme-swatch-label" data-i18n="vip.themeSwatchPaper">Paper</span>
+                        </button>
+                    </div>
+
+                    <label data-i18n="vip.themeLogoLabel">Logo (optional)</label>
+                    <input type="file" id="admin-grant-theme-logo" accept="image/png,image/svg+xml,image/webp" />
+
+                    <label data-i18n="vip.themeSloganPtLabel">Slogan (Portuguese, optional)</label>
+                    <input type="text" id="admin-grant-theme-slogan-pt" maxlength="80" />
+
+                    <label data-i18n="vip.themeSloganEnLabel">Slogan (English, optional)</label>
+                    <input type="text" id="admin-grant-theme-slogan-en" maxlength="80" />
+
+                    <label data-i18n="vip.themeGamesLabel">Which games should use this theme?</label>
+                    <div class="vip-theme-games-picker">
+                        <label><input type="checkbox" class="admin-grant-theme-game-check" value="quest_drop"> Quest Drop</label>
+                        <label><input type="checkbox" class="admin-grant-theme-game-check" value="time_attack"> Time Attack</label>
+                        <label><input type="checkbox" class="admin-grant-theme-game-check" value="show_down"> Show Down</label>
+                        <label><input type="checkbox" class="admin-grant-theme-game-check" value="tap_rush"> Tap Rush</label>
+                        <label><input type="checkbox" class="admin-grant-theme-game-check" value="roulette"> Roulette</label>
+                    </div>
+
+                    <div class="admin-grant-theme-actions">
+                        <button type="submit" class="btn btn-primary" data-i18n="users.grantThemeSubmit">Create & grant</button>
+                        <button type="button" id="admin-grant-theme-cancel" class="btn btn-secondary" data-i18n="users.cancel">Cancel</button>
+                    </div>
+                    <p id="admin-grant-theme-status" class="vip-badge-status"></p>
+                </form>
+            </section>
+
+            <!-- Painel de "criar pacote de perguntas pra essa conta" -
+                 mesmo espírito do painel de tema logo acima: admin cria
+                 e concede direto, como se a pessoa tivesse criado. -->
+            <section id="admin-grant-pack-panel" class="admin-grant-theme-panel" hidden>
+                <div class="profile-section-header">
+                    <span class="tag" data-i18n="users.grantPackTitle">Create pack for</span>
+                    <strong id="admin-grant-pack-target-name"></strong>
+                </div>
+
+                <form id="admin-grant-pack-form">
+                    <label data-i18n="vip.newPackGame">Games (pick one or more)</label>
+                    <div class="vip-new-pack-games">
+                        <label class="checkbox-row"><input type="checkbox" id="admin-grant-pack-game-showdown" value="show-down" checked><span>Show Down</span></label>
+                        <label class="checkbox-row"><input type="checkbox" id="admin-grant-pack-game-timeattack" value="time-attack"><span>Time Attack</span></label>
+                        <label class="checkbox-row"><input type="checkbox" id="admin-grant-pack-game-questdrop" value="quest-drop"><span>Quest Drop</span></label>
+                    </div>
+                    <p class="vip-submit-pack-hint" id="admin-grant-pack-questdrop-note" hidden data-i18n="vip.newPackQuestDropNote">Quest Drop uses a difficulty per question (easy/medium/hard). You can tag each question with DIFICULDADE in the box below - if you leave it out, the pack works in Quest Drop too, but without difficulty balancing: it just draws questions at random.</p>
+
+                    <label data-i18n="vip.newPackName">Pack name</label>
+                    <input type="text" id="admin-grant-pack-name" maxlength="200" />
+
+                    <label data-i18n="vip.newPackQuestions">Questions</label>
+                    <textarea id="admin-grant-pack-bulk-textarea" rows="6" placeholder="PERGUNTA: ...&#10;RESPOSTAS: A; B; C; D&#10;CORRETA: 1&#10;---" style="width:100%; resize:vertical; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-1); color:var(--text); font-family:monospace; font-size:13px;"></textarea>
+
+                    <div class="admin-grant-theme-actions">
+                        <button type="submit" class="btn btn-primary" data-i18n="users.grantPackSubmit">Create & grant</button>
+                        <button type="button" id="admin-grant-pack-cancel" class="btn btn-secondary" data-i18n="users.cancel">Cancel</button>
+                    </div>
+                    <p id="admin-grant-pack-status" class="vip-badge-status"></p>
+                </form>
+            </section>
         </section>
+
 
         <!-- ===================================================== -->
         <!-- VIP CODES / ACTIVATIONS - extraído de dentro de Usuários,
@@ -441,6 +564,31 @@
     </div>
 
 </main>
+
+<!-- Seletor de cor próprio, igualzinho ao de account/index.html -
+     filho direto do body de propósito (não dentro de #panel/.admin-tab-panel),
+     senão algum ancestral com z-index/overflow cria um "novo contexto de
+     empilhamento" e o popover fica preso atrás de outra coisa. -->
+<div id="admin-theme-color-picker" class="vip-color-picker" hidden>
+    <div class="vip-color-picker-backdrop" id="admin-theme-color-picker-backdrop"></div>
+    <div class="vip-color-picker-panel">
+        <button type="button" class="vip-modal-close-btn" id="admin-theme-picker-close-btn" aria-label="Close">&times;</button>
+        <div class="vip-color-picker-sv" id="admin-theme-picker-sv">
+            <div class="vip-color-picker-sv-white"></div>
+            <div class="vip-color-picker-sv-black"></div>
+            <div class="vip-color-picker-sv-cursor" id="admin-theme-picker-sv-cursor"></div>
+        </div>
+        <div class="vip-color-picker-hue" id="admin-theme-picker-hue">
+            <div class="vip-color-picker-hue-cursor" id="admin-theme-picker-hue-cursor"></div>
+        </div>
+        <div class="vip-color-picker-hex-row">
+            <span>#</span>
+            <input type="text" id="admin-theme-picker-hex" maxlength="6">
+        </div>
+        <div class="vip-color-palette" id="admin-theme-picker-palette"></div>
+        <button type="button" class="btn btn-primary vip-color-picker-done" id="admin-theme-picker-done" data-i18n="vip.themeSwatchApply">Apply</button>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="assets/js/supabase-client.js"></script>
