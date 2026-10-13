@@ -28,7 +28,7 @@ selector as the other games (`branding-manifest.js` with `GAME_SLUG =
 
 (The first version had a separate "live link" mode with no database. It was
 removed: the other NDQuest games already work as "anyone can use it, VIP gets
-the saved history", so Tournament follows the same model.)
+the history is open to any account", so Tournament follows the same model.)
 
 Every tournament is stored in the database. Anyone can create and run one,
 **guests included** (an anonymous Supabase session owns it, same mechanism as
@@ -39,7 +39,7 @@ room hosts). What changes with a VIP account:
 | Create | 10 tournaments per rolling 30 days (same number as hosted rooms) | no monthly cap |
 | Participants | up to 32 | up to 128 (bracket), 32 (league) |
 | Retention | 30 days after the last update | 180 days after the last update |
-| History | none (keeps the link only) | listed in the account History tab and on the tournament page, can resume open rooms |
+| History | listed in the account History tab (logged-in accounts) and on the tournament page, can resume open rooms | same |
 
 These numbers are proposals (constants at the top of `tournament-create`).
 Everyone also has a sanity cap of 200 non-expired tournaments.
@@ -165,7 +165,7 @@ points add up, draws share rank).
 
 # Database
 
-File: `docs/sql/tournament_schema.sql` (run once in the SQL Editor).
+SQL is delivered in the chat (not stored in the repo); run it once in the SQL Editor.
 
 - `tournaments` (owner, name, mode, config jsonb, status, champions,
   `version`, `expires_at`)
@@ -224,7 +224,7 @@ viewers resolve it by name, falling back to the default if they cannot see it
 
 # Deploy
 
-1. Run the SQL (`docs/sql/tournament_schema.sql` is the full schema for a fresh
+1. Run the SQL (the SQL given in the chat is the full schema for a fresh
    database; an existing database needs the migration that adds
    `last_activity_at` and the new `tournament_apply_changes` signature).
 2. Deploy the functions:

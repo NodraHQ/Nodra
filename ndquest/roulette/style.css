@@ -1249,3 +1249,39 @@ h1.title-display {
 [hidden]{
     display:none !important;
 }
+
+/* Botao "← NDQuest" padronizado (mesmo visual e posicao em todos os
+   jogos): pilula fixa no canto superior esquerdo, espelhando o toggle
+   de idioma do canto direito. */
+.back-to-ndquest {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow: var(--shadow-soft);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.back-to-ndquest:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 480px) {
+  .back-to-ndquest {
+    top: 10px;
+    left: 10px;
+    padding: 6px 10px;
+  }
+}

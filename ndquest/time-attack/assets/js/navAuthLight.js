@@ -109,7 +109,9 @@
 
         const { data: { session } } = await client.auth.getSession();
 
-        if (!session) {
+        // Convidado (sessão anônima) conta como deslogado: mostra "Entrar",
+        // não um avatar "?" que leva pra tela de login.
+        if (!session || session.user?.is_anonymous) {
             cachedState = { signedIn: false };
             render(container);
         } else {

@@ -233,12 +233,12 @@ import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.
         return "generic";
     }
 
-    // Historico de torneios: so pra conta VIP (mesma regra dos outros
-    // jogos: guardar e VIP, ver o historico tambem).
+    // Meus torneios: qualquer sessao ve os proprios (a retencao e que
+    // muda: 30 dias Free, 180 VIP).
     async function renderMine() {
         const list = $("mine-list");
         list.innerHTML = "";
-        if (!app.isVip) {
+        if (!app.userId) {
             $("mine").hidden = true;
             return;
         }

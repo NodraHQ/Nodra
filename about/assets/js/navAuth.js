@@ -89,7 +89,9 @@
 
         const { data: { session } } = await window.nodraSupabase.auth.getSession();
 
-        if (!session) {
+        // Convidado (sessão anônima dos jogos) conta como deslogado:
+        // sem perfil nem conta de verdade pra mostrar.
+        if (!session || session.user?.is_anonymous) {
             renderSignedOut(container);
             return;
         }

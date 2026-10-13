@@ -10,8 +10,8 @@
 //   - Free (inclui convidado): ate 10 torneios a cada 30 dias (mesmo
 //     numero das salas hospedadas), ate 32 participantes, historico
 //     guardado 30 dias.
-//   - VIP: sem teto mensal, ate o limite do motor (128 na chave), e
-//     historico de 180 dias, visivel na conta.
+//   - VIP: sem teto mensal, ate o limite do motor (128 na chave) e
+//     retencao de 180 dias. O historico na conta e igual pra todos.
 // O servidor monta a chave/tabela com o mesmo motor do navegador
 // (_shared/tournamentEngine.js): o cliente nunca manda a estrutura.
 // ==================================================================

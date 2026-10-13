@@ -377,7 +377,7 @@ function showLoggedInState(profile, user) {
     initProfileTopTabs();
     initProfileToc();
     loadMatchHistory();
-    loadTournamentHistory(profile.is_vip);
+    loadTournamentHistory();
     loadOwnBadges(user.id, profile.featured_badge_ids || []);
     renderVipMembershipStatus(profile.is_vip, profile.vip_expires_at);
     toggleNavbarProfileTabs(true);
@@ -1058,8 +1058,8 @@ async function loadMatchHistory() {
 }
 
 // ==================================================================
-// HISTÓRICO DE TORNEIOS (NDQuest) - só VIP, igual aos outros
-// históricos. Sala fechada por inatividade (30 min) ou encerrada fica
+// HISTÓRICO DE TORNEIOS (NDQuest) - qualquer conta logada, igual aos
+// outros jogos. Sala fechada por inatividade (30 min) ou encerrada fica
 // só pra consulta; sala ainda aberta tem link pra retomar. Ver
 // docs/TOURNAMENT_ARCHITECTURE.md.
 // ==================================================================
@@ -1068,13 +1068,7 @@ const TOURNAMENT_INACTIVITY_MINUTES = 30;
 
 let tournamentRows = [];
 
-async function loadTournamentHistory(isVip) {
-    if (!isVip) {
-        tournamentRows = [];
-        renderHistoryList();
-        return;
-    }
-
+async function loadTournamentHistory() {
     const { data, error } = await supabaseClient
         .from("tournaments")
         .select("id, name, mode, status, last_activity_at, created_at")
