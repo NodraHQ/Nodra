@@ -27,12 +27,14 @@
    problema de configuração cedo, antes de ir pro ar).
    ========================================================= */
 import defaultTheme from './default/default.js';
+import olaggTheme from './olagg/olagg.js';
 import { validateTheme } from './theme-schema.js';
 
 const GAME_SLUG = 'tournament';
 
 const rawThemes = [
-  { theme: defaultTheme, source: 'branding/default/default.js' }
+  { theme: defaultTheme, source: 'branding/default/default.js' },
+  { theme: olaggTheme, source: 'branding/olagg/olagg.js' }
 ];
 
 const staticThemes = rawThemes.map(({ theme, source }) => validateTheme(theme, source));

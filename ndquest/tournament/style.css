@@ -839,3 +839,11 @@ textarea.tn-textarea {
     min-width: 200px;
   }
 }
+
+.logo-text {
+    font-family: var(--font-display, 'Fraunces', serif);
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 0.02em;
+    color: var(--color-text);
+}

@@ -1195,8 +1195,22 @@ import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.
 
         applyThemeFonts(theme);
 
-        if (logoImg && theme.logo) {
-            logoImg.src = theme.logo;
+        // Com logo: mostra a imagem. Sem logo: mostra o nome do tema em
+        // texto (em vez de ficar a logo do NDQuest de outra marca).
+        const logoText = $("logo-text");
+        if (logoImg) {
+            if (theme.logo) {
+                logoImg.src = theme.logo;
+                logoImg.alt = theme.name;
+                logoImg.hidden = false;
+                if (logoText) logoText.hidden = true;
+            } else {
+                logoImg.hidden = true;
+                if (logoText) {
+                    logoText.textContent = theme.name;
+                    logoText.hidden = false;
+                }
+            }
         }
     }
 
