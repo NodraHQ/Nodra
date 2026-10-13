@@ -285,5 +285,9 @@
   "vip.tierGoldRoom": "Live rooms up to 1,000 players",
   "vip.tierGoldSupport": "Priority support",
   "vip.selectTierBtn": "Select",
-  "vip.selectedTierLabel": "Paying for {tier} - ${price}/month"
+  "vip.selectedTierLabel": "Paying for {tier} - ${price}/month",
+  "profile.tournamentSection": "Tournaments",
+  "profile.tournamentState.open": "Open, tap to resume",
+  "profile.tournamentState.closed": "Closed (inactivity)",
+  "profile.tournamentState.finished": "Finished"
 }

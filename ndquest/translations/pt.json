@@ -65,5 +65,11 @@
   "submit.draftTitle": "Perguntas Neste Pacote",
   "submit.draftEmpty": "Nenhuma pergunta adicionada ainda.",
   "submit.submitBtn": "Enviar Pacote pra Revisão",
-  "submit.submittingAs": "Enviando como {username} ({email})."
+  "submit.submittingAs": "Enviando como {username} ({email}).",
+  "games.tabs.tournament": "Torneio",
+  "games.tournament.panelTitle": "Torneio",
+  "games.tournament.panelDescription": "Você toca a competição, a tabela se cuida sozinha.",
+  "games.tournament.title": "Torneio",
+  "games.tournament.description": "Chaves de mata-mata ou ligas de pontos corridos pra sua comunidade, em qualquer jogo. Você lança os resultados, o NDQuest mantém a chave e a classificação.",
+  "games.tournament.cta": "Jogar →"
 }

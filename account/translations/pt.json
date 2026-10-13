@@ -285,5 +285,9 @@
   "vip.tierGoldRoom": "Sala ao vivo até 1.000 jogadores",
   "vip.tierGoldSupport": "Suporte prioritário",
   "vip.selectTierBtn": "Selecionar",
-  "vip.selectedTierLabel": "Pagando o {tier} - ${price}/mês"
+  "vip.selectedTierLabel": "Pagando o {tier} - ${price}/mês",
+  "profile.tournamentSection": "Torneios",
+  "profile.tournamentState.open": "Aberto, toque pra retomar",
+  "profile.tournamentState.closed": "Fechado (inatividade)",
+  "profile.tournamentState.finished": "Encerrado"
 }

@@ -65,5 +65,11 @@
   "submit.draftTitle": "Questions in This Pack",
   "submit.draftEmpty": "No questions added yet.",
   "submit.submitBtn": "Send Pack for Review",
-  "submit.submittingAs": "Submitting as {username} ({email})."
+  "submit.submittingAs": "Submitting as {username} ({email}).",
+  "games.tabs.tournament": "Tournament",
+  "games.tournament.panelTitle": "Tournament",
+  "games.tournament.panelDescription": "Run the competition, the table takes care of itself.",
+  "games.tournament.title": "Tournament",
+  "games.tournament.description": "Knockout brackets or points-table leagues for your community, in any game. You enter the results, NDQuest keeps the bracket and the standings.",
+  "games.tournament.cta": "Play →"
 }

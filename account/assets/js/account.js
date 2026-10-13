@@ -377,6 +377,7 @@ function showLoggedInState(profile, user) {
     initProfileTopTabs();
     initProfileToc();
     loadMatchHistory();
+    loadTournamentHistory(profile.is_vip);
     loadOwnBadges(user.id, profile.featured_badge_ids || []);
     renderVipMembershipStatus(profile.is_vip, profile.vip_expires_at);
     toggleNavbarProfileTabs(true);
@@ -1056,6 +1057,85 @@ async function loadMatchHistory() {
     renderHistoryList();
 }
 
+// ==================================================================
+// HISTÓRICO DE TORNEIOS (NDQuest) - só VIP, igual aos outros
+// históricos. Sala fechada por inatividade (30 min) ou encerrada fica
+// só pra consulta; sala ainda aberta tem link pra retomar. Ver
+// docs/TOURNAMENT_ARCHITECTURE.md.
+// ==================================================================
+
+const TOURNAMENT_INACTIVITY_MINUTES = 30;
+
+let tournamentRows = [];
+
+async function loadTournamentHistory(isVip) {
+    if (!isVip) {
+        tournamentRows = [];
+        renderHistoryList();
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("tournaments")
+        .select("id, name, mode, status, last_activity_at, created_at")
+        .eq("owner_id", currentUserId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+    if (error) {
+        console.error("Erro ao carregar torneios:", error);
+        return;
+    }
+
+    tournamentRows = data || [];
+    renderHistoryList();
+}
+
+// Uma linha de torneio dentro da lista unica do historico. O organizador
+// e sempre "Host"; sala ainda aberta abre pra retomar.
+function renderTournamentRow(container, row) {
+    const closed =
+        row.status === "active" &&
+        Date.now() - new Date(row.last_activity_at).getTime() > TOURNAMENT_INACTIVITY_MINUTES * 60 * 1000;
+    const stateKey = row.status === "finished" ? "finished" : closed ? "closed" : "open";
+    const stateFallback = { finished: "Finished", closed: "Closed", open: "Open" }[stateKey];
+    const stateLabel = window.nodraTranslator?.translations?.["profile.tournamentState." + stateKey] || stateFallback;
+    const modeLabel = row.mode === "league" ? "League" : "Bracket";
+    const hostLabel = window.nodraTranslator?.translations?.["profile.historyRoleHost"] || "Host";
+
+    const item = document.createElement("div");
+    item.className = "profile-history-item";
+    const link = document.createElement("a");
+    link.className = "profile-history-row is-clickable";
+    link.href = "../ndquest/tournament/index.html?t=" + encodeURIComponent(row.id);
+    link.style.textDecoration = "none";
+    link.style.color = "inherit";
+
+    const icon = document.createElement("div");
+    icon.className = "profile-history-row-icon";
+    icon.textContent = "H";
+
+    const main = document.createElement("div");
+    main.className = "profile-history-row-main";
+    const nameEl = document.createElement("div");
+    nameEl.className = "profile-history-row-game";
+    nameEl.textContent = "Tournament · " + row.name;
+    const metaEl = document.createElement("div");
+    metaEl.className = "profile-history-row-meta";
+    metaEl.textContent = hostLabel + " · " + modeLabel + " · " + formatHistoryDate(row.created_at);
+    main.append(nameEl, metaEl);
+
+    const stateEl = document.createElement("div");
+    stateEl.className = "profile-history-row-result";
+    const strong = document.createElement("strong");
+    strong.textContent = stateLabel;
+    stateEl.appendChild(strong);
+
+    link.append(icon, main, stateEl);
+    item.appendChild(link);
+    container.appendChild(item);
+}
+
 function formatHistoryDate(isoString) {
     const date = new Date(isoString);
     return date.toLocaleDateString(undefined, {
@@ -1076,9 +1156,17 @@ function renderHistoryList() {
         return matchesGame && matchesRole;
     });
 
+    // Torneios entram na mesma lista (sempre como Host).
+    const tournamentsShown =
+        (historyFilter === "all" || historyFilter === "tournament") &&
+        (historyRoleFilter === "all" || historyRoleFilter === "host")
+            ? tournamentRows
+            : [];
+    const gameRows = historyFilter === "tournament" ? [] : filtered;
+
     container.innerHTML = "";
 
-    if (filtered.length === 0) {
+    if (gameRows.length === 0 && tournamentsShown.length === 0) {
         if (emptyEl) emptyEl.hidden = false;
         return;
     }
@@ -1092,7 +1180,7 @@ function renderHistoryList() {
     // detalhe - mesmo padrão que já existia pra Host, agora também
     // pra várias rodadas de jogador na mesma sala.
     const groups = new Map();
-    filtered.forEach((row) => {
+    gameRows.forEach((row) => {
         const key = `${row.game}:${row.room_code}`;
         if (!groups.has(key))
             groups.set(key, {
@@ -1109,23 +1197,24 @@ function renderHistoryList() {
         }
     });
 
-    const sortedGroups = [...groups.values()].sort((a, b) => {
-        const aLatest = Math.max(
-            ...[a.hostRow, ...a.playerRows]
+    const latestOf = (g) =>
+        Math.max(
+            ...[g.hostRow, ...g.playerRows]
                 .filter(Boolean)
                 .map((r) => new Date(r.created_at).getTime()),
         );
-        const bLatest = Math.max(
-            ...[b.hostRow, ...b.playerRows]
-                .filter(Boolean)
-                .map((r) => new Date(r.created_at).getTime()),
-        );
-        return bLatest - aLatest;
-    });
 
-    sortedGroups.forEach((group) => {
-        group.playerRows.sort((a, b) => (a.round_number || 0) - (b.round_number || 0));
-        renderHistoryGroup(container, group);
+    const entries = [...groups.values()].map((g) => ({ time: latestOf(g), group: g }));
+    tournamentsShown.forEach((row) => entries.push({ time: new Date(row.created_at).getTime(), tournament: row }));
+    entries.sort((x, y) => y.time - x.time);
+
+    entries.forEach((entry) => {
+        if (entry.tournament) {
+            renderTournamentRow(container, entry.tournament);
+            return;
+        }
+        entry.group.playerRows.sort((a, b) => (a.round_number || 0) - (b.round_number || 0));
+        renderHistoryGroup(container, entry.group);
     });
 }
 

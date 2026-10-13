@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">Torneio: NDQuest</title>
+<meta name="description" content="Monte uma chave de mata-mata ou uma liga de pontos corridos pra sua comunidade. Você lança os resultados, o NDQuest mantém a tabela.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="language-toggle" role="group" aria-label="Idioma / Language">
+    <button type="button" class="language-btn" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" class="language-btn" id="lang-en" data-lang="en">EN</button>
+</div>
+
+<div id="nav-auth-light" hidden></div>
+
+<div class="container" id="page-container">
+
+    <a class="logo-row" href="../index.html">
+        <img id="logo-img" src="assets/logos/ndquest-light.png" alt="NDQuest" style="height:36px">
+    </a>
+
+    <a href="../index.html" class="join-existing-link" data-i18n="nav.back">← NDQuest</a>
+
+    <div id="screen-loading" class="tn-center" data-i18n="common.loading">Carregando...</div>
+
+    <!-- ===================================================== -->
+    <!-- TELA 1: CRIAR -->
+    <!-- ===================================================== -->
+    <section id="screen-config" hidden>
+        <span class="eyebrow" data-i18n="create.eyebrow">Torneio</span>
+        <h1 class="title-display" data-i18n="create.title">Montar o Torneio</h1>
+        <p class="subtitle" data-i18n="create.subtitle">Chave de mata-mata ou liga de pontos corridos, pra qualquer jogo. Você lança os resultados, o NDQuest mantém a tabela.</p>
+
+        <form id="create-form" class="card" autocomplete="off">
+
+            <div class="field">
+                <label for="f-name" data-i18n="create.name">Nome do torneio</label>
+                <input type="text" id="f-name" maxlength="80" data-i18n-placeholder="create.namePlaceholder" placeholder="Copa de Sexta">
+            </div>
+
+            <div class="field">
+                <label for="theme-select" data-i18n="labels.theme">Tema da empresa</label>
+                <select id="theme-select"></select>
+            </div>
+
+            <div class="field">
+                <span class="tn-fieldlabel" data-i18n="create.format">Formato</span>
+                <div class="tn-seg" role="radiogroup">
+                    <label><input type="radio" name="mode" value="bracket" checked><span data-i18n="create.formatBracket">Chave (mata-mata)</span></label>
+                    <label><input type="radio" name="mode" value="league"><span data-i18n="create.formatLeague">Liga (pontos corridos)</span></label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="f-participants" data-i18n="create.participants">Participantes</label>
+                <textarea id="f-participants" class="tn-textarea" rows="8" data-i18n-placeholder="create.participantsPlaceholder" placeholder="Um nome por linha"></textarea>
+                <p class="hint-text" id="f-count"></p>
+            </div>
+
+            <div id="opts-bracket" class="field">
+                <label for="f-losers" data-i18n="create.losersRoute">Rota dos perdedores</label>
+                <select id="f-losers">
+                    <option value="none" data-i18n="create.losersNone">Sem rota dos perdedores (eliminação simples)</option>
+                    <option value="separate" data-i18n="create.losersSeparate">Dois campeões (principal e perdedores)</option>
+                    <option value="final" data-i18n="create.losersFinal">Final entre os dois campeões</option>
+                </select>
+                <p class="hint-text" id="f-losers-help"></p>
+                <label id="f-rematch-wrap" class="tn-check" hidden style="margin-top:12px;margin-bottom:0">
+                    <input id="f-rematch" type="checkbox" checked>
+                    <span data-i18n="create.rematch">Revanche se o campeão dos perdedores vencer a final</span>
+                </label>
+                <p class="hint-text" id="f-rematch-help" hidden data-i18n="create.rematchHelp">Só acontece se o campeão dos perdedores vencer a primeira final.</p>
+            </div>
+
+            <div id="opts-league" class="field" hidden>
+                <label class="tn-check" style="margin-bottom:0">
+                    <input id="f-double" type="checkbox">
+                    <span data-i18n="create.doubleRound">Ida e volta (todos jogam contra todos duas vezes)</span>
+                </label>
+                <p class="hint-text" data-i18n="create.pointsHelp">Vitória 3 pontos, empate 1, derrota 0.</p>
+            </div>
+
+            <label class="tn-check">
+                <input id="f-shuffle" type="checkbox" checked>
+                <span data-i18n="create.shuffle">Sortear a chave</span>
+            </label>
+
+            <p class="hint-text" id="f-retention-help" style="margin:0 0 16px"></p>
+
+            <p class="field-error" id="create-error"></p>
+            <button type="submit" id="create-submit" class="btn btn-primary" data-i18n="create.submit">Criar Torneio →</button>
+        </form>
+
+        <div id="mine" class="tn-mine" hidden>
+            <h2 data-i18n="mine.title">Seus torneios</h2>
+            <p class="hint-text" style="margin:0 0 12px" data-i18n="mine.hint">Histórico da sua conta VIP. Salas ainda abertas dá pra retomar.</p>
+            <ul id="mine-list" class="tn-list"></ul>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- TELA 2: O TORNEIO -->
+    <!-- ===================================================== -->
+    <section id="screen-tournament" hidden>
+        <div class="tn-head-row">
+            <div>
+                <span class="eyebrow" id="t-meta"></span>
+                <h1 class="title-display" id="t-name"></h1>
+            </div>
+            <div class="tn-actions">
+                <span id="t-viewers" class="tn-pill" hidden></span>
+                <button type="button" id="t-image" class="btn btn-secondary" data-i18n="t.saveImage">🖼 Salvar imagem</button>
+                <button type="button" id="t-copy" class="btn btn-secondary" data-i18n="t.copyLink">📋 Copiar Link</button>
+                <button type="button" id="t-refresh" class="btn btn-secondary" hidden data-i18n="t.refresh">Atualizar</button>
+                <button type="button" id="t-delete" class="btn btn-secondary" hidden data-i18n="t.delete">Apagar</button>
+            </div>
+        </div>
+
+        <p id="t-notice" class="tn-notice" hidden></p>
+        <div id="t-champion" class="tn-champion" hidden></div>
+
+        <div id="t-tabs" class="method-tabs tn-tabs" hidden></div>
+        <div id="t-body"></div>
+
+        <div id="t-log" class="card tn-log" hidden>
+            <h2 data-i18n="log.title">Log de correções</h2>
+            <p class="hint-text" style="margin-bottom:12px" data-i18n="log.subtitle">Toda correção de resultado já lançado aparece aqui, publicamente.</p>
+            <ul id="t-log-list" class="tn-list"></ul>
+        </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- ERRO / INDISPONÍVEL -->
+    <!-- ===================================================== -->
+    <section id="screen-error" class="tn-center" hidden>
+        <h2 id="err-title" style="font-family:var(--font-display)"></h2>
+        <p id="err-text" class="subtitle"></p>
+        <div class="tn-actions" style="justify-content:center">
+            <button type="button" id="err-retry" class="btn btn-secondary" hidden data-i18n="common.retry">Tentar de novo</button>
+            <a href="index.html" class="btn btn-primary" data-i18n="common.newTournament">Novo torneio</a>
+        </div>
+    </section>
+
+</div>
+
+<!-- Modal de resultado -->
+<div id="modal" class="tn-modal" hidden>
+    <form id="modal-form" class="card tn-modal-card" autocomplete="off">
+        <h3 id="modal-title"></h3>
+        <div class="tn-score-row">
+            <label><span id="modal-a-name"></span><input id="modal-a" type="number" placeholder="0" min="0" max="9999" inputmode="numeric"></label>
+            <span class="tn-vs">x</span>
+            <label><span id="modal-b-name"></span><input id="modal-b" type="number" placeholder="0" min="0" max="9999" inputmode="numeric"></label>
+        </div>
+        <div id="modal-reason-wrap" class="field" hidden>
+            <label for="modal-reason" data-i18n="modal.reason">Motivo (opcional, aparece no log público)</label>
+            <input type="text" id="modal-reason" maxlength="200">
+        </div>
+        <p class="field-error" id="modal-error"></p>
+        <div class="tn-actions">
+            <button type="button" id="modal-cancel" class="btn btn-secondary" data-i18n="common.cancel">Cancelar</button>
+            <button type="submit" id="modal-save" class="btn btn-primary" data-i18n="common.save">Salvar</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/supabase-client.js"></script>
+<script defer src="assets/js/navAuthLight.js" data-account-url="../../account/index.html" data-lang-key="tournament:language"></script>
+<script defer src="assets/js/tournament-engine.js"></script>
+<script type="module" src="host.js"></script>
+</body>
+</html>
