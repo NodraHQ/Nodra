@@ -83,6 +83,7 @@ button{
    BACKGROUND (shared brand texture: grid overlay + radial glow)
    ========================================================================== */
 
+/* Grade quadriculada removida. Para voltar, descomente o bloco abaixo.
 body::before{
     content:"";
     position:fixed;
@@ -94,6 +95,7 @@ body::before{
     pointer-events:none;
     z-index:-2;
 }
+*/
 
 body::after{
     content:"";
