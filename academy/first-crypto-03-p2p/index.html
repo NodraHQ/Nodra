@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="firstP2p.meta.title">P2P: Nodra Academy</title>
+<meta name="description" content="Buying and selling directly between people: how trust works without a company in the middle, the full step by step with P2P.me, the risks and your records.">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/academy.css">
+<link rel="stylesheet" href="../assets/css/first-p2p.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#first" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div id="nav-auth"></div>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+
+                    <span class="tag" data-i18n="firstP2p.hero.tag">FIRST CRYPTOS 03</span>
+
+                    <h1 class="hero-title" data-i18n="firstP2p.hero.title">P2P</h1>
+
+                    <p class="hero-description" data-i18n="firstP2p.hero.description">Buying and selling directly between people: how trust works without a company in the middle, the full step by step with P2P.me, the risks and your records.</p>
+
+                    <div class="hero-actions">
+                        <a href="#introduction" class="btn btn-primary" data-i18n="firstP2p.hero.cta">Start Reading →</a>
+                        <a href="../index.html#first" class="btn btn-secondary" data-i18n="firstP2p.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card"><strong data-i18n="firstP2p.hero.stat1.value">Beginner</strong><span data-i18n="firstP2p.hero.stat1.label">Difficulty</span></div>
+                        <div class="stat-card"><strong data-i18n="firstP2p.hero.stat2.value">60 min</strong><span data-i18n="firstP2p.hero.stat2.label">Duration</span></div>
+                        <div class="stat-card"><strong data-i18n="firstP2p.hero.stat3.value">Reading + Quiz</strong><span data-i18n="firstP2p.hero.stat3.label">Format</span></div>
+                        <div class="stat-card"><strong data-i18n="firstP2p.hero.stat4.value">10</strong><span data-i18n="firstP2p.hero.stat4.label">Sections</span></div>
+                    </div>
+
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="buy-mock">
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="firstP2p.visual.l1">Escrow</span><span class="buy-mock__value" data-i18n="firstP2p.visual.v1">Code, bonds, merchants</span></div>
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="firstP2p.visual.l2">Payment</span><span class="buy-mock__value" data-i18n="firstP2p.visual.v2">Pix, QR code, bank slip</span></div>
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="firstP2p.visual.l3">Delivery</span><span class="buy-mock__value" data-i18n="firstP2p.visual.v3">Straight to your wallet</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="firstP2p.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#introduction" data-i18n="firstP2p.toc.introduction">Introduction</a></li>
+                        <li><a href="#kinds" data-i18n="firstP2p.toc.kinds">Kinds of P2P</a></li>
+                        <li><a href="#trust" data-i18n="firstP2p.toc.trust">How Trust Works</a></li>
+                        <li><a href="#overview" data-i18n="firstP2p.toc.overview">P2P.me Overview</a></li>
+                        <li><a href="#p2pme" data-i18n="firstP2p.toc.p2pme">P2P.me</a></li>
+                        <li><a href="#risks" data-i18n="firstP2p.toc.risks">Risks and Scams</a></li>
+                        <li><a href="#privacy" data-i18n="firstP2p.toc.privacy">Privacy</a></li>
+                        <li><a href="#summary" data-i18n="firstP2p.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="firstP2p.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="firstP2p.toc.quiz">Quiz</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="firstP2p.introduction.eyebrow">01. Introduction</span>
+                <h2 class="section-title" data-i18n="firstP2p.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="fp.intro.p1">In the first lesson you saw P2P inside an exchange: a marketplace run by a company, with the company holding the crypto in escrow. This lesson is about P2P as a way of buying and selling directly between people, often without needing an exchange account and, in some services, without traditional identity verification.</p>
+                <p class="section-description" data-i18n="fp.intro.p2">The whole lesson uses P2P.me as the example, a service used in the Brazilian community to turn reais into USDC and to spend USDC through Pix and QR codes. Everything here describes how the service presents itself and how community guides use it; terms, limits and availability change, so always confirm on the official channels before sending any money.</p>
+                <p class="section-description" data-i18n="fp.intro.p3">By the end you will be able to tell manual P2P from a service with its own guarantee, follow the full flow with P2P.me (buying, spending and selling USDC), recognize the risks that remain, and keep your own records, which stay your responsibility.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="kinds">
+                <span class="tag" data-i18n="firstP2p.kinds.eyebrow">02. Kinds of P2P</span>
+                <h2 class="section-title" data-i18n="firstP2p.kinds.title">Kinds of P2P</h2>
+                <p class="section-description" data-i18n="fp.kinds.p1">The same word covers three different things, and the difference matters.</p>
+                <div class="next-grid next-grid--one">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.kinds.inside.title">P2P inside an exchange</h3>
+                        <p data-i18n="fp.kinds.inside.text">A company runs the market, holds the crypto in escrow and requires a verified account. You depend on the company and on its rules.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.kinds.manual.title">Manual P2P</h3>
+                        <p data-i18n="fp.kinds.manual.text">You deal directly with another person, usually in forums, groups or private communities, and everything rests on trust that you will receive. There is no escrow, no dispute process and no one to cover a loss.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.kinds.service.title">P2P through a service (P2P.me)</h3>
+                        <p data-i18n="fp.kinds.service.text">A service connects buyers and merchants, locks the crypto during the swap, keeps the order inside the app and has its own guarantee. Delivery goes to a wallet you control, and some services start without traditional KYC.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fp.kinds.p2">This lesson is about the third kind, with P2P.me as the example. Since there is no exchange account in the middle, you need a wallet first, which is why it comes after the lesson about wallets.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="trust">
+                <span class="tag" data-i18n="firstP2p.trust.eyebrow">03. How Trust Works</span>
+                <h2 class="section-title" data-i18n="firstP2p.trust.title">How Trust Works</h2>
+                <p class="section-description" data-i18n="fp.trust.p1">A buyer sends money by Pix and a seller sends crypto. Someone has to make sure neither side runs away. Different services solve it in different ways:</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.trust.liq.title">Liquidity providers</h3>
+                        <p data-i18n="fp.trust.liq.text">Independent merchants hold stablecoins and settle through their own bank accounts. The protocol locks the crypto during the swap and releases it when the payment is confirmed. This is the P2P.me model.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.trust.multisig.title">Multisig escrow</h3>
+                        <p data-i18n="fp.trust.multisig.text">Funds are locked in a wallet that needs more than one signature. Some protocols ask both sides for a security deposit that is lost if someone cheats.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.trust.ln.title">Lightning escrow and bonds</h3>
+                        <p data-i18n="fp.trust.ln.text">The sats are held by a payment that is only settled when the trade is confirmed, and both sides post a bond that is returned on completion.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.trust.rep.title">Reputation</h3>
+                        <p data-i18n="fp.trust.rep.text">Some flows rely on the seller's history to decide how much trust a new trade deserves, which suits small amounts.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fp.trust.p2">None of them is magic, and each one shifts the risk to a different place. In manual P2P, all the trust is in one person. In a service, the trust moves to rules and code and, in some cases, to a guarantee that covers the loss if something fails.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="overview">
+                <span class="tag" data-i18n="firstP2p.overview.eyebrow">04. How P2P.me Works</span>
+                <h2 class="section-title" data-i18n="firstP2p.overview.title">How P2P.me Works</h2>
+                <p class="section-description" data-i18n="fp.ov.p1">P2P.me is a non-custodial on and off ramp for USDC, built on the Base network. You swap reais for USDC and USDC for reais, or pay a Pix or a QR code directly with USDC, and independent merchants fill the orders. The descriptions below come from what the project communicates publicly.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.ov.lp.title">Liquidity providers</h3>
+                        <p data-i18n="fp.ov.lp.text">Merchants hold USDC and settle through their own bank accounts. According to a public analysis of the project, they earn about 2% on each swap, so the cost to you sits in the quote: always read the final amount before confirming.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.ov.id.title">Identity and limits</h3>
+                        <p data-i18n="fp.ov.id.text">Starting does not require traditional identity verification. Limits are low at first, and zero-knowledge proofs can raise them without handing your personal data to the service. The app shows your current limit.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.ov.freeze.title">The project's own guarantees</h3>
+                        <p data-i18n="fp.ov.freeze.text">According to the project, there is a guarantee of its own: if a merchant disappears, the platform can cover the order. It also describes a refund in USDC if a bank freeze happens after a trade, a community legal team, and the recommendation of a separate bank account for P2P. These are the project's own statements: read the current terms before relying on them.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.ov.methods.title">Payment methods and countries</h3>
+                        <p data-i18n="fp.ov.methods.text">Pix is the method used in Brazil. The service also lists local methods in other countries, such as India, Indonesia and Argentina. Availability depends on your country and on the moment.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fp.ov.others">Other P2P options exist, each with its own model: Bisq (a desktop app with multisig escrow), RoboSats (Lightning-based, accessed through Tor, with a bond from both sides), Hodl Hodl (multisig with an arbiter, accessed on the web) and Peach (a mobile app with multisig). They are mentioned only for comparison; compare fees, limits, payment methods and recent incident history before choosing any service.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="p2pme">
+                <span class="tag" data-i18n="firstP2p.p2pme.eyebrow">05. P2P.me Step by Step</span>
+                <h2 class="section-title" data-i18n="firstP2p.p2pme.title">P2P.me Step by Step</h2>
+                <p class="section-description" data-i18n="fp.pme.p1">P2P.me has two main uses: turning reais into USDC (buying) and using USDC to pay a Pix or a QR code (spending), plus the way back, selling USDC to receive a Pix. In every step you deal with the app and its order, never directly with the merchant: there is no private conversation. Community guides describe the flow below, and limits, verification and the network in use appear in the app, so treat the numbers here as examples.</p>
+                <p class="section-description step-title" data-i18n="fp.pme.h1">Step 1. Access the official app and sign in</p>
+                <p class="section-description" data-i18n="fp.pme.s1">Open the app from the official site or from the links on the official profiles, choose Brazil and Brazilian reais, and sign in with an e-mail, which creates a wallet inside the service. The service works with USDC on the Base network. It also accepts deposits from other networks and converts them to USDC on Base, as an integrated bridge, so check the network and the address shown before sending anything.</p>
+                <p class="ref-line"><a class="btn btn-primary" href="https://app.p2p.me/recommend?address=0x3E33F8C25AdB290eA57f1c5A6a253ff877B7B6fD&amp;nonce=558572&amp;signature=0x874ed99a1f3bdf6a9dbc000fcfae874db0d4383e24b7861b3b8f3fec4e86180415cc2205b70549bff348a3396681927e57b1b85f52e7410da0868eaff9a213bb1b" target="_blank" rel="sponsored noopener noreferrer" data-i18n="fp.pme.cta">Open P2P.me ↗</a> <span class="ref-line__tag" data-i18n="fp.pme.tag">partner link</span></p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-1-pmelogin.png" width="1280" height="720" loading="lazy" alt="P2P.me sign-in screen">
+<figcaption class="step-figure__cap" data-i18n="firstP2p.shot.pmelogin.cap">Figure 1. P2P.me: choosing the country and signing in.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstP2p.shot.pmelogin.l1">Open the app from the official site or an official profile link.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstP2p.shot.pmelogin.l2">Choose Brazil and Brazilian reais as the local currency.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstP2p.shot.pmelogin.l3">Sign in and note the address of the wallet created and the network it uses.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="fp.pme.h2">Step 2. Buy USDC with Pix</p>
+                <p class="section-description" data-i18n="fp.pme.s2">Choose to buy USDC, enter the amount in reais and check how many USDC you will receive. A liquidity provider takes the order and shows the Pix details. Pay in the exact amount shown, and confirm only after the money has left your account. The service does not require that the paying account be yours. When the provider confirms, the USDC is released to your wallet in the service.</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-2-pmebuy.png" width="1280" height="720" loading="lazy" alt="P2P.me buy order screen">
+<figcaption class="step-figure__cap" data-i18n="firstP2p.shot.pmebuy.cap">Figure 2. P2P.me: creating a buy order and paying the Pix.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstP2p.shot.pmebuy.l1">Choose to buy USDC and enter the amount in reais.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstP2p.shot.pmebuy.l2">Check the amount of USDC, the rate and any fee before confirming.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstP2p.shot.pmebuy.l3">Pay the Pix shown in the exact amount and keep the proof.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="firstP2p.shot.pmebuy.l4">Wait for the provider to confirm and for the USDC to appear in your balance.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="fp.pme.h3">Step 3. Raise your limit (optional)</p>
+                <p class="section-description" data-i18n="fp.pme.s3">New accounts start with a low limit. The project describes verification with zero-knowledge proofs, which prove something about you (for example, that you have an account on a social network) without handing your personal data to the service, to raise the limit. Follow the instructions in the app, and use only the official tools it indicates.</p>
+                <p class="section-description step-title" data-i18n="fp.pme.h4">Step 4. Pay a Pix or a QR code with USDC</p>
+                <p class="section-description" data-i18n="fp.pme.s4">To spend, choose the option to scan a QR code, or to send to a Pix key, enter the exact amount in reais and answer the anti-fraud question if the app asks. The recipient does not need to be you: you can pay someone else, including bank slips that accept payment by Pix. A liquidity provider accepts the order and makes the Pix from their bank account, usually within a few minutes. The receipt is not automatic: if you need it, request it in the order, and keep it.</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-3-pmepay.png" width="1280" height="720" loading="lazy" alt="P2P.me pay screen">
+<figcaption class="step-figure__cap" data-i18n="firstP2p.shot.pmepay.cap">Figure 3. P2P.me: paying a QR code or a Pix key with USDC.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstP2p.shot.pmepay.l1">Choose to scan a QR code or to send to a Pix key.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstP2p.shot.pmepay.l2">Enter the exact amount in reais and check the USDC that will be spent.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstP2p.shot.pmepay.l3">Answer the anti-fraud check if the app asks, then confirm the order.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="firstP2p.shot.pmepay.l4">Wait for the provider to pay, and keep the receipt.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="fp.pme.hs">Step 5. Sell USDC and receive a Pix</p>
+                <p class="section-description" data-i18n="fp.pme.ss">To go back to reais, choose to sell USDC, enter the Pix key that will receive the money and the amount, and confirm. A liquidity provider takes the order and sends the Pix. Check the key and the amount before confirming, since a Pix cannot be undone, and keep the receipt for your records.</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-4-pmesell.png" width="1280" height="720" loading="lazy" alt="P2P.me sell screen">
+<figcaption class="step-figure__cap" data-i18n="firstP2p.shot.pmesell.cap">Figure 4. P2P.me: selling USDC and receiving a Pix.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstP2p.shot.pmesell.l1">Choose to sell USDC and enter the amount.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstP2p.shot.pmesell.l2">Enter the Pix key that will receive the money and check it carefully.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstP2p.shot.pmesell.l3">Check the amount in reais you will receive and confirm the order.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="firstP2p.shot.pmesell.l4">Wait for the provider to send the Pix and check your bank account.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="fp.pme.h5">Step 6. Move the rest to your own wallet</p>
+                <p class="section-description" data-i18n="fp.pme.s5">A balance inside the service is not yet in your own wallet. Send USDC to the address of your wallet on the same network, after a small test, as in the wallets lesson. Bitget Wallet is a good fit here: it supports Base, and the company describes gas-free transfers and swaps on the network, which means you may not need ETH to move the USDC (conditions and limits can change, so check the app). If the service lets you export the private key of the wallet it created, treat that key like a recovery phrase: never share it.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="risks">
+                <span class="tag" data-i18n="firstP2p.risks.eyebrow">06. Risks and Scams</span>
+                <h2 class="section-title" data-i18n="firstP2p.risks.title">Risks and Scams</h2>
+                <p class="section-description" data-i18n="fp.risks.p1">Risk in P2P depends a lot on where the trade happens. Trading directly with a person has the risks most people have heard about. A service with an order inside the app, the crypto locked by the protocol and its own guarantee changes most of them, but not all.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.risks.cmp.informal.title">Manual P2P, directly with a person</h3>
+                        <p data-i18n="fp.risks.cmp.informal.text">Everything rests on trust: you pay and hope to receive. The person can take your Pix and never release the crypto, show a fake proof of payment, or the "support" that offers help can be the scammer. There is no escrow and no dispute process. It is very common in forums and private communities, and it is where most scams happen.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.risks.cmp.service.title">P2P.me</h3>
+                        <p data-i18n="fp.risks.cmp.service.text">The order lives inside the app, the crypto is locked by the protocol during the swap, and there is no direct contact with the merchant. There are checks such as the anti-fraud question before a payment. According to the project, there is also its own guarantee: if a merchant disappears, the platform can cover it. The project reports a very low fraud rate, which is its own figure.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fp.risks.p2">What still applies, even when using a service like P2P.me:</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.risks.bank.title">Bank blocks</h3>
+                        <p data-i18n="fp.risks.bank.text">Moving Pix with many different people can make a bank flag an account, and a payment can be contested in a fraud claim. The project suggests a dedicated account for P2P and keeping the proof of every trade.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.risks.fake.title">Copies of the service</h3>
+                        <p data-i18n="fp.risks.fake.text">The most common attack is the copy: fake sites, fake profiles and "support" accounts that reach out in messages and comments offering help or better rates. In P2P.me there is no direct contact with the merchant, so anyone asking you to pay outside the app, or to an account different from the one in the order, is not the service. Use only the links published by the official profiles.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fp.risks.rush.title">Pressure</h3>
+                        <p data-i18n="fp.risks.rush.text">Messages like "pay now or lose the offer" exist to make you skip checks. A real order shows a time limit inside the service itself.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section lesson-section reveal" id="privacy">
+                <span class="tag" data-i18n="firstP2p.privacy.eyebrow">07. Privacy and Your Records</span>
+                <h2 class="section-title" data-i18n="firstP2p.privacy.title">Privacy and Your Records</h2>
+                <p class="section-description" data-i18n="fp.priv.p1">Services that do not ask for traditional identity verification can reduce the personal data they hold about you, and that is a real privacy benefit. That does not make your activity invisible: your wallet and your bank still show the movements, and the blockchain is public.</p>
+                <p class="section-description" data-i18n="fp.priv.p2">It also does not change your own obligations. As seen in the first lesson, a service that does not report on your behalf leaves the record of your operations to you, and the rules for individuals who use platforms without a link to Brazil are in force. Keep the receipt, the date, the amount in reais, the rate and the transaction hash of every trade, and check the current rules with the Receita Federal or with an accountant who knows crypto.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="firstP2p.summary.eyebrow">08. Summary</span>
+                <h2 class="section-title" data-i18n="firstP2p.summary.title">Summary</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="fp.summary.i1">There are three kinds of P2P: inside an exchange (depends on the company), manual (depends on one person) and through a service with its own guarantee, which delivers to a wallet you control.</li>
+                    <li data-i18n="fp.summary.i2">Trust is built by liquidity providers, multisig escrow, Lightning bonds or reputation. Each one shifts the risk to a different place: a person, rules and code, or a guarantee.</li>
+                    <li data-i18n="fp.summary.i3">P2P.me is a non-custodial ramp for USDC on Base: merchants called liquidity providers fill the orders, and you can buy USDC with Pix, pay a Pix or QR code with USDC, and sell USDC to receive a Pix.</li>
+                    <li data-i18n="fp.summary.i4">Limits start low and can be raised with zero-knowledge verification. The cost is in the quote, so read the final amount before confirming.</li>
+                    <li data-i18n="fp.summary.i5">Pay only as the order instructs, in the exact amount, and mark the payment only after the money left your account.</li>
+                    <li data-i18n="fp.summary.i6">Compared with manual P2P, an order inside a service with its own guarantee takes away the classic scam of the seller who disappears, since, according to the project, the platform covers it. The risks that remain are bank blocks, copies of the service and pressure.</li>
+                    <li data-i18n="fp.summary.i7">Fewer personal data held by the service is a privacy gain, but it does not make you invisible nor remove your obligations. Keep your own records.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="firstP2p.glossary.eyebrow">09. Glossary</span>
+                <h2 class="section-title" data-i18n="firstP2p.glossary.title">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term1">Non-custodial</dt>
+                        <dd data-i18n="firstP2p.glossary.def1">A service that never holds your keys or your assets on its own.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term2">On-ramp</dt>
+                        <dd data-i18n="firstP2p.glossary.def2">A way of turning local currency into crypto.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term3">Off-ramp</dt>
+                        <dd data-i18n="firstP2p.glossary.def3">A way of turning crypto back into local currency.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term4">Liquidity provider</dt>
+                        <dd data-i18n="firstP2p.glossary.def4">A merchant that holds assets and fills other users' orders.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term5">Multisig</dt>
+                        <dd data-i18n="firstP2p.glossary.def5">A wallet that needs more than one signature to move funds.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term6">Bond</dt>
+                        <dd data-i18n="firstP2p.glossary.def6">A deposit locked during a trade and returned when it is completed correctly.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term7">Hold invoice</dt>
+                        <dd data-i18n="firstP2p.glossary.def7">A Lightning payment that stays pending until a condition is met.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term8">KYC</dt>
+                        <dd data-i18n="firstP2p.glossary.def8">Know your customer: identity verification required by a platform.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstP2p.glossary.term9">Transaction hash</dt>
+                        <dd data-i18n="firstP2p.glossary.def9">The unique identifier of a transaction on a blockchain.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="firstP2p.quiz.eyebrow">10. Quiz</span>
+                <h2 class="section-title" data-i18n="firstP2p.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="firstP2p.quiz.intro">Check your understanding of this lesson before moving on. Incorrect answers point you straight back to the relevant section.</p>
+                <p class="section-description" data-i18n="firstP2p.quiz.badgeNote">This quiz is for practice and does not grant a badge. Badges are earned by completing the modules of Crypto A to Z.</p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q1">1. What is the main difference between manual P2P and a service like P2P.me?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q1o1">A. None, they work the same way</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q1o2">B. In the service, the order lives in the app with the crypto locked and no direct contact with the merchant</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q1o3">C. Manual P2P always has escrow</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q1o4">D. The service never delivers to your wallet</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="#kinds">Kinds of P2P</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q2">2. How do P2P services make sure neither side runs away?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q2o1">A. They do not</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q2o2">B. With escrow by code, locked funds, bonds or reputation</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q2o3">C. Only with a phone call</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q2o4">D. With a paper contract</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="#trust">How Trust Works</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q3">3. Who fills your order in P2P.me?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q3o1">A. A liquidity provider, an independent merchant</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q3o2">B. A bank</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q3o3">C. The Receita Federal</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q3o4">D. A hardware wallet</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="#overview">P2P.me Overview</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q4">4. What do zero-knowledge proofs do in the service?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q4o1">A. Raise limits without handing your personal data to the service</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q4o2">B. Remove all fees</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q4o3">C. Make the Pix reversible</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q4o4">D. Hide the transaction from your bank</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="#overview">P2P.me Overview</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q5">5. Which network does P2P.me use for USDC?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q5o1">A. Base, converting deposits from other networks to USDC on Base</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q5o2">B. Only Bitcoin</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q5o3">C. Only Tron</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q5o4">D. It has no network</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q5.feedbackIncorrect" hidden>Not quite, review <a href="#p2pme">P2P.me Step by Step</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q6">6. When can you confirm a Pix payment in the order?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q6o1">A. Before paying, to save time</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q6o2">B. Only after the money has left your account</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q6o3">C. After a stranger asks in a private chat</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q6o4">D. Never</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q6.feedbackIncorrect" hidden>Not quite, review <a href="#p2pme">P2P.me Step by Step</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q7">7. In the step by step, who can be the recipient of a Pix paid with USDC?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q7o1">A. Only yourself</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q7o2">B. Someone else too, including bank slips that accept Pix</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q7o3">C. Only a company</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q7o4">D. Nobody</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q7.feedbackIncorrect" hidden>Not quite, review <a href="#p2pme">P2P.me Step by Step</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q8">8. A "support" account in a direct message asks you to pay outside the service. What do you do?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q8o1">A. Pay, since it is support</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q8o2">B. Refuse: use only links from official profiles and pay inside the service</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q8o3">C. Pay half</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q8o4">D. Send a screenshot of your wallet</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q8.feedbackIncorrect" hidden>Not quite, review <a href="#risks">Risks and Scams</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q9">9. Why do services suggest a dedicated bank account for P2P?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q9o1">A. To separate P2P movements from the rest and reduce the impact of a bank flag</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q9o2">B. To avoid paying fees</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q9o3">C. To hide the account from the Receita</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q9o4">D. It is mandatory by law</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q9.feedbackIncorrect" hidden>Not quite, review <a href="#risks">Risks and Scams</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstP2p.quiz.q10">10. A service does not ask for traditional identity verification. What does that mean for your records?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q10o1">A. They are no longer needed</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstP2p.quiz.q10o2">B. You still keep your own records: receipt, date, amount in reais, rate and hash</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q10o3">C. The blockchain keeps them for you in reais</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstP2p.quiz.q10o4">D. Your bank deletes them</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstP2p.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstP2p.quiz.q10.feedbackIncorrect" hidden>Not quite, review <a href="#privacy">Privacy</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="firstP2p.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="firstP2p.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">10</strong>
+                            <span data-i18n="firstP2p.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="firstP2p.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../first-crypto-02-wallets/index.html" class="btn btn-secondary" data-i18n="firstP2p.pagination.back">← Wallets</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html#first" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/navAuth.js" data-account-url="../../account/index.html"></script>
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/academy.js"></script>
+<script defer src="../assets/js/first-p2p.js"></script>
+</body>
+</html>

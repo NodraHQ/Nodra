@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="firstWallets.meta.title">Wallets: Nodra Academy</title>
+<meta name="description" content="Self-custody wallets: what they are, how to protect the recovery phrase, how to withdraw from an exchange, and everyday use with QR payments and a card.">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/academy.css">
+<link rel="stylesheet" href="../assets/css/first-wallets.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#first" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div id="nav-auth"></div>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+
+                    <span class="tag" data-i18n="firstWallets.hero.tag">FIRST CRYPTOS 02</span>
+
+                    <h1 class="hero-title" data-i18n="firstWallets.hero.title">Wallets</h1>
+
+                    <p class="hero-description" data-i18n="firstWallets.hero.description">Self-custody wallets: what they are, how to protect the recovery phrase, how to withdraw from an exchange, and everyday use with QR payments and a card.</p>
+
+                    <div class="hero-actions">
+                        <a href="#introduction" class="btn btn-primary" data-i18n="firstWallets.hero.cta">Start Reading →</a>
+                        <a href="../index.html#first" class="btn btn-secondary" data-i18n="firstWallets.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card"><strong data-i18n="firstWallets.hero.stat1.value">Beginner</strong><span data-i18n="firstWallets.hero.stat1.label">Difficulty</span></div>
+                        <div class="stat-card"><strong data-i18n="firstWallets.hero.stat2.value">50 min</strong><span data-i18n="firstWallets.hero.stat2.label">Duration</span></div>
+                        <div class="stat-card"><strong data-i18n="firstWallets.hero.stat3.value">Reading + Quiz</strong><span data-i18n="firstWallets.hero.stat3.label">Format</span></div>
+                        <div class="stat-card"><strong data-i18n="firstWallets.hero.stat4.value">11</strong><span data-i18n="firstWallets.hero.stat4.label">Sections</span></div>
+                    </div>
+
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="buy-mock">
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="firstWallets.visual.l1">Keys</span><span class="buy-mock__value" data-i18n="firstWallets.visual.v1">Only you hold them</span></div>
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="firstWallets.visual.l2">Backup</span><span class="buy-mock__value" data-i18n="firstWallets.visual.v2">Recovery phrase on paper</span></div>
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="firstWallets.visual.l3">Use</span><span class="buy-mock__value" data-i18n="firstWallets.visual.v3">Receive, send, pay</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="firstWallets.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#introduction" data-i18n="firstWallets.toc.introduction">Introduction</a></li>
+                        <li><a href="#custody" data-i18n="firstWallets.toc.custody">Custody</a></li>
+                        <li><a href="#types" data-i18n="firstWallets.toc.types">Types of Wallets</a></li>
+                        <li><a href="#seed" data-i18n="firstWallets.toc.seed">Recovery Phrase</a></li>
+                        <li><a href="#bitget" data-i18n="firstWallets.toc.bitget">Bitget Wallet</a></li>
+                        <li><a href="#others" data-i18n="firstWallets.toc.others">Wallets by Network</a></li>
+                        <li><a href="#withdraw" data-i18n="firstWallets.toc.withdraw">Withdrawing</a></li>
+                        <li><a href="#safety" data-i18n="firstWallets.toc.safety">Safety Checklist</a></li>
+                        <li><a href="#summary" data-i18n="firstWallets.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="firstWallets.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="firstWallets.toc.quiz">Quiz</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="firstWallets.introduction.eyebrow">01. Introduction</span>
+                <h2 class="section-title" data-i18n="firstWallets.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="fw.intro.p1">In the previous lesson, your crypto stayed on an exchange, which means it stayed on a company's books. This lesson is about the other side: a wallet that only you control. You will see what a wallet really is, how to choose one, how to protect the recovery phrase, how to bring assets from an exchange to it, and how to start using it day to day.</p>
+                <p class="section-description" data-i18n="fw.intro.p2">The main example is Bitget Wallet, a self-custody wallet that also offers payments by QR code and its own card. It is an example, not a rule: the right wallet depends on the networks you use, and the later sections cover options for Solana and for EVM networks. The screens are placeholders for real screenshots, and every platform changes its menus over time.</p>
+                <p class="section-description" data-i18n="fw.intro.p3">By the end you will be able to explain what self-custody means, protect a recovery phrase correctly, withdraw from an exchange to your wallet without losing funds, and recognize the most common wallet scams.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="custody">
+                <span class="tag" data-i18n="firstWallets.custody.eyebrow">02. Custody</span>
+                <h2 class="section-title" data-i18n="firstWallets.custody.title">Custody</h2>
+                <p class="section-description" data-i18n="fw.custody.p1">A wallet does not store coins. Assets live on the blockchain, and the wallet stores the private keys that allow you to move them. Whoever has the keys controls the assets. In a custodial account, such as an exchange, the company holds the keys and you hold a claim. In a self-custody wallet, you hold the keys and nobody can freeze, block or approve your transfers.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.custody.custodial.title">Custodial</h3>
+                        <p data-i18n="fw.custody.custodial.text">Convenient and recoverable through support, but it depends on the company: its rules, its availability and its security.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.custody.self.title">Self-custody</h3>
+                        <p data-i18n="fw.custody.self.text">Full control and no permission needed, but the responsibility is yours: lose the recovery phrase and nobody can restore access.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fw.custody.p2">Neither one is "the right one" for everything. A common approach is to keep on an exchange only what you are about to trade, and the rest in a wallet you control.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="types">
+                <span class="tag" data-i18n="firstWallets.types.eyebrow">03. Types of Wallets</span>
+                <h2 class="section-title" data-i18n="firstWallets.types.title">Types of Wallets</h2>
+                <p class="section-description" data-i18n="fw.types.p1">Wallets are usually grouped by how they connect to the internet and by who makes them.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.types.hot.title">Software wallets (hot)</h3>
+                        <p data-i18n="fw.types.hot.text">Mobile apps, desktop apps and browser extensions. Keys live on a device that is online, which is practical for daily use and exposed to malware and phishing.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.types.cold.title">Hardware wallets (cold)</h3>
+                        <p data-i18n="fw.types.cold.text">A dedicated device that keeps keys offline and signs transactions on the device itself. Better for larger amounts, but it costs money and must be bought from the official maker.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.types.multi.title">Multi-network wallets</h3>
+                        <p data-i18n="fw.types.multi.text">One app that supports many blockchains. Convenient, but each network has its own address format and its own risks.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.types.native.title">Network-specific wallets</h3>
+                        <p data-i18n="fw.types.native.text">Wallets built around one ecosystem, such as Solana or EVM networks, usually with deeper support for its apps and tokens.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fw.types.criteria">Before installing any wallet, check:</p>
+                <ul class="lesson-list">
+                    <li data-i18n="fw.types.checks.i1">Who makes it, for how long, and whether the code is open or audited.</li>
+                    <li data-i18n="fw.types.checks.i2">Whether it supports the network and the tokens you want to use.</li>
+                    <li data-i18n="fw.types.checks.i3">Whether it is self-custody: you must receive a recovery phrase that only you hold.</li>
+                    <li data-i18n="fw.types.checks.i4">That the download comes from the official site or the official store page of the maker.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="seed">
+                <span class="tag" data-i18n="firstWallets.seed.eyebrow">04. Recovery Phrase</span>
+                <h2 class="section-title" data-i18n="firstWallets.seed.title">Recovery Phrase</h2>
+                <p class="section-description" data-i18n="fw.seed.p1">When you create a self-custody wallet, it shows a recovery phrase (also called seed phrase), usually 12 or 24 words. That phrase is the wallet: anyone who has it can recreate your keys on another device and move everything.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.seed.do.title">Do</h3>
+                        <p data-i18n="fw.seed.do.text">Write it on paper (or metal) as soon as it is shown, check each word, keep it in a safe place, and consider more than one copy in separate places.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.seed.dont.title">Do not</h3>
+                        <p data-i18n="fw.seed.dont.text">Do not take a screenshot, save it in notes, e-mail it, upload it to a cloud or type it into any website. Do not share it with anyone, including "support".</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fw.seed.p2">A password or a PIN protects the app on one device. The recovery phrase protects the funds everywhere. After creating the wallet, send a small amount to it and practice restoring the wallet from the phrase on a clean install, so you know the backup works before it matters.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="bitget">
+                <span class="tag" data-i18n="firstWallets.bitget.eyebrow">05. Bitget Wallet</span>
+                <h2 class="section-title" data-i18n="firstWallets.bitget.title">Bitget Wallet</h2>
+                <p class="section-description" data-i18n="fw.bitget.p1">Bitget Wallet is a multi-network self-custody wallet. Its main appeal for Brazilian users is that, besides storing and swapping assets, it connects the stablecoin balance to everyday payments. According to the company's announcements, this includes paying by QR code through Pix, a card that spends USDC and USDT, and buying stablecoins by bank transfer through a partner. Availability, eligibility and fees depend on your account and country and can change, so check the app before counting on any feature.</p>
+                <p class="section-description" data-i18n="fw.bitget.note">Do not confuse it with the Bitget exchange. The exchange is a custodial company, while the wallet is the self-custody app, even though they share a brand.</p>
+                <p class="ref-line"><a class="btn btn-primary" href="https://web3.bitget.com/share/2PQnqv?inviteCode=X0aaOImC" target="_blank" rel="sponsored noopener noreferrer" data-i18n="fw.bitget.cta">Download Bitget Wallet ↗</a> <span class="ref-line__tag" data-i18n="fw.bitget.tag">partner link</span></p>
+                <p class="section-description step-title" data-i18n="fw.bitget.h1">Step 1. Install and create the wallet</p>
+                <p class="section-description" data-i18n="fw.bitget.s1">Install the app only from the official store page or the official site, then choose to create a new wallet. Set a local password or PIN. The app offers creating with Google, e-mail or Apple, or with a seed phrase. Here we follow the seed phrase, the path where you keep the recovery yourself.</p>
+<figure class="card step-figure">
+<img class="step-shot step-shot--phone" src="img/step-1-create.jpg" width="608" height="1043" loading="lazy" alt="Wallet creation screen">
+<figcaption class="step-figure__cap" data-i18n="firstWallets.shot.create.cap">Figure 1. Creating a new wallet. Names and menus change over time.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstWallets.shot.create.l1">Download only from the official store page or site.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstWallets.shot.create.l2">Choose how to create it: with Google, e-mail or Apple (access goes through your account) or with a seed phrase (you keep the words). This guide follows the seed phrase path.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstWallets.shot.create.l3">Set the local password or PIN for this device.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="fw.bitget.h2">Step 2. Back up the recovery phrase</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-2-backup.jpg" width="1600" height="1200" loading="lazy" alt="Recovery phrase backup screen">
+<figcaption class="step-figure__cap" data-i18n="firstWallets.shot.backup.cap">Figure 2. Seed phrase backup (photo of a test wallet). Never photograph or share this screen on your real wallet.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstWallets.shot.backup.l1">Make sure nobody and no camera can see the screen.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstWallets.shot.backup.l2">Write the words on paper in the numbered order shown (01 to 12).</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstWallets.shot.backup.l3">Tap Done only after copying all 12 words. The app may ask you to confirm them next.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="fw.bitget.h3">Step 3. Find your receiving address</p>
+                <p class="section-description" data-i18n="fw.bitget.s3">To receive an asset, pick the asset and the network, then copy the address or show the QR code. The address is public and safe to share; the recovery phrase never is.</p>
+<figure class="card step-figure">
+<img class="step-shot step-shot--phone" src="img/step-3-receive.jpg" width="610" height="1356" loading="lazy" alt="Wallet receive screen">
+<figcaption class="step-figure__cap" data-i18n="firstWallets.shot.receive.cap">Figure 3. Receive screen, with the address of each network.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstWallets.shot.receive.l1">Tap Receive and choose to browse by Token (the asset) or by Network.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstWallets.shot.receive.l2">Find the network the sender will use, such as Ethereum, Solana or BNB Chain. It must be the same one.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstWallets.shot.receive.l3">Tap the copy icon to copy the address for that network.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="fw.bitget.h4">Everyday use: QR payments and card</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.bitget.use.qr.title">QR payment</h3>
+                        <p data-i18n="fw.bitget.use.qr.text">You scan a merchant's Pix QR code, the app uses your stablecoin balance, and the merchant receives through the rail it already uses. The company says eligible users can verify to unlock it, so expect a verification step. The Pay area also groups other services, such as online purchases, eSIMs and hotels in many countries, depending on availability.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.bitget.use.card.title">Card</h3>
+                        <p data-i18n="fw.bitget.use.card.text">A card that spends USDC and USDT wherever major card networks are accepted. Check the fees, limits and verification requirements shown in the app, since the announcements do not detail them.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.bitget.use.onramp.title">Buying stablecoins by Pix</h3>
+                        <p data-i18n="fw.bitget.use.onramp.text">A bank transfer on-ramp operated by a partner. As seen in the previous lesson, the payment goes to a third party, so compare the total cost and keep the receipts.</p>
+                    </div>
+                </div>
+<figure class="card step-figure">
+<img class="step-shot step-shot--phone" src="img/step-4-qrpay.jpg" width="610" height="1356" loading="lazy" alt="Wallet Pay area screen">
+<figcaption class="step-figure__cap" data-i18n="firstWallets.shot.qrpay.cap">Figure 4. The wallet's Pay area, with QR code scanning and other services.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstWallets.shot.qrpay.l1">Open the wallet's Pay area.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstWallets.shot.qrpay.l2">See what is available: scan a QR code, online purchases, eSIMs, hotels in many countries and other services. Options change over time and with your country.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstWallets.shot.qrpay.l3">To pay a Pix, choose scan QR code, scan the merchant's code and check the amount in reais and in stablecoin before confirming.</span></li>
+</ol>
+</figure>
+                <p class="section-description" data-i18n="fw.bitget.records">Spending crypto also creates history: each payment uses an asset that has a date, an amount and a value in reais. Keep those records, as in the first lesson.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="others">
+                <span class="tag" data-i18n="firstWallets.others.eyebrow">06. Wallets by Network</span>
+                <h2 class="section-title" data-i18n="firstWallets.others.title">Wallets by Network</h2>
+                <p class="section-description" data-i18n="fw.others.p1">Wallets are not interchangeable across ecosystems. A Solana address and an EVM address have different formats, and the same recovery phrase can create accounts on different networks. The best wallet for you depends on where you will use your assets.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.others.sol.title">Solana: Phantom and Solflare</h3>
+                        <p data-i18n="fw.others.sol.text">Wallets built around Solana, available as extension and mobile app, with support for Solana tokens and apps.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.others.evm.title">EVM networks: MetaMask and Rabby</h3>
+                        <p data-i18n="fw.others.evm.text">Wallets for Ethereum and compatible networks (such as Base, Arbitrum and Polygon). Rabby is known for showing a preview of what a transaction will do before you sign.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.others.hw.title">Hardware wallets</h3>
+                        <p data-i18n="fw.others.hw.text">Devices such as Ledger, Trezor and Tangem can be used together with many software wallets, keeping the keys offline. Buy only from the official maker.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="fw.others.p2">These are examples and not recommendations. Features and security of each wallet change, and the same rules apply to all of them: official download, protected phrase, and a test transfer before the real one.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="withdraw">
+                <span class="tag" data-i18n="firstWallets.withdraw.eyebrow">07. Withdrawing to Your Wallet</span>
+                <h2 class="section-title" data-i18n="firstWallets.withdraw.title">Withdrawing to Your Wallet</h2>
+                <p class="section-description" data-i18n="fw.withdraw.p1">Now you can bring assets from an exchange to your wallet. The order matters: start with the wallet, copy the address for the right network, and only then go to the exchange.</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-5-withdraw.png" width="1280" height="720" loading="lazy" alt="Exchange withdrawal screen">
+<figcaption class="step-figure__cap" data-i18n="firstWallets.shot.withdraw.cap">Figure 5. Withdrawal form on an exchange. Options and names differ between platforms.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="firstWallets.shot.withdraw.l1">Choose the asset you want to withdraw.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="firstWallets.shot.withdraw.l2">Choose the network. It must be one that your wallet supports for that asset.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="firstWallets.shot.withdraw.l3">Paste the address copied from your own wallet and compare the first and last characters.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="firstWallets.shot.withdraw.l4">Enter the amount and check the network fee shown.</span></li>
+<li><span class="step-legend__n">5</span><span data-i18n="firstWallets.shot.withdraw.l5">Confirm with your security codes. Blockchain transfers cannot be undone.</span></li>
+</ol>
+</figure>
+                <ul class="lesson-list">
+                    <li data-i18n="fw.withdraw.rules.i1">The network on the exchange and the network of the address must be the same. The same asset can exist on several networks, and sending on the wrong one can mean losing the funds.</li>
+                    <li data-i18n="fw.withdraw.rules.i2">Compare the first and last characters of the address after pasting it. Some malware replaces copied addresses without you noticing.</li>
+                    <li data-i18n="fw.withdraw.rules.i3">For the first withdrawal, send a small amount and confirm that it arrived. Then send the rest.</li>
+                    <li data-i18n="fw.withdraw.rules.i4">Some exchanges let you save a list of allowed addresses. Turn it on after adding your own wallet.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="safety">
+                <span class="tag" data-i18n="firstWallets.safety.eyebrow">08. Safety Checklist</span>
+                <h2 class="section-title" data-i18n="firstWallets.safety.title">Safety Checklist</h2>
+                <p class="section-description" data-i18n="fw.safety.intro">Most wallet losses come from the user signing or revealing something, not from a break in the blockchain. These are the patterns that repeat.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.safety.phrase.title">Anyone asking for the phrase</h3>
+                        <p data-i18n="fw.safety.phrase.text">No support, no airdrop and no "wallet validation" site ever needs your recovery phrase. Anyone asking for it is a scammer.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.safety.fake.title">Fake apps and extensions</h3>
+                        <p data-i18n="fw.safety.fake.text">Copies of popular wallets appear in stores and in ads. Install only from the maker's official links, and check the publisher.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.safety.sign.title">Signing without reading</h3>
+                        <p data-i18n="fw.safety.sign.text">Connecting to a site is harmless, but signing can give a contract permission to spend your tokens. Read what you are approving, and revoke old approvals you no longer use.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="fw.safety.poison.title">Address poisoning</h3>
+                        <p data-i18n="fw.safety.poison.text">Scammers send tiny transfers from addresses that look like ones you used, hoping you copy them from the history. Always copy the address from the original source.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="firstWallets.summary.eyebrow">09. Summary</span>
+                <h2 class="section-title" data-i18n="firstWallets.summary.title">Summary</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="fw.summary.i1">A wallet stores private keys, not coins. Whoever holds the keys controls the assets.</li>
+                    <li data-i18n="fw.summary.i2">Custodial accounts depend on a company. Self-custody gives full control and full responsibility.</li>
+                    <li data-i18n="fw.summary.i3">Software wallets are practical and more exposed. Hardware wallets keep keys offline and suit larger amounts.</li>
+                    <li data-i18n="fw.summary.i4">The recovery phrase is the wallet. Write it on paper, never digitize it, never share it, and test the restore.</li>
+                    <li data-i18n="fw.summary.i5">Bitget Wallet is an example of a wallet that connects the stablecoin balance to QR payments and a card, subject to availability and verification.</li>
+                    <li data-i18n="fw.summary.i6">Different ecosystems use different wallets: for example Phantom and Solflare for Solana, MetaMask and Rabby for EVM networks.</li>
+                    <li data-i18n="fw.summary.i7">When withdrawing from an exchange, match the network, compare the address, and test with a small amount first.</li>
+                    <li data-i18n="fw.summary.i8">Be careful with anyone asking for the phrase, with fake apps, with blind signatures and with look-alike addresses.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="firstWallets.glossary.eyebrow">10. Glossary</span>
+                <h2 class="section-title" data-i18n="firstWallets.glossary.title">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term1">Private key</dt>
+                        <dd data-i18n="firstWallets.glossary.def1">The secret that lets you sign transactions and move assets.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term2">Recovery phrase</dt>
+                        <dd data-i18n="firstWallets.glossary.def2">A list of 12 or 24 words that can recreate the keys of a wallet. Also called seed phrase.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term3">Custodial</dt>
+                        <dd data-i18n="firstWallets.glossary.def3">A service where a company holds the keys for you.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term4">Self-custody</dt>
+                        <dd data-i18n="firstWallets.glossary.def4">Holding your own keys, with no company in between.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term5">Hot wallet</dt>
+                        <dd data-i18n="firstWallets.glossary.def5">A wallet whose keys live on a device connected to the internet.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term6">Hardware wallet</dt>
+                        <dd data-i18n="firstWallets.glossary.def6">A dedicated device that keeps keys offline and signs on the device.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term7">Address</dt>
+                        <dd data-i18n="firstWallets.glossary.def7">The public identifier where an asset can be received on a network.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term8">Network</dt>
+                        <dd data-i18n="firstWallets.glossary.def8">The blockchain on which a transfer happens. It must match between sender and receiver.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term9">EVM</dt>
+                        <dd data-i18n="firstWallets.glossary.def9">Ethereum Virtual Machine: the technology shared by Ethereum and compatible networks.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term10">Approval</dt>
+                        <dd data-i18n="firstWallets.glossary.def10">A signature that lets a contract spend a token from your wallet.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="firstWallets.glossary.term11">Address poisoning</dt>
+                        <dd data-i18n="firstWallets.glossary.def11">A scam that plants look-alike addresses in your history.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="firstWallets.quiz.eyebrow">11. Quiz</span>
+                <h2 class="section-title" data-i18n="firstWallets.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="firstWallets.quiz.intro">Check your understanding of this lesson before moving on. Incorrect answers point you straight back to the relevant section.</p>
+                <p class="section-description" data-i18n="firstWallets.quiz.badgeNote">This quiz is for practice and does not grant a badge. Badges are earned by completing the modules of Crypto A to Z.</p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q1">1. What does a wallet actually store?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q1o1">A. The coins themselves</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q1o2">B. The private keys that let you move assets on the blockchain</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q1o3">C. Your bank details</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q1o4">D. A copy of the blockchain</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="#custody">Custody</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q2">2. In a self-custody wallet, what happens if you lose the recovery phrase?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q2o1">A. Support can restore it</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q2o2">B. Nobody can restore access</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q2o3">C. The network resets it after 30 days</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q2o4">D. It is regenerated from your e-mail</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="#custody">Custody</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q3">3. What is a main advantage of a hardware wallet?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q3o1">A. It keeps keys offline and signs on the device</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q3o2">B. It has no cost</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q3o3">C. It cannot be lost</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q3o4">D. It needs no recovery phrase</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="#types">Types of Wallets</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q4">4. Where is it acceptable to store a recovery phrase?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q4o1">A. In a screenshot</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q4o2">B. In a cloud notes app</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q4o3">C. Written on paper, in a safe place</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q4o4">D. In an e-mail to yourself</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="#seed">Recovery Phrase</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q5">5. Is the Bitget Wallet the same thing as the Bitget exchange?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q5o1">A. Yes, they are the same product</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q5o2">B. No: the wallet is a self-custody app, the exchange is a custodial company</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q5o3">C. Yes, but only in Brazil</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q5o4">D. No: the wallet is custodial and the exchange is not</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q5.feedbackIncorrect" hidden>Not quite, review <a href="#bitget">Bitget Wallet</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q6">6. Which pairing is typical?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q6o1">A. Phantom and Solflare for Solana</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q6o2">B. MetaMask and Rabby for Solana only</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q6o3">C. Ledger for Solana only</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q6o4">D. Phantom for EVM only</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q6.feedbackIncorrect" hidden>Not quite, review <a href="#others">Wallets by Network</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q7">7. What can happen if you withdraw on a network your wallet does not support?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q7o1">A. Nothing, the wallet adapts</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q7o2">B. The funds can be lost</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q7o3">C. The exchange refunds you automatically</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q7o4">D. The transfer is cancelled with no cost</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q7.feedbackIncorrect" hidden>Not quite, review <a href="#withdraw">Withdrawing</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q8">8. What is a good practice for a first withdrawal?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q8o1">A. Send everything at once to save fees</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q8o2">B. Send a small amount first and confirm it arrived</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q8o3">C. Skip checking the address</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q8o4">D. Use any network</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q8.feedbackIncorrect" hidden>Not quite, review <a href="#withdraw">Withdrawing</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="firstWallets.quiz.q9">9. A "support agent" asks for your recovery phrase to fix a problem. What do you do?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q9o1">A. Send it, since it is support</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="firstWallets.quiz.q9o2">B. Never share it: nobody legitimate needs it</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q9o3">C. Send half of the words</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="firstWallets.quiz.q9o4">D. Send it only by e-mail</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="firstWallets.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="firstWallets.quiz.q9.feedbackIncorrect" hidden>Not quite, review <a href="#safety">Safety Checklist</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="firstWallets.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="firstWallets.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">9</strong>
+                            <span data-i18n="firstWallets.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="firstWallets.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../first-crypto-01-buying/index.html" class="btn btn-secondary" data-i18n="firstWallets.pagination.back">← Buying Crypto</a>
+                <a href="../first-crypto-03-p2p/index.html" class="btn btn-primary" data-i18n="firstWallets.pagination.next">Next: P2P →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html#first" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/navAuth.js" data-account-url="../../account/index.html"></script>
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/academy.js"></script>
+<script defer src="../assets/js/first-wallets.js"></script>
+</body>
+</html>

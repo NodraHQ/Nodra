@@ -83,3 +83,39 @@ navbar.classList.remove("navbar-solid");
 }
 
 });
+
+// ------------------------------------------------------------------
+// Pastas da home (Cripto de A a Z e Suas Primeiras Criptos): cada card
+// abre/fecha a sua lista de modulos (so uma aberta por vez). Abrem
+// sozinhas se chegarem por #modules ou #first (menu/rodape).
+// ------------------------------------------------------------------
+(function () {
+    const folders = [
+        { toggle: document.getElementById("folder-toggle"), panel: document.getElementById("modules"), hash: "#modules" },
+        { toggle: document.getElementById("first-toggle"), panel: document.getElementById("first-modules"), hash: "#first" }
+    ].filter((f) => f.toggle && f.panel);
+
+    if (!folders.length) return;
+
+    function setOpen(folder, open) {
+        folder.toggle.setAttribute("aria-expanded", String(open));
+        folder.panel.classList.toggle("is-open", open);
+    }
+
+    folders.forEach((folder) => {
+        folder.toggle.addEventListener("click", () => {
+            const open = folder.toggle.getAttribute("aria-expanded") !== "true";
+            folders.forEach((other) => setOpen(other, other === folder && open));
+        });
+    });
+
+    function openFromHash() {
+        const folder = folders.find((f) => f.hash === window.location.hash);
+        if (!folder) return;
+        folders.forEach((other) => setOpen(other, other === folder));
+        folder.panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    window.addEventListener("hashchange", openFromHash);
+    openFromHash();
+})();

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="buying.meta.title">Buying Crypto: Nodra Academy</title>
+<meta name="description" content="The main ways to buy crypto, how to tell a service linked to your country from a global one, and a step-by-step example on an exchange.">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/academy.css">
+<link rel="stylesheet" href="../assets/css/buying-crypto.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <a href="../../index.html" class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Nodra</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="../index.html#first" data-i18n="academyNav.modules">Modules</a>
+        <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+        <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+        <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+
+        <div id="nav-auth"></div>
+
+        <div class="language-switch">
+            <button id="lang-en">EN</button>
+            <button id="lang-pt">PT</button>
+        </div>
+
+    </div>
+
+    <div class="reading-progress" aria-hidden="true">
+        <div class="reading-progress__bar" id="readingProgressBar"></div>
+    </div>
+
+</nav>
+
+<main>
+
+    <section class="hero" id="top">
+        <div class="container">
+            <div class="hero-grid">
+
+                <div class="hero-content reveal">
+
+                    <span class="tag" data-i18n="buying.hero.tag">FIRST CRYPTOS 01</span>
+
+                    <h1 class="hero-title" data-i18n="buying.hero.title">Buying Crypto</h1>
+
+                    <p class="hero-description" data-i18n="buying.hero.description">The main ways to buy crypto, how to tell a service linked to your country from a global one, and a step-by-step example on an exchange, from the account to your own wallet.</p>
+
+                    <div class="hero-actions">
+                        <a href="#introduction" class="btn btn-primary" data-i18n="buying.hero.cta">Start Reading →</a>
+                        <a href="../index.html#first" class="btn btn-secondary" data-i18n="buying.hero.back">← Academy</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card"><strong data-i18n="buying.hero.stat1.value">Beginner</strong><span data-i18n="buying.hero.stat1.label">Difficulty</span></div>
+                        <div class="stat-card"><strong data-i18n="buying.hero.stat2.value">45 min</strong><span data-i18n="buying.hero.stat2.label">Duration</span></div>
+                        <div class="stat-card"><strong data-i18n="buying.hero.stat3.value">Reading + Quiz</strong><span data-i18n="buying.hero.stat3.label">Format</span></div>
+                        <div class="stat-card"><strong data-i18n="buying.hero.stat4.value">11</strong><span data-i18n="buying.hero.stat4.label">Sections</span></div>
+                    </div>
+
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="hero-dashboard glow">
+                        <div class="dashboard-header">
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                            <span class="dashboard-dot"></span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="buy-mock">
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="buying.visual.l1">Exchange</span><span class="buy-mock__value" data-i18n="buying.visual.v1">Account, balance, orders</span></div>
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="buying.visual.l2">P2P</span><span class="buy-mock__value" data-i18n="buying.visual.v2">Pay a person, escrow</span></div>
+                                <div class="buy-mock__row"><span class="buy-mock__label" data-i18n="buying.visual.l3">Apps</span><span class="buy-mock__value" data-i18n="buying.visual.v3">Card inside the app</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container lesson-layout">
+
+        <aside class="lesson-sidebar" id="sidebar">
+            <nav class="toc" aria-label="Table of contents">
+                <span class="tag" data-i18n="buying.toc.title">Contents</span>
+                <div class="toc__list-wrap" id="tocListWrap">
+                    <span class="toc__indicator" id="tocIndicator" aria-hidden="true"></span>
+                    <ol class="toc__list" id="tocList">
+                        <li><a href="#introduction" data-i18n="buying.toc.introduction">Introduction</a></li>
+                        <li><a href="#ways" data-i18n="buying.toc.ways">Ways to Buy</a></li>
+                        <li><a href="#borders" data-i18n="buying.toc.borders">No Borders</a></li>
+                        <li><a href="#exchange" data-i18n="buying.toc.exchange">How an Exchange Works</a></li>
+                        <li><a href="#account" data-i18n="buying.toc.account">Account Setup</a></li>
+                        <li><a href="#funding" data-i18n="buying.toc.funding">Adding Funds</a></li>
+                        <li><a href="#spot" data-i18n="buying.toc.spot">Spot Buying</a></li>
+                        <li><a href="#safety" data-i18n="buying.toc.safety">Safety Checklist</a></li>
+                        <li><a href="#summary" data-i18n="buying.toc.summary">Summary</a></li>
+                        <li><a href="#glossary" data-i18n="buying.toc.glossary">Glossary</a></li>
+                        <li><a href="#quiz" data-i18n="buying.toc.quiz">Quiz</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </aside>
+
+        <article class="lesson-content">
+
+            <section class="section lesson-section reveal" id="introduction">
+                <span class="tag" data-i18n="buying.introduction.eyebrow">01. Introduction</span>
+                <h2 class="section-title" data-i18n="buying.introduction.title">Introduction</h2>
+                <p class="section-description" data-i18n="buying.introduction.p1">Buying your first crypto is less about clicking the right button and more about understanding where you are buying, who holds your money while you do it, and what you can do afterwards. This lesson walks through the main ways to buy and then follows one complete example, step by step: creating an account on an exchange, securing it, adding funds and making a first purchase. Moving what you bought to a wallet you control is covered in a separate self-custody lesson.</p>
+                <p class="section-description" data-i18n="buying.introduction.p2">The example uses MEXC, a global exchange. It is there to show how the process works, not as a recommendation: every platform has its own menus, rules and availability, and all of them change over time. What stays the same from one platform to another is the logic, and that is what you will learn here.</p>
+                <p class="section-description" data-i18n="buying.introduction.p3">By the end of this lesson you will be able to tell the main ways of buying crypto apart, explain the difference between a service linked to your country and a global one, follow the full flow from account to first purchase, and compare the ways of adding funds (Pix, card and peer to peer) by their real cost and implications.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="ways">
+                <span class="tag" data-i18n="buying.ways.eyebrow">02. Ways to Buy</span>
+                <h2 class="section-title" data-i18n="buying.ways.title">Ways to Buy</h2>
+                <p class="section-description" data-i18n="buying.ways.intro">There is no single place to buy crypto. In practice, most beginners use one of three paths, and each one trades convenience, cost and risk in a different way.</p>
+                <div class="next-grid next-grid--one">
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.ways.exchange.title">Exchange</h3>
+                        <p data-i18n="buying.ways.exchange.text">A company runs a marketplace. You deposit money, buy, and the company keeps the asset for you until you withdraw it.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.ways.p2p.title">Peer to peer (P2P)</h3>
+                        <p data-i18n="buying.ways.p2p.text">You buy directly from another person. The platform holds the crypto in escrow while you pay the seller, and releases it only when the seller confirms.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.ways.app.title">Apps and wallets</h3>
+                        <p data-i18n="buying.ways.app.text">Some apps let you pay by card or bank transfer inside the app, through a partner. It is the simplest route, and usually the most expensive.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="buying.ways.compare">None of them is "the right one". On an exchange, adding funds usually happens through Pix or bank transfer, by card, or by P2P, and each has different costs and implications (covered below). For people who already know the market, P2P tends to add little: the price is rarely better than buying directly, and you take on the risk of dealing with another person. An app is the quickest way to buy a small amount without learning anything else. This lesson focuses on the exchange, because it teaches how the market actually works.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="borders">
+                <span class="tag" data-i18n="buying.borders.eyebrow">03. Crypto Has No Borders</span>
+                <h2 class="section-title" data-i18n="buying.borders.title">Crypto Has No Borders</h2>
+                <p class="section-description" data-i18n="buying.borders.p1">Crypto networks do not belong to any country: anyone with an internet connection can use the same network. The companies that offer services on top of those networks are a different story. Each one is established somewhere, follows the rules of the place where it operates, and chooses which countries it serves.</p>
+                <p class="section-description" data-i18n="buying.borders.p2">That creates two broad groups. Services linked to Brazil usually have a company in the country or clearly aim at Brazilians: support in Portuguese, a .br domain, local advertising, local payment methods or partnerships with Brazilian companies. Global services operate from other countries, often have no office here and answer to the rules of where they are established, even when Brazilians use them every day.</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.borders.local.title">Service linked to Brazil</h3>
+                        <p data-i18n="buying.borders.local.text">Support and terms in Portuguese, a local company you can contact, and operations handled under Brazilian rules. Information about your operations is reported by the platform itself.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.borders.global.title">Global service</h3>
+                        <p data-i18n="buying.borders.global.text">Rules, support and legal responsibility come from another country. It may accept Brazilians and local payment methods without being a Brazilian company, and it does not report on your behalf in Brazil.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="buying.borders.p3">Pix shows why this is not obvious. Pix only means that money moves between Brazilian bank accounts. When you buy in a P2P market, you send Pix to another person, while the platform, which may be based abroad, only holds the crypto during the trade. Paying with Pix does not make a global service local, and a service that accepts Pix is not automatically Brazilian: what counts is who runs it and where.</p>
+                <p class="section-description" data-i18n="buying.borders.p4">One practical consequence is reporting. Platforms considered to operate in Brazil report their users' operations to the Receita Federal under the rules in force. A global platform without that link does not do it for you, so the record of your purchases, sales and transfers (dates, amounts and values in reais) is yours to keep, and Brazilian regulation also sets duties for people who use foreign platforms. The current framework is the DeCripto (IN RFB 2.291/2025), which replaces the older IN RFB 1.888/2019. Rules change often, so check the current ones with the Receita Federal or with an accountant who knows crypto.</p>
+                <p class="section-description" data-i18n="buying.borders.key">Key takeaway: before using any platform, find out which company runs it, where it is based, which countries it serves and who answers to you if something goes wrong.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="exchange">
+                <span class="tag" data-i18n="buying.exchange.eyebrow">04. How an Exchange Works</span>
+                <h2 class="section-title" data-i18n="buying.exchange.title">How an Exchange Works</h2>
+                <p class="section-description" data-i18n="buying.exchange.p1">An exchange is a marketplace where buyers and sellers meet. When you deposit money, the exchange credits a balance on its own books. That balance is a claim on the company: until you withdraw, the company, not you, controls the private keys of the assets. That is why the lessons on wallets insist on the idea of self custody.</p>
+                <p class="section-description" data-i18n="buying.exchange.p2">Assets on an exchange are traded in pairs, written like BTC/USDT. In that pair, you buy BTC (the first asset) and pay with USDT (the second). USDT is a stablecoin that tracks the US dollar, which is why many exchanges ask you to get a stablecoin first and then use it to buy other assets.</p>
+                <p class="section-description" data-i18n="buying.exchange.p3">This lesson covers only spot trading, which means buying and selling the real asset at the current price. Products such as futures and leverage are a different matter, with risks that do not belong in a first purchase.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="account">
+                <span class="tag" data-i18n="buying.account.eyebrow">05. Account, Security and Verification</span>
+                <h2 class="section-title" data-i18n="buying.account.title">Account, Security and Verification</h2>
+                <p class="section-description" data-i18n="buying.account.intro">The next three sections follow the same example from the start. First, the account itself: creating it, protecting it and verifying your identity. Do these steps in this order, because a protected account is the foundation for everything else.</p>
+                <p class="section-description step-title" data-i18n="buying.account.h1">Step 1. Create the account</p>
+                <p class="section-description" data-i18n="buying.account.signup">On the official site or app, sign up with an e-mail or phone number and a strong password, then confirm the code you receive. Type the address yourself or use a bookmark you created: never trust a link from an ad or a message.</p>
+                <p class="ref-line"><a class="btn btn-primary" href="https://promote.mexc.com/a/E7mI09tk" target="_blank" rel="sponsored noopener noreferrer" data-i18n="buying.ref.cta">Create your account on MEXC ↗</a> <span class="ref-line__tag" data-i18n="buying.ref.tag">referral link</span></p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-1-signup.png" width="1280" height="720" loading="lazy" alt="Exchange sign-up screen">
+<figcaption class="step-figure__cap" data-i18n="buying.shot.signup.cap">Figure 1. Sign-up screen. Real screens vary by platform and change over time.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="buying.ill.signup.l1">The address bar: type the official address yourself or use a bookmark you created, never a link from an ad or a message.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="buying.ill.signup.l2">Your email: use one that only you access and that is protected with its own two-step verification.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="buying.ill.signup.l3">A strong password that you do not use anywhere else: a password manager helps.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="buying.ill.signup.l4">Confirm the code sent to your email to finish creating the account.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="buying.account.h2">Step 2. Secure the account before adding any money</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-2-security.png" width="1280" height="720" loading="lazy" alt="Exchange security settings">
+<figcaption class="step-figure__cap" data-i18n="buying.shot.security.cap">Figure 2. Security settings page. Names and options differ between platforms.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="buying.ill.sec.l1">Two-step verification with an authenticator app. Prefer it over SMS, which can be hijacked with a SIM swap.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="buying.ill.sec.l2">An anti-phishing code appears in every genuine email from the platform. If it is missing, the email is fake.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="buying.ill.sec.l3">A whitelist (when offered) lets withdrawals go only to addresses you approved in advance.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="buying.ill.sec.l4">Check from time to time which devices are logged in, and remove the ones you do not recognize.</span></li>
+</ol>
+</figure>
+                <p class="section-description step-title" data-i18n="buying.account.h3">Step 3. Verify your identity (KYC)</p>
+                <p class="section-description" data-i18n="buying.account.kyc">KYC stands for "know your customer". Platforms ask for it to meet regulations and to fight fraud, and most features stay limited until it is done. Send your documents only through the official site or app, and never to someone who contacts you offering to "speed up" the verification.</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-3-kyc.png" width="1280" height="720" loading="lazy" alt="Exchange identity verification screen">
+<figcaption class="step-figure__cap" data-i18n="buying.shot.kyc.cap">Figure 3. Identity verification (KYC) flow.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="buying.ill.kyc.l1">A photo of an official ID document. Use a sharp, well lit photo with all four corners visible.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="buying.ill.kyc.l2">A selfie, so the platform can match your face with the document.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="buying.ill.kyc.l3">The review can take minutes or days. Until it finishes, some features stay limited.</span></li>
+</ol>
+</figure>
+            </section>
+
+            <section class="section lesson-section reveal" id="funding">
+                <span class="tag" data-i18n="buying.funding.eyebrow">06. Adding Funds</span>
+                <h2 class="section-title" data-i18n="buying.funding.title">Adding Funds</h2>
+                <p class="section-description" data-i18n="buying.funding.intro">To buy, you need a balance on the platform. There are a few common ways to add it, and each has different implications for cost, speed, limits and, as seen in "Crypto Has No Borders", for who is on the other side of the payment. What you see depends on the platform, your country and your account, and it changes over time, so always check inside the app before planning.</p>
+                <p class="section-description step-title" data-i18n="buying.funding.h1">Step 4. Add funds</p>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.funding.ways.pix.title">Pix or bank transfer</h3>
+                        <p data-i18n="buying.funding.ways.pix.text">Many global platforms do not receive Pix themselves. The payment usually goes to a third-party payment provider, which sells you the crypto and credits your account. It is normally cheaper than a card, but the cost often sits in the exchange rate and spread instead of a visible fee. The receipt may show a company that is not the platform, and providers commonly require the paying account to be in the name of the verified holder.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.funding.ways.card.title">Card</h3>
+                        <p data-i18n="buying.funding.ways.card.text">The fastest and most convenient, and usually the most expensive: provider fee plus spread. If the provider is abroad, your issuer can treat it as an international purchase, with extra charges on the statement, and some issuers block or flag crypto purchases. Limits are low at first. Avoid paying in installments or with credit you cannot settle: the asset can lose value while the bill stays the same.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.funding.ways.p2p.title">P2P</h3>
+                        <p data-i18n="buying.funding.ways.p2p.text">You pay another person, and the platform holds the crypto in escrow until the seller confirms. For experienced users it adds little, because the price is rarely better than buying directly and you take on counterparty risk. If you use it: pay only inside the order, from an account in your name, never move the conversation to another app, and mark the payment as made only after the money has left your account.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.funding.ways.deposit.title">Deposit crypto you already own</h3>
+                        <p data-i18n="buying.funding.ways.deposit.text">If you already hold crypto elsewhere, you can send it to the platform. The network you choose must match the one of the deposit address, otherwise the funds can be lost.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="buying.funding.compare">Before choosing, compare:</p>
+                <ul class="lesson-list">
+                    <li data-i18n="buying.funding.checks.i1">The total cost, not only the displayed fee: compare the rate you get with a reference price at that moment.</li>
+                    <li data-i18n="buying.funding.checks.i2">Limits and time to credit, which are usually lower and slower for new accounts.</li>
+                    <li data-i18n="buying.funding.checks.i3">Who receives your payment, and whether the paying account has to be in your name.</li>
+                    <li data-i18n="buying.funding.checks.i4">The records you keep: receipts, dates and amounts in reais are part of your history, as seen in "Crypto Has No Borders".</li>
+                </ul>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-4-funding.png" width="1280" height="720" loading="lazy" alt="Exchange buy crypto screen">
+<figcaption class="step-figure__cap" data-i18n="buying.shot.funding.cap">Figure 4. Buy crypto or deposit screen. Options and names differ between platforms.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="buying.shot.funding.l1">Find the area to buy crypto or add funds.</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="buying.shot.funding.l2">Choose your currency and the payment method offered to you (Pix, card or others).</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="buying.shot.funding.l3">Enter the amount and check the quantity you will receive and the total cost before confirming.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="buying.shot.funding.l4">Complete the payment on the page shown and wait for the balance to be credited. Do not close the page before it ends.</span></li>
+</ol>
+</figure>
+            </section>
+
+            <section class="section lesson-section reveal" id="spot">
+                <span class="tag" data-i18n="buying.spot.eyebrow">07. Buying on the Spot Market</span>
+                <h2 class="section-title" data-i18n="buying.spot.title">Buying on the Spot Market</h2>
+                <p class="section-description step-title" data-i18n="buying.spot.h1">Step 5. Buy on the spot market</p>
+                <p class="section-description" data-i18n="buying.spot.p1">With a balance in the account (for example, in USDT), you can buy the asset you want on the spot market. Choose the pair, decide the order type, enter an amount, review the fee and confirm.</p>
+<figure class="card step-figure">
+<img class="step-shot" src="img/step-5-spot.png" width="1280" height="720" loading="lazy" alt="Exchange spot trading screen">
+<figcaption class="step-figure__cap" data-i18n="buying.shot.spot.cap">Figure 5. Spot trading screen. Layout and names differ between platforms.</figcaption>
+<ol class="step-legend">
+<li><span class="step-legend__n">1</span><span data-i18n="buying.ill.spot.l1">The trading pair. In BTC/USDT you buy BTC (the first) paying with USDT (the second).</span></li>
+<li><span class="step-legend__n">2</span><span data-i18n="buying.ill.spot.l2">Market buys right now at the best available price. Limit waits until the price reaches the value you choose.</span></li>
+<li><span class="step-legend__n">3</span><span data-i18n="buying.ill.spot.l3">How much you want to spend. For a first purchase, a small amount is enough to learn the flow.</span></li>
+<li><span class="step-legend__n">4</span><span data-i18n="buying.ill.spot.l4">The fee is shown before you confirm. Read it: it is part of the real cost of buying.</span></li>
+<li><span class="step-legend__n">5</span><span data-i18n="buying.ill.spot.l5">Review everything and confirm. The purchase appears in your balance right away.</span></li>
+</ol>
+</figure>
+                <div class="next-grid">
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.spot.orders.market.title">Market order</h3>
+                        <p data-i18n="buying.spot.orders.market.text">Executes immediately at the best price available. Simple and fast, but the final price can be slightly different from the one you saw, especially in assets with little volume.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.spot.orders.limit.title">Limit order</h3>
+                        <p data-i18n="buying.spot.orders.limit.text">Executes only when the price reaches the value you set. You control the price, but the order may never be filled if the market does not get there.</p>
+                    </div>
+                </div>
+                <p class="section-description" data-i18n="buying.spot.fees">Fees are the real cost of buying. A platform charges a percentage of each trade (a "maker" fee when your order waits in the book, a "taker" fee when it matches an existing one immediately), and the difference between buy and sell prices (the spread) also works like a cost. As an illustration only: with a 0.1% fee, spending 100 USDT costs about 0.1 USDT in fees. Look at the actual figures shown before you confirm.</p>
+            </section>
+
+            <section class="section lesson-section reveal" id="safety">
+                <span class="tag" data-i18n="buying.safety.eyebrow">08. Safety Checklist</span>
+                <h2 class="section-title" data-i18n="buying.safety.title">Safety Checklist</h2>
+                <p class="section-description" data-i18n="buying.safety.intro">Most losses among beginners do not come from the market: they come from mistakes in the process. This list covers the ones that repeat the most.</p>
+                <div class="next-grid next-grid--one">
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.safety.fake.title">Fake sites and apps</h3>
+                        <p data-i18n="buying.safety.fake.text">Paid ads and links in messages often lead to copies of real platforms. Type the address yourself, keep a bookmark and install apps only from the official stores.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.safety.support.title">Fake support</h3>
+                        <p data-i18n="buying.safety.support.text">Real support never asks for your seed phrase, your two-step codes or for you to install remote access software. Anyone who does is a scammer.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.safety.check.title">Check the platform</h3>
+                        <p data-i18n="buying.safety.check.text">Look for the company behind it, where it is based and whether it is allowed to serve people in your country. If it is not, understand that recovering money and getting help can be much harder.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.safety.keep.title">Do not keep everything there</h3>
+                        <p data-i18n="buying.safety.keep.text">Keep on the exchange only what you are about to trade. Moving the rest to a wallet you control is covered in the self-custody lesson.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.safety.promises.title">Promises of easy returns</h3>
+                        <p data-i18n="buying.safety.promises.text">Guaranteed returns, "signals" and urgent offers from strangers are the usual bait. Real markets do not guarantee anything.</p>
+                    </div>
+                    <div class="next-card glow">
+                        <h3 data-i18n="buying.safety.records.title">Keep your records</h3>
+                        <p data-i18n="buying.safety.records.text">Save the dates, amounts and values of what you buy, sell and send. Platforms can change or shut down, and your history should not depend on them.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section lesson-section reveal" id="summary">
+                <span class="tag" data-i18n="buying.summary.eyebrow">09. Summary</span>
+                <h2 class="section-title" data-i18n="buying.summary.title">Summary</h2>
+                <ul class="lesson-list">
+                    <li data-i18n="buying.summary.i1">There are three common ways to buy: exchange, P2P and apps with built-in purchase. Each trades convenience, cost and risk differently.</li>
+                    <li data-i18n="buying.summary.i2">Crypto networks have no borders, but the companies offering services do: where they are based and who they serve matters.</li>
+                    <li data-i18n="buying.summary.i3">Paying with Pix does not make a service Brazilian. The payment may go to a third-party provider or to another person.</li>
+                    <li data-i18n="buying.summary.i4">A global platform does not report your operations in Brazil for you, so keeping your own records is part of the process.</li>
+                    <li data-i18n="buying.summary.i5">On an exchange, the balance is a claim on the company. Self custody starts when you move assets to your own wallet, which is the topic of a separate lesson.</li>
+                    <li data-i18n="buying.summary.i6">Secure the account before adding money: strong password, authenticator app and the extra protections offered.</li>
+                    <li data-i18n="buying.summary.i7">Pix, card and P2P differ in cost, limits and who receives the payment. Compare the total cost, not only the displayed fee.</li>
+                    <li data-i18n="buying.summary.i8">Card is usually the most expensive, and should never be paid with credit you cannot settle.</li>
+                    <li data-i18n="buying.summary.i9">Market orders are immediate. Limit orders wait for your price. Fees and spread are part of the cost.</li>
+                </ul>
+            </section>
+
+            <section class="section lesson-section reveal" id="glossary">
+                <span class="tag" data-i18n="buying.glossary.eyebrow">10. Glossary</span>
+                <h2 class="section-title" data-i18n="buying.glossary.title">Glossary</h2>
+                <dl class="glossary-list">
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term1">Exchange</dt>
+                        <dd data-i18n="buying.glossary.def1">A company that runs a marketplace where users buy and sell crypto.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term2">P2P (peer to peer)</dt>
+                        <dd data-i18n="buying.glossary.def2">A purchase made directly from another person, with the platform holding the crypto in escrow.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term3">Escrow (garantia)</dt>
+                        <dd data-i18n="buying.glossary.def3">Assets held by a third party until both sides of a trade fulfil their part.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term4">KYC</dt>
+                        <dd data-i18n="buying.glossary.def4">Know your customer: identity verification required by a platform.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term5">2FA</dt>
+                        <dd data-i18n="buying.glossary.def5">Two-step verification: a second proof, such as a code from an authenticator app, besides the password.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term6">Trading pair</dt>
+                        <dd data-i18n="buying.glossary.def6">Two assets traded against each other, such as BTC/USDT.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term7">Spot market</dt>
+                        <dd data-i18n="buying.glossary.def7">The market where the real asset is bought and sold at the current price.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term8">Market order</dt>
+                        <dd data-i18n="buying.glossary.def8">An order that executes immediately at the best available price.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term9">Limit order</dt>
+                        <dd data-i18n="buying.glossary.def9">An order that executes only when the price reaches the value you set.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term10">Spread</dt>
+                        <dd data-i18n="buying.glossary.def10">The difference between the best buy price and the best sell price.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term11">Maker and taker fees</dt>
+                        <dd data-i18n="buying.glossary.def11">Percentage charged on trades: maker when your order waits in the book, taker when it matches immediately.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term12">Payment provider</dt>
+                        <dd data-i18n="buying.glossary.def12">A third-party company that receives your Pix or card payment and delivers the crypto to your account.</dd>
+                    </div>
+                    <div class="card glossary-list__item">
+                        <dt data-i18n="buying.glossary.term13">Withdrawal whitelist</dt>
+                        <dd data-i18n="buying.glossary.def13">A list of pre-approved addresses; withdrawals can only go to them.</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="section lesson-section reveal" id="quiz">
+                <span class="tag" data-i18n="buying.quiz.eyebrow">11. Quiz</span>
+                <h2 class="section-title" data-i18n="buying.quiz.title">Quiz</h2>
+                <p class="section-description" data-i18n="buying.quiz.intro">Check your understanding of this lesson before moving on. Incorrect answers point you straight back to the relevant section.</p>
+                <p class="section-description" data-i18n="buying.quiz.badgeNote">This quiz is for practice and does not grant a badge. Badges are earned by completing the modules of Crypto A to Z.</p>
+
+                <div class="quiz-list" id="quizList">
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q1">1. In a P2P purchase, what does the platform do?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q1o1">A. Holds the crypto in escrow until the seller confirms the payment</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q1o2">B. Pays the seller from its own money</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q1o3">C. Sends the crypto before you pay</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q1o4">D. Chooses the price for you</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q1.feedbackIncorrect" hidden>Not quite, review <a href="#ways">Ways to Buy</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q2">2. What does paying with Pix tell you about the service you are using?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q2o1">A. That the service is a Brazilian company</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q2o2">B. Nothing by itself: in P2P, Pix goes to another person</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q2o3">C. That the service reports everything to the Receita Federal</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q2o4">D. That the service is regulated in Brazil</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q2.feedbackIncorrect" hidden>Not quite, review <a href="#borders">No Borders</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q3">3. When you use a global platform with no link to Brazil, who keeps the record of your operations?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q3o1">A. Nobody needs to</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q3o2">B. You do: the platform does not report on your behalf in Brazil</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q3o3">C. Your bank</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q3o4">D. The blockchain, automatically, with names and values in reais</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q3.feedbackIncorrect" hidden>Not quite, review <a href="#borders">No Borders</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q4">4. Who controls the private keys of the assets while they are on an exchange?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q4o1">A. You</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q4o2">B. The exchange</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q4o3">C. The network validators</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q4o4">D. Your wallet app</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q4.feedbackIncorrect" hidden>Not quite, review <a href="#exchange">How an Exchange Works</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q5">5. Why is an authenticator app preferred over SMS for two-step verification?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q5o1">A. It is faster to type</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q5o2">B. SMS messages can be intercepted, for example with a SIM swap</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q5o3">C. It removes the need for a password</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q5o4">D. It hides your identity from the platform</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q5.feedbackIncorrect" hidden>Not quite, review <a href="#account">Account Setup</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q6">6. Which way of adding funds is usually the most expensive?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q6o1">A. Pix or bank transfer</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q6o2">B. Card</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q6o3">C. Depositing crypto you already own</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q6o4">D. All cost exactly the same</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q6.feedbackIncorrect" hidden>Not quite, review <a href="#funding">Adding Funds</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q7">7. What characterizes a limit order?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q7o1">A. It executes immediately at any price</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q7o2">B. It executes only when the price reaches the value you set</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q7o3">C. It has no fees</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q7o4">D. It can only be used to sell</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q7.feedbackIncorrect" hidden>Not quite, review <a href="#spot">Spot Buying</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q8">8. In the pair BTC/USDT, what happens when you buy?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q8o1">A. You receive USDT and pay with BTC</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q8o2">B. You receive BTC and pay with USDT</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q8o3">C. You receive both</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q8o4">D. You pay no asset</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q8.feedbackIncorrect" hidden>Not quite, review <a href="#spot">Spot Buying</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-item" data-quiz-item>
+                        <h3 class="quiz-item__question" data-i18n="buying.quiz.q9">9. When buying through a payment provider, where does part of the cost often hide?</h3>
+                        <div class="quiz-item__options" role="group" aria-label="Answer options">
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q9o1">A. Only in a fee line shown separately</button>
+                            <button type="button" class="quiz-option" data-correct="true" data-i18n="buying.quiz.q9o2">B. In the exchange rate and spread, so compare with a reference price</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q9o3">C. In the password you choose</button>
+                            <button type="button" class="quiz-option" data-correct="false" data-i18n="buying.quiz.q9o4">D. Nowhere, there is no cost</button>
+                        </div>
+                        <p class="quiz-item__feedback quiz-item__feedback--correct" data-i18n="buying.quiz.feedbackCorrect" hidden>Correct, well done.</p>
+                        <p class="quiz-item__feedback quiz-item__feedback--incorrect" data-i18n="buying.quiz.q9.feedbackIncorrect" hidden>Not quite, review <a href="#funding">Adding Funds</a> and try again.</p>
+                    </div>
+
+                    <div class="card quiz-summary" id="quizSummary" hidden>
+                        <p class="quiz-summary__text">
+                            <span data-i18n="buying.quiz.summaryPrefix">You scored</span>
+                            <strong class="quiz-summary__score" id="quizScore">0</strong>
+                            <span data-i18n="buying.quiz.summaryMiddle">out of</span>
+                            <strong class="quiz-summary__score" id="quizTotal">9</strong>
+                            <span data-i18n="buying.quiz.summarySuffix">correct.</span>
+                        </p>
+                        <button type="button" class="btn btn-secondary" id="quizResetBtn" data-i18n="buying.quiz.reset">Try again</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <nav class="lesson-pagination" aria-label="Lesson pagination">
+                <a href="../index.html#first" class="btn btn-secondary" data-i18n="buying.pagination.back">← Academy</a>
+                <a href="../first-crypto-02-wallets/index.html" class="btn btn-primary" data-i18n="buying.pagination.next">Next: Wallets →</a>
+            </nav>
+
+        </article>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <h3 data-i18n="footer.title">Nodra</h3>
+                <span data-i18n="footer.subtitle">Knowledge before Capital.</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html#first" data-i18n="academyNav.modules">Modules</a>
+                <a href="../index.html#paths" data-i18n="academyNav.learningPaths">Learning Paths</a>
+                <a href="#glossary" data-i18n="academyNav.glossary">Glossary</a>
+                <a href="https://github.com/NodraHQ/Nodra" target="_blank" data-i18n="academyNav.github">GitHub</a>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="../assets/js/supabase-client.js"></script>
+<script defer src="../assets/js/navAuth.js" data-account-url="../../account/index.html"></script>
+<script defer src="../assets/js/translations.js"></script>
+<script defer src="../assets/js/academy.js"></script>
+<script defer src="../assets/js/buying-crypto.js"></script>
+</body>
+</html>

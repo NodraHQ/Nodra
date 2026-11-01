@@ -1,0 +1,647 @@
+/* ==========================================================================
+   BUYING-CRYPTO.CSS
+   Estilos específicos do módulo academy/first-crypto-01-buying
+   (derivado do assets.css, sem diagrama/supply, com ilustrações).
+
+   O que NÃO está aqui, de propósito (já existe e é reutilizado sem
+   alteração pelo próprio index.html):
+   - .navbar, .logo, .nav-links, .language-switch, .footer, .footer-grid,
+     .footer-links, .container, .btn/.btn-primary/.btn-secondary, .hero,
+     .hero-grid, .hero-content, .hero-title, .hero-description,
+     .hero-actions, .hero-stats, .stat-card, .hero-dashboard, .glow,
+     .dashboard-header, .dashboard-dot, .tag, .section-title,
+     .section-description, .modules, .module, .module-number, .next-grid,
+     .next-card, .card, .reveal/.reveal.show
+
+   Este arquivo repete, de propósito, a parte "genérica" de leitura
+   (sidebar, TOC, reading-progress, glossary, quiz, copy-btn, lesson-list)
+   que também existe em blockchain.css, wallets.css e networks.css. Cada
+   módulo mantém seu próprio CSS de forma independente, por decisão do
+   time, para reduzir impacto entre módulos e facilitar manutenção pontual.
+
+   Tudo abaixo usa apenas tokens já existentes em variables.css.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. READING PROGRESS (elemento novo, filho do .navbar já existente)
+   ========================================================================== */
+
+.reading-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: transparent;
+    overflow: hidden;
+}
+
+.reading-progress__bar {
+    height: 100%;
+    width: 0%;
+    background: var(--primary);
+    box-shadow: var(--glow-primary);
+    transition: width .1s linear;
+}
+
+/* ==========================================================================
+   2. ASSET MOCK (hero visual, dentro do .hero-dashboard / .dashboard-content)
+   ========================================================================== */
+
+.buy-mock {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    width: 100%;
+}
+
+.buy-mock__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+.buy-mock__row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.buy-mock__label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--text-muted);
+}
+
+.buy-mock__value {
+    font-size: var(--text-sm);
+    color: var(--text);
+    font-weight: var(--semibold);
+    text-align: right;
+}
+
+.buy-mock__value--live {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--success);
+}
+
+.buy-mock__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(40, 199, 111, .18);
+}
+
+.buy-mock__block__unused {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: var(--black);
+    color: var(--primary);
+}
+
+/* ==========================================================================
+   3. LESSON LAYOUT — sidebar + coluna de leitura (mesmo padrão dos Módulos 01/02)
+   ========================================================================== */
+
+.lesson-layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    gap: var(--space-16);
+    align-items: start;
+    padding: var(--space-16) 0;
+}
+
+.lesson-sidebar {
+    position: sticky;
+    top: calc(var(--navbar-height) + var(--space-8));
+    max-height: calc(100vh - var(--navbar-height) - var(--space-16));
+    overflow-y: auto;
+    padding-bottom: var(--space-6);
+}
+
+.toc__list-wrap {
+    position: relative;
+    margin-top: var(--space-4);
+}
+
+.toc__indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 32px;
+    background: var(--primary);
+    box-shadow: var(--glow-primary);
+    transform: translateY(0);
+    transition: transform var(--transition), height var(--transition), opacity var(--transition-fast);
+    opacity: 0;
+}
+
+.toc__list-wrap.is-tracking .toc__indicator {
+    opacity: 1;
+}
+
+.toc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--border);
+}
+
+.toc__list a {
+    display: block;
+    padding: var(--space-2) 0 var(--space-2) var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    transition: color var(--transition);
+}
+
+.toc__list a:hover {
+    color: var(--text);
+}
+
+.toc__list a.is-active {
+    color: var(--primary);
+    font-weight: var(--semibold);
+}
+
+.lesson-content {
+    max-width: 760px;
+}
+
+.lesson-section {
+    border-bottom: 1px solid var(--border);
+}
+
+.lesson-section:last-of-type {
+    border-bottom: none;
+}
+
+.lesson-section .section-title {
+    font-size: var(--text-4xl);
+}
+
+.lesson-section .section-description {
+    max-width: none;
+    margin-bottom: var(--space-4);
+}
+
+.lesson-section .section-description:last-child {
+    margin-bottom: 0;
+}
+
+/* Grids reutilizados da Landing, adaptados à coluna mais estreita do leitor */
+
+.lesson-content .modules {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.lesson-content .next-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Variante com 3 colunas, usada em "Why Different Blockchains Exist" */
+.lesson-content .next-grid--three {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* ==========================================================================
+   4. LISTAS DE CONTEÚDO (sem equivalente na Landing)
+   ========================================================================== */
+
+.lesson-list {
+    list-style: none;
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.lesson-list li {
+    position: relative;
+    padding-left: var(--space-6);
+    line-height: 1.75;
+    color: var(--text-secondary);
+}
+
+.lesson-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--primary);
+    opacity: .7;
+}
+
+.lesson-list--compact {
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.lesson-list--compact li {
+    font-size: var(--text-sm);
+}
+
+.lesson-list a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ==========================================================================
+   8. GLOSSARY (reaproveita .card para cada item)
+   ========================================================================== */
+
+.glossary-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+    margin: var(--space-8) 0 0;
+}
+
+.glossary-list__item dt {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: var(--extrabold);
+    font-size: var(--text-lg);
+    color: var(--primary);
+    margin-bottom: var(--space-2);
+}
+
+.glossary-list__item dd {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   9. QUIZ (reaproveita .card para cada pergunta e para o resumo)
+   ========================================================================== */
+
+.quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+}
+
+.quiz-item__question {
+    font-size: var(--text-lg);
+    font-weight: var(--semibold);
+    color: var(--text);
+    margin-bottom: var(--space-5);
+}
+
+.quiz-item__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.quiz-option {
+    text-align: left;
+    width: 100%;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    background: var(--background-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    transition: var(--transition);
+}
+
+.quiz-option:hover:not(:disabled) {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.quiz-option:disabled {
+    cursor: default;
+}
+
+.quiz-option.is-selected {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.quiz-option.is-correct {
+    border-color: var(--success);
+    background: rgba(40, 199, 111, .1);
+    color: var(--text);
+}
+
+.quiz-option.is-incorrect {
+    border-color: var(--danger);
+    background: rgba(255, 94, 122, .1);
+    color: var(--text);
+}
+
+.quiz-option.is-muted {
+    opacity: .5;
+}
+
+.quiz-item__feedback {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-sm);
+    font-weight: var(--semibold);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+}
+
+.quiz-item__feedback a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.quiz-item__feedback--correct {
+    color: var(--success);
+    background: rgba(40, 199, 111, .1);
+}
+
+.quiz-item__feedback--incorrect {
+    color: var(--danger);
+    background: rgba(255, 94, 122, .1);
+}
+
+.quiz-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+}
+
+.quiz-summary__text {
+    font-size: var(--text-lg);
+    color: var(--text);
+}
+
+.quiz-summary__score {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-weight: var(--black);
+    font-size: var(--text-xl);
+}
+
+/* ==========================================================================
+   10. PAGINATION
+   ========================================================================== */
+
+.lesson-pagination {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-16);
+}
+
+/* ==========================================================================
+   11. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+    .lesson-content .modules,
+    .lesson-content .next-grid--three {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .lesson-layout {
+        grid-template-columns: 1fr;
+        padding-top: var(--space-8);
+    }
+
+    .lesson-sidebar {
+        position: sticky;
+        top: var(--navbar-height);
+        z-index: var(--z-sidebar);
+        max-height: none;
+        margin: 0 -24px;
+        padding: var(--space-3) 24px;
+        background: rgba(6, 8, 13, .92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .toc .tag {
+        display: none;
+    }
+
+    .toc__list-wrap {
+        width: max-content;
+        margin-top: 0;
+    }
+
+    .toc__list {
+        display: flex;
+        gap: var(--space-1);
+        border-left: none;
+        white-space: nowrap;
+    }
+
+    .toc__indicator {
+        display: none;
+    }
+
+    .toc__list a {
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-pill);
+        border: 1px solid transparent;
+    }
+
+    .toc__list a.is-active {
+        background: rgba(77, 166, 255, .12);
+        border-color: var(--border-light);
+    }
+
+    .lesson-content .next-grid,
+    .lesson-content .next-grid--three,
+    .glossary-list {
+        grid-template-columns: 1fr;
+    }
+
+    .lesson-pagination {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .quiz-summary {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}
+
+
+/* ==========================================================================
+   12. TUTORIAL ILLUSTRATIONS (wireframes SVG desenhados à mão, não são
+   prints de nenhuma plataforma)
+   ========================================================================== */
+
+.lesson-content .next-grid--one { grid-template-columns: 1fr; }
+
+.step-title {
+    color: var(--text);
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--extrabold);
+    text-transform: uppercase;
+    margin-top: var(--space-8);
+}
+
+.step-figure {
+    margin: var(--space-6) 0 0;
+    padding: var(--space-5);
+}
+
+.step-figure .ill {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.step-figure__cap {
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.step-legend {
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+}
+
+.step-legend li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+}
+
+.step-legend__n {
+    flex: 0 0 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #06080D;
+    font-weight: var(--extrabold);
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lesson-list--steps { counter-reset: st; }
+.lesson-list--steps li { counter-increment: st; }
+.lesson-list--steps li::before {
+    content: counter(st);
+    width: 22px; height: 22px; top: .2em;
+    border-radius: 50%;
+    background: rgba(77,166,255,.18);
+    color: var(--primary);
+    font-size: 12px; font-weight: var(--bold);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 1;
+}
+.lesson-list--steps li { padding-left: 36px; }
+
+.step-shot {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md, 12px);
+    border: 1px solid var(--border);
+}
+
+.ref-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+}
+
+.ref-line__tag {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    .step-figure { padding: var(--space-3); }
+}
+
+.step-shot--phone {
+    width: auto;
+    max-width: 100%;
+    max-height: 560px;
+    margin: 0 auto;
+}
+
+
+/* Zoom de prints: clique para ampliar */
+.step-shot--zoomable { cursor: zoom-in; }
+
+.shot-zoom {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4, 16px);
+    background: rgba(4, 6, 10, .88);
+    cursor: zoom-out;
+}
+
+.shot-zoom[hidden] { display: none; }
+
+.shot-zoom__img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    border-radius: var(--radius-md, 12px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+}
+
+.shot-zoom__close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.shot-zoom__close:hover { background: rgba(255, 255, 255, .16); }
+
+body.shot-zoom-open { overflow: hidden; }

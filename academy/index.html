@@ -39,7 +39,7 @@
 <!-- HERO — Academy-specific: focused on teaching, not on selling Nodra -->
 <!-- ===================================================== -->
 
-<section class="hero" id="top">
+<section class="hero hero--academy" id="top">
     <div class="container">
         <div class="hero-grid">
 
@@ -67,7 +67,7 @@
                         <span data-i18n="stats.language.subtitle">Languages</span>
                     </div>
                     <div class="stat-card">
-                        <strong data-i18n="academyHero.tracksStat.title">3</strong>
+                        <strong data-i18n="academyHero.tracksStat.title">2</strong>
                         <span data-i18n="academyHero.tracksStat.subtitle">Tracks</span>
                     </div>
                 </div>
@@ -121,218 +121,189 @@
 
         <div class="tracks-grid">
 
-            <a href="#track-foundations" class="track-card glow">
-                <div class="track-card__count" data-i18n="tracks.foundations.count">4 Modules</div>
-                <h3 data-i18n="tracks.foundations.title">Blockchain Foundations</h3>
-                <p data-i18n="tracks.foundations.description">Blocks, consensus, wallets, networks and asset types: the base every other track builds on.</p>
-            </a>
+            <button type="button" class="track-card track-card--folder glow" id="folder-toggle" aria-expanded="false" aria-controls="modules">
+                <div class="track-card__count" data-i18n="journey.main.count">10 Modules</div>
+                <h3 data-i18n="journey.main.title">Crypto A to Z</h3>
+                <p data-i18n="journey.main.description">Blockchain, wallets, DeFi and security in one sequence, from your first block to the final project.</p>
+                <span class="track-card__toggle"><span class="when-closed" data-i18n="journey.show">View modules</span><span class="when-open" data-i18n="journey.hide">Hide modules</span><i class="chev" aria-hidden="true"></i></span>
+            </button>
 
-            <a href="#track-defi" class="track-card glow">
-                <div class="track-card__count" data-i18n="tracks.defi.count">4 Modules</div>
-                <h3 data-i18n="tracks.defi.title">DeFi</h3>
-                <p data-i18n="tracks.defi.description">Decentralized exchanges, lending markets, yield strategies and stablecoins: how money works without banks.</p>
-            </a>
-
-            <a href="#track-security" class="track-card glow">
-                <div class="track-card__count" data-i18n="tracks.security.count">2 Modules</div>
-                <h3 data-i18n="tracks.security.title">Security</h3>
-                <p data-i18n="tracks.security.description">Threat models, common exploits, and a final project that ties every track together.</p>
-            </a>
+            <button type="button" class="track-card track-card--folder glow" id="first-toggle" aria-expanded="false" aria-controls="first-modules">
+                <div class="track-card__count" data-i18n="journey.first.count">3 Modules</div>
+                <h3 data-i18n="journey.first.title">Your First Cryptos</h3>
+                <p data-i18n="journey.first.description">How to buy, store and trade your first assets: exchanges, wallets and P2P.</p>
+                <span class="track-card__toggle"><span class="when-closed" data-i18n="journey.show">View modules</span><span class="when-open" data-i18n="journey.hide">Hide modules</span><i class="chev" aria-hidden="true"></i></span>
+            </button>
 
         </div>
 
         <!-- ===================================================== -->
-        <!-- ALL MODULES — grouped by track -->
+        <!-- CRYPTO A TO Z FOLDER: all 10 modules in one expandable panel -->
         <!-- ===================================================== -->
 
-        <div id="modules">
-
-            <div class="path" id="track-foundations">
-                <div class="path-title">
-                    <h3 data-i18n="tracks.foundations.title">Blockchain Foundations</h3>
-                    <div class="path-progress">
-                        <span class="active"></span>
-                        <span class="active"></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </div>
-
-                <div class="modules">
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.blockchain.number">MODULE 01</div>
-                            <h4 data-i18n="module.blockchain.title">Blockchain</h4>
-                            <p data-i18n="module.blockchain.description">Learn blocks, transactions, consensus, decentralization and digital ownership.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.beginner">Beginner</span>
-                            </div>
-                            <a href="01-blockchain/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.wallets.number">MODULE 02</div>
-                            <h4 data-i18n="module.wallets.title">Wallets</h4>
-                            <p data-i18n="module.wallets.description">Private keys, seed phrases, self custody, hot wallets and cold wallets.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.beginner">Beginner</span>
-                            </div>
-                            <a href="02-wallets/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.networks.number">MODULE 03</div>
-                            <h4 data-i18n="module.networks.title">Networks</h4>
-                            <p data-i18n="module.networks.description">Ethereum, Solana, BNB Chain and cross-chain transactions.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.beginner">Beginner</span>
-                            </div>
-                            <a href="03-networks/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.assets.number">MODULE 04</div>
-                            <h4 data-i18n="module.assets.title">Assets</h4>
-                            <p data-i18n="module.assets.description">Coins, tokens, stablecoins, NFTs and RWAs.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.beginner">Beginner</span>
-                            </div>
-                            <a href="04-assets/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                </div>
-            </div>
-
-            <div class="path" id="track-defi">
-                <div class="path-title">
-                    <h3 data-i18n="tracks.defi.title">DeFi</h3>
-                    <div class="path-progress">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </div>
-
-                <div class="modules">
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.defi.number">MODULE 05</div>
-                            <h4 data-i18n="module.defi.title">DeFi Fundamentals</h4>
-                            <p data-i18n="module.defi.description">What decentralized finance actually replaces, and how liquidity moves without a bank.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
-                            </div>
-                            <a href="05-defi/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.lending.number">MODULE 06</div>
-                            <h4 data-i18n="module.lending.title">Lending</h4>
-                            <p data-i18n="module.lending.description">Collateral, interest rates, liquidations, and how on-chain lending markets stay solvent.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
-                            </div>
-                            <a href="06-lending/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.yield.number">MODULE 07</div>
-                            <h4 data-i18n="module.yield.title">Yield</h4>
-                            <p data-i18n="module.yield.description">Liquidity pools, staking, farming, and telling real yield from unsustainable incentives.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
-                            </div>
-                            <a href="07-yield/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.stablecoins.number">MODULE 08</div>
-                            <h4 data-i18n="module.stablecoins.title">Stablecoins</h4>
-                            <p data-i18n="module.stablecoins.description">Fiat-backed, crypto-backed and algorithmic stablecoins, and why some of them fail.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.intermediate">Intermediate</span>
-                            </div>
-                            <a href="08-stablecoins/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
+        <div id="modules" class="folder-panel" role="region" aria-labelledby="folder-toggle">
+            <div class="folder-panel__inner">
+                <div class="folder-list">
+                    <h4 class="folder-group" data-i18n="tracks.foundations.title">Blockchain Foundations</h4>
+                    <a class="folder-row" href="01-blockchain/index.html">
+                        <span class="folder-row__num">01</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.blockchain.title"></strong>
+                            <span data-i18n="module.blockchain.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.beginner"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="02-wallets/index.html">
+                        <span class="folder-row__num">02</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.wallets.title"></strong>
+                            <span data-i18n="module.wallets.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.beginner"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="03-networks/index.html">
+                        <span class="folder-row__num">03</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.networks.title"></strong>
+                            <span data-i18n="module.networks.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.beginner"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="04-assets/index.html">
+                        <span class="folder-row__num">04</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.assets.title"></strong>
+                            <span data-i18n="module.assets.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.beginner"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <h4 class="folder-group" data-i18n="tracks.defi.title">DeFi</h4>
+                    <a class="folder-row" href="05-defi/index.html">
+                        <span class="folder-row__num">05</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.defi.title"></strong>
+                            <span data-i18n="module.defi.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.intermediate"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="06-lending/index.html">
+                        <span class="folder-row__num">06</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.lending.title"></strong>
+                            <span data-i18n="module.lending.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.intermediate"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="07-yield/index.html">
+                        <span class="folder-row__num">07</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.yield.title"></strong>
+                            <span data-i18n="module.yield.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.intermediate"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="08-stablecoins/index.html">
+                        <span class="folder-row__num">08</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.stablecoins.title"></strong>
+                            <span data-i18n="module.stablecoins.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.intermediate"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <h4 class="folder-group" data-i18n="tracks.security.title">Security</h4>
+                    <a class="folder-row" href="09-security/index.html">
+                        <span class="folder-row__num">09</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.security.title"></strong>
+                            <span data-i18n="module.security.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.advanced"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="10-final-project/index.html">
+                        <span class="folder-row__num">10</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.finalProject.title"></strong>
+                            <span data-i18n="module.finalProject.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.allLevels"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <div class="path" id="track-security">
-                <div class="path-title">
-                    <h3 data-i18n="tracks.security.title">Security</h3>
-                    <div class="path-progress">
-                        <span></span>
-                        <span></span>
-                    </div>
-                </div>
+        <!-- ===================================================== -->
+        <!-- YOUR FIRST CRYPTOS FOLDER -->
+        <!-- ===================================================== -->
 
-                <div class="modules">
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.security.number">MODULE 09</div>
-                            <h4 data-i18n="module.security.title">Security</h4>
-                            <p data-i18n="module.security.description">Phishing, exploits, audits, and the habits that keep builders and users safe.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.advanced">Advanced</span>
-                            </div>
-                            <a href="09-security/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
-                    <article class="module glow">
-                        <div>
-                            <div class="module-number" data-i18n="module.finalProject.number">MODULE 10</div>
-                            <h4 data-i18n="module.finalProject.title">Final Project</h4>
-                            <p data-i18n="module.finalProject.description">A guided review across every module, closing with one comprehensive, course-wide quiz.</p>
-                        </div>
-                        <div class="module-footer">
-                            <div class="module-meta">
-                                <span class="meta" data-i18n="module.allLevels">All Levels</span>
-                            </div>
-                            <a href="10-final-project/index.html" class="module-link" data-i18n="module.open">Open →</a>
-                        </div>
-                    </article>
-
+        <div id="first-modules" class="folder-panel" role="region" aria-labelledby="first-toggle">
+            <div class="folder-panel__inner">
+                <div class="folder-list">
+                    <h4 class="folder-group" data-i18n="tracks.first.title">First Steps</h4>
+                    <a class="folder-row" href="first-crypto-01-buying/index.html">
+                        <span class="folder-row__num">01</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.first.buying.title"></strong>
+                            <span data-i18n="module.first.buying.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.beginner"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="first-crypto-02-wallets/index.html">
+                        <span class="folder-row__num">02</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.first.wallets.title"></strong>
+                            <span data-i18n="module.first.wallets.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.beginner"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
+                    <a class="folder-row" href="first-crypto-03-p2p/index.html">
+                        <span class="folder-row__num">03</span>
+                        <span class="folder-row__body">
+                            <strong data-i18n="module.first.p2p.title"></strong>
+                            <span data-i18n="module.first.p2p.description"></span>
+                        </span>
+                        <span class="folder-row__side">
+                            <span class="meta" data-i18n="module.beginner"></span>
+                            <span class="module-link" data-i18n="module.open">Open →</span>
+                        </span>
+                    </a>
                 </div>
             </div>
-
         </div>
 
     </div>
