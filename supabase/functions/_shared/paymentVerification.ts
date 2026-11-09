@@ -292,3 +292,53 @@ async function verifySolanaPayment(config: SolanaTokenConfig, txHash: string, mi
         fromAddress: senderEntry?.owner || "unknown",
     };
 }
+
+// ------------------------------------------------------------------
+// Trava contra reuso de transação (auditoria de 11/2026)
+//
+// 1. Hash EVM é hexadecimal: "0xABC..." e "0xabc..." são a MESMA
+//    transação pra blockchain, mas strings diferentes pro banco - sem
+//    normalizar, o mesmo pagamento passava pela trava UNIQUE de novo só
+//    trocando maiúsculas/minúsculas. Assinatura Solana é base58 e
+//    diferencia maiúscula de minúscula de verdade, então lá só tira
+//    espaço.
+// 2. VIP e submissão de tema guardam pagamento em tabelas diferentes -
+//    sem olhar as duas, uma transação de 10 USDT pagava o tema E o VIP
+//    Bronze. A checagem tem que olhar TODA tabela de pagamento.
+// ------------------------------------------------------------------
+
+export function normalizeTxHash(network: string, txHash: string): string {
+    const trimmed = txHash.trim();
+    return network === "solana" ? trimmed : trimmed.toLowerCase();
+}
+
+const PAYMENT_TABLES = ["payment_tx_claims", "vip_payments", "theme_submission_payments"];
+
+// deno-lint-ignore no-explicit-any
+export async function isTxHashAlreadyUsed(serviceClient: any, txHash: string): Promise<boolean> {
+    for (const table of PAYMENT_TABLES) {
+        const { data, error } = await serviceClient
+            .from(table)
+            .select("id")
+            .eq("tx_hash", txHash)
+            .limit(1);
+        if (error) throw error;
+        if (data && data.length > 0) return true;
+    }
+    return false;
+}
+
+// Reserva o hash no registro único (payment_tx_claims) - chamar DEPOIS
+// de confirmar o pagamento na blockchain e ANTES de conceder qualquer
+// coisa. Retorna false se outra compra já usou essa transação (inclusive
+// se dois pedidos chegarem ao mesmo tempo: a chave primária só deixa um
+// passar).
+// deno-lint-ignore no-explicit-any
+export async function claimTxHash(serviceClient: any, txHash: string, purpose: string, userId: string): Promise<boolean> {
+    const { error } = await serviceClient
+        .from("payment_tx_claims")
+        .insert({ tx_hash: txHash, purpose, user_id: userId });
+    if (!error) return true;
+    if (error.code === "23505") return false;
+    throw error;
+}

@@ -168,6 +168,7 @@
   "profile.historyConfirmHint": "Confirming attests these results are accurate: required before any prize or badge can be issued for this match.",
   "profile.historyRolePlayer": "Player",
   "wallet.label": "EVM wallet",
+  "wallet.publicNotice": "Your wallet address appears on your public profile. Only add it if you're comfortable with anyone seeing it - never share your seed phrase or private key.",
   "wallet.manualLabel": "Paste your address manually",
   "wallet.saveBtn": "Save address",
   "wallet.formatError": "That doesn't look like a valid EVM address (should start with 0x, 42 characters total).",

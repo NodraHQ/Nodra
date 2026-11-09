@@ -22,6 +22,7 @@
 // mão.
 // ==================================================================
 
+import { BADGE_SHAPES, isHexColor, isIconKey, isOwnStorageUrl } from "../_shared/inputValidation.ts";
 import { corsHeaders, withVipAuth, logVipAction } from "../_shared/vipAuth.ts";
 
 const BADGE_LIMITS_BY_TIER: Record<string, number> = {
@@ -54,6 +55,24 @@ Deno.serve(withVipAuth(async (req, { vipClient, vipId }) => {
 
     if (typeof slug !== "string" || typeof namePt !== "string" || !namePt.trim()) {
         return new Response(JSON.stringify({ error: "slug e namePt são obrigatórios" }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+    }
+
+    // Esses campos vão parar dentro de HTML/CSS no placar dos jogos de
+    // todo mundo que tiver a badge - só aceita valor no formato certo
+    // (ver _shared/inputValidation.ts).
+    const invalidField =
+        (badgeShape != null && !BADGE_SHAPES.includes(badgeShape)) ? "badgeShape" :
+        (backgroundColor != null && backgroundColor !== "" && !isHexColor(backgroundColor)) ? "backgroundColor" :
+        (iconColor != null && iconColor !== "" && !isHexColor(iconColor)) ? "iconColor" :
+        (icon != null && icon !== "" && !isIconKey(icon)) ? "icon" :
+        (imageUrl != null && imageUrl !== "" && !isOwnStorageUrl(imageUrl, "badge-images")) ? "imageUrl" :
+        (iconSize != null && iconSize !== "" && !(Number.isFinite(Number(iconSize)) && Number(iconSize) > 0 && Number(iconSize) <= 200)) ? "iconSize" :
+        null;
+    if (invalidField) {
+        return new Response(JSON.stringify({ error: `Campo inválido: ${invalidField}` }), {
             status: 400,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });

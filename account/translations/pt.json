@@ -168,6 +168,7 @@
   "profile.historyConfirmHint": "Confirmar atesta que esse resultado é verdadeiro: vai ser exigido antes de qualquer prêmio ou badge sair pra essa partida.",
   "profile.historyRolePlayer": "Jogador",
   "wallet.label": "Wallet EVM",
+  "wallet.publicNotice": "O endereço da sua carteira aparece no seu perfil público. Só adicione se não se importar que qualquer pessoa veja - e nunca compartilhe sua frase-semente ou chave privada.",
   "wallet.manualLabel": "Cole seu endereço manualmente",
   "wallet.saveBtn": "Salvar endereço",
   "wallet.formatError": "Isso não parece um endereço EVM válido (precisa começar com 0x, 42 caracteres no total).",

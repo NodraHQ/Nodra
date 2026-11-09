@@ -16,8 +16,11 @@ import { corsHeaders, withVipAuth, logVipAction } from "../_shared/vipAuth.ts";
 
 function generateClaimCode(): string {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sem O/0/I/1
+    // crypto.getRandomValues em vez de Math.random (que não é
+    // imprevisível de verdade). chars tem 32 letras e 256 é múltiplo
+    // de 32, então "% chars.length" não favorece nenhuma letra.
     const randomBlock = () =>
-        Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+        Array.from(crypto.getRandomValues(new Uint8Array(4)), (b) => chars[b % chars.length]).join("");
     return `${randomBlock()}-${randomBlock()}`;
 }
 

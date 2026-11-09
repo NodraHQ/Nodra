@@ -5,6 +5,29 @@
 import translations from './i18n/translations.js';
 import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 
+
+// --------------------------------------------------------
+// Escape de HTML - tudo que vem de OUTRA pessoa (apelido, time, nome
+// e cores de badge, nome de pacote) passa por aqui antes de entrar em
+// innerHTML. Sem isso, um jogador com apelido tipo
+// <img src=x onerror=...> rodava código no navegador do host e dos
+// outros jogadores (auditoria de 11/2026).
+// --------------------------------------------------------
+function esc(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function safeColor(value, fallback) {
+    return typeof value === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(value) ? value : fallback;
+}
+function safeToken(value, fallback) {
+    return typeof value === 'string' && /^[a-z0-9-]+$/.test(value) ? value : fallback;
+}
+
 const FREE_MONTHLY_ROOM_LIMIT = 10;
 
 // Mesma checagem de inatividade usada em play.js - precisa existir
@@ -140,12 +163,12 @@ function buildMiniBadgeRow(badges) {
             // account.css .badge--image - senão sobra um "anel" da cor
             // de fundo em volta da arte, onde o recorte daqui não bate
             // pixel a pixel com o hexágono já desenhado na imagem).
-            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${safeToken(b.badge_shape, 'circle')}`;
 
             if (b.image_url) {
-                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${esc(b.image_url)}" alt=""></span>`;
             }
-            const color = b.icon_color || b.background_color || '#888';
+            const color = safeColor(b.icon_color, safeColor(b.background_color, '#888'));
             // Badge sem ícone e sem imagem é uma opção válida na hora de
             // criar (só forma+cor) - sem isso, ficava um círculo vazio
             // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
@@ -161,8 +184,8 @@ function buildMiniBadgeRow(badges) {
             // icon_color (não faz sentido ter cor de ícone sem ícone), e
             // "color" acima cai pro MESMO background_color do fundo -
             // letra invisível, escondida na própria cor do círculo.
-            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
-            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${esc((b.name_pt || '?').charAt(0).toUpperCase())}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${safeColor(b.background_color, '#333')};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -611,7 +634,7 @@ function updatePreviewStatus() {
 function renderPreview(parsed, errors) {
     if (errors.length > 0) {
         parseErrorsBox.hidden = false;
-        parseErrorsBox.innerHTML = `<strong>Encontrei ${errors.length} problema(s):</strong><ul>${errors.map((e) => `<li>${e}</li>`).join('')}</ul>`;
+        parseErrorsBox.innerHTML = `<strong>Encontrei ${errors.length} problema(s):</strong><ul>${errors.map((e) => `<li>${esc(e)}</li>`).join('')}</ul>`;
     } else {
         parseErrorsBox.hidden = true;
     }
@@ -875,7 +898,7 @@ function showRoomScreen(roomCode, roomData, hostName) {
         : (pack ? (currentLanguage === 'en' ? pack.name_en : pack.name_pt) : roomData.pack_slug);
 
     roomSummary.innerHTML = `
-        <span class="room-summary__chip"><strong>${packName}</strong></span>
+        <span class="room-summary__chip"><strong>${esc(packName)}</strong></span>
         <span class="room-summary__chip">${t('labels.timeBankStart')}: <strong>${roomData.time_bank_start}s</strong></span>
         <span class="room-summary__chip">${t('labels.timeBonusCorrect')}: <strong>+${roomData.time_bonus_correct}s</strong></span>
         <span class="room-summary__chip">${t('labels.timePenaltyWrong')}: <strong>-${roomData.time_penalty_wrong}s</strong></span>
@@ -959,7 +982,7 @@ async function renderLeaderboard(players) {
         row.innerHTML = `
             <span class="leaderboard-row__rank">#${index + 1}</span>
             <span class="leaderboard-row__name-block">
-                <span class="leaderboard-row__name">${player.nickname}</span>
+                <span class="leaderboard-row__name">${esc(player.nickname)}</span>
                 ${buildMiniBadgeRow(badgeMap.get(player.user_id))}
             </span>
             <span class="leaderboard-row__score">${player.correct_answers}</span>
@@ -1184,7 +1207,7 @@ function renderPreviousRounds() {
         round.results.forEach((player, index) => {
             const row = document.createElement('div');
             row.className = 'previous-round-row';
-            row.innerHTML = `<span>#${index + 1} ${player.nickname}</span><span>${player.correct_answers}</span>`;
+            row.innerHTML = `<span>#${index + 1} ${esc(player.nickname)}</span><span>${player.correct_answers}</span>`;
             block.appendChild(row);
         });
 

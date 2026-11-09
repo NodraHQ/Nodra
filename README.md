@@ -93,6 +93,10 @@ Before implementing new Academy modules, read:
 - docs/CLAUDE_EXECUTOR.md
 - docs/MODULE_TEMPLATE.md
 
+Before touching the database, Edge Functions or rendering user data, read:
+
+- docs/SECURITY_RULES.md
+
 ##
 
 python3 -m http.server 8000

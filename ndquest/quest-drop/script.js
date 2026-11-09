@@ -15,6 +15,29 @@ import questionPacks from './questions/questions-manifest.js';
 import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 import translations from './i18n/translations.js';
 
+
+// --------------------------------------------------------
+// Escape de HTML - tudo que vem de OUTRA pessoa (apelido, time, nome
+// e cores de badge, nome de pacote) passa por aqui antes de entrar em
+// innerHTML. Sem isso, um jogador com apelido tipo
+// <img src=x onerror=...> rodava código no navegador do host e dos
+// outros jogadores (auditoria de 11/2026).
+// --------------------------------------------------------
+function esc(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function safeColor(value, fallback) {
+    return typeof value === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(value) ? value : fallback;
+}
+function safeToken(value, fallback) {
+    return typeof value === 'string' && /^[a-z0-9-]+$/.test(value) ? value : fallback;
+}
+
 // Começa só com o tema padrão (mesma aparência de sempre, na hora),
 // depois é substituído pela lista completa (padrão + Supabase) assim
 // que a busca terminar - ver a chamada de loadRemoteThemes logo
@@ -352,7 +375,7 @@ function parseCustomBulkText(text) {
 function renderCustomPreview(parsed, errors) {
   if (errors.length > 0) {
     parseErrorsBox.hidden = false;
-    parseErrorsBox.innerHTML = `<strong>Encontrei ${errors.length} problema(s):</strong><ul>${errors.map((e) => `<li>${e}</li>`).join('')}</ul>`;
+    parseErrorsBox.innerHTML = `<strong>Encontrei ${errors.length} problema(s):</strong><ul>${errors.map((e) => `<li>${esc(e)}</li>`).join('')}</ul>`;
   } else {
     parseErrorsBox.hidden = true;
   }
@@ -361,7 +384,7 @@ function renderCustomPreview(parsed, errors) {
   parsed.forEach((q) => {
     const item = document.createElement('div');
     item.className = 'preview-item';
-    item.innerHTML = `<span class="preview-item__tag">${q.difficulty}</span><span>${q.question.pt}</span>`;
+    item.innerHTML = `<span class="preview-item__tag">${esc(q.difficulty)}</span><span>${esc(q.question.pt)}</span>`;
     previewList.appendChild(item);
   });
 }
@@ -602,7 +625,7 @@ function renderPrizeTierList(tier) {
   customPrizeLists[tier].forEach((item, index) => {
     const row = document.createElement('div');
     row.className = 'prize-item';
-    row.innerHTML = `<span>${item.label} × ${item.quantity}</span>`;
+    row.innerHTML = `<span>${esc(item.label)} × ${esc(item.quantity)}</span>`;
     const removeBtn = document.createElement('button');
     removeBtn.type = 'button';
     removeBtn.className = 'prize-item__remove';

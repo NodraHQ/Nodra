@@ -22,6 +22,29 @@
 import translations from './i18n/translations.js';
 import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 
+
+// --------------------------------------------------------
+// Escape de HTML - tudo que vem de OUTRA pessoa (apelido, time, nome
+// e cores de badge, nome de pacote) passa por aqui antes de entrar em
+// innerHTML. Sem isso, um jogador com apelido tipo
+// <img src=x onerror=...> rodava código no navegador do host e dos
+// outros jogadores (auditoria de 11/2026).
+// --------------------------------------------------------
+function esc(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function safeColor(value, fallback) {
+    return typeof value === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(value) ? value : fallback;
+}
+function safeToken(value, fallback) {
+    return typeof value === 'string' && /^[a-z0-9-]+$/.test(value) ? value : fallback;
+}
+
 const FREE_MONTHLY_ROOM_LIMIT = 10;
 
 // Mesma checagem de inatividade usada em play.js - precisa existir
@@ -188,12 +211,12 @@ function buildMiniBadgeRow(badges) {
             // account.css .badge--image - senão sobra um "anel" da cor
             // de fundo em volta da arte, onde o recorte daqui não bate
             // pixel a pixel com o hexágono já desenhado na imagem).
-            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${safeToken(b.badge_shape, 'circle')}`;
 
             if (b.image_url) {
-                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${esc(b.image_url)}" alt=""></span>`;
             }
-            const color = b.icon_color || b.background_color || '#888';
+            const color = safeColor(b.icon_color, safeColor(b.background_color, '#888'));
             // Badge sem ícone e sem imagem é uma opção válida na hora de
             // criar (só forma+cor) - sem isso, ficava um círculo vazio
             // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
@@ -209,8 +232,8 @@ function buildMiniBadgeRow(badges) {
             // icon_color (não faz sentido ter cor de ícone sem ícone), e
             // "color" acima cai pro MESMO background_color do fundo -
             // letra invisível, escondida na própria cor do círculo.
-            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
-            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${esc((b.name_pt || '?').charAt(0).toUpperCase())}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${safeColor(b.background_color, '#333')};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -739,16 +762,16 @@ function renderWaitingPlayers(players) {
     waitingEmpty.hidden = true;
     waitingPlayersList.innerHTML = activePlayers
         .map((p) => {
-            const teamTag = p.team ? ` (${p.team})` : '';
-            return `<span class="player-chip">${p.nickname}${teamTag}</span>`;
+            const teamTag = p.team ? ` (${esc(p.team)})` : '';
+            return `<span class="player-chip">${esc(p.nickname)}${teamTag}</span>`;
         })
         .join('');
 
     loadPlayerBadgeMap(activePlayers.map((p) => p.user_id)).then((badgeMap) => {
         waitingPlayersList.innerHTML = activePlayers
             .map((p) => {
-                const teamTag = p.team ? ` (${p.team})` : '';
-                return `<span class="player-chip">${p.nickname}${teamTag}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`;
+                const teamTag = p.team ? ` (${esc(p.team)})` : '';
+                return `<span class="player-chip">${esc(p.nickname)}${teamTag}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`;
             })
             .join('');
     });
@@ -928,7 +951,7 @@ function renderActiveView(players) {
                     <div class="race-lane">
                         <div class="race-lane__fill" style="width:${pct}%"></div>
                         <div class="race-lane__label">
-                            <span>${p.nickname}</span>
+                            <span>${esc(p.nickname)}</span>
                             <span>${p.tap_count}</span>
                         </div>
                         <div class="race-lane__finish"></div>
@@ -1027,7 +1050,7 @@ async function renderResults(players, winnerPlayerId, winnerTeam) {
                 <div class="leaderboard-row">
                     <span class="leaderboard-row__rank">#${i + 1}</span>
                     <span class="leaderboard-row__name-block">
-                        <span class="leaderboard-row__name">${p.nickname}</span>
+                        <span class="leaderboard-row__name">${esc(p.nickname)}</span>
                         ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
                     </span>
                     <span class="leaderboard-row__score">${p.tap_count} ${t('results.tapsLabel')}</span>
@@ -1053,7 +1076,7 @@ async function renderResults(players, winnerPlayerId, winnerTeam) {
                 <div class="leaderboard-row">
                     <span class="leaderboard-row__rank">#${i + 1}</span>
                     <span class="leaderboard-row__name-block">
-                        <span class="leaderboard-row__name">${p.nickname} (${p.team})</span>
+                        <span class="leaderboard-row__name">${esc(p.nickname)} (${esc(p.team)})</span>
                         ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
                     </span>
                     <span class="leaderboard-row__score">${p.tap_count} ${t('results.tapsLabel')}</span>
@@ -1100,8 +1123,8 @@ function renderPreviousRounds() {
         round.result.sorted.forEach((player) => {
             const row = document.createElement('div');
             row.className = 'previous-round-row';
-            const nameSuffix = round.result.mode === 'tugofwar' ? ` (${player.team})` : '';
-            row.innerHTML = `<span>${player.nickname}${nameSuffix}</span><span>${player.tap_count}</span>`;
+            const nameSuffix = round.result.mode === 'tugofwar' ? ` (${esc(player.team)})` : '';
+            row.innerHTML = `<span>${esc(player.nickname)}${nameSuffix}</span><span>${player.tap_count}</span>`;
             block.appendChild(row);
         });
 

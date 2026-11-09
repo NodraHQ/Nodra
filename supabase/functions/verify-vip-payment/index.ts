@@ -27,7 +27,7 @@
 
 import { corsHeaders } from "../_shared/vipAuth.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { isSupportedNetworkToken, verifyStablecoinPayment } from "../_shared/paymentVerification.ts";
+import { claimTxHash, isSupportedNetworkToken, isTxHashAlreadyUsed, normalizeTxHash, verifyStablecoinPayment, type NetworkId, type TokenSymbol } from "../_shared/paymentVerification.ts";
 
 // Reportado ao vivo: 3 níveis de VIP agora, cada um com preço e
 // limite de sala diferente - Bronze é o "padrão" de sempre, Prata e
@@ -74,17 +74,21 @@ Deno.serve(async (req) => {
         }
 
         const body = await req.json().catch(() => null);
-        const txHash = body?.txHash;
+        const rawTxHash = body?.txHash;
         const network = body?.network;
         const token = body?.token;
         const tier = body?.tier;
 
-        if (typeof txHash !== "string") {
+        if (typeof rawTxHash !== "string") {
             return jsonError("Body precisa de { txHash, network, token, tier }", 400);
         }
         if (typeof network !== "string" || typeof token !== "string" || !isSupportedNetworkToken(network, token)) {
             return jsonError("Rede/token não aceito", 400);
         }
+
+        // Mesmo hash em maiúsculas/minúsculas é a mesma transação - ver
+        // normalizeTxHash em _shared/paymentVerification.ts.
+        const txHash = normalizeTxHash(network, rawTxHash);
         if (typeof tier !== "string" || !VIP_TIER_PRICES[tier]) {
             return jsonError('tier precisa ser "bronze", "prata" ou "gold"', 400);
         }
@@ -96,11 +100,9 @@ Deno.serve(async (req) => {
 
         // Trava contra reuso - a MESMA transação não pode "comprar"
         // VIP duas vezes, nem pra contas diferentes.
-        const { data: existingPayment } = await serviceClient
-            .from("vip_payments")
-            .select("id")
-            .eq("tx_hash", txHash)
-            .maybeSingle();
+        // Olha TODAS as tabelas de pagamento, não só a desta function -
+        // uma transação só paga uma coisa (VIP ou tema, nunca os dois).
+        const existingPayment = await isTxHashAlreadyUsed(serviceClient, txHash);
 
         if (existingPayment) {
             return jsonError("Essa transação já foi usada antes", 409);
@@ -109,10 +111,17 @@ Deno.serve(async (req) => {
         // Consulta a blockchain de verdade, não confia em nada que o
         // cliente mandou sobre o valor/destinatário - ver
         // _shared/paymentVerification.ts pros detalhes de cada rede.
-        const result = await verifyStablecoinPayment(network, token, txHash, VIP_TIER_PRICES[tier]);
+        const result = await verifyStablecoinPayment(network as NetworkId, token as TokenSymbol, txHash, VIP_TIER_PRICES[tier]);
 
         if (!result.ok) {
             return jsonError(result.error || "Pagamento não pôde ser confirmado", 400);
+        }
+
+        // Reserva a transação no registro único antes de conceder
+        // qualquer coisa - fecha a corrida entre dois pedidos simultâneos
+        // (inclusive um de VIP e outro de tema com o mesmo hash).
+        if (!(await claimTxHash(serviceClient, txHash, "vip", user.id))) {
+            return jsonError("Essa transação já foi usada antes", 409);
         }
 
         // Estende a partir de agora, ou a partir do vencimento atual

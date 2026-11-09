@@ -14,7 +14,7 @@
 // de esperar o mesmo bug aparecer no Tap Rush.
 // ==================================================================
 
-import { corsHeaders, getServiceClient } from "../_shared/gameAuth.ts";
+import { corsHeaders, getServiceClient, requireRoomHost } from "../_shared/gameAuth.ts";
 
 Deno.serve(async (req) => {
 
@@ -34,6 +34,9 @@ Deno.serve(async (req) => {
         }
 
         const client = getServiceClient();
+
+        const hostCheck = await requireRoomHost(req, client, "tap_rush_rooms", room_id);
+        if (hostCheck.error) return hostCheck.error;
 
         const { error: resetError } = await client
             .from("tap_rush_players")
