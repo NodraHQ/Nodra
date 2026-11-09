@@ -21,7 +21,7 @@
 // resolvem isso tendo cada jogador gravar sobre si mesmo.
 // ==================================================================
 
-import { corsHeaders, getServiceClient } from "../_shared/gameAuth.ts";
+import { corsHeaders, getServiceClient, requireRoomHost } from "../_shared/gameAuth.ts";
 
 Deno.serve(async (req) => {
 
@@ -41,6 +41,18 @@ Deno.serve(async (req) => {
         }
 
         const client = getServiceClient();
+
+        // Só o host da sala grava resultado (auditoria de 11/2026 -
+        // antes qualquer um com o room_id gravava vitória no histórico
+        // de quem quisesse), e o room_code tem que ser o dessa sala.
+        const hostCheck = await requireRoomHost(req, client, "roulette_rooms", room_id);
+        if (hostCheck.error) return hostCheck.error;
+        if (hostCheck.room?.room_code !== room_code) {
+            return new Response(JSON.stringify({ error: "room_code não bate com a sala" }), {
+                status: 400,
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+        }
 
         const { data: winnerPlayerRow, error: lookupError } = await client
             .from("roulette_players")
@@ -71,6 +83,23 @@ Deno.serve(async (req) => {
             : false;
 
         if (isRealAccount) {
+            // Mesma rodada/posição já gravada pra essa pessoa (clique
+            // duplo, reenvio) - não duplica a linha no histórico.
+            const { data: existing } = await client
+                .from("match_history")
+                .select("id")
+                .eq("user_id", winnerPlayerRow.user_id)
+                .eq("game", "roulette")
+                .eq("room_code", room_code)
+                .eq("round_number", round_number)
+                .eq("placement", placement)
+                .limit(1);
+            if (existing && existing.length > 0) {
+                return new Response(JSON.stringify({ success: true, duplicate: true }), {
+                    headers: { ...corsHeaders, "Content-Type": "application/json" },
+                });
+            }
+
             const { error } = await client
                 .from("match_history")
                 .insert({

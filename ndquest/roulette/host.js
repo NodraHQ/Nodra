@@ -18,6 +18,29 @@
 import translations from './i18n/translations.js';
 import { getStaticThemes, loadRemoteThemes } from './branding/branding-manifest.js';
 
+
+// --------------------------------------------------------
+// Escape de HTML - tudo que vem de OUTRA pessoa (apelido, time, nome
+// e cores de badge, nome de pacote) passa por aqui antes de entrar em
+// innerHTML. Sem isso, um jogador com apelido tipo
+// <img src=x onerror=...> rodava código no navegador do host e dos
+// outros jogadores (auditoria de 11/2026).
+// --------------------------------------------------------
+function esc(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function safeColor(value, fallback) {
+    return typeof value === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(value) ? value : fallback;
+}
+function safeToken(value, fallback) {
+    return typeof value === 'string' && /^[a-z0-9-]+$/.test(value) ? value : fallback;
+}
+
 const FREE_MONTHLY_ROOM_LIMIT = 10;
 
 // Mesma checagem de inatividade usada em play.js - precisa existir
@@ -163,12 +186,12 @@ function buildMiniBadgeRow(badges) {
             // account.css .badge--image - senão sobra um "anel" da cor
             // de fundo em volta da arte, onde o recorte daqui não bate
             // pixel a pixel com o hexágono já desenhado na imagem).
-            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${safeToken(b.badge_shape, 'circle')}`;
 
             if (b.image_url) {
-                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${esc(b.image_url)}" alt=""></span>`;
             }
-            const color = b.icon_color || b.background_color || '#888';
+            const color = safeColor(b.icon_color, safeColor(b.background_color, '#888'));
             // Badge sem ícone e sem imagem é uma opção válida na hora de
             // criar (só forma+cor) - sem isso, ficava um círculo vazio
             // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
@@ -184,8 +207,8 @@ function buildMiniBadgeRow(badges) {
             // icon_color (não faz sentido ter cor de ícone sem ícone), e
             // "color" acima cai pro MESMO background_color do fundo -
             // letra invisível, escondida na própria cor do círculo.
-            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
-            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${esc((b.name_pt || '?').charAt(0).toUpperCase())}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${safeColor(b.background_color, '#333')};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -197,7 +220,7 @@ function buildMiniBadgeRow(badges) {
 // recompensa". Sem username (jogador convidado, sem conta), mostra
 // só o texto puro, sem link nenhum.
 function buildPlayerNameLink(name, username) {
-    const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const safeName = esc(name);
     if (!username) return safeName;
     const profileUrl = `../../account/perfil.html?u=${encodeURIComponent(username)}`;
     return `<a href="${profileUrl}" target="_blank" rel="noopener" class="player-name-link">${safeName}</a>`;
@@ -801,12 +824,12 @@ function renderQrPlayers(players) {
     qrPlayersList.innerHTML = players.map((p) => {
         const isOnline = onlineNicknames.has(p.nickname);
         const dot = isOnline ? '<span class="player-chip-dot is-online" title="Acompanhando agora"></span>' : '';
-        return `<span class="player-chip">${dot}${p.nickname}</span>`;
+        return `<span class="player-chip">${dot}${esc(p.nickname)}</span>`;
     }).join('');
 
     loadPlayerBadgeMap(players.map((p) => p.user_id)).then((badgeMap) => {
         qrPlayersList.innerHTML = players
-            .map((p) => `<span class="player-chip">${p.nickname}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`)
+            .map((p) => `<span class="player-chip">${esc(p.nickname)}${buildMiniBadgeRow(badgeMap.get(p.user_id))}</span>`)
             .join('');
     });
 }

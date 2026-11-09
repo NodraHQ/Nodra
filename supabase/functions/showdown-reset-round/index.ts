@@ -20,7 +20,7 @@
 // vez, em vez de só logar o erro e continuar sem saber a causa.
 // ==================================================================
 
-import { corsHeaders, getServiceClient } from "../_shared/gameAuth.ts";
+import { corsHeaders, getServiceClient, requireRoomHost } from "../_shared/gameAuth.ts";
 
 Deno.serve(async (req) => {
 
@@ -40,6 +40,9 @@ Deno.serve(async (req) => {
         }
 
         const client = getServiceClient();
+
+        const hostCheck = await requireRoomHost(req, client, "showdown_rooms", room_id);
+        if (hostCheck.error) return hostCheck.error;
 
         const { error: deleteError } = await client
             .from("showdown_answers")

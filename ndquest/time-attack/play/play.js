@@ -5,6 +5,29 @@
 import translations from '../i18n/translations.js';
 import themes from '../branding/branding-manifest.js';
 
+
+// --------------------------------------------------------
+// Escape de HTML - tudo que vem de OUTRA pessoa (apelido, time, nome
+// e cores de badge, nome de pacote) passa por aqui antes de entrar em
+// innerHTML. Sem isso, um jogador com apelido tipo
+// <img src=x onerror=...> rodava código no navegador do host e dos
+// outros jogadores (auditoria de 11/2026).
+// --------------------------------------------------------
+function esc(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function safeColor(value, fallback) {
+    return typeof value === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(value) ? value : fallback;
+}
+function safeToken(value, fallback) {
+    return typeof value === 'string' && /^[a-z0-9-]+$/.test(value) ? value : fallback;
+}
+
 // Sala sem nenhuma atualização por mais de 30 minutos é considerada
 // abandonada - reportado ao vivo, mesma ideia repetida nos 4 jogos
 // (self-contained, sem importar de arquivo comum entre eles).
@@ -149,12 +172,12 @@ function buildMiniBadgeRow(badges) {
             // account.css .badge--image - senão sobra um "anel" da cor
             // de fundo em volta da arte, onde o recorte daqui não bate
             // pixel a pixel com o hexágono já desenhado na imagem).
-            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${safeToken(b.badge_shape, 'circle')}`;
 
             if (b.image_url) {
-                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${esc(b.image_url)}" alt=""></span>`;
             }
-            const color = b.icon_color || b.background_color || '#888';
+            const color = safeColor(b.icon_color, safeColor(b.background_color, '#888'));
             // Badge sem ícone e sem imagem é uma opção válida na hora de
             // criar (só forma+cor) - sem isso, ficava um círculo vazio
             // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
@@ -170,8 +193,8 @@ function buildMiniBadgeRow(badges) {
             // icon_color (não faz sentido ter cor de ícone sem ícone), e
             // "color" acima cai pro MESMO background_color do fundo -
             // letra invisível, escondida na própria cor do círculo.
-            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
-            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${esc((b.name_pt || '?').charAt(0).toUpperCase())}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${safeColor(b.background_color, '#333')};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -1071,7 +1094,7 @@ async function renderFinishedRanking(roomId) {
             <div class="leaderboard-row ${p.nickname === currentNickname ? 'is-selected' : ''}">
                 <span class="leaderboard-row__rank">#${i + 1}</span>
                 <span class="leaderboard-row__name-block">
-                    <span class="leaderboard-row__name">${p.nickname}</span>
+                    <span class="leaderboard-row__name">${esc(p.nickname)}</span>
                     ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
                 </span>
                 <span class="leaderboard-row__score">${p.correct_answers}</span>

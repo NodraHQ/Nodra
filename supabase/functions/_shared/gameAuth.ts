@@ -66,3 +66,39 @@ export async function isCallerAnonymous(req: Request): Promise<boolean> {
     return user?.is_anonymous ?? true;
 
 }
+
+// Pra Edge Function que só o HOST da sala pode chamar (zerar rodada,
+// gravar vencedor...). Confere o token de quem chamou contra o
+// host_id da sala. Antes essas functions aceitavam qualquer chamada
+// com um room_id - qualquer jogador conseguia zerar o placar da sala
+// ou gravar vitória falsa no histórico (auditoria de 11/2026).
+// Retorna null se estiver tudo certo, ou a Response de erro pronta.
+export async function requireRoomHost(
+    req: Request,
+    client: SupabaseClient,
+    roomTable: "showdown_rooms" | "tap_rush_rooms" | "roulette_rooms" | "time_attack_rooms",
+    roomId: string,
+): Promise<{ error: Response | null; room: Record<string, unknown> | null }> {
+
+    const fail = (message: string, status: number) => ({
+        error: new Response(JSON.stringify({ error: message }), {
+            status,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }),
+        room: null,
+    });
+
+    const callerId = await getOptionalCallerId(req);
+    if (!callerId) return fail("Not signed in", 401);
+
+    const { data: room } = await client
+        .from(roomTable)
+        .select("*")
+        .eq("id", roomId)
+        .maybeSingle();
+
+    if (!room) return fail("Sala não encontrada", 404);
+    if (!room.host_id || room.host_id !== callerId) return fail("Só o host da sala pode fazer isso", 403);
+
+    return { error: null, room };
+}

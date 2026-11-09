@@ -22,6 +22,7 @@
 // cor de certo/errado não muda com a marca.
 // ==================================================================
 
+import { isOwnStorageUrl } from "../_shared/inputValidation.ts";
 import { corsHeaders, withVipAuth, logVipAction } from "../_shared/vipAuth.ts";
 
 // --------------------------------------------------------
@@ -158,6 +159,15 @@ Deno.serve(withVipAuth(async (req, { vipClient, vipId }) => {
     const colorOverrides: Record<string, string> = {};
     for (const key of OVERRIDABLE_KEYS) {
         if (HEX_REGEX.test(rawOverrides[key] || "")) colorOverrides[key] = rawOverrides[key];
+    }
+
+
+    // logo aparece pros jogadores da sala - só imagem do próprio storage.
+    if (logoUrl !== null && logoUrl !== "" && !isOwnStorageUrl(logoUrl, "theme-logos")) {
+        return new Response(JSON.stringify({ error: "logo_url inválido" }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     }
 
     if (!name || !HEX_REGEX.test(primaryColor || "") || !HEX_REGEX.test(backgroundColor || "")) {

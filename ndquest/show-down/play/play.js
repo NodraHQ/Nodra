@@ -11,6 +11,29 @@
 import translations from '../i18n/translations.js';
 import themes from '../branding/branding-manifest.js';
 
+
+// --------------------------------------------------------
+// Escape de HTML - tudo que vem de OUTRA pessoa (apelido, time, nome
+// e cores de badge, nome de pacote) passa por aqui antes de entrar em
+// innerHTML. Sem isso, um jogador com apelido tipo
+// <img src=x onerror=...> rodava código no navegador do host e dos
+// outros jogadores (auditoria de 11/2026).
+// --------------------------------------------------------
+function esc(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function safeColor(value, fallback) {
+    return typeof value === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(value) ? value : fallback;
+}
+function safeToken(value, fallback) {
+    return typeof value === 'string' && /^[a-z0-9-]+$/.test(value) ? value : fallback;
+}
+
 // Sala sem nenhuma atualização por mais de 30 minutos é considerada
 // abandonada - reportado ao vivo, mesma ideia repetida nos 4 jogos
 // (self-contained, sem importar de arquivo comum entre eles).
@@ -152,12 +175,12 @@ function buildMiniBadgeRow(badges) {
             // account.css .badge--image - senão sobra um "anel" da cor
             // de fundo em volta da arte, onde o recorte daqui não bate
             // pixel a pixel com o hexágono já desenhado na imagem).
-            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${b.badge_shape || 'circle'}`;
+            const shapeClass = b.image_url ? 'mini-badge--image' : `mini-badge--${safeToken(b.badge_shape, 'circle')}`;
 
             if (b.image_url) {
-                return `<span class="mini-badge ${shapeClass}"><img src="${b.image_url}" alt=""></span>`;
+                return `<span class="mini-badge ${shapeClass}"><img src="${esc(b.image_url)}" alt=""></span>`;
             }
-            const color = b.icon_color || b.background_color || '#888';
+            const color = safeColor(b.icon_color, safeColor(b.background_color, '#888'));
             // Badge sem ícone e sem imagem é uma opção válida na hora de
             // criar (só forma+cor) - sem isso, ficava um círculo vazio
             // (reportado ao vivo: "só aparece um quadradinho azul"). Cai
@@ -173,8 +196,8 @@ function buildMiniBadgeRow(badges) {
             // icon_color (não faz sentido ter cor de ícone sem ícone), e
             // "color" acima cai pro MESMO background_color do fundo -
             // letra invisível, escondida na própria cor do círculo.
-            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${(b.name_pt || '?').charAt(0).toUpperCase()}</span>`;
-            return `<span class="mini-badge ${shapeClass}" style="background:${b.background_color || '#333'};color:${color};">${fallback}</span>`;
+            const fallback = iconSvg || `<span class="mini-badge__initial" style="color:#fff;">${esc((b.name_pt || '?').charAt(0).toUpperCase())}</span>`;
+            return `<span class="mini-badge ${shapeClass}" style="background:${safeColor(b.background_color, '#333')};color:${color};">${fallback}</span>`;
         })
         .join('');
     return `<div class="mini-badge-row">${chips}</div>`;
@@ -744,22 +767,19 @@ async function renderQuestion(room) {
 
     if (room.questions) {
 
-        // Modo custom - conteúdo já vem na própria sala, sem
-        // validação de servidor (escopo menor de propósito, mesma
-        // decisão do Time Attack).
+        // Modo custom - conteúdo já vem na própria sala; a resposta
+        // vai pra Edge Function conferir (ver submitAnswerCustom).
         const q = room.questions[index];
         const answers = q.answers[currentLanguage] || q.answers.pt;
-        const correctText = answers[q.correct];
-
         questionText.textContent = q.question[currentLanguage] || q.question.pt;
 
         answersGrid.innerHTML = '';
-        answers.forEach((answerText) => {
+        answers.forEach((answerText, answerIndex) => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'answer-btn';
             btn.textContent = answerText;
-            btn.addEventListener('click', () => submitAnswerCustom(room, index, answerText === correctText, btn));
+            btn.addEventListener('click', () => submitAnswerCustom(room, index, answerIndex, btn));
             answersGrid.appendChild(btn);
         });
 
@@ -849,19 +869,13 @@ function startQuestionTimer(startedAtISO, questionSeconds) {
     questionTimerInterval = setInterval(tick, 200);
 }
 
-// Só usado no modo custom agora - o pacote oficial tem a mesma
-// fórmula rodando dentro da Edge Function, do lado do servidor
-// (ver supabase/functions/showdown-submit-answer), calculada com o
-// relógio do servidor, não o do navegador de quem está jogando.
-function calcPoints(elapsedMs, questionSeconds) {
-    const elapsedSeconds = elapsedMs / 1000;
-    if (elapsedSeconds <= 3) return 1000;
-    if (elapsedSeconds >= questionSeconds) return 300;
-    const ratio = (elapsedSeconds - 3) / (questionSeconds - 3);
-    return Math.round(1000 - ratio * (1000 - 300));
-}
-
-async function submitAnswerCustom(room, questionIndex, isCorrect, btnEl) {
+// Modo custom/salvo - igual ao pacote oficial, quem decide certo/errado
+// e calcula os pontos é a Edge Function (showdown-submit-answer),
+// conferindo contra showdown_rooms.questions do lado do servidor.
+// Antes o navegador decidia e gravava total_score direto no banco, o
+// que deixava qualquer um se dar a pontuação que quisesse pelo
+// console; hoje o banco ignora mudança de placar vinda do navegador.
+async function submitAnswerCustom(room, questionIndex, selectedIndex, btnEl) {
 
     if (hasAnsweredThisQuestion) return;
     hasAnsweredThisQuestion = true;
@@ -869,39 +883,19 @@ async function submitAnswerCustom(room, questionIndex, isCorrect, btnEl) {
     Array.from(answersGrid.children).forEach((b) => { b.disabled = true; });
     btnEl.classList.add('is-selected');
 
-    const elapsedMs = Date.now() - new Date(room.question_started_at).getTime();
-    const points = isCorrect ? calcPoints(elapsedMs, room.question_seconds) : 0;
-
     answersGrid.hidden = true;
     answerSentMsg.hidden = false;
 
-    const { error: answerError } = await window.ndquestSupabase
-        .from('showdown_answers')
-        .insert({
-            room_id: room.id,
-            player_id: currentPlayerId,
-            question_index: questionIndex,
-            is_correct: isCorrect,
-            points_earned: points
-        });
+    const result = await callGameFunction('showdown-submit-answer', {
+        room_id: room.id,
+        question_index: questionIndex,
+        selected_index: selectedIndex,
+        player_id: currentPlayerId,
+    });
 
-    if (answerError) {
-        console.error('Show Down submit answer error:', answerError);
-        return;
+    if (result.error) {
+        console.error('Show Down: erro ao enviar resposta (custom)', result.error);
     }
-
-    const { data: playerRow } = await window.ndquestSupabase
-        .from('showdown_players')
-        .select('total_score')
-        .eq('id', currentPlayerId)
-        .single();
-
-    const newScore = (playerRow ? playerRow.total_score : 0) + points;
-
-    await window.ndquestSupabase
-        .from('showdown_players')
-        .update({ total_score: newScore })
-        .eq('id', currentPlayerId);
 }
 
 // Pacote oficial - a Edge Function decide certo/errado, calcula os
@@ -990,7 +984,7 @@ async function renderRankingList(container, players) {
             <div class="leaderboard-row ${p.id === currentPlayerId ? 'is-selected' : ''}">
                 <span class="leaderboard-row__rank">#${i + 1}</span>
                 <span class="leaderboard-row__name-block">
-                    <span class="leaderboard-row__name">${p.nickname}</span>
+                    <span class="leaderboard-row__name">${esc(p.nickname)}</span>
                     ${buildMiniBadgeRow(badgeMap.get(p.user_id))}
                 </span>
                 <span class="leaderboard-row__score">${p.total_score} ${t('ranking.pointsLabel')}</span>

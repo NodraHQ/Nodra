@@ -18,8 +18,11 @@ function generateCode(): string {
     // Formato legível, fácil de digitar/compartilhar por fora -
     // tipo NODRA-X7K2-P9QM, não um uuid gigante.
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sem O/0/I/1, evita confusão visual
+    // crypto.getRandomValues em vez de Math.random (que não é
+    // imprevisível de verdade). chars tem 32 letras e 256 é múltiplo
+    // de 32, então "% chars.length" não favorece nenhuma letra.
     const randomBlock = () =>
-        Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+        Array.from(crypto.getRandomValues(new Uint8Array(4)), (b) => chars[b % chars.length]).join("");
     return `NODRA-${randomBlock()}-${randomBlock()}`;
 }
 

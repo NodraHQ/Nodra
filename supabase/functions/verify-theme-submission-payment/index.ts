@@ -22,7 +22,7 @@
 
 import { corsHeaders } from "../_shared/vipAuth.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { isSupportedNetworkToken, verifyStablecoinPayment } from "../_shared/paymentVerification.ts";
+import { claimTxHash, isSupportedNetworkToken, isTxHashAlreadyUsed, normalizeTxHash, verifyStablecoinPayment, type NetworkId, type TokenSymbol } from "../_shared/paymentVerification.ts";
 
 const THEME_SUBMISSION_PRICE_USDT = 10; // fácil de trocar aqui
 
@@ -50,16 +50,20 @@ Deno.serve(async (req) => {
 
         const body = await req.json().catch(() => null);
         const themeId = body?.themeId;
-        const txHash = body?.txHash;
+        const rawTxHash = body?.txHash;
         const network = body?.network;
         const token = body?.token;
 
-        if (typeof themeId !== "string" || typeof txHash !== "string") {
+        if (typeof themeId !== "string" || typeof rawTxHash !== "string") {
             return jsonError("Body precisa de { themeId, txHash, network, token }", 400);
         }
         if (typeof network !== "string" || typeof token !== "string" || !isSupportedNetworkToken(network, token)) {
             return jsonError("Rede/token não aceito", 400);
         }
+
+        // Mesmo hash em maiúsculas/minúsculas é a mesma transação - ver
+        // normalizeTxHash em _shared/paymentVerification.ts.
+        const txHash = normalizeTxHash(network, rawTxHash);
 
         const serviceClient = createClient(
             Deno.env.get("SUPABASE_URL")!,
@@ -84,18 +88,23 @@ Deno.serve(async (req) => {
         // Trava contra reuso - a MESMA transação não pode submeter
         // dois temas, nem em contas diferentes, nem se a pessoa
         // tentar de novo dizendo que é de outra rede.
-        const { data: existingPayment } = await serviceClient
-            .from("theme_submission_payments")
-            .select("id")
-            .eq("tx_hash", txHash)
-            .maybeSingle();
+        // Olha TODAS as tabelas de pagamento, não só a desta function -
+        // uma transação só paga uma coisa (VIP ou tema, nunca os dois).
+        const existingPayment = await isTxHashAlreadyUsed(serviceClient, txHash);
 
         if (existingPayment) return jsonError("Essa transação já foi usada antes", 409);
 
-        const result = await verifyStablecoinPayment(network, token, txHash, THEME_SUBMISSION_PRICE_USDT);
+        const result = await verifyStablecoinPayment(network as NetworkId, token as TokenSymbol, txHash, THEME_SUBMISSION_PRICE_USDT);
 
         if (!result.ok) {
             return jsonError(result.error || "Pagamento não pôde ser confirmado", 400);
+        }
+
+        // Reserva a transação no registro único antes de conceder
+        // qualquer coisa - fecha a corrida entre dois pedidos simultâneos
+        // (inclusive um de VIP e outro de tema com o mesmo hash).
+        if (!(await claimTxHash(serviceClient, txHash, "theme_submission", user.id))) {
+            return jsonError("Essa transação já foi usada antes", 409);
         }
 
         const { error: paymentInsertError } = await serviceClient.from("theme_submission_payments").insert({

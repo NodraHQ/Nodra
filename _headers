@@ -1,0 +1,35 @@
+# Headers de segurança servidos pela Netlify (auditoria de 11/2026).
+# Formato: https://docs.netlify.com/routing/headers/
+#
+# Site inteiro: proteções básicas que não mudam nada visível.
+# - nosniff: o navegador não "adivinha" tipo de arquivo (evita servir
+#   um upload como script).
+# - Referrer-Policy: outros sites não recebem a URL completa (com
+#   códigos de sala/claim na query) quando alguém clica num link daqui.
+# - Permissions-Policy: nenhuma página usa câmera/microfone/localização.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000
+
+# Conta: não pode ser embutida em iframe de outro site (clickjacking -
+# um site falso por cima fazendo a pessoa clicar em botões da conta
+# sem perceber). Os jogos continuam embutíveis de propósito.
+/account
+  X-Frame-Options: DENY
+/account/*
+  X-Frame-Options: DENY
+
+# Admin: a página de maior privilégio. Além de bloquear iframe, CSP
+# rígida - só roda script do próprio site e do supabase-js (versão
+# fixa com SRI), e só conversa com o Supabase do projeto. Se algum
+# XSS escapar um dia, o navegador recusa carregar script de fora.
+# Ao adicionar um recurso externo novo no admin (fonte, CDN, API),
+# ele precisa entrar aqui, senão o navegador bloqueia.
+/admin
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tndiyjitylqjajtlneyi.supabase.co https://api.qrserver.com; connect-src 'self' https://tndiyjitylqjajtlneyi.supabase.co wss://tndiyjitylqjajtlneyi.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+/admin/*
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tndiyjitylqjajtlneyi.supabase.co https://api.qrserver.com; connect-src 'self' https://tndiyjitylqjajtlneyi.supabase.co wss://tndiyjitylqjajtlneyi.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'

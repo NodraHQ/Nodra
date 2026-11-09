@@ -58,7 +58,12 @@ Deno.serve(async (req) => {
             query = query.eq("difficulty", difficulty);
         }
 
-        const excluded = Array.isArray(excluded_question_ids) ? excluded_question_ids : [];
+        // Só aceita UUIDs de verdade - o valor entra no filtro do
+        // PostgREST abaixo, e texto livre ali poderia alterar o filtro.
+        const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        const excluded = Array.isArray(excluded_question_ids)
+            ? excluded_question_ids.filter((id: unknown) => typeof id === "string" && UUID_RE.test(id))
+            : [];
         if (excluded.length > 0) {
             query = query.not("id", "in", `(${excluded.join(",")})`);
         }
