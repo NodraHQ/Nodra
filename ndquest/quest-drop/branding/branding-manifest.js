@@ -82,9 +82,12 @@ export async function loadRemoteThemes(supabaseClient) {
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
     const token = session?.access_token;
-
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    // apikey sempre - sem ela, quem ainda não tem sessão (primeira visita,
+    // jogador que acabou de escanear o QR) levava 401 do Supabase e o jogo
+    // caía no tema padrão em vez do tema do patrocinador/VIP. O token da
+    // sessão, quando existe, continua indo pra function saber quem é.
+    const headers = { 'Content-Type': 'application/json', apikey: window.ndquestSupabaseAnonKey };
+    headers['Authorization'] = `Bearer ${token || window.ndquestSupabaseAnonKey}`;
 
     const response = await fetch(`${window.ndquestSupabaseUrl}/functions/v1/ndquest-get-themes`, {
       method: 'POST',
